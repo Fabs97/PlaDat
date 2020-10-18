@@ -1,5 +1,3 @@
-
-
 - [1. Project Proposal](#1-project-proposal)
   - [1.1 Project Abstract](#11-project-abstract)
   - [1.2 Project Scope](#12-project-scope)
@@ -9,8 +7,7 @@
   - [2.1 Project Team](#21-project-team)
 - [2.2 Useful Links](#22-useful-links)
 - [3. Project Stack](#3-project-stack)
-  - [3.1 Front-end](#31-front-end)
-  - [3.2 Back-end](#32-back-end)
+  - [3.1 Technologies](#31-technologies)
 - [4. Project Artifacts](#4-project-artifacts)
   - [4.1 Mandatory artifacts](#41-mandatory-artifacts)
     - [4.1.1 Product](#411-product)
@@ -70,16 +67,30 @@ The project will follow a SCRUM-like agile method, which includes defining a SCR
 
 - [Google Drive](https://drive.google.com/drive/folders/1uC0bpIpx8PbYAirWj4T_9s9fEPUDn9Cf?usp=sharing)
 - [Discord Server](https://discord.gg/Rn4Ggnb)
+- [Jira Board](https://pladat.atlassian.net/secure/RapidBoard.jspa?projectKey=PLAD&rapidView=1)
+- [Figma Board](https://www.figma.com/files/project/16799299/PlaDat)
 
 ---
 
 ## 3. Project Stack
 
-### 3.1 Front-end
-> **TBD**
+### 3.1 Technologies
 
-### 3.2 Back-end
-> **TBD**
+
+> #### 3.1.1 Front-end
+> [![Flutter](https://upload.wikimedia.org/wikipedia/commons/1/17/Google-flutter-logo.png)](https://flutter.dev/)
+
+> #### 3.1.2 Back-end
+> [![NodeJS](https://cdn.pixabay.com/photo/2015/04/23/17/41/node-js-736399_640.png)](https://nodejs.org/en/)
+
+> #### 3.1.3 Database
+>  [![PostgreSQL](https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Postgresql_elephant.svg/1200px-Postgresql_elephant.svg.png)](https://www.postgresql.org/)
+
+> #### 3.1.4 Communication technology
+>  [![RESTful API](https://snmpcenter.com/wp-content/uploads/2016/10/RESTful-API-logo-for-light-bg.png)](https://restfulapi.net/)
+
+> #### 3.1.5 Deployment and storage
+>  [![Heroku](https://www.thedevcoach.co.uk/wp-content/uploads/2020/04/heroku.png)](https://www.heroku.com/)
 
 --- 
 
