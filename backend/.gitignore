@@ -1,0 +1,4 @@
+## backend specific .gitignore
+
+node_modules/
+package-lock.json
