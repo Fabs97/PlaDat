@@ -9,16 +9,41 @@ on:
     branches: [ main ]
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
+# jobs:
+#   build:
+#     runs-on: ubuntu-latest
+
+#     # Steps represent a sequence of tasks that will be executed as part of the job
+#     steps:
+#       - name: Deploy Flutter web app to github pages
+#       # You may pin to the exact commit or the version.
+#       # uses: erickzanardo/flutter-gh-pages@5d84a658452f00c1056347e3781d343a9d0a854a
+#         uses: erickzanardo/flutter-gh-pages@v2
+#         with:
+#           useCanvasKit: false
+#           workingDir: frontend/
 jobs:
   build:
     runs-on: ubuntu-latest
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      - name: Deploy Flutter web app to github pages
-      # You may pin to the exact commit or the version.
-      # uses: erickzanardo/flutter-gh-pages@5d84a658452f00c1056347e3781d343a9d0a854a
-        uses: erickzanardo/flutter-gh-pages@v2
-        with:
-          useCanvasKit: false
-          workingDir: ./frontend
+    - uses: actions/checkout@v2
+    - uses: subosito/flutter-action@v1
+      with:
+        channel: beta
+    # move into the correct folder 
+    - run: cd frontend/
+    # enable flutter web
+    - run: flutter config --enable-web
+    # run dependencies
+    - run: flutter pub get
+    # run tests
+    - run: flutter test
+    # build web app
+    - run: flutter build web
+    # deploy to github pages
+    - uses: JamesIves/github-pages-deploy-action@3.7.1
+      with:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        BRANCH: gh-pages # The branch the action should deploy to.
+        FOLDER: build/web # The folder the action should deploy.
+        CLEAN: true # Automatically remove deleted files from the deploy branch
