@@ -30,20 +30,25 @@ jobs:
     - uses: subosito/flutter-action@v1
       with:
         channel: beta
-    # move into the correct folder 
-    - run: cd frontend/
-    # enable flutter web
-    - run: flutter config --enable-web
-    # run dependencies
-    - run: flutter pub get
-    # run tests
-    - run: flutter test
-    # build web app
-    - run: flutter build web
-    # deploy to github pages
-    - uses: JamesIves/github-pages-deploy-action@3.7.1
+    - name: Enable Flutter web
+      run: flutter config --enable-web
+    
+    - name: Running Flutter dependencies
+      working-directory: ./frontend
+      run: flutter pub get
+
+    - name: Running Flutter tests
+      working-directory: ./frontend
+      run: flutter test
+
+    - name: Building Flutter app
+      working-directory: ./frontend
+      run: flutter build web
+      
+    - name: Deploying to Github pages
+      uses: JamesIves/github-pages-deploy-action@3.7.1
       with:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         BRANCH: gh-pages # The branch the action should deploy to.
-        FOLDER: build/web # The folder the action should deploy.
+        FOLDER: frontend/build/web # The folder the action should deploy.
         CLEAN: true # Automatically remove deleted files from the deploy branch
