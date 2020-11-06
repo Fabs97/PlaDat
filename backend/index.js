@@ -5,9 +5,8 @@ const port = 3000;
 require('dotenv').config({ path: './.env' })
 
 
-// const studentRoute = require("routes/studentRoute");
-
-// app.use("/student", studentRoute);
+const studentRoute = require("./routes/studentRoute");
+app.use('/', studentRoute);
 
 app.get('/', (req, res) => res.send('Hello World!'));
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));
