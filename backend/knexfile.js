@@ -6,8 +6,6 @@ module.exports = {
 
   development: {
     client: 'pg',
-    // connection: process.env.DB_DEV_CONNECTION
-    // connection: 'postgres://postgres:csuite@localhost:5432/pladat'
     connection: ()=> ({
       host: process.env.DEV_DB_HOST,
       database: process.env.DEV_DB_NAME,
@@ -15,9 +13,10 @@ module.exports = {
       port: process.env.DEV_DB_PORT,
       password: process.env.DEV_DB_PWD
     }),
-    // migrations: {
-    //   directory: __dirname + 'DB/migrations'
-    // }
+    cwd: "./DB/migrations",
+    migrations: {
+      directory: './DB/migrations'
+    }
   },
 
   // production: {
