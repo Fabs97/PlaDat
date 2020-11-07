@@ -16,6 +16,7 @@
     "express": "^4.17.1",
     "knex": "^0.21.12",
     "pg": "^8.4.2"
+    "swagger-ui-express": "^4.1.4"
   },
   "devDependencies": {
     "nodemon": "^2.0.6"
