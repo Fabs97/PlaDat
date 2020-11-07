@@ -4,8 +4,6 @@ const swaggerUI = require('swagger-ui-express');
 const APIDocumentation = require('./docs/openapi');
 const port = 3000;
 
-require('dotenv').config({ path: './.env' })
-
 app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(APIDocumentation));
 
 const studentRoute = require("./routes/studentRoute");

@@ -134,18 +134,23 @@ npm i -g knex
 Once the requirements have been completed, please go ahead and follow the next steps:
 1. Create a new database:
    1. Fire up PGAdming 4, login and create a new database by right click on the database in your server, `Create > Database`;
-![Create a new database](assets/createDB.png);
+![Create a new database](assets/createDB.png)
    1. Insert the database name (of your choice) and keep that in mind;
-![Create a new database](assets/createDB2.png);
+![Create a new database](assets/createDB2.png)
    3. Save the new database;
 2. Configure Node.js
    1. Open the backend folder of this project and create a new file called `.env`;
    2. Fill in the document with the following information by replacing the information with your own, keep the values in the double quotes:
 ```
 DEV_DB_HOST="localhost"
-DEV_DB_NAME="name_of_your_database" 
+DEV_DB_NAME="name_of_your_database"
 DEV_DB_USR="your_username"
 DEV_DB_PORT="port_of_your_database"
 DEV_DB_PWD="your_password"
 
 ```
+   3. Check that everything is correct by doing the first migration:
+```
+cd <project_folder>/backend
+knex migrate:latest 
+```   
