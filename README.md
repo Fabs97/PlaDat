@@ -8,14 +8,10 @@
 - [2.2 Useful Links](#22-useful-links)
 - [3. Project Stack](#3-project-stack)
   - [3.1 Technologies](#31-technologies)
-- [4. Project Artifacts](#4-project-artifacts)
-  - [4.1 Mandatory artifacts](#41-mandatory-artifacts)
-    - [4.1.1 Product](#411-product)
-    - [4.1.2 Sprints](#412-sprints)
-  - [4.2 Optional artifacts](#42-optional-artifacts)
-    - [4.2.1 Product](#421-product)
-    - [4.2.2 Sprints](#422-sprints)
-- [5. Project setup](#5-project-setup)
+- [4. Project setup](#4-project-setup)
+  - [4.1 Frontend](#41-frontend)
+  - [4.2 Backend](#42-backend)
+  - [4.3 Database](#43-database)
 
 ---
 
@@ -123,3 +119,38 @@ cd <path_to_project>/backend
 npm start
 ```
 - You should be able to check your backend by opening your browser of choice and navigating to the URL that is prompted after the `npm start`
+
+### 4.3 Database
+Please make sure to satisfy the following requirements before the backend setup:
+
+- Install PostgreSQL from this link [here](https://www.postgresql.org/download/);
+  - **NB: Take careful note of the password that you're going to give to postgres in the wizard while installing!**
+- Install PGAdming4 from this link [here](https://www.pgadmin.org/download/);
+- Make sure to have installed the `knex` package globally by running the following command in your prompt of choice:
+```
+npm i -g knex
+```
+
+Once the requirements have been completed, please go ahead and follow the next steps:
+1. Create a new database:
+   1. Fire up PGAdming 4, login and create a new database by right click on the database in your server, `Create > Database`;
+![Create a new database](assets/createDB.png)
+   1. Insert the database name (of your choice) and keep that in mind;
+![Create a new database](assets/createDB2.png)
+   3. Save the new database;
+2. Configure Node.js
+   1. Open the backend folder of this project and create a new file called `.env`;
+   2. Fill in the document with the following information by replacing the information with your own, keep the values in the double quotes:
+```
+DEV_DB_HOST="localhost"
+DEV_DB_NAME="name_of_your_database"
+DEV_DB_USR="your_username"
+DEV_DB_PORT="port_of_your_database"
+DEV_DB_PWD="your_password"
+
+```
+   3. Check that everything is correct by doing the first migration:
+```
+cd <project_folder>/backend
+knex migrate:latest 
+```   
