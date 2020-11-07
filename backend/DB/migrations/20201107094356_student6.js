@@ -7,6 +7,6 @@ exports.up = function(knex) {
 };
   
 exports.down = function(knex) {
-    return knex.schema.dropTable('student4');
+    return knex.schema.dropTable('student1');
     
 };

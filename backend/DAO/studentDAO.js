@@ -1,5 +1,6 @@
 //You need to import the DB instance in order to use it and make requests
-const database = require('../DB/connection')
+const database = require('../DB/connection');
+const knexfile = require('../knexfile');
 
 module.exports = {
     // Here we add methods that have to make operation on the database: create, select, delete, etc
@@ -13,5 +14,16 @@ module.exports = {
             .select('id', 'name')
             .where('id', id);
     },
+
+    setStudentSkills: (studentId, skills) => {
+        for(let i=0, len=skills.length; i<len; i++) {
+            database('Student_Has_Skill')
+            .returning()
+            .insert({
+                student_id: studentId,
+                skill_id: skills[i].id
+                }, ['student_id', 'skill_id']);
+        }
+    }
 
 };

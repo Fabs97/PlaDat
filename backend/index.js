@@ -6,6 +6,8 @@ const port = 3000;
 
 app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(APIDocumentation));
 
+app.use(express.json())
+
 const studentRoute = require("./routes/studentRoute");
 app.use('/', studentRoute);
 

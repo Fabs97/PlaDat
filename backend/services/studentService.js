@@ -8,4 +8,9 @@ module.exports = {
         // but they can request it from the specific DAO (Data Access Object) component.
         return studentDAO.getStudentById(id);
     },
+
+    saveStudentProfile: (studentId, studentInfo) => {
+        studentDAO.setStudentSkills(studentId, [...studentInfo.technicalSkills, ...studentInfo.softSkills]);
+        // studentDAO.createStudentSkills(studentInfo.otherSkills);
+    }
 };

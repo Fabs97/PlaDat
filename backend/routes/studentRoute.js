@@ -1,6 +1,6 @@
 const router = require('express').Router();
 
-const service = require('../services/studentService');
+const studentService = require('../services/studentService');
 
 router.get("/student/:id", async (req, res, next) => {
 
@@ -10,6 +10,13 @@ router.get("/student/:id", async (req, res, next) => {
     // and we put the result in an object "student", which we send back to the caller (frontend)
     const student = await service.getStudent(req.params.id);
     res.json(student);
+
+});
+
+router.post("/student/:id/profile", async (req, res, next) => {
+
+    await studentService.saveStudentProfile(req.params.id, req.body);
+    // res.json(student);
 
 });
 
