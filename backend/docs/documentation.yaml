@@ -26,6 +26,60 @@ components:
             - OTHER
 
 paths:
+  /student/{id}/profile:
+    post:
+      description: Allows users to save additional information to the specified student profile
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - $ref: '#/components/schemas/Skills'
+              type: object
+              example:
+                {
+                  technicalSkills: [
+                    {
+                      id: 1
+                    },
+                    {
+                      id: 2
+                    },
+                  ],
+                  softSkills: [
+                    {
+                      id: 4,
+                    }
+                  ]
+                }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                description: Returns a json from the table matching the student id with the skills ids
+                example: [
+                  {
+                    student: 5,
+                    skill: 1
+                  },
+                  {
+                    student: 5,
+                    skill: 1
+                  },
+                  {
+                    student: 5,
+                    skill: 1
+                  },
+                ]
   /skills:
     get: 
       description: Provides all the skills in the database 
@@ -50,36 +104,39 @@ paths:
                     items:
                       allOf:
                         - $ref: '#/components/schemas/Skills'
-                example:
-                  technicalSkills:
-                    - {
+                example: {
+                  technicalSkills: [
+                    {
                       id: 4,
                       name: "JavaScript",
                       type: "TECH"
-                    }
-                    - {
+                    },
+                    {
                       id: 5,
                       name: "Flutter",
                       type: "TECH"
-                    }
-                    - {
+                    },
+                    {
                       id: 6,
                       name: "Heroku Management",
                       type: "TECH"
-                    }
-                  softSkills:
-                    - {
+                    },
+                  ],
+                  softSkills: [
+                    {
                       id: 1,
                       name: "Time Management",
                       type: "SOFT"
-                    }
-                    - {
+                    },
+                    {
                       id: 2,
                       name: "Team Management",
                       type: "SOFT"
-                    }
-                    - {
+                    },
+                    {
                       id: 3,
                       name: "Project Management",
                       type: "SOFT"
-                    }
+                    },
+                  ]
+                }
