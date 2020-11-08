@@ -3,9 +3,12 @@ const studentDAO = require('../DAO/studentDAO');
 
 module.exports = {
     getAvailableSkills: async () => {
-        let technicalSkills = await skillsDAO.getSkillByType('TECH');
-        let softSkills =  await skillsDAO.getSkillByType('SOFT');
-        let skills = [...technicalSkills, ...softSkills];
+        const technicalSkills = await skillsDAO.getSkillByType('TECH');
+        const softSkills =  await skillsDAO.getSkillByType('SOFT');
+        const skills = {
+            technicalSkills: technicalSkills,
+            softSkills: softSkills
+        };
         return skills;
     },
 };
