@@ -10,20 +10,45 @@ module.exports = {
         // You can find out more about this one on its website: http://knexjs.org/
         
         // This one is very similar to SQL
-        return database('student4')
+        return database('student')
             .select('id', 'name')
             .where('id', id);
     },
 
-    setStudentSkills: (studentId, skills) => {
-        for(let i=0, len=skills.length; i<len; i++) {
-            database('Student_Has_Skill')
+    createStudentAccount: (studentInfo) => {
+        return database('student')
             .returning()
             .insert({
-                student_id: studentId,
-                skill_id: skills[i].id
-                }, ['student_id', 'skill_id']);
-        }
+                name: studentInfo.name,
+                surname: studentInfo.surname
+            },['id','name','surname']);
+    },
+
+    setStudentSkills: (studentId, skills) => {
+        studentId = parseInt(studentId);
+        return new Promise(async (resolve, reject) => {
+            let studentToSkills = []
+            for(let i=0, len=skills.length; i<len; i++) {
+                let result = await database('student_has_skills')
+                    .returning()
+                    .insert({
+                        student_id: studentId,
+                        skill_id: skills[i].id
+                        }, ['student_id', 'skill_id'])
+                        .catch(error => {
+                            console.log(error);  
+                        })
+                    
+                if(result) {
+                    studentToSkills.push({
+                        student: result[0].student_id,
+                        skill: result[0].skill_id
+                    })
+                }
+                
+            }
+            resolve(studentToSkills);
+        });
     }
 
 };

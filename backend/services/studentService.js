@@ -9,8 +9,19 @@ module.exports = {
         return studentDAO.getStudentById(id);
     },
 
+    createStudentAccount: (studentInfo) => {
+        return studentDAO.createStudentAccount(studentInfo);
+    },
+
     saveStudentProfile: (studentId, studentInfo) => {
-        studentDAO.setStudentSkills(studentId, [...studentInfo.technicalSkills, ...studentInfo.softSkills]);
+        let skills = [];
+        if(studentInfo.technicalSkills && studentInfo.technicalSkills.length > 0) {
+            skills = [...skills, ...studentInfo.technicalSkills];
+        } 
+        if(studentInfo.softSkills && studentInfo.softSkills.length > 0) {
+            skills = [...skills, ...studentInfo.softSkills];
+        }
+        return studentDAO.setStudentSkills(studentId, skills)    
         // studentDAO.createStudentSkills(studentInfo.otherSkills);
     }
 };
