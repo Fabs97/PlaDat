@@ -1,0 +1,52 @@
+openapi: '3.0.2'
+info:
+  title: PlaDat APIs
+  version: '1.0'
+servers:
+  - url: https://pladat.herokuapp.com/
+    description: Production backend server
+  - url: http://localhost:3000/
+    description: Local development environment
+  
+
+components:
+  schemas:
+    Skills:
+      type: object
+      properties:
+        id:
+          type: integer
+        name: 
+          type: string
+        type:
+          type: string
+          enum:
+            - TECH
+            - SOFT
+            - OTHER
+
+paths:
+  /skills:
+    get: 
+      description: Provides all the skills in the database 
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                description: Returns a json with all the skills in the DB divided by TECH and SOFT
+                type: object
+                properties:
+                  technicalSkills: 
+                    description: All the technical skills in the database
+                    type: array
+                    items:
+                      allOf:
+                        - $ref: '#/components/schemas/Skills'
+                  softSkills: 
+                    description: All the soft skills in the database
+                    type: array
+                    items:
+                      allOf:
+                        - $ref: '#/components/schemas/Skills'
