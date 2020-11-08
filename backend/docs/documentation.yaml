@@ -50,3 +50,36 @@ paths:
                     items:
                       allOf:
                         - $ref: '#/components/schemas/Skills'
+                example:
+                  technicalSkills:
+                    - {
+                      id: 4,
+                      name: "JavaScript",
+                      type: "TECH"
+                    }
+                    - {
+                      id: 5,
+                      name: "Flutter",
+                      type: "TECH"
+                    }
+                    - {
+                      id: 6,
+                      name: "Heroku Management",
+                      type: "TECH"
+                    }
+                  softSkills:
+                    - {
+                      id: 1,
+                      name: "Time Management",
+                      type: "SOFT"
+                    }
+                    - {
+                      id: 2,
+                      name: "Team Management",
+                      type: "SOFT"
+                    }
+                    - {
+                      id: 3,
+                      name: "Project Management",
+                      type: "SOFT"
+                    }
