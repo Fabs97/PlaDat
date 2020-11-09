@@ -11,4 +11,15 @@ module.exports = {
         };
         return skills;
     },
+
+    //This function check if the other skill already exist in the db adn adds it if needed
+    addNewOtherSkillIfNeeded: async (skillName) => {
+
+        let skillID = await skillsDAO.checkIfOtherSkillExists(skillName);
+        if(skillID == null) {
+            skillID = await skillsDAO.addNewOtherSkill(skillName);
+        }
+        return skillID;
+        
+    },
 };
