@@ -26,7 +26,7 @@ module.exports = {
             id: newId,
             name: name, 
             type: 'Other'
-        }, ['id', 'name', 'type']);
+            }, ['id', 'name', 'type']);
         return newID;
     },
 
