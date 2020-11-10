@@ -18,7 +18,6 @@ class InstitutionsAPIService extends APIInfo {
 
     if (response.statusCode == 200) {
       final parsed = jsonDecode(response.body).cast<Map<String, dynamic>>();
-      print(parsed);
       return parsed
           .map((institutionJson) => Institution.fromJson(institutionJson))
           .toList();

@@ -12,6 +12,7 @@
   - [4.1 Frontend](#41-frontend)
   - [4.2 Backend](#42-backend)
   - [4.3 Database](#43-database)
+  - [4.4 Important DEV notes:](#44-important-dev-notes)
 
 ---
 
@@ -159,4 +160,10 @@ knex migrate:latest
 - When testing the application from the dev branch, remember to run the frontend with the following command: 
 ```
 flutter run -d chrome --dart-define=API_ENDPOINT=https://pladat-staging.herokuapp.com/
+```
+
+- When testing your frontend application and its linking with the backend, make sure to run it with one of the following commands:
+```
+flutter run -d chrome --web-hostname=127.0.0.1 --web-port=8200
+flutter run -d chrome --web-hostname=localhost --web-port=8200
 ```

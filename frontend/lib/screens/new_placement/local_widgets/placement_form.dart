@@ -18,11 +18,25 @@ class _PlacementFormState extends State<PlacementForm> {
   final _formKey = GlobalKey<FormState>();
 
   DateTimeRange dateTimeRange;
+  List<String> majorsList = [];
+  List<String> institutionsList = [];
 
   @override
   void initState() {
-    APIService.route(ENDPOINTS.Majors, "/majors").then((response) {
-      print(response);
+    APIService.route(ENDPOINTS.Majors, "/majors").then((majors) {
+      setState(() {
+        majorsList = majors.map((major) {
+          return major.name;
+        }).toList().cast<String>();
+      });
+    }).catchError((err) {
+      print(err);
+    });
+    APIService.route(ENDPOINTS.Institutions, "/institutions")
+        .then((institutions) {
+       institutionsList = institutions.map((institution) {
+          return institution.name;
+        }).toList().cast<String>();
     }).catchError((err) {
       print(err);
     });
@@ -71,11 +85,13 @@ class _PlacementFormState extends State<PlacementForm> {
                         _createSalaryField(),
                         _createDescriptionField(),
                         Dropdown(
-                            title: 'Preferred Institutions',
-                            items: ['One', 'Two', 'Three', 'Four']),
+                          title: 'Preferred Institutions',
+                          items: institutionsList,
+                        ),
                         Dropdown(
-                            title: 'Preferred Majors',
-                            items: ['One', 'Two', 'Three', 'Four']),
+                          title: 'Preferred Majors',
+                          items: majorsList,
+                        ),
                       ],
                     ),
                   ),
