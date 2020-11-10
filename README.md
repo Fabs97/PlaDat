@@ -154,3 +154,9 @@ DEV_DB_PWD="your_password"
 cd <project_folder>/backend
 knex migrate:latest 
 ```   
+
+### 4.4 Important DEV notes:
+- When testing the application from the dev branch, remember to run the frontend with the following command: 
+```
+flutter run -d chrome --dart-define=API_ENDPOINT=https://pladat-staging.herokuapp.com/
+```
