@@ -6,9 +6,12 @@ const cors = require('cors');
 const port = process.env.PORT || 3000;
 
 const originWhitelist = [
-    'http://127.0.0.1:8200',
-    'http://localhost:8200',
+    'http://127.0.0.1:8200/#/',
+    'http://localhost:8200/#/',
 ];
+
+// DO NOT DEFINE ROUTES ABOVE THIS LINE. THEY WON'T WORK. SIMPLE AS THAT
+app.use(cors()); 
 
 
 app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(APIDocumentation));
@@ -21,17 +24,6 @@ app.use('/', majorRoute);
 app.use('/', institutionRoute);
 
 app.use(express.json());
-
-app.use(cors({
-    origin: (origin, callback) => {
-        if (originWhitelist.indexOf(origin) !== -1) {
-            callback(null, true)
-        } else {
-            callback(new Error('Not allowed by CORS'))
-        }
-    },   
-    optionsSuccessStatus: 200,
-}));
 
 app.get('/', (req, res) => res.send('Hello World!'));
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));

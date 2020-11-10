@@ -4,7 +4,7 @@ module.exports = {
 
   getMajors: () => {
         return database('majors')
-            .select('id', 'name');
+      .select('id', 'name');
   }
 
 
