@@ -54,7 +54,7 @@ class _PlacementFormState extends State<PlacementForm> {
           key: _formKey,
           child: SafeArea(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               mainAxisSize: MainAxisSize.max,
               children: <Widget>[
@@ -96,22 +96,20 @@ class _PlacementFormState extends State<PlacementForm> {
                     ),
                   ),
                 ),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 16.0),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        // Validate will return true if the form is valid, or false if
-                        // the form is invalid.
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 16.0),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      // Validate will return true if the form is valid, or false if
+                      // the form is invalid.
 
-                        if (_formKey.currentState.validate()) {
-                          widget.changeStep(false);
-                          // Process data.
+                      if (_formKey.currentState.validate()) {
+                        widget.changeStep(false);
+                        // Process data.
 
-                        }
-                      },
-                      child: Text('Continue'),
-                    ),
+                      }
+                    },
+                    child: Text('Continue'),
                   ),
                 ),
               ],
