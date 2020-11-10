@@ -25,7 +25,7 @@ class _DropdownState extends State<Dropdown> {
     return SafeArea(
       child: DropdownButton<String>(
         hint: Text(dropdownValue),
-        iconSize: 26,
+        iconSize: 30,
         elevation: 40,
         isExpanded: true,
         style: TextStyle(color: Colors.deepPurple),

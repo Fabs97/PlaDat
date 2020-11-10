@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:date_range_form_field/date_range_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -25,18 +27,24 @@ class _PlacementFormState extends State<PlacementForm> {
   void initState() {
     APIService.route(ENDPOINTS.Majors, "/majors").then((majors) {
       setState(() {
-        majorsList = majors.map((major) {
-          return major.name;
-        }).toList().cast<String>();
+        majorsList = majors
+            .map((major) {
+              return major.name;
+            })
+            .toList()
+            .cast<String>();
       });
     }).catchError((err) {
       print(err);
     });
     APIService.route(ENDPOINTS.Institutions, "/institutions")
         .then((institutions) {
-       institutionsList = institutions.map((institution) {
-          return institution.name;
-        }).toList().cast<String>();
+      institutionsList = institutions
+          .map((institution) {
+            return institution.name;
+          })
+          .toList()
+          .cast<String>();
     }).catchError((err) {
       print(err);
     });
@@ -98,18 +106,21 @@ class _PlacementFormState extends State<PlacementForm> {
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 16.0),
-                  child: ElevatedButton(
+                  child: RaisedButton(
+                    color: Colors.grey[600],
                     onPressed: () {
                       // Validate will return true if the form is valid, or false if
                       // the form is invalid.
-
+                      widget.changeStep(false); //TODO rimmettere nell'if
                       if (_formKey.currentState.validate()) {
-                        widget.changeStep(false);
                         // Process data.
 
                       }
                     },
-                    child: Text('Continue'),
+                    child: Text(
+                      'Continue',
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
                 ),
               ],
