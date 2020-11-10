@@ -1,4 +1,5 @@
 const studentDAO = require('../DAO/studentDAO');
+const skillService = require('../services/skillsService')
 
 module.exports = {
     // Here you can add all kinds of methods that manage or handle data, or do specific tasks. 
@@ -13,13 +14,17 @@ module.exports = {
         return studentDAO.createStudentAccount(studentInfo);
     },
 
-    saveStudentProfile: (studentId, studentInfo) => {
+    saveStudentProfile: async (studentId, studentInfo) => {
         let skills = [];
         if(studentInfo.technicalSkills && studentInfo.technicalSkills.length > 0) {
             skills = [...skills, ...studentInfo.technicalSkills];
         } 
         if(studentInfo.softSkills && studentInfo.softSkills.length > 0) {
             skills = [...skills, ...studentInfo.softSkills];
+        }
+        if(studentInfo.otherSkills && studentInfo.otherSkills.length > 0) {
+            const otherSkills = await skillService.saveOtherSkills(studentInfo.otherSkills);
+            skills = [...skills, ...otherSkills];  
         }
         return studentDAO.setStudentSkills(studentId, skills)    
         // studentDAO.createStudentSkills(studentInfo.otherSkills);
