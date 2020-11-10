@@ -7,7 +7,11 @@ const port = 3000;
 app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(APIDocumentation));
 
 const studentRoute = require("./routes/studentRoute");
+const majorRoute = require("./routes/majorRoute");
+const institutionRoute = require("./routes/institutionRoute");
 app.use('/', studentRoute);
+app.use('/', majorRoute);
+app.use('/', institutionRoute);
 
 app.get('/', (req, res) => res.send('Hello World!'));
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));
