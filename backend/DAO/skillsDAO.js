@@ -12,7 +12,15 @@ module.exports = {
     getOtherSkillIdByName: (name) => {
         return database('skill')
             .select('id')
-            .where(['name', 'type'], [name, 'Other']);
+            .where(['name', 'type'], [name, 'OTHER']);
+    },
+
+    checkIfOtherSkillExists: (name) => {
+
+        return database('skill')
+            .select('id')
+            .where(['name', 'type'], [name, 'OTHER']);
+            
     },
 
     // this adds another skill in the other skill already exists in the db

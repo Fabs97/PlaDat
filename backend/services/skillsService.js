@@ -25,7 +25,7 @@ const self = module.exports = {
     addNewOtherSkillIfNeeded: async (skillName) => {
         let skillID = null;
         // Aida: I commented this because the method is not implemented and it was giving me errors
-        // let skillID = await skillsDAO.checkIfOtherSkillExists(skillName);
+        let skillID = await skillsDAO.checkIfOtherSkillExists(skillName);
         if(skillID == null) {
             skillID = await skillsDAO.addNewOtherSkill(skillName);
         }
