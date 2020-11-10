@@ -8,7 +8,8 @@ const service = require('../services/placementService');
  */
 router.post("/placement/new-placement", async (req, res, next) => {
 
-    newPlacementID = await service.savePlacementPage(req.body);
+    const placementDetails = JSON.parse(req.body);
+    newPlacementID = await service.savePlacementPage(placementDetails);
     res.json(newPlacementID);
 
 });

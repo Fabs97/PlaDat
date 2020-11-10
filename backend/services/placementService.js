@@ -6,8 +6,7 @@ module.exports = {
     // this service forwards the data of a new placement to the dao
     savePlacementPage: async (placementDetails) => {
 
-        const details = JSON.parse(placementDetails);
-        return await placementDAO.createNewPlacement(details);
+        return await placementDAO.createNewPlacement(placementDetails);
 
     },
 

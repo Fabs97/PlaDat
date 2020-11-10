@@ -11,6 +11,7 @@ module.exports = {
             .insert({
                 position: details.position,
                 working_hours: details.workingHours,
+                start_period: details.startPeriod,
                 end_period: details.endPeriod, 
                 salary: details.salary,
                 description_role: details.descriptionRole,
