@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:html' as html;
 import 'package:frontend/screens/new_placement/local_widgets/placement_form.dart';
 import 'package:frontend/screens/new_placement/local_widgets/skills_form.dart';
 

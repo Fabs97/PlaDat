@@ -1,6 +1,9 @@
 import 'package:date_range_form_field/date_range_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:frontend/screens/new_placement/local_widgets/dropdown.dart';
+import 'package:frontend/services/api_service.dart';
+import 'package:frontend/services/api_services/majors_api_service.dart';
 import 'package:intl/intl.dart';
 
 class PlacementForm extends StatefulWidget {
@@ -17,50 +20,86 @@ class _PlacementFormState extends State<PlacementForm> {
   DateTimeRange dateTimeRange;
 
   @override
+  void initState() {
+    APIService.route(ENDPOINTS.Majors, "/majors").then((response) {
+      print(response);
+    }).catchError((err) {
+      print(err);
+    });
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return SizedBox(
       width: size.width * .9,
       height: size.height * .85,
       child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10.0),
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black,
-              blurRadius: 2.0,
-              spreadRadius: 0.0,
-              offset: Offset(2.0, 2.0),
-            ),
-          ],
-        ),
         child: Form(
           key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: <Widget>[
-              _createPlacementField(),
-              _createWorkingHoursField(),
-              _createWorkingPeriodField(),
-              _createSalaryField(),
-              _createDescriptionField(),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 16.0),
-                child: ElevatedButton(
-                  onPressed: () {
-                    // Validate will return true if the form is valid, or false if
-                    // the form is invalid.
-                    widget.changeStep(false);
-                    // if (_formKey.currentState.validate()) {
-                    //   // Process data.
-                    // }
-                  },
-                  child: Text('Continue'),
+          child: SafeArea(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisSize: MainAxisSize.max,
+              children: <Widget>[
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10.0),
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black,
+                        blurRadius: 2.0,
+                        spreadRadius: 0.0,
+                        offset: Offset(2.0, 2.0),
+                      ),
+                    ],
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 20.0,
+                      vertical: 5.0,
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        _createPlacementField(),
+                        _createWorkingHoursField(),
+                        _createWorkingPeriodField(),
+                        _createSalaryField(),
+                        _createDescriptionField(),
+                        Dropdown(
+                            title: 'Preferred Institutions',
+                            items: ['One', 'Two', 'Three', 'Four']),
+                        Dropdown(
+                            title: 'Preferred Majors',
+                            items: ['One', 'Two', 'Three', 'Four']),
+                      ],
+                    ),
+                  ),
                 ),
-              ),
-            ],
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 16.0),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        // Validate will return true if the form is valid, or false if
+                        // the form is invalid.
+
+                        if (_formKey.currentState.validate()) {
+                          widget.changeStep(false);
+                          // Process data.
+
+                        }
+                      },
+                      child: Text('Continue'),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -160,6 +199,7 @@ class _PlacementFormState extends State<PlacementForm> {
       decoration: const InputDecoration(
         hintText: "Try to be as descriptive as possible",
         labelText: "Describe the role's activity",
+        filled: true,
       ),
       maxLines: 4,
       validator: (value) {

@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
-class ListSearch extends StatefulWidget {
+class SkillBox extends StatefulWidget {
   final String title;
 
-  const ListSearch({Key key, this.title}) : super(key: key);
+  const SkillBox({Key key, this.title}) : super(key: key);
 
   @override
-  ListSearchState createState() => ListSearchState();
+  SkillBoxState createState() => SkillBoxState();
 }
 
-class ListSearchState extends State<ListSearch> {
+class SkillBoxState extends State<SkillBox> {
   TextEditingController _textController = TextEditingController();
   static List<String> mainDataList = [
     "Apple",
@@ -68,6 +68,8 @@ class ListSearchState extends State<ListSearch> {
         decoration: InputDecoration(
           suffixIcon: Icon(Icons.search),
           hintText: 'Search Here...',
+          fillColor: Colors.grey[100],
+          filled: true,
         ),
         onChanged: onItemChanged,
       ),

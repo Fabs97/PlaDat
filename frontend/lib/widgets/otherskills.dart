@@ -38,7 +38,7 @@ class OtherListSkillsState extends State<OtherListSkills> {
             spacing: 10.0,
             runSpacing: 5.0,
             children: otherSkillsList.map((skill) {
-              return InputChip(
+              return Chip(
                 label: Text(skill),
               );
             }).toList(),
