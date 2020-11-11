@@ -3,10 +3,13 @@ import 'dart:ui';
 import 'package:date_range_form_field/date_range_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:frontend/models/placement.dart';
 import 'package:frontend/screens/new_placement/local_widgets/dropdown.dart';
 import 'package:frontend/services/api_service.dart';
 import 'package:frontend/services/api_services/majors_api_service.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import 'package:date_range_picker/date_range_picker.dart' as DateRagePicker;
 
 class PlacementForm extends StatefulWidget {
   final Function(bool) changeStep;
@@ -53,6 +56,8 @@ class _PlacementFormState extends State<PlacementForm> {
 
   @override
   Widget build(BuildContext context) {
+    final placement = Provider.of<Placement>(context);
+    print(placement.toString());
     final size = MediaQuery.of(context).size;
     return SizedBox(
       width: size.width * .9,
@@ -87,11 +92,11 @@ class _PlacementFormState extends State<PlacementForm> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        _createPlacementField(),
-                        _createWorkingHoursField(),
-                        _createWorkingPeriodField(),
-                        _createSalaryField(),
-                        _createDescriptionField(),
+                        _createPlacementField(placement),
+                        _createWorkingHoursField(placement),
+                        _createWorkingPeriodField(placement),
+                        _createSalaryField(placement),
+                        _createDescriptionField(placement),
                         Dropdown(
                           title: 'Preferred Institutions',
                           items: institutionsList,
@@ -111,8 +116,8 @@ class _PlacementFormState extends State<PlacementForm> {
                     onPressed: () {
                       // Validate will return true if the form is valid, or false if
                       // the form is invalid.
-                      widget.changeStep(false); //TODO rimmettere nell'if
                       if (_formKey.currentState.validate()) {
+                        widget.changeStep(false);
                         // Process data.
 
                       }
@@ -131,11 +136,17 @@ class _PlacementFormState extends State<PlacementForm> {
     );
   }
 
-  Widget _createPlacementField() {
+  Widget _createPlacementField(Placement placement) {
     return TextFormField(
       decoration: const InputDecoration(
         hintText: 'Placement role',
       ),
+      initialValue: placement.position ?? '',
+      onChanged: (value) {
+        setState(() {
+          placement.position = value;
+        });
+      },
       validator: (value) {
         if (value.isEmpty) {
           return 'Please enter a placement role';
@@ -145,12 +156,18 @@ class _PlacementFormState extends State<PlacementForm> {
     );
   }
 
-  Widget _createWorkingHoursField() {
+  Widget _createWorkingHoursField(Placement placement) {
     return TextFormField(
       decoration: const InputDecoration(
         labelText: 'Working hours per week',
         hintText: 'Insert only digits 0-9',
       ),
+      initialValue: placement.workingHours?.toString(),
+      onChanged: (value) {
+        setState(() {
+          placement.workingHours = int.parse(value);
+        });
+      },
       keyboardType: TextInputType.number,
       inputFormatters: [
         FilteringTextInputFormatter.digitsOnly,
@@ -166,40 +183,42 @@ class _PlacementFormState extends State<PlacementForm> {
     );
   }
 
-  Widget _createWorkingPeriodField() {
-    return SafeArea(
-      child: DateRangeField(
-        context: context,
-        decoration: InputDecoration(
-          labelText: "Date Range",
-          prefixIcon: Icon(Icons.date_range),
-          hintText: "Please select a start and end date",
-          // border: OutlineInputBorder(),
-          contentPadding: EdgeInsets.symmetric(horizontal: 0),
-        ),
-        initialValue: DateTimeRange(
-          start: DateTime.now(),
-          end: DateTime.now(),
-        ),
-        dateFormat: DateFormat('dd/MM/yyyy'),
-        validator: (value) {
-          if (value.start.isBefore(DateTime.now())) {
-            return "Please enter a valid date";
-          }
-          return null;
-        },
-        onSaved: (value) {
-          setState(() {
-            print(dateTimeRange);
-            dateTimeRange = value;
-            print(dateTimeRange);
-          });
-        },
+  void _openDatePicker(Placement placement) async {
+    final List<DateTime> picked = await DateRagePicker.showDatePicker(
+      context: context,
+      initialFirstDate: placement.startPeriod ?? DateTime.now(),
+      initialLastDate: placement.endPeriod ??
+          (new DateTime.now()).add(new Duration(days: 7)),
+      firstDate: DateTime.now(),
+      lastDate: (DateTime.now()).add(Duration(days: 365 * 100)),
+    );
+    if (picked != null && picked.length == 2) {
+      setState(() {
+        // picked is always ordered with the smaller one coming at index 0
+        placement.startPeriod = picked[0];
+        placement.endPeriod = picked[1];
+      });
+    }
+  }
+
+  Widget _createWorkingPeriodField(Placement placement) {
+    final formatter = DateFormat('dd/MMM/yyyy');
+    return TextFormField(
+      onTap: () => _openDatePicker(placement),
+      decoration: InputDecoration(
+        // prefixIcon: IconButton(
+        //   icon: Icon(Icons.calendar_today_rounded),
+        //   onPressed: () => _openDatePicker(placement),
+        // ),
+        hintText: placement.startPeriod != null && placement.endPeriod != null
+            ? "${formatter.format(placement.startPeriod)} - ${formatter.format(placement.endPeriod)} "
+            : "Working period",
       ),
+      readOnly: true,
     );
   }
 
-  Widget _createSalaryField() {
+  Widget _createSalaryField(Placement placement) {
     return TextFormField(
       decoration: const InputDecoration(
         labelText: 'Salary per month',
@@ -210,6 +229,12 @@ class _PlacementFormState extends State<PlacementForm> {
       inputFormatters: [
         FilteringTextInputFormatter.digitsOnly,
       ],
+      initialValue: placement.salary?.toString(),
+      onChanged: (value) {
+        setState(() {
+          placement.salary = int.parse(value);
+        });
+      },
       validator: (value) {
         if (value.isEmpty) {
           return 'Please enter a salary';
@@ -219,13 +244,19 @@ class _PlacementFormState extends State<PlacementForm> {
     );
   }
 
-  Widget _createDescriptionField() {
+  Widget _createDescriptionField(Placement placement) {
     return TextFormField(
       decoration: const InputDecoration(
         hintText: "Try to be as descriptive as possible",
         labelText: "Describe the role's activity",
         filled: true,
       ),
+      initialValue: placement.description ?? '',
+      onChanged: (value) {
+        setState(() {
+          placement.description = value;
+        });
+      },
       maxLines: 4,
       validator: (value) {
         if (value.isEmpty) {

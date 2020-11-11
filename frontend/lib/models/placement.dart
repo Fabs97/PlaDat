@@ -1,22 +1,29 @@
 import 'package:flutter/material.dart';
 
-class Placement {
-  final String id;
-  final String role;
-  final int hours;
-  final DateTimeRange period;
-  final int salary;
-  final String description;
-  // final String institutions;
-  // final String majors;
+class Placement extends ChangeNotifier {
+  int id;
+  String position;
+  int workingHours;
+  DateTime startPeriod;
+  DateTime endPeriod;
+  int salary;
+  String description;
+  String institution;
+  String major;
 
-  // TODO: required fields must be chosen
   Placement(
-    this.role,
-    this.hours,
-    this.period,
-    this.salary, {
-    this.id,
-    this.description,
-  });
+      {this.id,
+      this.position,
+      this.workingHours,
+      this.startPeriod,
+      this.endPeriod,
+      this.salary,
+      this.description,
+      this.institution,
+      this.major});
+
+  @override
+  String toString() {
+    return "$id:$position:$workingHours:$startPeriod";
+  }
 }

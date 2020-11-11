@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/models/placement.dart';
 import 'package:frontend/widgets/otherskills.dart';
 import 'package:frontend/widgets/skillsbox.dart';
+import 'package:provider/provider.dart';
 
 class SkillsForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final placement = Provider.of<Placement>(context);
+    print(placement.toString());
     final size = MediaQuery.of(context).size;
     return SizedBox(
       width: size.width * .9,
