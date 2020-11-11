@@ -11,9 +11,13 @@ class CustomDrawer {
               color: Colors.blue,
             ),
           ),
+          // ListTile(
+          //   title: Text("Create placement"),
+          //   onTap: () => Navigator.pushNamed(context, "/new-placement"),
+          // ),
           ListTile(
-            title: Text("Create placement"),
-            onTap: () => Navigator.pushNamed(context, "/new-placement"),
+            title: Text("Students list"),
+            onTap: () => Navigator.pushNamed(context, "/student-list"),
           ),
         ],
       ),
