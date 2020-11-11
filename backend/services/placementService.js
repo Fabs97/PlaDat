@@ -17,4 +17,10 @@ module.exports = {
 
     },
 
+    getAllPlacementsIds: async () => {
+
+        return await placementDAO.getAllPlacementsIds();
+
+    },
+
 };

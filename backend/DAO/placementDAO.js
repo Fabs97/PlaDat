@@ -17,7 +17,7 @@ module.exports = {
                 description_role: details.descriptionRole,
                 institution: details.institution, 
                 major: details.major
-            }, ['id']);
+            }, ['id', 'position', 'working_hours', 'start_period', 'end_period', 'salary', 'description_role', 'institution', 'major']);
 
     },
 
@@ -36,6 +36,13 @@ module.exports = {
                 'major')
             .where('id', id);
 
+    },
+
+    getAllPlacementsIds: () => {
+        return database('placements')
+            .select('id');
     }
+
+    
 
 }; 
