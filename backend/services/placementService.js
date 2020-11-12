@@ -1,5 +1,7 @@
 
 const placementDAO = require('../DAO/placementDAO');
+//This line is needed when integrated with the skill module
+//const skillService = require('../services/skillService');
 
 module.exports = {
 
@@ -33,7 +35,8 @@ module.exports = {
             newSkills = [...newSkills, ...placementInfos.softSkills];
         }
         if(placementInfos.otherSkills && placementInfos.otherSkills.length > 0) {
-            const otherSkills = await skillService.saveOtherSkills(placementInfos.otherSkills);
+            //this module is needed when integrated with the skill module
+            //const otherSkills = await skillService.saveOtherSkills(placementInfos.otherSkills);
             newSkills = [...newSkills, ...otherSkills];  
         }
         return placementDAO.setPlacementSkills(placementId, newSkills)  

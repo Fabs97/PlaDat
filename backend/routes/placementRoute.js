@@ -1,6 +1,6 @@
 const router = require('express').Router();
 
-const service = require('../services/placementService');
+const placementService = require('../services/placementService');
 
 /* This API gets a JSON in the body of the request that contain the information about the new placemen
  * This information is supposed to be collected by the frontend and sent when the user click the "publish the placement" button
@@ -8,7 +8,7 @@ const service = require('../services/placementService');
  */
 router.post("/placement/new-placement", async (req, res, next) => {
 
-    newPlacement = await service.savePlacementPage(req.body);
+    newPlacement = await placementService.savePlacementPage(req.body);
     res.json(newPlacement);
 
 });
@@ -18,21 +18,24 @@ router.post("/placement/new-placement", async (req, res, next) => {
 // id, position, workingHours, startPeriod, endPeriod, salary, descriptionRole, institution, major 
 router.get('/placement/:id', async (req, res, next) => {
 
-    const placement = await service.getPlacementById(req.params.id); 
+    const placement = await placementService.getPlacementById(req.params.id); 
     res.json(placement);
 
 });
 
+
+// this api return all the ids of all the placements
 router.get('/placement', async (req, res, next) => {
 
-    const placements = await service.getAllPlacementsIds();
+    const placements = await placementService.getAllPlacementsIds();
     res.json(placements);
 
 });
 
+// this api makes you add skills to the placement knowing its id
 router.post('/placement/:id/add-skills', async (req, res, next) => {
 
-    const skillsToPlacement = await service.addSkillsToPlacement(req.params.id, req.body);
+    const skillsToPlacement = await placementService.addSkillsToPlacement(req.params.id, req.body);
     res.json(skillsToPlacement); 
 
 });
