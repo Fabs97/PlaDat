@@ -6,18 +6,14 @@ module.exports = {
     // This creates a new placement in the database 
     createNewPlacement: (details) => {
 
-        const workingHs = parseInt(details.workingHours);
-        const salary = parseInt(details.salary);
-        
-    
         return database('placements')
             .returning()
             .insert({
                 position: details.position,
-                working_hours: workingHs,
+                working_hours: details.workingHours,
                 start_period: details.startPeriod,
                 end_period: details.endPeriod, 
-                salary: salary,
+                salary: details.salary,
                 description_role: details.descriptionRole,
                 institution: details.institution, 
                 major: details.major
