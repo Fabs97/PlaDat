@@ -45,7 +45,7 @@ module.exports = {
             description_role: newPlacement[0].description_role,
             institution: newPlacement[0].institution, 
             major: newPlacement[0].major,
-            skills: newSkills
+            skills: placementDetails.skills
         }
         return placementResult;
     },
