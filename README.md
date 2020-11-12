@@ -147,6 +147,7 @@ DEV_DB_NAME="name_of_your_database"
 DEV_DB_USR="your_username"
 DEV_DB_PORT="port_of_your_database"
 DEV_DB_PWD="your_password"
+NODE_ENV="development" #do not change this
 
 ```
    3. Check that everything is correct by doing the first migration:
