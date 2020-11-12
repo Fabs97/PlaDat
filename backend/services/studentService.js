@@ -27,6 +27,5 @@ module.exports = {
             skills = [...skills, ...otherSkills];  
         }
         return studentDAO.setStudentSkills(studentId, skills)    
-        // studentDAO.createStudentSkills(studentInfo.otherSkills);
     }
 };

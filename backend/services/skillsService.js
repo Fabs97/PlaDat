@@ -23,20 +23,16 @@ const self = module.exports = {
 
     // This function check if the other skill already exist in the db adn adds it if needed, it returns the skill Id
     addNewOtherSkillIfNeeded: async (skillName) => {
-        let skillID = null;
-        // Aida: I commented this because the method is not implemented and it was giving me errors
         let skillID = await skillsDAO.checkIfOtherSkillExists(skillName);
-        if(skillID == null) {
+        if(!skillID) {
             skillID = await skillsDAO.addNewOtherSkill(skillName);
         }
-        return skillID[0];
+        return skillID;
         
     },
 
     // this look in the db for a skill, known the name and type
     getSkillByNameAndType: async (skillName, skillType) => {
-
         return await skillsDAO.getSkillByNameAndType(skillName, skillType);
-
     }
 };

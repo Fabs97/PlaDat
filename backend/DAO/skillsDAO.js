@@ -15,30 +15,23 @@ module.exports = {
             .where(['name', 'type'], [name, 'OTHER']);
     },
 
-    checkIfOtherSkillExists: (name) => {
-
-        return database('skill')
+    checkIfOtherSkillExists: async (name) => {
+        let result = await database('skill')
             .select('id')
-            .where(['name', 'type'], [name, 'OTHER']);
-            
+            .where('name', name)
+            .andWhere('type', 'OTHER');
+        return result [0];
     },
 
     // this adds another skill in the other skill already exists in the db
-    addNewOtherSkill: (name) => {
-        //Aida: I removed the creating of the id because it didn't work when I was trying 
-        // to save other skills - the id is created incrememntally by Postgres, so we should 
-        //just igore it when we create a new entry in the DB
-
-        // I assumed the id are assigned in numerical order, I am going to check later/fix it
-        return database('skill')
+    addNewOtherSkill: async (name) => {
+        let result = await database('skill')
             .returning()
             .insert({
                 name: name, 
                 type: 'OTHER'
                 }, ['id']);
-        // return newID;
-        // I commented this return because we usually return the result of the query, and we 
-        // have to put in the query what value we want to get as return (in here, it's the id)
+        return result[0];
     },
 
     // this look for a skill, known the name and the type

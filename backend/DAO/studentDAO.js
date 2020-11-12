@@ -29,7 +29,14 @@ module.exports = {
         return new Promise(async (resolve, reject) => {
             let studentToSkills = []
             for(let i=0, len=skills.length; i<len; i++) {
+
                 let result = await database('student_has_skills')
+                    .select()
+                    .where('student_id', studentId)
+                    .andWhere('skill_id', skills[i].id);
+
+                if(result.length == 0) {
+                    result = await database('student_has_skills')
                     .returning()
                     .insert({
                         student_id: studentId,
@@ -37,8 +44,9 @@ module.exports = {
                         }, ['student_id', 'skill_id'])
                         .catch(error => {
                             console.log(error);  
-                        })
-                    
+                        });
+                }
+                 
                 if(result) {
                     studentToSkills.push({
                         student: result[0].student_id,
