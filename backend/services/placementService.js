@@ -1,6 +1,6 @@
 
 const placementDAO = require('../DAO/placementDAO');
-const skillService = require('../services/skillsService');
+const skillService = require('./skillsService');
 
 module.exports = {
 
