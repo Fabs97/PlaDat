@@ -32,12 +32,5 @@ router.get('/placement', async (req, res, next) => {
 
 });
 
-// this api makes you add skills to the placement knowing its id
-router.post('/placement/:id/add-skills', async (req, res, next) => {
-
-    const skillsToPlacement = await placementService.addSkillsToPlacement(req.params.id, req.body);
-    res.json(skillsToPlacement); 
-
-});
 
 module.exports = router;

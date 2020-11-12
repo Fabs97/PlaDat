@@ -1,16 +1,9 @@
 
 const placementDAO = require('../DAO/placementDAO');
-//This line is needed when integrated with the skill module
-//const skillService = require('../services/skillService');
+const skillService = require('../services/skillsService');
 
 module.exports = {
 
-    // this service forwards the data of a new placement to the dao
-    savePlacementPage: async (placementDetails) => {
-
-        return await placementDAO.createNewPlacement(placementDetails);
-
-    },
 
     // this service gets the data of a placement from the dao, knowing the placement's id
     getPlacementById: async (placementId) => {
@@ -25,7 +18,11 @@ module.exports = {
 
     },
 
-    addSkillsToPlacement: async (placementId, placementInfos) => {
+    savePlacementPage: async (placementDetails) => {
+
+        let newPlacement = await placementDAO.createNewPlacement(placementDetails);
+
+        let placementInfos = placementDetails.skills;
 
         let newSkills = [];
         if(placementInfos.technicalSkills && placementInfos.technicalSkills.length > 0) {
@@ -35,12 +32,22 @@ module.exports = {
             newSkills = [...newSkills, ...placementInfos.softSkills];
         }
         if(placementInfos.otherSkills && placementInfos.otherSkills.length > 0) {
-            //this module is needed when integrated with the skill module
-            //const otherSkills = await skillService.saveOtherSkills(placementInfos.otherSkills);
+            const otherSkills = await skillService.saveOtherSkills(placementInfos.otherSkills);
             newSkills = [...newSkills, ...otherSkills];  
         }
-        return placementDAO.setPlacementSkills(placementId, newSkills)  
-
+        newSkills = await placementDAO.setPlacementSkills(newPlacement[0].id, newSkills);
+        let placementResult = {
+            position: newPlacement[0].position,
+            working_hours: newPlacement[0].working_ours,
+            start_period: newPlacement[0].start_period,
+            end_period: newPlacement[0].end_period, 
+            salary: newPlacement[0].salary,
+            description_role: newPlacement[0].description_role,
+            institution: newPlacement[0].institution, 
+            major: newPlacement[0].major,
+            skills: newSkills
+        }
+        return placementResult;
     },
 
 
