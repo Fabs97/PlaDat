@@ -1,10 +1,15 @@
 import 'package:frontend/services/api_services/institutions_api_service.dart';
 import 'package:frontend/services/api_services/majors_api_service.dart';
+import 'package:frontend/services/api_services/placement_api_service.dart';
+
+import 'api_services/skills_api_service.dart';
 
 enum ENDPOINTS {
   // add a new endpoint for each new high-level API Service you create
   Majors,
   Institutions,
+  Placement,
+  Skills,
 }
 
 class APIInfo {
@@ -19,13 +24,19 @@ class APIInfo {
 class APIService {
   // This is the first layer of the API Service, when adding the second layer of your API call,
   // create a file inside the services/api_services folder and add the route to the ENDPOINTS enum
-  static Future<dynamic> route(ENDPOINTS endpoint, String subRoute) {
+  static Future<dynamic> route(ENDPOINTS endpoint, String subRoute,
+      {dynamic body, dynamic urlArgs}) {
     try {
       switch (endpoint) {
         case ENDPOINTS.Majors:
           return MajorsAPIService.route(subRoute);
         case ENDPOINTS.Institutions:
           return InstitutionsAPIService.route(subRoute);
+        case ENDPOINTS.Skills:
+          return SkillsAPIService.route(subRoute, urlArgs: urlArgs);
+        case ENDPOINTS.Placement:
+          return PlacementAPIService.route(subRoute,
+              body: body, urlArgs: urlArgs);
         default:
           throw APIException();
       }

@@ -1,6 +1,5 @@
 import 'dart:ui';
 
-import 'package:date_range_form_field/date_range_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:frontend/models/placement.dart';
@@ -57,7 +56,6 @@ class _PlacementFormState extends State<PlacementForm> {
   @override
   Widget build(BuildContext context) {
     final placement = Provider.of<Placement>(context);
-    print(placement.toString());
     final size = MediaQuery.of(context).size;
     return SizedBox(
       width: size.width * .9,
@@ -119,7 +117,6 @@ class _PlacementFormState extends State<PlacementForm> {
                       if (_formKey.currentState.validate()) {
                         widget.changeStep(false);
                         // Process data.
-
                       }
                     },
                     child: Text(
@@ -206,10 +203,6 @@ class _PlacementFormState extends State<PlacementForm> {
     return TextFormField(
       onTap: () => _openDatePicker(placement),
       decoration: InputDecoration(
-        // prefixIcon: IconButton(
-        //   icon: Icon(Icons.calendar_today_rounded),
-        //   onPressed: () => _openDatePicker(placement),
-        // ),
         hintText: placement.startPeriod != null && placement.endPeriod != null
             ? "${formatter.format(placement.startPeriod)} - ${formatter.format(placement.endPeriod)} "
             : "Working period",
