@@ -23,4 +23,22 @@ module.exports = {
 
     },
 
+    addSkillsToPlacement: async (placementId, placementInfos) => {
+
+        let newSkills = [];
+        if(placementInfos.technicalSkills && placementInfos.technicalSkills.length > 0) {
+            newSkills = [...newSkills, ...placementInfos.technicalSkills];
+        } 
+        if(placementInfos.softSkills && placementInfos.softSkills.length > 0) {
+            newSkills = [...newSkills, ...placementInfos.softSkills];
+        }
+        if(placementInfos.otherSkills && placementInfos.otherSkills.length > 0) {
+            const otherSkills = await skillService.saveOtherSkills(placementInfos.otherSkills);
+            newSkills = [...newSkills, ...otherSkills];  
+        }
+        return placementDAO.setPlacementSkills(placementId, newSkills)  
+
+    },
+
+
 };

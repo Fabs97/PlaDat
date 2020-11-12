@@ -8,8 +8,8 @@ const service = require('../services/placementService');
  */
 router.post("/placement/new-placement", async (req, res, next) => {
 
-    newPlacementID = await service.savePlacementPage(req.body);
-    res.json(newPlacementID);
+    newPlacement = await service.savePlacementPage(req.body);
+    res.json(newPlacement);
 
 });
 
@@ -27,6 +27,13 @@ router.get('/placement', async (req, res, next) => {
 
     const placements = await service.getAllPlacementsIds();
     res.json(placements);
+
+});
+
+router.post('/placement/:id/add-skills', async (req, res, next) => {
+
+    const skillsToPlacement = await service.addSkillsToPlacement(req.params.id, req.body);
+    res.json(skillsToPlacement); 
 
 });
 

@@ -41,8 +41,35 @@ module.exports = {
     getAllPlacementsIds: () => {
         return database('placements')
             .select('id');
-    }
+    },
 
-    
+    setPlacementSkills: (id, skills) => {
+
+        id = parseInt(id);
+        return new Promise(async (resolve, reject) => {
+            let placementToSkills = []
+            for(let i=0, len=skills.length; i<len; i++) {
+                let result = await database('placement_has_skills')
+                    .returning()
+                    .insert({
+                        placement_id: id,
+                        skill_id: skills[i].id
+                        }, ['placement_id', 'skill_id'])
+                        .catch(error => {
+                            console.log(error);  
+                        })
+                    
+                if(result) {
+                    placementToSkills.push({
+                        placement: result[0].placement_id,
+                        skill: result[0].skill_id
+                    })
+                }
+                
+            }
+            resolve(placementToSkills);
+        });
+
+    },
 
 }; 
