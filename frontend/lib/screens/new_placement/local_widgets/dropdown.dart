@@ -54,7 +54,9 @@ class _DropdownState extends State<Dropdown> {
         onSaved: (value) {
           if (value == null) return;
           setState(() {
-            widget._itemsChosen = value;
+            widget._itemsChosen = widget._items
+                .where((element) => value.contains(element.name))
+                .toList();
           });
         },
       ),
