@@ -12,6 +12,7 @@
   - [4.1 Frontend](#41-frontend)
   - [4.2 Backend](#42-backend)
   - [4.3 Database](#43-database)
+  - [4.4 Important DEV notes:](#44-important-dev-notes)
 
 ---
 
@@ -147,6 +148,7 @@ DEV_DB_NAME="name_of_your_database"
 DEV_DB_USR="your_username"
 DEV_DB_PORT="port_of_your_database"
 DEV_DB_PWD="your_password"
+NODE_ENV="development" #do not change this
 
 ```
    3. Check that everything is correct by doing the first migration:
@@ -154,3 +156,15 @@ DEV_DB_PWD="your_password"
 cd <project_folder>/backend
 knex migrate:latest 
 ```   
+
+### 4.4 Important DEV notes:
+- When testing the application from the dev branch, remember to run the frontend with the following command: 
+```
+flutter run -d chrome --dart-define=API_ENDPOINT=https://pladat-staging.herokuapp.com/
+```
+
+- When testing your frontend application and its linking with the backend, make sure to run it with one of the following commands:
+```
+flutter run -d chrome --web-hostname=127.0.0.1 --web-port=8200
+flutter run -d chrome --web-hostname=localhost --web-port=8200
+```

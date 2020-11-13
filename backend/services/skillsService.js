@@ -34,5 +34,9 @@ const self = module.exports = {
     // this look in the db for a skill, known the name and type
     getSkillByNameAndType: async (skillName, skillType) => {
         return await skillsDAO.getSkillByNameAndType(skillName, skillType);
+    },
+
+    getSkillByType: async (skillType) => {
+        return await skillsDAO.getSkillByType(skillType);
     }
 };

@@ -1,31 +1,41 @@
 // Update with your config settings.
-
 require('dotenv').config({ path: './.env' })
 
-module.exports = {
+const environment = process.env.NODE_ENV;
+let DBConnection;
+let seedDirectory;
 
-  development: {
-    client: 'pg',
-    connection: ()=> ({
+switch (environment) {
+  case "staging": {
+    DBConnection = process.env.DATABASE_URL;
+    seedDirectory = "./DB/seeds/staging";
+  }
+  case "production": {
+    DBConnection = process.env.DATABASE_URL;
+    seedDirectory = "./DB/seeds/production";
+    break;
+  }
+  case "development": {
+    DBConnection = ({
       host: process.env.DEV_DB_HOST,
       database: process.env.DEV_DB_NAME,
       user: process.env.DEV_DB_USR,
       port: process.env.DEV_DB_PORT,
       password: process.env.DEV_DB_PWD
-    }),
-    cwd: "./DB/migrations",
-    migrations: {
-      directory: './DB/migrations'
-    }
+    });
+    seedDirectory = "./DB/seeds/development";
+    break;    
+  }
+}
+
+module.exports = {
+  client: 'pg',
+  connection: DBConnection,
+  cwd: "./DB/",
+  migrations: {
+    directory: './DB/migrations'
   },
-
-  // production: {
-  //   client: 'postgresql',
-  //   connection: {
-  //     database: 'my_db',
-  //     user:     'username',
-  //     password: 'password'
-  //   }
-  // }
-
+  seeds: {
+    directory: seedDirectory
+  }
 };
