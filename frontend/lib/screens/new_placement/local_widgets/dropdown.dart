@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:multiselect_formfield/multiselect_formfield.dart';
 
 class Dropdown extends StatefulWidget {
   final String title;
-  final List<String> items;
+  final List<dynamic> items;
+  List<dynamic> _itemsChosen = [];
+
+  List<dynamic> get itemsChosen => _itemsChosen;
 
   Dropdown({this.title, this.items, Key key}) : super(key: key);
 
@@ -23,25 +27,26 @@ class _DropdownState extends State<Dropdown> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: DropdownButton<String>(
-        hint: Text(dropdownValue),
-        iconSize: 30,
-        elevation: 40,
-        isExpanded: true,
-        style: TextStyle(color: Colors.deepPurple),
-        underline: Container(
-          height: 2,
-          color: Colors.grey,
+      child: MultiSelectFormField(
+        chipBackGroundColor: Colors.grey,
+        checkBoxActiveColor: Colors.grey[50],
+        checkBoxCheckColor: Colors.lightBlue,
+        dialogShapeBorder: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(12.0))),
+        title: Text(
+          widget.title,
         ),
-        items: widget.items.map((String value) {
-          return DropdownMenuItem<String>(
-            value: value,
-            child: Text(value),
-          );
-        }).toList(),
-        onChanged: (String newValue) {
+        dataSource: widget.items
+            .map((item) => {'display': item.name, 'value': item.name})
+            .toList(),
+        textField: 'display',
+        valueField: 'value',
+        okButtonLabel: 'OK',
+        cancelButtonLabel: 'CANCEL',
+        onSaved: (value) {
+          if (value == null) return;
           setState(() {
-            dropdownValue = newValue;
+            widget._itemsChosen = value;
           });
         },
       ),
