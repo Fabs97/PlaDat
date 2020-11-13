@@ -51,13 +51,14 @@ module.exports = {
 
         id = parseInt(id);
         return new Promise(async (resolve, reject) => {
-            let placementToSkills = []
-            for(let i=0, len=skills.length; i<len; i++) {
+            let placementToSkills = [];
+            for (let i = 0, len = skills.length; i < len; i++) {
+                const skill = JSON.parse(skills[i]);
                 let result = await database('placement_has_skills')
                     .returning()
                     .insert({
                         placement_id: id,
-                        skill_id: skills[i].id
+                        skill_id: skill.id
                         }, ['placement_id', 'skill_id'])
                         .catch(error => {
                             console.log(error);  
