@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class Skill {
   final int id;
   final String name;
@@ -11,5 +13,13 @@ class Skill {
       name: json["name"] as String,
       type: json["type"] as String,
     );
+  }
+
+  String toJson() {
+    return jsonEncode({
+      "id": this.id,
+      "name": this.name,
+      "type": this.type,
+    });
   }
 }

@@ -6,7 +6,7 @@ class OtherSkills extends StatefulWidget {
 
   OtherSkills({Key key}) : super(key: key);
 
-  Object get otherSkills => null;
+  Object get otherSkills => _otherSkills;
 
   @override
   OtherSkillsState createState() => OtherSkillsState();

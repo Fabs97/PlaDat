@@ -5,10 +5,11 @@ import 'package:frontend/services/api_service.dart';
 class SkillBox extends StatefulWidget {
   final String title;
   final String skillsType;
+  List<Skill> _chosenSkills = [];
 
   SkillBox({@required this.skillsType, this.title, Key key}) : super(key: key);
 
-  Object get chosenSkills => null;
+  Object get chosenSkills => _chosenSkills;
 
   @override
   SkillBoxState createState() => SkillBoxState();
@@ -18,20 +19,19 @@ class SkillBoxState extends State<SkillBox> {
   TextEditingController _textController = TextEditingController();
 
   List<Skill> skills = [];
-  List<Skill> _chosenSkills = [];
   List<Skill> suggestedSkills = [];
 
   _onItemPressed(Skill skill) {
     setState(() {
       suggestedSkills.remove(skill);
-      _chosenSkills.add(skill);
+      widget._chosenSkills.add(skill);
     });
   }
 
   _onItemDeleted(Skill skill) {
     setState(() {
       suggestedSkills.add(skill);
-      _chosenSkills.remove(skill);
+      widget._chosenSkills.remove(skill);
     });
   }
 
@@ -49,8 +49,9 @@ class SkillBoxState extends State<SkillBox> {
   void initState() {
     APIService.route(ENDPOINTS.Skills, "/skills/type",
             urlArgs: widget.skillsType)
-        .then((skills) => setState(() {
-              skills = skills;
+        .then((dynamicSkills) => setState(() {
+              List<Skill> castedSkills = List<Skill>.from(dynamicSkills);
+              skills = castedSkills;
               suggestedSkills = skills?.sublist(0, 1) ?? [];
             }));
     super.initState();
@@ -94,7 +95,7 @@ class SkillBoxState extends State<SkillBox> {
                     direction: Axis.horizontal,
                     spacing: 10.0,
                     runSpacing: 5.0,
-                    children: _chosenSkills.map((skill) {
+                    children: widget._chosenSkills.map((skill) {
                       return Chip(
                         backgroundColor: Colors.grey[600],
                         label: Text(

@@ -162,7 +162,7 @@ class _PlacementFormState extends State<PlacementForm> {
       initialValue: placement.workingHours?.toString(),
       onChanged: (value) {
         setState(() {
-          placement.workingHours = int.parse(value);
+          placement.workingHours = value != null ? int.parse(value) : "";
         });
       },
       keyboardType: TextInputType.number,
@@ -225,7 +225,7 @@ class _PlacementFormState extends State<PlacementForm> {
       initialValue: placement.salary?.toString(),
       onChanged: (value) {
         setState(() {
-          placement.salary = int.parse(value);
+          placement.salary = value != null ? int.parse(value) : "";
         });
       },
       validator: (value) {

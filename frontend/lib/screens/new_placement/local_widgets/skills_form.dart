@@ -57,22 +57,16 @@ class SkillsForm extends StatelessWidget {
   }
 
   void _savePlacementToDB(BuildContext context, Placement placement) async {
+    placement.skills = {
+      "technicalSkills": technicalSkillsBox.chosenSkills,
+      "softSkills": softSkillsBox.chosenSkills,
+      "otherSkills": otherSkills.otherSkills,
+    };
+
     Placement newPlacement = await APIService.route(
         ENDPOINTS.Placement, "/placement/new-placement",
         body: placement);
-
-    var response = await APIService.route(
-      ENDPOINTS.Placement,
-      "/placement/id/add-skills",
-      body: jsonEncode({
-        "technicalSkills": technicalSkillsBox.chosenSkills,
-        "softSkills": softSkillsBox.chosenSkills,
-        "otherSkills": otherSkills.otherSkills,
-      }),
-      urlArgs: newPlacement.id,
-    );
-
-    print(response);
+    print(newPlacement);
 
     Navigator.of(context).popAndPushNamed("/home");
   }

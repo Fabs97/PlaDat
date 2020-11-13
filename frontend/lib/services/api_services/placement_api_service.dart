@@ -9,8 +9,6 @@ class PlacementAPIService extends APIInfo {
     switch (subRoute) {
       case "/placement/new-placement":
         return _postPlacement(subRoute, body);
-      case "/placement/id/add-skills":
-        return _postPlacementAddSkills(subRoute, body, urlArgs);
       default:
         throw PlacementAPIException();
     }
@@ -26,19 +24,6 @@ class PlacementAPIService extends APIInfo {
 
     if (response.statusCode == 200) {
       return Placement.fromJson(jsonDecode(response.body));
-    }
-  }
-
-  static Future<dynamic> _postPlacementAddSkills(
-      String subRoute, String skillsJson, String placementId) async {
-    var response = await http.post(
-      APIInfo.apiEndpoint + "/placement/$placementId/add-skills",
-      headers: {"Content-Type": "application/json"},
-      body: skillsJson,
-    );
-
-    if (response.statusCode == 200) {
-      return true;
     }
   }
 }
