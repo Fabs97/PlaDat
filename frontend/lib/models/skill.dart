@@ -22,4 +22,12 @@ class Skill {
       "type": this.type,
     });
   }
+
+  Map<String, dynamic> toJsonMap() {
+    return {
+      "id": this.id,
+      "name": this.name,
+      "type": this.type,
+    };
+  }
 }

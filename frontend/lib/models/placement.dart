@@ -38,10 +38,13 @@ class Placement extends ChangeNotifier {
       "endPeriod": this.endPeriod.toString(),
       "salary": this.salary,
       "descriptionRole": this.description,
-      "institutions": this.institutions.map((institution) => institution.toJson()).toList(),
-      "majors": this.majors.map((major) => major.toJson()).toList(),
-      "skills": this.skills.map(
-          (key, value) => MapEntry(key, value.map((e) => e.toJson()).toList()))
+      "institutions": this
+          .institutions
+          .map((institution) => institution.toJsonMap())
+          .toList(),
+      "majors": this.majors.map((major) => major.toJsonMap()).toList(),
+      "skills": this.skills.map((key, value) =>
+          MapEntry(key, value.map((e) => e.toJsonMap()).toList()))
     });
   }
 
@@ -54,10 +57,12 @@ class Placement extends ChangeNotifier {
       endPeriod: DateTime.parse(json["end_period"]),
       salary: json["salary"],
       description: json["description_role"],
-      institutions: json["institution"].map((institution) => Institution.fromJson(institution)).toList(),
-      majors: json["major"].map((major) => Major.fromJson(major)).toList(),
+      institutions: json["institutions"]
+          .map((institution) => Institution.fromJson(institution))
+          .toList(),
+      majors: json["majors"].map((major) => Major.fromJson(major)).toList(),
       skills: json["skills"].forEach((key, value) =>
-          MapEntry(key, value.map((skill) => Skill.fromJson(skill)))),
+          value = MapEntry(key, value.map((skill) => Skill.fromJson(skill)))),
     );
   }
 }

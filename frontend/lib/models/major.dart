@@ -19,4 +19,10 @@ class Major {
       "name": this.name,
     });
   }
+  Map<String, dynamic> toJsonMap() {
+    return {
+      "id": this.id,
+      "name": this.name,
+    };
+  }
 }

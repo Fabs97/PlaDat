@@ -3,7 +3,6 @@ import 'dart:convert';
 class Institution {
   final int id;
   final String name;
-  bool chosen = false;
 
   Institution({this.id, this.name});
 
@@ -19,5 +18,12 @@ class Institution {
       "id": this.id,
       "name": this.name,
     });
+  }
+
+  Map<String, dynamic> toJsonMap() {
+    return {
+      "id": this.id,
+      "name": this.name,
+    };
   }
 }
