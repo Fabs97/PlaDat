@@ -21,6 +21,10 @@ module.exports = {
     savePlacementPage: async (placementDetails) => {
 
         let newPlacement = await placementDAO.createNewPlacement(placementDetails);
+        //newPlacement = newPlacement[0];
+
+        newPlacement.institutions = await placementDAO.setPlacementInstitutions(newPlacement.id, placementDetails.institutions);
+        newPlacement.majors = await placementDAO.setPlacementMajors(newPlacement.id, placementDetails.majors);
 
         let placementInfos = placementDetails.skills;
 
@@ -35,19 +39,9 @@ module.exports = {
             const otherSkills = await skillService.saveOtherSkills(placementInfos.otherSkills);
             newSkills = [...newSkills, ...otherSkills];  
         }
-        newSkills = await placementDAO.setPlacementSkills(newPlacement[0].id, newSkills);
-        let placementResult = {
-            position: newPlacement[0].position,
-            working_hours: newPlacement[0].working_ours,
-            start_period: newPlacement[0].start_period,
-            end_period: newPlacement[0].end_period, 
-            salary: newPlacement[0].salary,
-            description_role: newPlacement[0].description_role,
-            institution: newPlacement[0].institution, 
-            major: newPlacement[0].major,
-            skills: placementDetails.skills
-        }
-        return placementResult;
+        newPlacement.skills = await placementDAO.setPlacementSkills(newPlacement.id, newSkills);
+        
+        return newPlacement;
     },
 
 
