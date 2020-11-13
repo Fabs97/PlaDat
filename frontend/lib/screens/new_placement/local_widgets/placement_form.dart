@@ -1,6 +1,5 @@
 import 'dart:ui';
 
-import 'package:date_range_form_field/date_range_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:frontend/models/placement.dart';
