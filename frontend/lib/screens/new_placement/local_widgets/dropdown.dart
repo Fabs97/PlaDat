@@ -3,20 +3,28 @@ import 'package:multiselect_formfield/multiselect_formfield.dart';
 
 class Dropdown extends StatefulWidget {
   final String title;
-  final List<dynamic> items;
+  List<dynamic> _items = [];
   List<dynamic> _itemsChosen = [];
+  _DropdownState state = _DropdownState();
 
   List<dynamic> get itemsChosen => _itemsChosen;
-
-  Dropdown({this.title, this.items, Key key}) : super(key: key);
+  set items(List<dynamic> items) => state.setItems(items);
+  
+  Dropdown({this.title, Key key}) : super(key: key);
 
   @override
-  _DropdownState createState() => _DropdownState();
+  _DropdownState createState() => state;
 }
 
 /// This is the private State class that goes with Dropdown.
 class _DropdownState extends State<Dropdown> {
   String dropdownValue;
+
+  void setItems(List<dynamic> items) {
+    setState(() {
+      widget._items = items;
+    });
+  }
 
   @override
   void initState() {
@@ -36,7 +44,7 @@ class _DropdownState extends State<Dropdown> {
         title: Text(
           widget.title,
         ),
-        dataSource: widget.items
+        dataSource: widget._items
             .map((item) => {'display': item.name, 'value': item.name})
             .toList(),
         textField: 'display',

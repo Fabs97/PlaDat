@@ -24,27 +24,25 @@ class _PlacementFormState extends State<PlacementForm> {
   final _formKey = GlobalKey<FormState>();
 
   DateTimeRange dateTimeRange;
-  Dropdown majorsWidget = null;
-  Dropdown institutionsWidget = null;
+  Dropdown majorsWidget = Dropdown(
+    title: 'Preferred Majors',
+  );
+  Dropdown institutionsWidget = Dropdown(
+    title: 'Preferred Institutions',
+  );
 
   @override
   void initState() {
     APIService.route(ENDPOINTS.Majors, "/majors").then((majors) {
       setState(() {
-        majorsWidget = Dropdown(
-          title: 'Preferred Majors',
-          items: majors,
-        );
+        majorsWidget.items = majors;
       });
     }).catchError((err) {
       print(err);
     });
     APIService.route(ENDPOINTS.Institutions, "/institutions")
         .then((institutions) {
-      institutionsWidget = Dropdown(
-        title: 'Preferred Institutions',
-        items: institutions,
-      );
+      institutionsWidget.items = institutions;
     }).catchError((err) {
       print(err);
     });
