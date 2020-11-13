@@ -1,0 +1,142 @@
+openapi: '3.0.2'
+info:
+  title: PlaDat APIs
+  version: '1.0'
+servers:
+  - url: https://pladat.herokuapp.com/
+    description: Production backend server
+  - url: http://localhost:3000/
+    description: Local development environment
+  
+
+components:
+  schemas:
+    Skills:
+      type: object
+      properties:
+        id:
+          type: integer
+        name: 
+          type: string
+        type:
+          type: string
+          enum:
+            - TECH
+            - SOFT
+            - OTHER
+
+paths:
+  /student/{id}/profile:
+    post:
+      description: Allows users to save additional information to the specified student profile
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - $ref: '#/components/schemas/Skills'
+              type: object
+              example:
+                {
+                  technicalSkills: [
+                    {
+                      id: 1
+                    },
+                    {
+                      id: 2
+                    },
+                  ],
+                  softSkills: [
+                    {
+                      id: 4,
+                    }
+                  ]
+                }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                description: Returns a json from the table matching the student id with the skills ids
+                example: [
+                  {
+                    student: 5,
+                    skill: 1
+                  },
+                  {
+                    student: 5,
+                    skill: 1
+                  },
+                  {
+                    student: 5,
+                    skill: 1
+                  },
+                ]
+  /skills:
+    get: 
+      description: Provides all the skills in the database 
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                description: Returns a json with all the skills in the DB divided by TECH and SOFT
+                type: object
+                properties:
+                  technicalSkills: 
+                    description: All the technical skills in the database
+                    type: array
+                    items:
+                      allOf:
+                        - $ref: '#/components/schemas/Skills'
+                  softSkills: 
+                    description: All the soft skills in the database
+                    type: array
+                    items:
+                      allOf:
+                        - $ref: '#/components/schemas/Skills'
+                example: {
+                  technicalSkills: [
+                    {
+                      id: 4,
+                      name: "JavaScript",
+                      type: "TECH"
+                    },
+                    {
+                      id: 5,
+                      name: "Flutter",
+                      type: "TECH"
+                    },
+                    {
+                      id: 6,
+                      name: "Heroku Management",
+                      type: "TECH"
+                    },
+                  ],
+                  softSkills: [
+                    {
+                      id: 1,
+                      name: "Time Management",
+                      type: "SOFT"
+                    },
+                    {
+                      id: 2,
+                      name: "Team Management",
+                      type: "SOFT"
+                    },
+                    {
+                      id: 3,
+                      name: "Project Management",
+                      type: "SOFT"
+                    },
+                  ]
+                }
