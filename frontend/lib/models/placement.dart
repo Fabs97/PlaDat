@@ -61,8 +61,9 @@ class Placement extends ChangeNotifier {
           .map((institution) => Institution.fromJson(institution))
           .toList(),
       majors: json["majors"].map((major) => Major.fromJson(major)).toList(),
-      skills: json["skills"].forEach((key, value) =>
-          value = MapEntry(key, value.map((skill) => Skill.fromJson(skill)))),
+      skills: json["skills"].forEach((key, value) {
+        value = MapEntry(key, value.map((skill) => Skill.fromJson(skill)));
+      }),
     );
   }
 }
