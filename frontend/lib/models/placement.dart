@@ -61,9 +61,12 @@ class Placement extends ChangeNotifier {
           .map((institution) => Institution.fromJson(institution))
           .toList(),
       majors: json["majors"].map((major) => Major.fromJson(major)).toList(),
-      skills: json["skills"].forEach((key, value) {
-        value = MapEntry(key, value.map((skill) => Skill.fromJson(skill)));
-      }),
+      // ! This is throwing the following exception: 
+      // ! Expected a value of type 'Map<String, dynamic>', but got one of type 'MappedListIterable<dynamic, dynamic>'
+      // ! Fix this when needed
+      // skills: json["skills"].map((entry) {
+      //   entry.value = entry.value.map((skill) => Skill.fromJson(skill)).toList();
+      // }),
     );
   }
 }
