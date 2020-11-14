@@ -27,6 +27,7 @@ dependencies:
   multiselect_formfield: ^0.1.4
   intl: ^0.16.1
   http: ^0.12.2
+  flutter_tindercard: ^0.2.0
 
   provider: ^4.3.2+2
  
