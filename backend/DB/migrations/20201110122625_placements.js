@@ -1,6 +1,7 @@
 
-exports.up = function(knex) {
-    return knex.schema.createTable('placements', (table) => {
+exports.up = async function(knex) {
+    let hasTable = await knex.schema.hasTable('placements')
+    return !hasTable ? knex.schema.createTable('placements', (table) => {
         table.increments();
         table.string("position");
         table.integer("working_hours");
@@ -10,7 +11,7 @@ exports.up = function(knex) {
         table.string("description_role");
         table.string("institution");
         table.string("major");
-    })
+    }) : null;
 };
 
 exports.down = function(knex) {
