@@ -4,6 +4,7 @@ import 'package:frontend/models/student.dart';
 import 'package:frontend/screens/company_student_list/local_widgets/student_card.dart';
 import 'package:frontend/widgets/appbar.dart';
 import 'package:frontend/widgets/drawer.dart';
+import 'package:frontend/widgets/tinder_button.dart';
 
 class StudentCardsList extends StatefulWidget {
   StudentCardsList({Key key}) : super(key: key);
@@ -56,6 +57,12 @@ class _StudentCardsListState extends State<StudentCardsList> {
                 }
               },
             ),
+          ),
+          Row(
+            children: [
+              TinderButton(label: "Discard", cardController: _cardController, discardButton: true),
+              TinderButton(label: "I'm interested", cardController: _cardController, discardButton: false),
+            ],
           )
         ],
       ),
