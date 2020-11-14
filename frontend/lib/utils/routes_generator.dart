@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/main.dart';
-import 'package:frontend/screens/new_placement/new_placement.dart';
 import 'package:frontend/screens/student_placement_list/student_placement_list.dart';
 
 class RoutesGenerator {
@@ -12,13 +11,9 @@ class RoutesGenerator {
         {
           return MaterialPageRoute(builder: (_) => FirstPage());
         }
-      case '/new-placement':
       case '/placement-list':
         {
           return MaterialPageRoute(builder: (_) => PlacementCardsList());
-        }
-        {
-          return MaterialPageRoute(builder: (_) => NewPlacement());
         }
       default:
         {
