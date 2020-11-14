@@ -4,10 +4,10 @@ module.exports = {
     saveChoice: async (choice) => { 
         let previousInteraction = await matchDAO.getPreviousInteraction(choice.studentID, choice.placementID);
         let result = {};
-        if(!previousInteraction.length) {
+        if(!previousInteraction) {
             result = await matchDAO.createInteraction(choice)
         } else {
-            // matchDAO.saveInteraction(previousInteraction, choice);
+            result = await matchDAO.saveInteraction(previousInteraction, choice);
         }
         return result;
     },
