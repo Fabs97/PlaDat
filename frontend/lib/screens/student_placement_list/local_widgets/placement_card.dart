@@ -26,9 +26,9 @@ class PlacementCard extends StatelessWidget {
             _createPlacementDescription(placement.description),
             _createPlacementWorkingInfo(),
             CardSkillsChips(
-                title: "Technical skills", skills: ["Java", "CSS", "HTML", "JavaScript"]),
+                title: "Technical skills", skills: placement.skills["technicalSkills"] ?? []),
             CardSkillsChips(
-                title: "Soft skills", skills: ["Java", "CSS", "HTML", "JavaScript"]),
+                title: "Soft skills", skills: placement.skills["softSkills"] ?? []),
           ],
         ),
       ),

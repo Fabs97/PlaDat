@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/models/skill.dart';
 
 class CardSkillsChips extends StatelessWidget {
   final String title;
-  final List<String> skills;
+  final List<Skill> skills;
 
   const CardSkillsChips({Key key, this.title, this.skills}) : super(key: key);
 
@@ -25,7 +26,7 @@ class CardSkillsChips extends StatelessWidget {
           runSpacing: 10.0,
           children: skills.map((skill) {
             return Chip(
-              label: Text(skill),
+              label: Text(skill.name),
             );
           }).toList(),
         ),
