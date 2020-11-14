@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/screens/new_student/local_widget/skills_form.dart';
 import 'package:frontend/models/student.dart';
+import 'package:frontend/widgets/appbar.dart';
 import 'package:provider/provider.dart';
 
 class NewStudent extends StatefulWidget {
@@ -27,16 +28,7 @@ class _NewStudentState extends State<NewStudent> {
         )
       ],
       child: Scaffold(
-        appBar: AppBar(
-          title: Text(
-            "Create Student Profile",
-            textAlign: TextAlign.center,
-          ),
-          leading: IconButton(
-            onPressed: () => changeStep(true),
-            icon: Icon(Icons.arrow_back),
-          ),
-        ),
+        appBar: CustomAppBar.createAppBar(context, "Student profile"),
         body: Container(
           width: MediaQuery.of(context).size.width,
           child: Column(
