@@ -1,22 +1,72 @@
-class Placement {
-  final int id;
-  final String position;
-  final int workingHours;
-  final DateTime startPeriod;
-  final DateTime endPeriod;
-  final int salary;
-  final String description;
-  final String institution;
-  final String major;
+import 'dart:convert';
 
-  Placement({
-      this.id,
+import 'package:flutter/material.dart';
+import 'package:frontend/models/institution.dart';
+import 'package:frontend/models/major.dart';
+import 'package:frontend/models/skill.dart';
+
+class Placement extends ChangeNotifier {
+  int id;
+  String position;
+  int workingHours;
+  DateTime startPeriod;
+  DateTime endPeriod;
+  int salary;
+  String description;
+  List<dynamic> institutions;
+  List<dynamic> majors;
+  Map<String, dynamic> skills;
+
+  Placement(
+      {this.id,
       this.position,
       this.workingHours,
       this.startPeriod,
       this.endPeriod,
       this.salary,
       this.description,
-      this.institution,
-      this.major});
+      this.institutions,
+      this.majors,
+      this.skills});
+
+  String toJson() {
+    return jsonEncode({
+      "id": this.id,
+      "position": this.position,
+      "workingHours": this.workingHours,
+      "startPeriod": this.startPeriod.toString(),
+      "endPeriod": this.endPeriod.toString(),
+      "salary": this.salary,
+      "descriptionRole": this.description,
+      "institutions": this
+          .institutions
+          .map((institution) => institution.toJsonMap())
+          .toList(),
+      "majors": this.majors.map((major) => major.toJsonMap()).toList(),
+      "skills": this.skills.map((key, value) =>
+          MapEntry(key, value.map((e) => e.toJsonMap()).toList()))
+    });
+  }
+
+  static Placement fromJson(Map<String, dynamic> json) {
+    return Placement(
+      id: json["id"],
+      position: json["position"],
+      workingHours: json["working_hours"],
+      startPeriod: DateTime.parse(json["start_period"]),
+      endPeriod: DateTime.parse(json["end_period"]),
+      salary: json["salary"],
+      description: json["description_role"],
+      institutions: json["institutions"]
+          .map((institution) => Institution.fromJson(institution))
+          .toList(),
+      majors: json["majors"].map((major) => Major.fromJson(major)).toList(),
+      // ! This is throwing the following exception: 
+      // ! Expected a value of type 'Map<String, dynamic>', but got one of type 'MappedListIterable<dynamic, dynamic>'
+      // ! Fix this when needed
+      // skills: json["skills"].map((entry) {
+      //   entry.value = entry.value.map((skill) => Skill.fromJson(skill)).toList();
+      // }),
+    );
+  }
 }
