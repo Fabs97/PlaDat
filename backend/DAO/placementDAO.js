@@ -133,6 +133,11 @@ module.exports = {
 
     },
 
+    getPlacementSkillsByID: (placementID) => {
+        return database('placement_has_skills')
+            .select('skill_id')
+            .where('placement_id',placementID)
+    }
 
 
 }; 

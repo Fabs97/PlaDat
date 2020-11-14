@@ -21,7 +21,6 @@ module.exports = {
     savePlacementPage: async (placementDetails) => {
 
         let newPlacement = await placementDAO.createNewPlacement(placementDetails);
-        //newPlacement = newPlacement[0];
 
         newPlacement.institutions = await placementDAO.setPlacementInstitutions(newPlacement.id, placementDetails.institutions);
         newPlacement.majors = await placementDAO.setPlacementMajors(newPlacement.id, placementDetails.majors);
@@ -44,5 +43,8 @@ module.exports = {
         return newPlacement;
     },
 
+    getPlacementSkills: (placementID) => {
+        return placementDAO.getPlacementSkillsByID(placementID);
+    }
 
 };
