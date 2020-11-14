@@ -15,6 +15,10 @@ class CustomDrawer {
             title: Text("Create placement"),
             onTap: () => Navigator.pushNamed(context, "/new-placement"),
           ),
+          ListTile(
+            title: Text("Create student"),
+            onTap: () => Navigator.pushNamed(context, "/new-student"),
+          ),
         ],
       ),
     );

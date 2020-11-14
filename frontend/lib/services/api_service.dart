@@ -1,11 +1,13 @@
 import 'package:frontend/services/api_services/institutions_api_service.dart';
 import 'package:frontend/services/api_services/majors_api_service.dart';
 import 'package:frontend/services/api_services/placement_api_service.dart';
+import 'package:frontend/services/api_services/students_api_service.dart';
 
 import 'api_services/skills_api_service.dart';
 
 enum ENDPOINTS {
   // add a new endpoint for each new high-level API Service you create
+  Student,
   Majors,
   Institutions,
   Placement,
@@ -28,12 +30,14 @@ class APIService {
       {dynamic body, dynamic urlArgs}) {
     try {
       switch (endpoint) {
+        case ENDPOINTS.Student:
+          return StudentsAPIService.route(subRoute, body: body, urlArgs: urlArgs);
         case ENDPOINTS.Majors:
           return MajorsAPIService.route(subRoute);
         case ENDPOINTS.Institutions:
           return InstitutionsAPIService.route(subRoute);
         case ENDPOINTS.Skills:
-          return SkillsAPIService.route(subRoute, urlArgs: urlArgs);
+          return SkillsAPIService.route(subRoute, urlArgs: urlArgs, body: body);
         case ENDPOINTS.Placement:
           return PlacementAPIService.route(subRoute,
               body: body, urlArgs: urlArgs);
