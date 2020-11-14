@@ -22,10 +22,12 @@ const studentRoute = require("./routes/studentRoute");
 const majorRoute = require("./routes/majorRoute");
 const institutionRoute = require("./routes/institutionRoute");
 const placementRoute = require("./routes/placementRoute");
+const matchRoute = require("./routes/matchRoute");
 app.use('/', studentRoute);
 app.use('/', majorRoute);
 app.use('/', institutionRoute);
 app.use('/', placementRoute);
+app.use('/', matchRoute);
 
 
 
