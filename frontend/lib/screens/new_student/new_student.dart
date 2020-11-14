@@ -44,7 +44,7 @@ class _NewStudentState extends State<NewStudent> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             mainAxisSize: MainAxisSize.max,
             children: [
-              _firstStep ? SkillsForm() : SkillsForm(),
+             SkillsForm(),
             ],
           ),
         ),

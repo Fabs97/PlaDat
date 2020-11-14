@@ -31,13 +31,13 @@ class APIService {
     try {
       switch (endpoint) {
         case ENDPOINTS.Student:
-          return StudentsAPIService.route(subRoute, body: body);
+          return StudentsAPIService.route(subRoute, body: body, urlArgs: urlArgs);
         case ENDPOINTS.Majors:
           return MajorsAPIService.route(subRoute);
         case ENDPOINTS.Institutions:
           return InstitutionsAPIService.route(subRoute);
         case ENDPOINTS.Skills:
-          return SkillsAPIService.route(subRoute, urlArgs: urlArgs);
+          return SkillsAPIService.route(subRoute, urlArgs: urlArgs, body: body);
         case ENDPOINTS.Placement:
           return PlacementAPIService.route(subRoute,
               body: body, urlArgs: urlArgs);

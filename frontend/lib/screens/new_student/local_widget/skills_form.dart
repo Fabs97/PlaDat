@@ -44,7 +44,7 @@ class SkillsForm extends StatelessWidget {
               child: RaisedButton(
                 color: Colors.grey[600],
                 child: Text(
-                  "save",
+                  "SAVE",
                   style: TextStyle(color: Colors.white),
                 ),
                 onPressed: () => _saveStudentToDB(context, student),
@@ -64,10 +64,17 @@ class SkillsForm extends StatelessWidget {
     };
 
     Student newStudent = await APIService.route(
-        ENDPOINTS.Student, "/student",
-        body: student);
-    print(newStudent);
+      ENDPOINTS.Student,
+      "/student",
+      body: student,
+    );
 
+    if (newStudent != null) {
+      dynamic response = await APIService.route(
+          ENDPOINTS.Student, "/student/id/skills",
+          urlArgs: newStudent.id, body: student.skills);
+      print(response.toString());
+    }
     Navigator.of(context).popAndPushNamed("/home");
   }
 }
