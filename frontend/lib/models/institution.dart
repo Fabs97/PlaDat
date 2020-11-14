@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class Institution {
   final int id;
   final String name;
@@ -9,5 +11,19 @@ class Institution {
       id: json["id"] as int,
       name: json["name"] as String,
     );
+  }
+
+  String toJson() {
+    return jsonEncode({
+      "id": this.id,
+      "name": this.name,
+    });
+  }
+
+  Map<String, dynamic> toJsonMap() {
+    return {
+      "id": this.id,
+      "name": this.name,
+    };
   }
 }

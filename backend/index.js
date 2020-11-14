@@ -19,9 +19,9 @@ app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(APIDocumentation));
 app.use(express.json());
 
 const studentRoute = require("./routes/studentRoute");
-const placementRoute = require("./routes/placementRoute");
 const majorRoute = require("./routes/majorRoute");
 const institutionRoute = require("./routes/institutionRoute");
+const placementRoute = require("./routes/placementRoute");
 app.use('/', studentRoute);
 app.use('/', majorRoute);
 app.use('/', institutionRoute);

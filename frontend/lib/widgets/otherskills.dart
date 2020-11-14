@@ -1,18 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/models/skill.dart';
 
-class OtherListSkills extends StatefulWidget {
+class OtherSkills extends StatefulWidget {
+  List<Skill> _otherSkills = [];
+
+  OtherSkills({Key key}) : super(key: key);
+
+  Object get otherSkills => _otherSkills;
+
   @override
-  OtherListSkillsState createState() => OtherListSkillsState();
+  OtherSkillsState createState() => OtherSkillsState();
 }
 
-class OtherListSkillsState extends State<OtherListSkills> {
+class OtherSkillsState extends State<OtherSkills> {
   TextEditingController _textController = TextEditingController();
 
-  List<String> otherSkillsList = [];
-
-  onItemPressed(String skill) {
+  onItemPressed(String skillName) {
     setState(() {
-      otherSkillsList.add(skill);
+      widget._otherSkills.add(Skill(
+        name: skillName,
+        type: "OTHER",
+      ));
     });
   }
 
@@ -56,11 +64,11 @@ class OtherListSkillsState extends State<OtherListSkills> {
                     direction: Axis.horizontal,
                     spacing: 10.0,
                     runSpacing: 5.0,
-                    children: otherSkillsList.map((skill) {
+                    children: widget._otherSkills.map((skill) {
                       return Chip(
                         backgroundColor: Colors.grey[600],
                         label: Text(
-                          skill,
+                          skill.name,
                           style: TextStyle(color: Colors.white),
                         ),
                       );

@@ -1,8 +1,9 @@
 import 'dart:ui';
 
-import 'package:date_range_form_field/date_range_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:frontend/models/institution.dart';
+import 'package:frontend/models/major.dart';
 import 'package:frontend/models/placement.dart';
 import 'package:frontend/screens/new_placement/local_widgets/dropdown.dart';
 import 'package:frontend/services/api_service.dart';
@@ -23,31 +24,25 @@ class _PlacementFormState extends State<PlacementForm> {
   final _formKey = GlobalKey<FormState>();
 
   DateTimeRange dateTimeRange;
-  List<String> majorsList = [];
-  List<String> institutionsList = [];
+  Dropdown majorsWidget = Dropdown(
+    title: 'Preferred Majors',
+  );
+  Dropdown institutionsWidget = Dropdown(
+    title: 'Preferred Institutions',
+  );
 
   @override
   void initState() {
     APIService.route(ENDPOINTS.Majors, "/majors").then((majors) {
       setState(() {
-        majorsList = majors
-            .map((major) {
-              return major.name;
-            })
-            .toList()
-            .cast<String>();
+        majorsWidget.items = majors;
       });
     }).catchError((err) {
       print(err);
     });
     APIService.route(ENDPOINTS.Institutions, "/institutions")
         .then((institutions) {
-      institutionsList = institutions
-          .map((institution) {
-            return institution.name;
-          })
-          .toList()
-          .cast<String>();
+      institutionsWidget.items = institutions;
     }).catchError((err) {
       print(err);
     });
@@ -57,7 +52,6 @@ class _PlacementFormState extends State<PlacementForm> {
   @override
   Widget build(BuildContext context) {
     final placement = Provider.of<Placement>(context);
-    print(placement.toString());
     final size = MediaQuery.of(context).size;
     return SizedBox(
       width: size.width * .9,
@@ -97,14 +91,8 @@ class _PlacementFormState extends State<PlacementForm> {
                         _createWorkingPeriodField(placement),
                         _createSalaryField(placement),
                         _createDescriptionField(placement),
-                        Dropdown(
-                          title: 'Preferred Institutions',
-                          items: institutionsList,
-                        ),
-                        Dropdown(
-                          title: 'Preferred Majors',
-                          items: majorsList,
-                        ),
+                        majorsWidget ?? Container(),
+                        institutionsWidget ?? Container(),
                       ],
                     ),
                   ),
@@ -117,9 +105,9 @@ class _PlacementFormState extends State<PlacementForm> {
                       // Validate will return true if the form is valid, or false if
                       // the form is invalid.
                       if (_formKey.currentState.validate()) {
+                        placement.majors = majorsWidget.itemsChosen;
+                        placement.institutions = institutionsWidget.itemsChosen;
                         widget.changeStep(false);
-                        // Process data.
-
                       }
                     },
                     child: Text(
@@ -165,7 +153,7 @@ class _PlacementFormState extends State<PlacementForm> {
       initialValue: placement.workingHours?.toString(),
       onChanged: (value) {
         setState(() {
-          placement.workingHours = int.parse(value);
+          placement.workingHours = value != null ? int.parse(value) : "";
         });
       },
       keyboardType: TextInputType.number,
@@ -206,10 +194,6 @@ class _PlacementFormState extends State<PlacementForm> {
     return TextFormField(
       onTap: () => _openDatePicker(placement),
       decoration: InputDecoration(
-        // prefixIcon: IconButton(
-        //   icon: Icon(Icons.calendar_today_rounded),
-        //   onPressed: () => _openDatePicker(placement),
-        // ),
         hintText: placement.startPeriod != null && placement.endPeriod != null
             ? "${formatter.format(placement.startPeriod)} - ${formatter.format(placement.endPeriod)} "
             : "Working period",
@@ -232,7 +216,7 @@ class _PlacementFormState extends State<PlacementForm> {
       initialValue: placement.salary?.toString(),
       onChanged: (value) {
         setState(() {
-          placement.salary = int.parse(value);
+          placement.salary = value != null ? int.parse(value) : "";
         });
       },
       validator: (value) {

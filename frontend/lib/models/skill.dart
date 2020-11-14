@@ -1,15 +1,17 @@
 import 'dart:convert';
 
-class Major {
+class Skill {
   final int id;
   final String name;
+  final String type;
 
-  Major({this.id, this.name});
+  Skill({this.id, this.name, this.type});
 
-  factory Major.fromJson(Map<String, dynamic> json) {
-    return Major(
+  factory Skill.fromJson(Map<String, dynamic> json) {
+    return Skill(
       id: json["id"] as int,
       name: json["name"] as String,
+      type: json["type"] as String,
     );
   }
 
@@ -17,12 +19,15 @@ class Major {
     return jsonEncode({
       "id": this.id,
       "name": this.name,
+      "type": this.type,
     });
   }
+
   Map<String, dynamic> toJsonMap() {
     return {
       "id": this.id,
       "name": this.name,
+      "type": this.type,
     };
   }
 }

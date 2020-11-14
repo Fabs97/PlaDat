@@ -1,18 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:multiselect_formfield/multiselect_formfield.dart';
 
 class Dropdown extends StatefulWidget {
   final String title;
-  final List<String> items;
+  List<dynamic> _items = [];
+  List<dynamic> _itemsChosen = [];
+  _DropdownState state = _DropdownState();
 
-  Dropdown({this.title, this.items, Key key}) : super(key: key);
+  List<dynamic> get itemsChosen => _itemsChosen;
+  set items(List<dynamic> items) => state.setItems(items);
+  
+  Dropdown({this.title, Key key}) : super(key: key);
 
   @override
-  _DropdownState createState() => _DropdownState();
+  _DropdownState createState() => state;
 }
 
 /// This is the private State class that goes with Dropdown.
 class _DropdownState extends State<Dropdown> {
   String dropdownValue;
+
+  void setItems(List<dynamic> items) {
+    setState(() {
+      widget._items = items;
+    });
+  }
 
   @override
   void initState() {
@@ -23,25 +35,28 @@ class _DropdownState extends State<Dropdown> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: DropdownButton<String>(
-        hint: Text(dropdownValue),
-        iconSize: 30,
-        elevation: 40,
-        isExpanded: true,
-        style: TextStyle(color: Colors.deepPurple),
-        underline: Container(
-          height: 2,
-          color: Colors.grey,
+      child: MultiSelectFormField(
+        chipBackGroundColor: Colors.grey,
+        checkBoxActiveColor: Colors.grey[50],
+        checkBoxCheckColor: Colors.lightBlue,
+        dialogShapeBorder: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(12.0))),
+        title: Text(
+          widget.title,
         ),
-        items: widget.items.map((String value) {
-          return DropdownMenuItem<String>(
-            value: value,
-            child: Text(value),
-          );
-        }).toList(),
-        onChanged: (String newValue) {
+        dataSource: widget._items
+            .map((item) => {'display': item.name, 'value': item.name})
+            .toList(),
+        textField: 'display',
+        valueField: 'value',
+        okButtonLabel: 'OK',
+        cancelButtonLabel: 'CANCEL',
+        onSaved: (value) {
+          if (value == null) return;
           setState(() {
-            dropdownValue = newValue;
+            widget._itemsChosen = widget._items
+                .where((element) => value.contains(element.name))
+                .toList();
           });
         },
       ),
