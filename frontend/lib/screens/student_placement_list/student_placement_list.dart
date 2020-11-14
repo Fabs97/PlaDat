@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_tindercard/flutter_tindercard.dart';
 import 'package:frontend/models/placement.dart';
 import 'package:frontend/screens/student_placement_list/local_widgets/placement_card.dart';
+import 'package:frontend/services/api_service.dart';
 import 'package:frontend/widgets/appbar.dart';
 import 'package:frontend/widgets/drawer.dart';
 
@@ -14,65 +15,16 @@ class PlacementCardsList extends StatefulWidget {
 
 class _PlacementCardsListState extends State<PlacementCardsList>
     with TickerProviderStateMixin {
-  List<Placement> placements = [
-    Placement(
-      id: 1,
-      position: "Full Stack Dev",
-      workingHours: 20,
-      startPeriod: DateTime.now(),
-      endPeriod: DateTime.now(),
-      salary: 600,
-      description: "Lorem ipsum",
-      institution: "PoliMi",
-      major: "Computer Science",
-    ),
-    Placement(
-      id: 1,
-      position: "Full Stack Dev",
-      workingHours: 20,
-      startPeriod: DateTime.now(),
-      endPeriod: DateTime.now(),
-      salary: 600,
-      description: "Lorem ipsum",
-      institution: "PoliMi",
-      major: "Computer Science",
-    ),
-    Placement(
-      id: 1,
-      position: "Full Stack Dev",
-      workingHours: 20,
-      startPeriod: DateTime.now(),
-      endPeriod: DateTime.now(),
-      salary: 600,
-      description: "Lorem ipsum",
-      institution: "PoliMi",
-      major: "Computer Science",
-    ),
-    Placement(
-      id: 1,
-      position: "Full Stack Dev",
-      workingHours: 20,
-      startPeriod: DateTime.now(),
-      endPeriod: DateTime.now(),
-      salary: 600,
-      description: "Lorem ipsum",
-      institution: "PoliMi",
-      major: "Computer Science",
-    ),
-    Placement(
-      id: 1,
-      position: "Full Stack Dev",
-      workingHours: 20,
-      startPeriod: DateTime.now(),
-      endPeriod: DateTime.now(),
-      salary: 600,
-      description: "Lorem ipsum",
-      institution: "PoliMi",
-      major: "Computer Science",
-    ),
-  ];
+  List<Placement> placements = [];
 
   CardController _cardController;
+  @override
+  void initState() {
+    // TODO: correct the endpoint with the suggestions coming from the matching algorithm
+    APIService.route(ENDPOINTS.Placement, "/placements")
+        .then((placementsList) => placements = placementsList);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
