@@ -43,8 +43,13 @@ module.exports = {
         return newPlacement;
     },
 
-    getPlacementSkills: (placementID) => {
-        return placementDAO.getPlacementSkillsByID(placementID);
+    // getPlacementSkills: (placementID) => {
+    //     return placementDAO.getPlacementSkillsByID(placementID);
+    // }
+
+    getPlacementsForSkills: (skills) => {
+        let skillIDs = skills.map(skill => skill.skill_id);
+        return placementDAO.getPlacementsForSkills(skillIDs);
     }
 
 };

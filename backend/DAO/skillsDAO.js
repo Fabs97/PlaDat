@@ -41,6 +41,11 @@ module.exports = {
             .where(['name', 'type'], [name, type]);
     },
 
+    getStudentSkillsById: (studentID) => {
+        return database('student_has_skills')
+            .select('skill_id')
+            .where('student_id', studentID);
+    }
     
 
 };

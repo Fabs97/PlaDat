@@ -133,11 +133,46 @@ module.exports = {
 
     },
 
-    getPlacementSkillsByID: (placementID) => {
-        return database('placement_has_skills')
-            .select('skill_id')
-            .where('placement_id',placementID)
-    }
+    // getPlacementSkillsByID: (placementID) => {
+    //     return database('placement_has_skills')
+    //         .select('skill_id')
+    //         .where('placement_id',placementID)
+    // }
 
+    getPlacementsForSkills: (skills) => {
+
+        return database('placements AS p')
+            .select(['p.id', 'p.position'])
+            .leftJoin('placement_has_skills AS phs', 'phs.placement_id', 'p.id')
+            .leftJoin(database.raw('(select p.id, count(phs.skill_id) as count_total from placements p join placement_has_skills phs on p.id = phs.placement_id group by p.id) as p2'), 'p.id','p2.id') //here we count the total number of skills for each placement
+            .whereIn('phs.skill_id', skills)
+            .groupBy('p.id')
+            .having(database.raw('count(phs.skill_id) > max(p2.count_total)/2'))
+            .catch((error) => {
+                console.log(error)
+            });
+
+
+        /*
+            RAW SQL FOR INSPIRATION: 
+
+        select p.position
+        from placements p
+        join placement_has_skills phs on p.id = phs.placement_id
+        join (
+            select
+                p.id,
+                count(phs.skill_id) as count_total
+            from placements p
+            join placement_has_skills phs on p.id = phs.placement_id
+            group by p.id
+            )
+            as p2 on p.id = p2.id
+        where phs.skill_id in (2,3,4,5,6,7)
+        group by p.id
+        having count(phs.skill_id) > max(p2.count_total)/2
+
+        */
+    }
 
 }; 

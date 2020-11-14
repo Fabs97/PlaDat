@@ -58,13 +58,15 @@ module.exports = {
             resolve(studentToSkills);
         });
     },
-    getStudentsBySkills: (skillsId) => {
-        return database('student')
-            .select(['student.id', 'student.name'])
-            .leftJoin('student_has_skills AS shs', 'shs.student_id', 'student.id')
-            .whereIn('shs.skill_id', skillsId)
-            .groupBy('student.id')
-            .having(database.raw('count(shs.skill_id) > 2'))
-    }
+    // getStudentsBySkills: (skillsId) => {
+    //     return database('student')
+    //         .select(['student.id', 'student.name'])
+    //         .leftJoin('student_has_skills AS shs', 'shs.student_id', 'student.id')
+    //         .whereIn('shs.skill_id', skillsId)
+    //         .groupBy('student.id')
+    //              
+                //THIS SHOULD BE REPLACED WITH THE 50% CONDITION
+    //         .having(database.raw('count(shs.skill_id) > 2'))
+    // }
 
 };
