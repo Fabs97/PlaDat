@@ -5,4 +5,8 @@ module.exports = {
         const majors = await majorDAO.getMajors();
         return majors;
     },
+
+    getMajorById: async (id) => {
+        return await majorDAO.getMaiorById(id); 
+    },
 };

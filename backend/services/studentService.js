@@ -27,5 +27,9 @@ module.exports = {
             skills = [...skills, ...otherSkills];  
         }
         return studentDAO.setStudentSkills(studentId, skills)    
-    }
+    },
+    // getStudentsBySkills: (skills) => {
+    //     let skillIds = skills.map(skill => skill.skill_id);
+    //     return studentDAO.getStudentsBySkills(skillIds);
+    // },
 };

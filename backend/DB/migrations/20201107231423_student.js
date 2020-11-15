@@ -1,6 +1,7 @@
 
-exports.up = function(knex) {
-    return knex.schema.createTable('student', (table)=>{
+exports.up = async function(knex) {
+    let hasTable = await knex.schema.hasTable('student')
+    return !hasTable ? knex.schema.createTable('student', (table)=>{
         table.increments();
         table.string('name');
         table.string('surname');
@@ -8,7 +9,7 @@ exports.up = function(knex) {
         table.text('password');
         table.text('description');
         table.text('imgurl');
-    })
+    }) : null;
 };
   
 exports.down = function(knex) {
