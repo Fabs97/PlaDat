@@ -1,19 +1,13 @@
-module.exports = {
-    openapi: '3.0.1',
-    info: {
-      version: '1.3.0',
-      title: 'Users',
-      description: 'User management API',
-      termsOfService: 'http://api_url/terms/',
-      contact: {
-        name: 'Wolox Team',
-        email: 'hello@wolox.co',
-        url: 'https://www.wolox.com.ar/'
-      },
-      license: {
-        name: 'Apache 2.0',
-        url: 'https://www.apache.org/licenses/LICENSE-2.0.html'
-      }
-    },
-    /* ... */
-  };
+const fs = require('fs');
+const path = require('path');
+const yaml = require('js-yaml');
+
+try {
+  let fileContents = fs.readFileSync(path.join(__dirname, './documentation.yaml'), 'utf-8');
+  let documentation = yaml.safeLoad(fileContents);
+
+  module.exports = documentation;
+
+} catch (e) {
+  console.error(e);
+}
