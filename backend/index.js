@@ -22,16 +22,18 @@ const studentRoute = require("./routes/studentRoute");
 const majorRoute = require("./routes/majorRoute");
 const institutionRoute = require("./routes/institutionRoute");
 const placementRoute = require("./routes/placementRoute");
+const skillsRoute = require("./routes/skillsRoute");
 const recommendationRoute = require('./routes/recommendationRoute');
+const matchRoute = require('./routes/matchRoute');
 app.use('/', studentRoute);
 app.use('/', majorRoute);
 app.use('/', institutionRoute);
 app.use('/', placementRoute);
-app.use('/', recommendationRoute);
-
-const skillsRoute = require("./routes/skillsRoute");
-const recommendationService = require('./services/recommendationService');
 app.use('/', skillsRoute);
+app.use('/', recommendationRoute);
+app.use('/', matchRoute);
+
+
 
 app.get('/', (req, res) => res.send('Hello World!'));
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));

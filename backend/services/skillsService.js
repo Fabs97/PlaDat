@@ -38,5 +38,9 @@ const self = module.exports = {
 
     getSkillByType: async (skillType) => {
         return await skillsDAO.getSkillByType(skillType);
+    },
+
+    getStudentSkills: (studentID) => {
+        return skillsDAO.getStudentSkillsById(studentID);
     }
 };

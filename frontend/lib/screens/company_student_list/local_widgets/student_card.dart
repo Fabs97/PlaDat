@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/models/placement.dart';
+import 'package:frontend/models/student.dart';
 import 'package:frontend/widgets/card_skills_info.dart';
 
-class PlacementCard extends StatelessWidget {
-  final Placement placement;
-
-  const PlacementCard({Key key, this.placement}) : super(key: key);
+class StudentCard extends StatelessWidget {
+  final Student student;
+  const StudentCard({Key key, this.student}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -22,20 +21,20 @@ class PlacementCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.max,
           children: [
-            _createPlacementTitle(size, Theme.of(context).textTheme),
-            _createPlacementDescription(placement.description),
-            _createPlacementWorkingInfo(),
+            _createStudentTitle(size, Theme.of(context).textTheme),
+            _createStudentDescription("This is a description about me..."),
+            _createStudentInfo(),
             CardSkillsChips(
-                title: "Technical skills", skills: placement.skills["TECH"] ?? []),
+                title: "Technical skills", skills: []),
             CardSkillsChips(
-                title: "Soft skills", skills: placement.skills["SOFT"] ?? []),
+                title: "Soft skills", skills: []),
           ],
         ),
       ),
     );
   }
 
-  Widget _createPlacementTitle(Size size, TextTheme textTheme) {
+  Widget _createStudentTitle(Size size, TextTheme textTheme) {
     return Padding(
       padding: EdgeInsets.symmetric(
         horizontal: 20.0,
@@ -68,17 +67,13 @@ class PlacementCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  placement.position,
+                  "Name Surname",
                   style: textTheme.headline4.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                Text(
-                  "Company name",
-                  style: textTheme.headline6,
-                ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 0.0), // TODO: fix this padding
+                  padding: const EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 0.0),
                   child: Text(
                     "Find out more",
                     style: TextStyle(
@@ -94,55 +89,47 @@ class PlacementCard extends StatelessWidget {
     );
   }
 
-  Widget _createPlacementDescription(String description) {
+  Widget _createStudentDescription(String description) {
     return Text(description);
   }
 
-  Widget _createPlacementWorkingInfo() {
-    final startMonth = placement.startPeriod.month;
-    final endMonth = placement.endPeriod.month;
-    final endYear = placement.endPeriod.year;
-    return Row(
+  Widget _createStudentInfo() {
+    return Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisSize: MainAxisSize.max,
       children: [
-        _createPlacementWorkingInfoBox("Working period", "from $startMonth to $endMonth $endYear"),
-        _createPlacementWorkingInfoBox(
-            "Working hours", "${placement.workingHours} hours a week"),
-        _createPlacementWorkingInfoBox("Salary", "${placement.salary} €"),
+        _createStudentInfoBox("School of Life", "Jan 2020 - July 2022"),
+        _createStudentInfoBox("School of Life", "Jan 2020 - July 2022"),
       ],
     );
   }
 
-  Widget _createPlacementWorkingInfoBox(String title, String subTitle) {
-    return Expanded(
-      flex: 3,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 20.0,
+  Widget _createStudentInfoBox(String title, String subTitle) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        vertical: 10.0,
+      ),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.grey,
         ),
-        child: Container(
-          decoration: BoxDecoration(
-            color: Colors.grey,
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Center(
-                child: Text(
-                  title,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Center(
+              child: Text(
+                title,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
                 ),
               ),
-              Center(
-                child: Text(subTitle),
-              ),
-            ],
-          ),
+            ),
+            Center(
+              child: Text(subTitle),
+            ),
+          ],
         ),
       ),
     );

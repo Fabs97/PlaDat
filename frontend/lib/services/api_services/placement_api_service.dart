@@ -25,7 +25,8 @@ class PlacementAPIService extends APIInfo {
     );
 
     if (response.statusCode == 200) {
-      return Placement.fromJson(jsonDecode(response.body));
+      final placement = Placement.fromJson(jsonDecode(response.body));
+      return placement;
     }
   }
 

@@ -1,6 +1,6 @@
 //You need to import the DB instance in order to use it and make requests
 const database = require('../DB/connection');
-const knexfile = require('../knexfile');
+const connection = require('../DB/connection');
 
 module.exports = {
     // Here we add methods that have to make operation on the database: create, select, delete, etc
