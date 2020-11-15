@@ -45,6 +45,13 @@ module.exports = {
         return database('student_has_skills')
             .select('skill_id')
             .where('student_id', studentID);
+    },
+
+    getSkillById: async (id) => {
+        let result = await database('skill')
+            .select('id', 'name', 'type')
+            .where('id', id);
+        return result[0];
     }
     
 

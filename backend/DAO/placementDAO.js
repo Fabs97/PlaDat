@@ -24,9 +24,9 @@ module.exports = {
     },
 
     // this gets a placement from the db knowing its id
-    getPlacementById: (id) => {
+    getPlacementById: async (id) => {
 
-        return database('placements')
+        let result = await database('placements')
             .select('id',
                 'position',
                 'working_hours',
@@ -35,6 +35,7 @@ module.exports = {
                 'salary',
                 'description_role')
             .where('id', id);
+        return result[0];
 
     },
 
@@ -133,13 +134,13 @@ module.exports = {
 
     },
 
-    // getPlacementSkillsByID: (placementID) => {
-    //     return database('placement_has_skills')
-    //         .select('skill_id')
-    //         .where('placement_id',placementID)
-    // }
+    getPlacementSkillsByID: (placementID) => {
+         return database('placement_has_skills')
+            .select('skill_id')
+             .where('placement_id',placementID)
+    },
 
-    getPlacementsForSkills: (skills) => {
+    getPlacementsForSkills: async (skills) => {
 
         return database('placements AS p')
             .select(['p.id', 'p.position'])
@@ -173,6 +174,18 @@ module.exports = {
         having count(phs.skill_id) > max(p2.count_total)/2
 
         */
-    }
+    }, 
+
+    getPlacementMajorsId: async (id) => {
+        return database('placement_has_major')
+            .select('major_id')
+            .where('placement_id', id);
+    },
+
+    getPlacementInstitutionsId: async (id) => {
+        return database('placement_has_institution')
+            .select('institution_id')
+            .where('placement_id', id);
+    },
 
 }; 

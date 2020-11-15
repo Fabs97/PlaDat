@@ -5,4 +5,8 @@ module.exports = {
         const institutions =  await institutionDAO.getInstitutions();
         return institutions;
     },
+
+    getInstitutionById: async (id) => {
+        return await institutionDAO.getInstitutionById(id);
+    },
 };
