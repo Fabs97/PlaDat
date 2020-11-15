@@ -25,9 +25,9 @@ class StudentCard extends StatelessWidget {
             _createStudentDescription("This is a description about me..."),
             _createStudentInfo(),
             CardSkillsChips(
-                title: "Technical skills", skills: ["Java", "CSS", "HTML", "JavaScript"]),
+                title: "Technical skills", skills: []),
             CardSkillsChips(
-                title: "Soft skills", skills: ["Java", "CSS", "HTML", "JavaScript"]),
+                title: "Soft skills", skills: []),
           ],
         ),
       ),
