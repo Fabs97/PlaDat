@@ -1,7 +1,7 @@
 // Update with your config settings.
 require('dotenv').config({ path: './.env' })
 
-const environment = process.env.NODE_ENV;
+const environment = process.env.PLADAT_ENV;
 let DBConnection;
 let seedDirectory;
 
