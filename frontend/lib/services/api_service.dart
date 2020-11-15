@@ -1,6 +1,7 @@
 import 'package:frontend/services/api_services/institutions_api_service.dart';
 import 'package:frontend/services/api_services/majors_api_service.dart';
 import 'package:frontend/services/api_services/placement_api_service.dart';
+import 'package:frontend/services/api_services/recomendations_api_service.dart';
 import 'package:frontend/services/api_services/students_api_service.dart';
 
 import 'api_services/skills_api_service.dart';
@@ -12,6 +13,7 @@ enum ENDPOINTS {
   Institutions,
   Placement,
   Skills,
+  Recomendations,
 }
 
 class APIInfo {
@@ -40,6 +42,9 @@ class APIService {
           return SkillsAPIService.route(subRoute, urlArgs: urlArgs, body: body);
         case ENDPOINTS.Placement:
           return PlacementAPIService.route(subRoute,
+              body: body, urlArgs: urlArgs);
+        case ENDPOINTS.Recomendations:
+          return RecomendationsAPIService.route(subRoute,
               body: body, urlArgs: urlArgs);
         default:
           throw APIException();
