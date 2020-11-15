@@ -1,6 +1,6 @@
 //You need to import the DB instance in order to use it and make requests
 const database = require('../DB/connection');
-const knexfile = require('../knexfile');
+const connection = require('../DB/connection');
 
 module.exports = {
     // Here we add methods that have to make operation on the database: create, select, delete, etc
@@ -57,6 +57,16 @@ module.exports = {
             }
             resolve(studentToSkills);
         });
-    }
+    },
+    // getStudentsBySkills: (skillsId) => {
+    //     return database('student')
+    //         .select(['student.id', 'student.name'])
+    //         .leftJoin('student_has_skills AS shs', 'shs.student_id', 'student.id')
+    //         .whereIn('shs.skill_id', skillsId)
+    //         .groupBy('student.id')
+    //              
+                //THIS SHOULD BE REPLACED WITH THE 50% CONDITION
+    //         .having(database.raw('count(shs.skill_id) > 2'))
+    // }
 
 };

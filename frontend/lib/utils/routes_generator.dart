@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/main.dart';
+import 'package:frontend/screens/company_student_list/company_student_list.dart';
 import 'package:frontend/screens/new_placement/new_placement.dart';
 import 'package:frontend/screens/new_student/new_student.dart';
+import 'package:frontend/screens/student_placement_list/student_placement_list.dart';
 
 class RoutesGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -11,6 +13,14 @@ class RoutesGenerator {
       case '/home':
         {
           return MaterialPageRoute(builder: (_) => FirstPage());
+        }
+      case '/student-list':
+        {
+          return MaterialPageRoute(builder: (_) => StudentCardsList());
+        }
+      case '/placement-list':
+        {
+          return MaterialPageRoute(builder: (_) => PlacementCardsList());
         }
       case '/new-placement':
         {
