@@ -27,5 +27,10 @@ module.exports = {
             skills = [...skills, ...otherSkills];  
         }
         return studentDAO.setStudentSkills(studentId, skills)    
-    }
+    },
+
+    getStudentsBySkills: async (skills) => {
+        let skillIds = skills.map(skill => skill.skill_id);
+        return await studentDAO.getStudentsBySkills(skillIds);
+    },
 };

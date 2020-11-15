@@ -45,4 +45,8 @@ module.exports = {
     },
 
 
+    getPlacementSkills: async (placementID) => {
+        return await placementDAO.getPlacementSkillsById(placementID);
+    },
+
 };

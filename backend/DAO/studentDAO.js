@@ -57,6 +57,23 @@ module.exports = {
             }
             resolve(studentToSkills);
         });
-    }
+    },
+
+    getStudentsBySkills: async (skillsId) => {
+        let skillsNumber = skillsId.length;
+        let result = await database('student_has_skills')
+            .select('student_id')
+            .whereIn('skill_id', skillsId)
+            
+            .groupBy('student_id')
+                 
+                //THIS SHOULD BE REPLACED WITH THE 50% CONDITION
+            .havingRaw('count(*) >= ?', parseInt(skillsNumber/2))
+            .catch((error) => {
+                console.log(error);
+            });
+        return result;
+    },
+
 
 };

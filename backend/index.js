@@ -22,12 +22,15 @@ const studentRoute = require("./routes/studentRoute");
 const majorRoute = require("./routes/majorRoute");
 const institutionRoute = require("./routes/institutionRoute");
 const placementRoute = require("./routes/placementRoute");
+const recommendationRoute = require('./routes/recommendationRoute');
 app.use('/', studentRoute);
 app.use('/', majorRoute);
 app.use('/', institutionRoute);
 app.use('/', placementRoute);
+app.use('/', recommendationRoute);
 
 const skillsRoute = require("./routes/skillsRoute");
+const recommendationService = require('./services/recommendationService');
 app.use('/', skillsRoute);
 
 app.get('/', (req, res) => res.send('Hello World!'));
