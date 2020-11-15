@@ -93,7 +93,7 @@ module.exports = {
 
 
     getPlacementSkills: async (placementID) => {
-        return await placementDAO.getPlacementSkillsById(placementID);
+        return await placementDAO.getPlacementSkillsByID(placementID);
     },
 
 };

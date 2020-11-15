@@ -4,14 +4,14 @@ const connection = require('../DB/connection');
 
 module.exports = {
     // Here we add methods that have to make operation on the database: create, select, delete, etc
-    getStudentById: (id) => {
+    getStudentById: async (id) => {
         // Using Knex.js library, we are performing ORM (Object Relational Mapping).
         // This helps us not write direct sql queries, but perform basic DB operations using methods. 
         // You can find out more about this one on its website: http://knexjs.org/
         
         // This one is very similar to SQL
         return database('student')
-            .select('id', 'name')
+            .select('id', 'name','surname')
             .where('id', id);
     },
 

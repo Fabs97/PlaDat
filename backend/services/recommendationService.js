@@ -7,7 +7,11 @@ module.exports = {
     //for employers
     getStudentRecommendationsForPlacement: async (placementID) => {   
         let placementSkills = await placementsService.getPlacementSkills(placementID);
-        let students = await studentService.getStudentsBySkills(placementSkills);
+        let studentIds = await studentService.getStudentsBySkills(placementSkills);
+        let students =  [];
+        for(let i = 0; i < studentIds.length; i++) {
+            students[i]= await studentService.getStudentProfile(studentIds[i].student_id);
+        }
         return students;
     },
 

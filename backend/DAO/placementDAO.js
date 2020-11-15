@@ -146,7 +146,7 @@ module.exports = {
             'description_role',
             'major');
     }, 
-    getPlacementSkillsByID: (placementID) => {
+    getPlacementSkillsByID: async (placementID) => {
          return database('placement_has_skills')
             .select('skill_id')
              .where('placement_id',placementID)
