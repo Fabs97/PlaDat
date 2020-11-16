@@ -24,7 +24,7 @@ class RoutesGenerator {
         }
       case '/new-placement':
         {
-          return MaterialPageRoute(builder: (_) => PlacementCardsList());
+          return MaterialPageRoute(builder: (_) => NewPlacement());
         }
       case '/new-student':
         {
