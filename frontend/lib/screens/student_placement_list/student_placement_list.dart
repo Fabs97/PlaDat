@@ -79,23 +79,16 @@ class _PlacementCardsListState extends State<PlacementCardsList>
           Row(
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Flexible(
-                flex: 3,
-                child: TinderButton(
+              TinderButton(
                   label: "Discard",
                   cardController: _cardController,
-                  discardButton: true,
-                ),
-              ),
-              Flexible(
-                flex: 3,
-                child: TinderButton(
+                  discardButton: true),
+              TinderButton(
                   label: "I'm interested",
                   cardController: _cardController,
-                  discardButton: false,
-                ),
-              ),
+                  discardButton: false),
             ],
           )
         ],
