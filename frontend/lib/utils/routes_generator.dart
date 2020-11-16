@@ -12,7 +12,7 @@ class RoutesGenerator {
     switch (settings.name) {
       case '/home':
         {
-          return MaterialPageRoute(builder: (_) => FirstPage());
+          return _createRoute(FirstPage(), settings);
         }
       case '/student-list':
         {
@@ -24,17 +24,21 @@ class RoutesGenerator {
         }
       case '/new-placement':
         {
-          return MaterialPageRoute(builder: (_) => NewPlacement());
+          return _createRoute(NewPlacement(), settings);
         }
       case '/new-student':
         {
           return MaterialPageRoute(builder: (_) => NewStudent());
-        }  
+        }
       default:
         {
           return _errorRoute();
         }
     }
+  }
+
+  static Route<dynamic> _createRoute(Widget screen, RouteSettings settings) {
+    return MaterialPageRoute(builder: (_) => screen, settings: settings);
   }
 
   static Route<dynamic> _errorRoute() {
@@ -49,4 +53,8 @@ class RoutesGenerator {
       );
     });
   }
+}
+
+class Nav {
+  static final navigatorKey = GlobalKey<NavigatorState>();
 }

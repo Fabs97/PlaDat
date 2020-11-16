@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:frontend/utils/routes_generator.dart';
 import 'package:frontend/models/student.dart';
 import 'package:frontend/widgets/otherskills.dart';
 import 'package:frontend/widgets/skillsbox.dart';
@@ -75,6 +76,6 @@ class SkillsForm extends StatelessWidget {
           urlArgs: newStudent.id, body: student.skills);
       print(response.toString());
     }
-    Navigator.of(context).popAndPushNamed("/home");
+    Nav.navigatorKey.currentState.popAndPushNamed("/home");
   }
 }

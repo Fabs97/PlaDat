@@ -8,6 +8,7 @@ import 'package:frontend/models/placement.dart';
 import 'package:frontend/screens/new_placement/local_widgets/dropdown.dart';
 import 'package:frontend/services/api_service.dart';
 import 'package:frontend/services/api_services/majors_api_service.dart';
+import 'package:frontend/utils/routes_generator.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:date_range_picker/date_range_picker.dart' as DateRagePicker;
