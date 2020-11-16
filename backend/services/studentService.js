@@ -1,3 +1,4 @@
+
 const studentDAO = require('../DAO/studentDAO');
 const skillService = require('../services/skillsService')
 
@@ -27,5 +28,16 @@ module.exports = {
             skills = [...skills, ...otherSkills];  
         }
         return studentDAO.setStudentSkills(studentId, skills)    
+    },
+
+    getStudentsBySkills: async (skills) => {
+        let skillIds = skills.map(skill => skill.id);
+        return await studentDAO.getStudentsBySkills(skillIds);
+    },
+
+    getStudentProfile: async (id) => {
+        let profile = await studentDAO.getStudentById(id);
+        profile.skills = await skillService.getStudentSkills(profile.id);
+        return profile;
     }
 };

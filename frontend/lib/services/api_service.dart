@@ -1,8 +1,10 @@
 import 'package:frontend/services/api_services/institutions_api_service.dart';
 import 'package:frontend/services/api_services/majors_api_service.dart';
 import 'package:frontend/services/api_services/placement_api_service.dart';
+import 'package:frontend/services/api_services/recomendations_api_service.dart';
 import 'package:frontend/services/api_services/students_api_service.dart';
 
+import 'api_services/matches_API_service.dart';
 import 'api_services/skills_api_service.dart';
 
 enum ENDPOINTS {
@@ -12,6 +14,8 @@ enum ENDPOINTS {
   Institutions,
   Placement,
   Skills,
+  Recomendations,
+  Matches
 }
 
 class APIInfo {
@@ -31,7 +35,8 @@ class APIService {
     try {
       switch (endpoint) {
         case ENDPOINTS.Student:
-          return StudentsAPIService.route(subRoute, body: body, urlArgs: urlArgs);
+          return StudentsAPIService.route(subRoute,
+              body: body, urlArgs: urlArgs);
         case ENDPOINTS.Majors:
           return MajorsAPIService.route(subRoute);
         case ENDPOINTS.Institutions:
@@ -41,6 +46,11 @@ class APIService {
         case ENDPOINTS.Placement:
           return PlacementAPIService.route(subRoute,
               body: body, urlArgs: urlArgs);
+        case ENDPOINTS.Recomendations:
+          return RecomendationsAPIService.route(subRoute,
+              body: body, urlArgs: urlArgs);
+        case ENDPOINTS.Matches:
+          return MatchesAPIService.route(subRoute, body: body);
         default:
           throw APIException();
       }

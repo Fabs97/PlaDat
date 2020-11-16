@@ -24,9 +24,9 @@ module.exports = {
     },
 
     // this gets a placement from the db knowing its id
-    getPlacementById: (id) => {
+    getPlacementById: async (id) => {
 
-        return database('placements')
+        let result = await database('placements')
             .select('id',
                 'position',
                 'working_hours',
@@ -35,6 +35,7 @@ module.exports = {
                 'salary',
                 'description_role')
             .where('id', id);
+        return result[0];
 
     },
 
@@ -133,6 +134,55 @@ module.exports = {
 
     },
 
+   
+    getPlacementsForSkills: async (skills) => {
 
+        return database('placements AS p')
+            .select(['p.id', 'p.position'])
+            .leftJoin('placement_has_skills AS phs', 'phs.placement_id', 'p.id')
+            .leftJoin(database.raw('(select p.id, count(phs.skill_id) as count_total from placements p join placement_has_skills phs on p.id = phs.placement_id group by p.id) as p2'), 'p.id','p2.id') //here we count the total number of skills for each placement
+            .whereIn('phs.skill_id', skills)
+            .groupBy('p.id')
+            .having(database.raw('count(phs.skill_id) > max(p2.count_total)/2'))
+            .catch((error) => {
+                console.log(error)
+            });
+
+
+        /*
+            RAW SQL FOR INSPIRATION: 
+
+        select p.position
+        from placements p
+        join placement_has_skills phs on p.id = phs.placement_id
+        join (
+            select
+                p.id,
+                count(phs.skill_id) as count_total
+            from placements p
+            join placement_has_skills phs on p.id = phs.placement_id
+            group by p.id
+            )
+            as p2 on p.id = p2.id
+        where phs.skill_id in (2,3,4,5,6,7)
+        group by p.id
+        having count(phs.skill_id) > max(p2.count_total)/2
+
+        */
+    }, 
+
+    getPlacementMajors: async (id) => {
+        return database('majors AS m')
+            .select('m.id', 'm.name')
+            .leftJoin('placement_has_major AS phm', 'm.id', 'phm.major_id')
+            .where('phm.placement_id', id);
+    },
+
+    getPlacementInstitutions: async (id) => {
+        return database('institutions AS i')
+            .select('i.id', 'i.name')
+            .leftJoin('placement_has_institution AS phi', 'i.id', 'phi.institution_id')
+            .where('phi.placement_id', id);
+    },
 
 }; 

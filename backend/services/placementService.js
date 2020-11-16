@@ -1,17 +1,13 @@
 
 const placementDAO = require('../DAO/placementDAO');
 const skillService = require('./skillsService');
+const majorsDAO = require('../DAO/majorDAO');
+const institutionsDAO = require('../DAO/institutionDAO');
+const skillsDAO = require('../DAO/skillsDAO');
 
 module.exports = {
 
-
-    // this service gets the data of a placement from the dao, knowing the placement's id
-    getPlacementById: async (placementId) => {
-
-        return await placementDAO.getPlacementById(placementId);
-
-    },
-
+    
     getAllPlacementsIds: async () => {
 
         return await placementDAO.getAllPlacementsIds();
@@ -21,7 +17,6 @@ module.exports = {
     savePlacementPage: async (placementDetails) => {
 
         let newPlacement = await placementDAO.createNewPlacement(placementDetails);
-        //newPlacement = newPlacement[0];
 
         newPlacement.institutions = await placementDAO.setPlacementInstitutions(newPlacement.id, placementDetails.institutions);
         newPlacement.majors = await placementDAO.setPlacementMajors(newPlacement.id, placementDetails.majors);
@@ -44,5 +39,20 @@ module.exports = {
         return newPlacement;
     },
 
+  
+
+    getPlacementsForSkills: async (skills) => {
+        let skillIDs = skills.map(skill => skill.id);
+        return await placementDAO.getPlacementsForSkills(skillIDs);
+    },
+
+    getPlacementById: async (placementId) => {
+
+        let placement = await placementDAO.getPlacementById(placementId);
+        placement.institutions = await placementDAO.getPlacementInstitutions(placementId);
+        placement.majors = await placementDAO.getPlacementMajors(placementId);
+        placement.skills = await skillsDAO.getPlacementSkills(placementId);
+        return placement;
+    },
 
 };

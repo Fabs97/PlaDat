@@ -1,10 +1,10 @@
 
 exports.seed = function(knex) {
   // Deletes ALL existing entries
-  return knex('skill').del()
+  return knex('skills').del()
     .then(function () {
       // Inserts seed entries
-      return knex('skill').insert([
+      return knex('skills').insert([
         {id: 1, name: 'JavaScript', type: "TECH"},
         {id: 2, name: 'Java', type: "TECH"},
         {id: 3, name: 'C++', type: "TECH"},
