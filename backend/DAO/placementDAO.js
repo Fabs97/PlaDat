@@ -134,18 +134,6 @@ module.exports = {
 
     },
 
-    getPlacements: () => {
-        return database('placements')
-            .select('id',
-            'position',
-            'working_hours',
-            'start_period',
-            'end_period',
-            'salary',
-            'institution',
-            'description_role',
-            'major');
-    }, 
     getPlacementSkillsByID: async (placementID) => {
          return database('placement_has_skills')
             .select('skill_id')

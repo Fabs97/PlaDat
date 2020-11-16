@@ -32,9 +32,4 @@ router.get('/placement', async (req, res, next) => {
 
 });
 
-router.get("/placements", async (req, res, next) => {
-    const placements = await service.getPlacements(req.params.id);
-    res.json(placements);
-
-});
 module.exports = router;
