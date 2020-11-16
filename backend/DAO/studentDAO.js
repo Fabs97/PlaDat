@@ -7,12 +7,14 @@ module.exports = {
     getStudentById: async (id) => {
         // Using Knex.js library, we are performing ORM (Object Relational Mapping).
         // This helps us not write direct sql queries, but perform basic DB operations using methods. 
+        
         // You can find out more about this one on its website: http://knexjs.org/
         
         // This one is very similar to SQL
-        return database('student')
+        let result = await database('student')
             .select('id', 'name','surname')
             .where('id', id);
+        return result[0];
     },
 
     createStudentAccount: (studentInfo) => {
@@ -67,7 +69,6 @@ module.exports = {
             
             .groupBy('student_id')
                  
-                //THIS SHOULD BE REPLACED WITH THE 50% CONDITION
             .havingRaw('count(*) >= ?', parseInt(skillsNumber/2))
             .catch((error) => {
                 console.log(error);

@@ -134,12 +134,7 @@ module.exports = {
 
     },
 
-    getPlacementSkillsByID: async (placementID) => {
-         return database('placement_has_skills')
-            .select('skill_id')
-             .where('placement_id',placementID)
-    },
-
+   
     getPlacementsForSkills: async (skills) => {
 
         return database('placements AS p')
@@ -176,16 +171,18 @@ module.exports = {
         */
     }, 
 
-    getPlacementMajorsId: async (id) => {
-        return database('placement_has_major')
-            .select('major_id')
-            .where('placement_id', id);
+    getPlacementMajors: async (id) => {
+        return database('majors AS m')
+            .select('m.id', 'm.name')
+            .leftJoin('placement_has_major AS phm', 'm.id', 'phm.major_id')
+            .where('phm.placement_id', id);
     },
 
-    getPlacementInstitutionsId: async (id) => {
-        return database('placement_has_institution')
-            .select('institution_id')
-            .where('placement_id', id);
+    getPlacementInstitutions: async (id) => {
+        return database('institutions AS i')
+            .select('i.id', 'i.name')
+            .leftJoin('placement_has_institution AS phi', 'i.id', 'phi.institution_id')
+            .where('phi.placement_id', id);
     },
 
 }; 

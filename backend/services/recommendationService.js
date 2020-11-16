@@ -6,11 +6,12 @@ module.exports = {
 
     //for employers
     getStudentRecommendationsForPlacement: async (placementID) => {   
-        let placementSkills = await placementsService.getPlacementSkills(placementID);
+        let placementSkills = await skillsService.getPlacementSkills(placementID);
         let studentIds = await studentService.getStudentsBySkills(placementSkills);
         let students =  [];
         for(let i = 0; i < studentIds.length; i++) {
-            students[i]= await studentService.getStudentProfile(studentIds[i].student_id);
+            let student = await studentService.getStudentProfile(studentIds[i].student_id);
+            students.push(student);
         }
         return students;
     },
@@ -21,7 +22,8 @@ module.exports = {
         let placementIds = await placementsService.getPlacementsForSkills(studentSkills);
         let placements = [];
         for(let i = 0; i < placementIds.length; i++){
-            placements[i] = await placementsService.getPlacementById(placementIds[i].id);
+            let placement = await placementsService.getPlacementById(placementIds[i].id);
+            placements.push(placement);
         }
         return placements;
     }

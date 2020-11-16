@@ -39,61 +39,20 @@ module.exports = {
         return newPlacement;
     },
 
-    getPlacementSkills: async (placementID) => {
-        return await placementDAO.getPlacementSkillsByID(placementID);
-    },
+  
 
     getPlacementsForSkills: async (skills) => {
-        let skillIDs = skills.map(skill => skill.skill_id);
-        return placementDAO.getPlacementsForSkills(skillIDs);
-    },
-
-    getPlacementMajorsDetails: async  (id) => {
-        let majorIds = await placementDao.getPlacementMajorsId(id);
-        let majors = [];
-        for(i = 0; i < majorIds.length(); i++){
-            majors[i] = await majorsDAO.getMajorById(majorIds[i]);
-        }
-        return majors;
-    },
-
-    getPlacementInstitutionsDetails: async (id) => {
-        let institutionIds = await placementDAO.getPlacementInstitutionsId(id);
-        let institutions = [];
-        for(i = 0; i < institutionIds.length(); i++){
-            institutions[i] = await institutuionsDAO.getInstitututionById(institututionIds[i]);
-        }
-        return institututions;
+        let skillIDs = skills.map(skill => skill.id);
+        return await placementDAO.getPlacementsForSkills(skillIDs);
     },
 
     getPlacementById: async (placementId) => {
 
         let placement = await placementDAO.getPlacementById(placementId);
-        let institutionIds = await placementDAO.getPlacementInstitutionsId(placementId);
-        let institutions = [];
-        for(i = 0;i < institutionIds.length; i++){
-            institutions[i] = await institutionsDAO.getInstitutionById(institutionIds[i].institution_id);
-        }
-        placement.institutions = institutions;
-        let majorIds = await placementDAO.getPlacementMajorsId(placementId);
-        let majors = [];
-        for(i = 0; i < majorIds.length; i++){
-            majors[i] = await majorsDAO.getMajorById(majorIds[i].major_id);
-        }
-        placement.majors = majors;
-        skillIds = await placementDAO.getPlacementSkillsByID(placementId);
-        let skills = [];
-        for(i = 0; i < skillIds.length; i++){
-            skills[i] = await skillsDAO.getSkillById(skillIds[i].skill_id);
-        }
-        placement.skills = skills;
+        placement.institutions = await placementDAO.getPlacementInstitutions(placementId);
+        placement.majors = await placementDAO.getPlacementMajors(placementId);
+        placement.skills = await skillsDAO.getPlacementSkills(placementId);
         return placement;
-    },
-
-
-
-    getPlacementSkills: async (placementID) => {
-        return await placementDAO.getPlacementSkillsByID(placementID);
     },
 
 };
