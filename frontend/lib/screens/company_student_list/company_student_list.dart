@@ -4,6 +4,7 @@ import 'package:frontend/models/student.dart';
 import 'package:frontend/screens/company_student_list/local_widgets/student_card.dart';
 import 'package:frontend/services/api_service.dart';
 import 'package:frontend/widgets/appbar.dart';
+import 'package:frontend/models/match.dart';
 import 'package:frontend/widgets/drawer.dart';
 import 'package:frontend/widgets/tinder_button.dart';
 
@@ -39,7 +40,7 @@ class _StudentCardsListState extends State<StudentCardsList> {
       body: Column(
         children: [
           Container(
-            height: size.height * .9,
+            height: size.height * .8,
             child: students == null
                 ? Center(
                     child: CircularProgressIndicator(),
@@ -59,16 +60,35 @@ class _StudentCardsListState extends State<StudentCardsList> {
                         StudentCard(student: students[index]),
                     cardController: _cardController = CardController(),
                     swipeCompleteCallback: (orientation, index) {
-                      if (orientation == CardSwipeOrientation.LEFT) {
-                        // I don't like this placement
-                        print("I don't like this student");
-                      } else if (orientation == CardSwipeOrientation.RIGHT) {
-                        // I like this placement
-                        print("I like this student");
-                      }
+                      APIService.route(ENDPOINTS.Matches, "/matching",
+                          body: Match(
+                            studentID: students[index].id,
+                            placementID: placementId,
+                            placementAccept:
+                                orientation == CardSwipeOrientation.LEFT
+                                    ? false
+                                    : true,
+                          )).then((match) {
+                        print(match);
+                      });
                     },
                   ),
           ),
+          Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              TinderButton(
+                  label: "Discard",
+                  cardController: _cardController,
+                  discardButton: true),
+              TinderButton(
+                  label: "I'm interested",
+                  cardController: _cardController,
+                  discardButton: false),
+            ],
+          )
         ],
       ),
     );
