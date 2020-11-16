@@ -25,9 +25,9 @@ class StudentCard extends StatelessWidget {
             _createStudentDescription("This is a description about me..."),
             _createStudentInfo(),
             CardSkillsChips(
-                title: "Technical skills", skills: []),
+                title: "Technical skills", skills: student.skills["TECH"] ?? []),
             CardSkillsChips(
-                title: "Soft skills", skills: []),
+                title: "Soft skills", skills: student.skills["SOFT"] ?? []),
           ],
         ),
       ),
@@ -67,7 +67,7 @@ class StudentCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Name Surname",
+                  "${student.name} ${student.surname}",
                   style: textTheme.headline4.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
