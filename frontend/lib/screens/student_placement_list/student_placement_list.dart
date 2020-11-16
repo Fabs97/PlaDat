@@ -42,7 +42,7 @@ class _PlacementCardsListState extends State<PlacementCardsList>
       body: Column(
         children: [
           Container(
-            height: size.height * .9,
+            height: size.height * .8,
             child: placements == null
                 ? Center(
                     child: CircularProgressIndicator(),
@@ -77,6 +77,9 @@ class _PlacementCardsListState extends State<PlacementCardsList>
                   ),
           ),
           Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               TinderButton(
                   label: "Discard",
