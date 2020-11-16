@@ -73,14 +73,6 @@ class _PlacementCardsListState extends State<PlacementCardsList>
                           )).then((match) {
                         print(match);
                       });
-
-                      // if (orientation == CardSwipeOrientation.LEFT) {
-                      //   // I don't like this placement
-                      //   print("I don't like this placement");
-                      // } else if (orientation == CardSwipeOrientation.RIGHT) {
-                      //   // I like this placement
-                      //   print("I like this placement");
-                      // }
                     },
                   ),
           ),

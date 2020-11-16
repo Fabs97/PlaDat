@@ -64,4 +64,9 @@ class Placement extends ChangeNotifier {
       skills: Skill.listFromJson(json["skills"]),
     );
   }
+
+  static List<Placement> listFromJson(String json) {
+    final parsed = jsonDecode(json).cast<Map<String, dynamic>>();
+    return parsed.map((skillsJson) => Placement.fromJson(skillsJson)).toList();
+  }
 }

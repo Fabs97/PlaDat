@@ -4,15 +4,17 @@ const connection = require('../DB/connection');
 
 module.exports = {
     // Here we add methods that have to make operation on the database: create, select, delete, etc
-    getStudentById: (id) => {
+    getStudentById: async (id) => {
         // Using Knex.js library, we are performing ORM (Object Relational Mapping).
         // This helps us not write direct sql queries, but perform basic DB operations using methods. 
+        
         // You can find out more about this one on its website: http://knexjs.org/
         
         // This one is very similar to SQL
-        return database('student')
-            .select('id', 'name')
+        let result = await database('student')
+            .select('id', 'name','surname')
             .where('id', id);
+        return result[0];
     },
 
     createStudentAccount: (studentInfo) => {
@@ -58,15 +60,21 @@ module.exports = {
             resolve(studentToSkills);
         });
     },
-    // getStudentsBySkills: (skillsId) => {
-    //     return database('student')
-    //         .select(['student.id', 'student.name'])
-    //         .leftJoin('student_has_skills AS shs', 'shs.student_id', 'student.id')
-    //         .whereIn('shs.skill_id', skillsId)
-    //         .groupBy('student.id')
-    //              
-                //THIS SHOULD BE REPLACED WITH THE 50% CONDITION
-    //         .having(database.raw('count(shs.skill_id) > 2'))
-    // }
+
+    getStudentsBySkills: async (skillsId) => {
+        let skillsNumber = skillsId.length;
+        let result = await database('student_has_skills')
+            .select('student_id')
+            .whereIn('skill_id', skillsId)
+            
+            .groupBy('student_id')
+                 
+            .havingRaw('count(*) >= ?', parseInt(skillsNumber/2))
+            .catch((error) => {
+                console.log(error);
+            });
+        return result;
+    },
+
 
 };

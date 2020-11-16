@@ -1,14 +1,20 @@
 const skillsService = require('./skillsService');
 const placementsService = require('./placementService');
+const studentService = require('./studentService');
 
 module.exports = {
 
     //for employers
-    // getStudentRecommendationsForPlacement: async (placementID) => {   
-    //     let placementSkills = await placementService.getPlacementSkills(placementID);
-    //     let students = await studentService.getStudentsBySkills(placementSkills);
-    //     return students;
-    // },
+    getStudentRecommendationsForPlacement: async (placementID) => {   
+        let placementSkills = await skillsService.getPlacementSkills(placementID);
+        let studentIds = await studentService.getStudentsBySkills(placementSkills);
+        let students =  [];
+        for(let i = 0; i < studentIds.length; i++) {
+            let student = await studentService.getStudentProfile(studentIds[i].student_id);
+            students.push(student);
+        }
+        return students;
+    },
 
     //for students
     getPlacementRecommendationsForStudent: async (studentID) => {
@@ -16,7 +22,8 @@ module.exports = {
         let placementIds = await placementsService.getPlacementsForSkills(studentSkills);
         let placements = [];
         for(let i = 0; i < placementIds.length; i++){
-            placements[i] = await placementsService.getPlacementById(placementIds[i].id);
+            let placement = await placementsService.getPlacementById(placementIds[i].id);
+            placements.push(placement);
         }
         return placements;
     }
