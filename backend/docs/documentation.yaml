@@ -21,9 +21,46 @@ tags:
     description: All the APIs related to the "placements" table
   - name: Student
     description: All the APIs related to the "student" table
+  - name: Matching
+    description: All the APIs related to the matching algorithm
 
 components:
   schemas:
+    Student:
+      type: object
+      properties:
+        id:
+          type: integer
+        name: 
+          type: string
+        surname: 
+          type: string
+        email: 
+          type: string
+        password: 
+          type: string
+          format: password
+        description: 
+          type: string 
+        imgurl:
+          type: string
+    Match:
+      type: object
+      properties:
+        studentID:
+          type: integer
+        placementID: 
+          type: integer
+        studentAccept: 
+          type: boolean
+        placementAccept:
+          type: boolean
+        status:
+          type: string
+          enum:
+            - ACCEPTED
+            - REJECTED
+            - PENDING
     Placement:
       type: object
       properties:
@@ -72,6 +109,129 @@ components:
             - OTHER
 
 paths:
+  /recommendation/{id}/seePlacements:
+    get:
+      description: Provides all the placements recommendation for the provided student id, based on the algorithm
+      tags:
+        - "Matching"
+      parameters:
+        - in: path
+          required: true
+          name: id
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                anyOf:
+                  - $ref: "#/components/schemas/Student"
+                example:
+                  [
+                    {
+                      id: 1,
+                      name: "Julian",
+                      surname: "Bass",
+                      description: "Researching software development for large-scale systems focusing on multi-national teams and using modern lean and agile methods",
+                      skills: {
+                        technicalSkills: [
+                          {id: 1, name: "Flutter", type: "TECH"},
+                        ],
+                        softSkills: [
+                          {id: 4, name: "Team Management", type: "SOFT"},
+                        ],
+                        otherSkills: [
+                          {id: 7, name: "Skiing", type: "OTHER"},
+                        ]
+                      }
+                    }
+                  ]
+  /recommendation/{id}/seeStudents:
+    get:
+      description: Provides all the students recommendation for the provided placement id, based on the algorithm
+      tags:
+        - "Matching"
+      parameters:
+        - in: path
+          required: true
+          name: id
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                allOf:
+                  - $ref: "#/components/schemas/Placement"
+                example:
+                  [
+                    {
+                      id: 1,
+                      position: "Full stack developer",
+                      working_hours: 20,
+                      start_period: "2020-11-11",
+                      end_period: "2020-11-11",
+                      salary: 600,
+                      description_role: "An internship for you to learn how to be a full stack developer",
+                      majors: [
+                        {id: 1, name: "Computer Science and Engineering"},
+                      ],
+                      institutions: [
+                        {id: 1, name: "Politecnico di Milano"},
+                      ],
+                      skills: {
+                        technicalSkills: [
+                          {id: 1, name: "Flutter", type: "TECH"},
+                        ],
+                        softSkills: [
+                          {id: 4, name: "Team Management", type: "SOFT"},
+                        ],
+                        otherSkills: [
+                          {id: 7, name: "Skiing", type: "OTHER"},
+                        ]
+                      }
+                    }
+                  ]
+  /matching:
+    post:
+      description: Allows users to upsert the provided match to the matches table
+      tags:
+        - "Matching"
+      parameters:
+        - in: query
+          required: true
+          name: Match
+          schema:
+            type: object
+            example: {
+              studentID: 1,
+              placementID: 2,
+              studentAccept: true
+            }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Match"
+                example:
+                  {
+                    studentID: 1,
+                    placementID: 2,
+                    studentAccept: true,
+                    placementAccept: true,
+                    status: "ACCEPTED"
+                  }
   /placement:
     get:
       description: Returns all placement ids in the database 
@@ -301,6 +461,7 @@ paths:
           required: true
           schema:
             type: string
+          example: 1
       requestBody:
         required: true
         content:
@@ -413,6 +574,7 @@ paths:
   /skills/{type}/{name}:
     get:
       description: Returns the skill in the database with the given name and type
+      deprecated: true
       tags:
         - "Skills"
       parameters:
