@@ -63,16 +63,25 @@ module.exports = {
 
     getStudentsBySkills: async (skillsId) => {
         let skillsNumber = skillsId.length;
-        let result = await database('student_has_skills')
+        let studentIDs = await database('student_has_skills')
             .select('student_id')
             .whereIn('skill_id', skillsId)
             
             .groupBy('student_id')
                  
             .havingRaw('count(*) >= ?', parseInt(skillsNumber/2))
+            .as('student_ids')
             .catch((error) => {
                 console.log(error);
             });
+        
+        studentIDs = studentIDs.map(student => student.student_id);
+
+        let result = await database('student as s')
+            .select('s.id', 's.name', 's.surname','s.email','s.password','s.description','s.imgurl')
+            .whereIn('s.id', studentIDs)
+
+
         return result;
     },
 
