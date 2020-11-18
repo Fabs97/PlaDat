@@ -64,7 +64,7 @@ module.exports = {
     getPlacementSkills: async (placementID) => {
         return database('skill AS s')
            .select('s.id', 's.name', 's.type')
-           .leftJoin('placement_has_skills AS phs', 's.id', 'phs.placement_id')
+           .leftJoin('placement_has_skills AS phs', 's.id', 'phs.skill_id')
             .where('phs.placement_id',placementID)
    },
 
