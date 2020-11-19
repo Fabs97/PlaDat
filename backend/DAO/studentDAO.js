@@ -63,16 +63,54 @@ module.exports = {
 
     getStudentsBySkills: async (skillsId) => {
         let skillsNumber = skillsId.length;
-        let result = await database('student_has_skills')
+        let studentIDs = await database('student_has_skills')
             .select('student_id')
             .whereIn('skill_id', skillsId)
             
             .groupBy('student_id')
                  
             .havingRaw('count(*) >= ?', parseInt(skillsNumber/2))
+            .as('student_ids')
             .catch((error) => {
                 console.log(error);
             });
+        
+        studentIDs = studentIDs.map(student => student.student_id);
+
+        let resultTemp = await database('student AS s')
+            .select('s.id', 's.name', 's.surname', 's.email', 's.description', 's.imgurl', 'sk.id AS skill_id', 'sk.name AS skill_name', 'sk.type AS skill_type')
+            .leftJoin('student_has_skills AS shs', 's.id', 'shs.student_id')
+            .leftJoin('skill AS sk', 'shs.skill_id', 'sk.id')
+            .whereIn('s.id', studentIDs)
+            .orderBy('s.id');
+        let result = []
+
+        for(let i = 0; i < resultTemp.length; i++){
+            let prev = result.length-1;
+
+            if(!result[prev] || result[prev].id !== resultTemp[i].id) {
+                result.push({
+                    id: resultTemp[i].id,
+                    name: resultTemp[i].name,
+                    surname: resultTemp[i].surname,
+                    email: resultTemp[i].email,
+                    description: resultTemp[i].description,
+                    skills: [{
+                        id: resultTemp[i].skill_id,
+                        name: resultTemp[i].skill_name,
+                        type: resultTemp[i].skill_type
+                    }]
+                })
+            } else if(result[prev] && result[prev].id === resultTemp[i].id ){
+                result[prev].skills.push({
+                    id: resultTemp[i].skill_id,
+                    name: resultTemp[i].skill_name,
+                    type: resultTemp[i].skill_type
+                })
+            }
+        }
+
+
         return result;
     },
 

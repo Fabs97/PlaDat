@@ -40,6 +40,9 @@ class _PlacementCardsListState extends State<PlacementCardsList>
       appBar: CustomAppBar.createAppBar(context, "PlaDat"),
       drawer: CustomDrawer.createDrawer(context),
       body: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        mainAxisSize: MainAxisSize.max,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Container(
             height: size.height * .8,
@@ -76,20 +79,24 @@ class _PlacementCardsListState extends State<PlacementCardsList>
                     },
                   ),
           ),
-          Row(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              TinderButton(
-                  label: "Discard",
-                  cardController: _cardController,
-                  discardButton: true),
-              TinderButton(
-                  label: "I'm interested",
-                  cardController: _cardController,
-                  discardButton: false),
-            ],
+          Container(
+            width: size.width * .9,
+            height: size.height * .05,
+            child: Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                TinderButton(
+                    label: "Discard",
+                    cardController: _cardController,
+                    discardButton: true),
+                TinderButton(
+                    label: "I'm interested",
+                    cardController: _cardController,
+                    discardButton: false),
+              ],
+            ),
           )
         ],
       ),

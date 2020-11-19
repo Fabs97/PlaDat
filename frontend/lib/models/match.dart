@@ -15,6 +15,7 @@ class Match {
       this.status});
 
   factory Match.fromJson(Map<String, dynamic> json) {
+    if (json == null) return null;
     return Match(
       studentID: json['studentID'],
       placementID: json['placementID'],

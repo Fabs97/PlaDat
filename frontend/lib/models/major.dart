@@ -7,6 +7,7 @@ class Major {
   Major({this.id, this.name});
 
   factory Major.fromJson(Map<String, dynamic> json) {
+    if (json == null) return null;
     return Major(
       id: json["id"] as int,
       name: json["name"] as String,
@@ -19,6 +20,7 @@ class Major {
       "name": this.name,
     });
   }
+
   Map<String, dynamic> toJsonMap() {
     return {
       "id": this.id,
