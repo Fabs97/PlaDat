@@ -84,10 +84,11 @@ module.exports = {
             .whereIn('s.id', studentIDs)
             .orderBy('s.id');
         let result = []
-        let indx = 0;
-        let prev = 0;
+
         for(let i = 0; i < resultTemp.length; i++){
-            if(resultTemp[i].id > prev) {
+            let prev = result.length-1;
+
+            if(!result[prev] || result[prev].id !== resultTemp[i].id) {
                 result.push({
                     id: resultTemp[i].id,
                     name: resultTemp[i].name,
@@ -100,10 +101,8 @@ module.exports = {
                         type: resultTemp[i].skill_type
                     }]
                 })
-                indx++;
-                prev++;
-            } else {
-                (result[indx-1].skills).push({
+            } else if(result[prev] && result[prev].id === resultTemp[i].id ){
+                result[prev].skills.push({
                     id: resultTemp[i].skill_id,
                     name: resultTemp[i].skill_name,
                     type: resultTemp[i].skill_type
