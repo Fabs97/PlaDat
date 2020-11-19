@@ -14,12 +14,7 @@ module.exports = {
     //for students
     getPlacementRecommendationsForStudent: async (studentID) => {
         let studentSkills = await skillsService.getStudentSkills(studentID);
-        let placementIds = await placementsService.getPlacementsForSkills(studentSkills);
-        let placements = [];
-        for(let i = 0; i < placementIds.length; i++){
-            let placement = await placementsService.getPlacementById(placementIds[i].id);
-            placements.push(placement);
-        }
+        let placements = await placementsService.getPlacementsForSkills(studentSkills);
         return placements;
     }
 };
