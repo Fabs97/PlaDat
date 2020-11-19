@@ -77,9 +77,39 @@ module.exports = {
         
         studentIDs = studentIDs.map(student => student.student_id);
 
-        let result = await database('student as s')
-            .select('s.id', 's.name', 's.surname','s.email','s.password','s.description','s.imgurl')
+        let resultTemp = await database('student AS s')
+            .select('s.id', 's.name', 's.surname', 's.email', 's.description', 's.imgurl', 'sk.id AS skill_id', 'sk.name AS skill_name', 'sk.type AS skill_type')
+            .leftJoin('student_has_skills AS shs', 's.id', 'shs.student_id')
+            .leftJoin('skill AS sk', 'shs.skill_id', 'sk.id')
             .whereIn('s.id', studentIDs)
+            .orderBy('s.id');
+        let result = []
+        let indx = 0;
+        let prev = 0;
+        for(let i = 0; i < resultTemp.length; i++){
+            if(resultTemp[i].id > prev) {
+                result.push({
+                    id: resultTemp[i].id,
+                    name: resultTemp[i].name,
+                    surname: resultTemp[i].surname,
+                    email: resultTemp[i].email,
+                    description: resultTemp[i].description,
+                    skills: [{
+                        id: resultTemp[i].skill_id,
+                        name: resultTemp[i].skill_name,
+                        type: resultTemp[i].skill_type
+                    }]
+                })
+                indx++;
+                prev++;
+            } else {
+                (result[indx-1].skills).push({
+                    id: resultTemp[i].skill_id,
+                    name: resultTemp[i].skill_name,
+                    type: resultTemp[i].skill_type
+                })
+            }
+        }
 
 
         return result;
