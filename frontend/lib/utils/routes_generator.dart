@@ -16,11 +16,11 @@ class RoutesGenerator {
         }
       case '/student-list':
         {
-          return MaterialPageRoute(builder: (_) => StudentCardsList());
+          return _createRoute(StudentCardsList(), settings);
         }
       case '/placement-list':
         {
-          return MaterialPageRoute(builder: (_) => PlacementCardsList());
+          return _createRoute(PlacementCardsList(), settings);
         }
       case '/new-placement':
         {
@@ -28,7 +28,7 @@ class RoutesGenerator {
         }
       case '/new-student':
         {
-          return MaterialPageRoute(builder: (_) => NewStudent());
+          return _createRoute(NewStudent(), settings);
         }
       default:
         {
