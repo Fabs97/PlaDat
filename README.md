@@ -8,14 +8,11 @@
 - [2.2 Useful Links](#22-useful-links)
 - [3. Project Stack](#3-project-stack)
   - [3.1 Technologies](#31-technologies)
-- [4. Project Artifacts](#4-project-artifacts)
-  - [4.1 Mandatory artifacts](#41-mandatory-artifacts)
-    - [4.1.1 Product](#411-product)
-    - [4.1.2 Sprints](#412-sprints)
-  - [4.2 Optional artifacts](#42-optional-artifacts)
-    - [4.2.1 Product](#421-product)
-    - [4.2.2 Sprints](#422-sprints)
-- [5. Project setup](#5-project-setup)
+- [4. Project setup](#4-project-setup)
+  - [4.1 Frontend](#41-frontend)
+  - [4.2 Backend](#42-backend)
+  - [4.3 Database](#43-database)
+  - [4.4 Important DEV notes:](#44-important-dev-notes)
 
 ---
 
@@ -93,77 +90,81 @@ The project will follow a SCRUM-like agile method, which includes defining a SCR
 >  [![Heroku](https://www.thedevcoach.co.uk/wp-content/uploads/2020/04/heroku.png)](https://www.heroku.com/)
 
 --- 
+## 4. Project setup
+ 
+### 4.1 Frontend
+ 
+Please make sure to satisfy the following requirements before the frontend setup: 
+- Flutter is installed on your machine. If not, you can follow this guide [here](https://flutter.dev/docs/get-started/install);
+- Your Flutter environment has to have web development enabled. You can do this by entering the following commands in your command line prompt of choice or follow this [step by step guide](https://flutter.dev/docs/get-started/web):
+```
+flutter channel beta
+flutter upgrade
+flutter config --enable-web
+```
+ 
+Once the requirements have been completed, please go ahead and follow the next steps:
+- Open a command line prompt on your local machine and type `cd <path_to_project>/frontend`;
+- Run the following command: `flutter build web`;
+- Whenever you need to debug your application, you can use the following command: `flutter run -d chrome` (make sure to have Chrome installed).
+ 
+### 4.2 Backend
+ 
+Please make sure to satisfy the following requirements before the backend setup:
+- Install Node.js and npm from this link [here](https://nodejs.org/en/);
+ 
+Once the requirements have been completed, please go ahead and follow the next steps:
+- Open a command line prompt on your local machine and type the following commands:
+```
+cd <path_to_project>/backend
+npm start
+```
+- You should be able to check your backend by opening your browser of choice and navigating to the URL that is prompted after the `npm start`
 
-## 4. Project Artifacts
+### 4.3 Database
+Please make sure to satisfy the following requirements before the backend setup:
 
-Here follow all the artifacts that will be created for the project and its development.
+- Install PostgreSQL from this link [here](https://www.postgresql.org/download/);
+  - **NB: Take careful note of the password that you're going to give to postgres in the wizard while installing!**
+- Install PGAdming4 from this link [here](https://www.pgadmin.org/download/);
+- Make sure to have installed the `knex` package globally by running the following command in your prompt of choice:
+```
+npm i -g knex
+```
 
-### 4.1 Mandatory artifacts
-Here are listed all the mandatory artifacts that may or may have not been created for the project and its development.
+Once the requirements have been completed, please go ahead and follow the next steps:
+1. Create a new database:
+   1. Fire up PGAdming 4, login and create a new database by right click on the database in your server, `Create > Database`;
+![Create a new database](assets/createDB.png)
+   1. Insert the database name (of your choice) and keep that in mind;
+![Create a new database](assets/createDB2.png)
+   3. Save the new database;
+2. Configure Node.js
+   1. Open the backend folder of this project and create a new file called `.env`;
+   2. Fill in the document with the following information by replacing the information with your own, keep the values in the double quotes:
+```
+DEV_DB_HOST="localhost"
+DEV_DB_NAME="name_of_your_database"
+DEV_DB_USR="your_username"
+DEV_DB_PORT="port_of_your_database"
+DEV_DB_PWD="your_password"
+PLADAT_ENV="development" #do not change this
 
-#### 4.1.1 Product
+```
+   3. Check that everything is correct by doing the first migration:
+```
+cd <project_folder>/backend
+knex migrate:latest 
+```   
 
-> Product Backlog
+### 4.4 Important DEV notes:
+- When testing the application from the dev branch, remember to run the frontend with the following command: 
+```
+flutter run -d chrome --dart-define=API_ENDPOINT=https://pladat-staging.herokuapp.com/
+```
 
-> Backlog Items
-
-> Backlog item priorities
-
-> Backlog re-prioritization
-
-#### 4.1.2 Sprints
-
-> Sprint duration
-
-> Sprint planning meeting
-
-> Sprint backlog
-
-> Sprint backlog items
-
-> Sprint backlog updates
-
-> Task allocation
-
-> Effort remaining updates
-
-> Sprint retrospective
-
-<br>
-
-### 4.2 Optional artifacts
-Here are listed all the optional artifacts that may or may not have been created for the project and its development.
-
-#### 4.2.1 Product
-
-> Backlog item business value estimation
-
-> Effort estimation
-
-> Risk estimation
-
-> Product backlog refinement
-
-> Product/Release burndown chart
-
-#### 4.2.2 Sprints
-
-> Sprint planning meeting - advanced
-
-> Task reallocation
-
-> Sprint burndown chart
-
-> Aborting sprint
-
-> Daily scrum meeting
-
-> Follow-up meeting
-
-> Sprint review
-
----
-
-## 5. Project setup
-
-> **WIP**
+- When testing your frontend application and its linking with the backend, make sure to run it with one of the following commands:
+```
+flutter run -d chrome --web-hostname=127.0.0.1 --web-port=8200
+flutter run -d chrome --web-hostname=localhost --web-port=8200
+```

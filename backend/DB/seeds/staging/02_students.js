@@ -1,0 +1,20 @@
+exports.seed = function(knex) {
+  // Deletes ALL existing entries
+  return knex('student').del()
+    .then(function () {
+      // Inserts seed entries
+      return knex('student').insert([
+        {name: "Alice", surname: "Casali", email: "abcd@gmail.com", password: "1234", description: "Engineer student", imgurl: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.podchaser.com%2Fpodcasts%2Fcartoonin-in-520786%2Fepisodes&psig=AOvVaw1r-NKrk_F1p6CQRK5c6CU8&ust=1605525230766000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCMDq4t21hO0CFQAAAAAdAAAAABAK"},
+        {name: "Fabrizio", surname: "Siciliano", email: "abcd@gmail.com", password: "1234", description: "Engineer student", imgurl: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.podchaser.com%2Fpodcasts%2Fcartoonin-in-520786%2Fepisodes&psig=AOvVaw1r-NKrk_F1p6CQRK5c6CU8&ust=1605525230766000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCMDq4t21hO0CFQAAAAAdAAAAABAK"},
+        {name: "Anna", surname: "Bergamsco", email: "abcd@gmail.com", password: "1234", description: "Engineer student", imgurl: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.podchaser.com%2Fpodcasts%2Fcartoonin-in-520786%2Fepisodes&psig=AOvVaw1r-NKrk_F1p6CQRK5c6CU8&ust=1605525230766000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCMDq4t21hO0CFQAAAAAdAAAAABAK"},
+        {name: "Aida", surname: "Opirlesc", email: "abcd@gmail.com", password: "1234", description: "Engineer student", imgurl: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.podchaser.com%2Fpodcasts%2Fcartoonin-in-520786%2Fepisodes&psig=AOvVaw1r-NKrk_F1p6CQRK5c6CU8&ust=1605525230766000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCMDq4t21hO0CFQAAAAAdAAAAABAK"},
+        {name: "Andela", surname: "Zoric", email: "abcd@gmail.com", password: "1234", description: "Engineer student", imgurl: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.podchaser.com%2Fpodcasts%2Fcartoonin-in-520786%2Fepisodes&psig=AOvVaw1r-NKrk_F1p6CQRK5c6CU8&ust=1605525230766000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCMDq4t21hO0CFQAAAAAdAAAAABAK"},
+        {name: "William", surname: "Nordberg", email: "abcd@gmail.com", password: "1234", description: "Engineer student", imgurl: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.podchaser.com%2Fpodcasts%2Fcartoonin-in-520786%2Fepisodes&psig=AOvVaw1r-NKrk_F1p6CQRK5c6CU8&ust=1605525230766000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCMDq4t21hO0CFQAAAAAdAAAAABAK"},
+        {name: "Bassam", surname: "Zabad", email: "abcd@gmail.com", password: "1234", description: "Engineer student", imgurl: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.podchaser.com%2Fpodcasts%2Fcartoonin-in-520786%2Fepisodes&psig=AOvVaw1r-NKrk_F1p6CQRK5c6CU8&ust=1605525230766000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCMDq4t21hO0CFQAAAAAdAAAAABAK"},
+        {name: "Jhonny", surname: "Depp", email: "abcd@gmail.com", password: "1234", description: "Engineer student", imgurl: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.podchaser.com%2Fpodcasts%2Fcartoonin-in-520786%2Fepisodes&psig=AOvVaw1r-NKrk_F1p6CQRK5c6CU8&ust=1605525230766000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCMDq4t21hO0CFQAAAAAdAAAAABAK"},
+        {name: "Maryl", surname: "Streep", email: "abcd@gmail.com", password: "1234", description: "Engineer student", imgurl: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.podchaser.com%2Fpodcasts%2Fcartoonin-in-520786%2Fepisodes&psig=AOvVaw1r-NKrk_F1p6CQRK5c6CU8&ust=1605525230766000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCMDq4t21hO0CFQAAAAAdAAAAABAK"},
+        {name: "Freddy", surname: "Mercury", email: "abcd@gmail.com", password: "1234", description: "Engineer student", imgurl: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.podchaser.com%2Fpodcasts%2Fcartoonin-in-520786%2Fepisodes&psig=AOvVaw1r-NKrk_F1p6CQRK5c6CU8&ust=1605525230766000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCMDq4t21hO0CFQAAAAAdAAAAABAK"}
+       
+      ]);
+    });
+};
