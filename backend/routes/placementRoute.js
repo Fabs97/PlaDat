@@ -32,5 +32,4 @@ router.get('/placement', async (req, res, next) => {
 
 });
 
-
 module.exports = router;

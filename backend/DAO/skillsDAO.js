@@ -52,7 +52,20 @@ module.exports = {
             .select('id', 'name', 'type')
             .where('id', id);
         return result[0];
-    }
+    }, 
+
+    getStudentSkills: async (id) => {
+        return database('skill AS s')
+            .select('s.id', 's.name', 's.type')
+            .leftJoin('student_has_skills AS shs', 's.id', 'shs.skill_id')
+            .where('shs.student_id', id);
+    },
     
+    getPlacementSkills: async (placementID) => {
+        return database('skill AS s')
+           .select('s.id', 's.name', 's.type')
+           .leftJoin('placement_has_skills AS phs', 's.id', 'phs.skill_id')
+            .where('phs.placement_id',placementID)
+   },
 
 };

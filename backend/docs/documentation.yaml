@@ -5,12 +5,95 @@ info:
 servers:
   - url: https://pladat.herokuapp.com/
     description: Production backend server
+  - url: https://pladat-staging.herokuapp.com/
+    description: Staging backend server
   - url: http://localhost:3000/
     description: Local development environment
   
+tags:
+  - name: Skills
+    description: All the APIs related to the "skill" table
+  - name: Majors
+    description: All the APIs related to the "majors" table
+  - name: Institutions
+    description: All the APIs related to the "institutions" table
+  - name: Placement
+    description: All the APIs related to the "placements" table
+  - name: Student
+    description: All the APIs related to the "student" table
+  - name: Matching
+    description: All the APIs related to the matching algorithm
 
 components:
   schemas:
+    Student:
+      type: object
+      properties:
+        id:
+          type: integer
+        name: 
+          type: string
+        surname: 
+          type: string
+        email: 
+          type: string
+        password: 
+          type: string
+          format: password
+        description: 
+          type: string 
+        imgurl:
+          type: string
+    Match:
+      type: object
+      properties:
+        studentID:
+          type: integer
+        placementID: 
+          type: integer
+        studentAccept: 
+          type: boolean
+        placementAccept:
+          type: boolean
+        status:
+          type: string
+          enum:
+            - ACCEPTED
+            - REJECTED
+            - PENDING
+    Placement:
+      type: object
+      properties:
+        id:
+          type: integer
+        position: 
+          type: string
+        working_hours:
+          type: integer
+        start_period: 
+          type: string
+          format: date-time
+        end_period:
+          type: string
+          format: date-time
+        salary:
+          type: integer
+        description_role:
+          type: string
+    Institution:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+    Major:
+      type: object
+      properties:
+        id:
+          type: integer
+        name: 
+          type: string
     Skills:
       type: object
       properties:
@@ -26,15 +109,359 @@ components:
             - OTHER
 
 paths:
+  /recommendation/{id}/seePlacements:
+    get:
+      description: Provides all the placements recommendation for the provided student id, based on the algorithm
+      tags:
+        - "Matching"
+      parameters:
+        - in: path
+          required: true
+          name: id
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                anyOf:
+                  - $ref: "#/components/schemas/Student"
+                example:
+                  [
+                    {
+                      id: 1,
+                      name: "Julian",
+                      surname: "Bass",
+                      description: "Researching software development for large-scale systems focusing on multi-national teams and using modern lean and agile methods",
+                      skills: {
+                        technicalSkills: [
+                          {id: 1, name: "Flutter", type: "TECH"},
+                        ],
+                        softSkills: [
+                          {id: 4, name: "Team Management", type: "SOFT"},
+                        ],
+                        otherSkills: [
+                          {id: 7, name: "Skiing", type: "OTHER"},
+                        ]
+                      }
+                    }
+                  ]
+  /recommendation/{id}/seeStudents:
+    get:
+      description: Provides all the students recommendation for the provided placement id, based on the algorithm
+      tags:
+        - "Matching"
+      parameters:
+        - in: path
+          required: true
+          name: id
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                allOf:
+                  - $ref: "#/components/schemas/Placement"
+                example:
+                  [
+                    {
+                      id: 1,
+                      position: "Full stack developer",
+                      working_hours: 20,
+                      start_period: "2020-11-11",
+                      end_period: "2020-11-11",
+                      salary: 600,
+                      description_role: "An internship for you to learn how to be a full stack developer",
+                      majors: [
+                        {id: 1, name: "Computer Science and Engineering"},
+                      ],
+                      institutions: [
+                        {id: 1, name: "Politecnico di Milano"},
+                      ],
+                      skills: {
+                        technicalSkills: [
+                          {id: 1, name: "Flutter", type: "TECH"},
+                        ],
+                        softSkills: [
+                          {id: 4, name: "Team Management", type: "SOFT"},
+                        ],
+                        otherSkills: [
+                          {id: 7, name: "Skiing", type: "OTHER"},
+                        ]
+                      }
+                    }
+                  ]
+  /matching:
+    post:
+      description: Allows users to upsert the provided match to the matches table
+      tags:
+        - "Matching"
+      parameters:
+        - in: query
+          required: true
+          name: Match
+          schema:
+            type: object
+            example: {
+              studentID: 1,
+              placementID: 2,
+              studentAccept: true
+            }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Match"
+                example:
+                  {
+                    studentID: 1,
+                    placementID: 2,
+                    studentAccept: true,
+                    placementAccept: true,
+                    status: "ACCEPTED"
+                  }
+  /placement:
+    get:
+      description: Returns all placement ids in the database 
+      tags:
+        - "Placement"
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                example: 
+                  [
+                    {id: 1},
+                    {id: 2},
+                    {id: 3},
+                    {id: 4},
+                  ]
+  /placement/{id}:
+    get:
+      description: Returns a placement with the provided id
+      tags:
+        - "Placement"
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {
+                    id: 1,
+                    position: "Full stack developer",
+                    working_hours: 20,
+                    start_period: "2020-11-11",
+                    end_period: "2020-11-11",
+                    salary: 600,
+                    description_role: "An internship for you to learn how to be a full stack developer",
+                    majors: [
+                      {id: 1, name: "Computer Science and Engineering"},
+                      {id: 2, name: "Management Engineering"},
+                    ],
+                    institutions: [
+                      {id: 1, name: "Politecnico di Milano"},
+                      {id: 1, name: "Politecnico di Torino"},
+                    ],
+                    skills: {
+                      technicalSkills: [
+                        {id: 1, name: "Flutter", type: "TECH"},
+                        {id: 2, name: "JavaScript", type: "TECH"},
+                        {id: 3, name: "Java", type: "TECH"},
+                      ],
+                      softSkills: [
+                        {id: 4, name: "Team Management", type: "SOFT"},
+                        {id: 5, name: "Time Management", type: "SOFT"},
+                        {id: 6, name: "Communications", type: "SOFT"},
+                      ],
+                      otherSkills: [
+                        {id: 7, name: "Skiing", type: "OTHER"},
+                        {id: 8, name: "Cooking", type: "OTHER"},
+                        {id: 9, name: "Trekking", type: "OTHER"},
+                      ]
+                    }
+                  }
+
+  /placement/new-placement:
+    get:
+      description: Allows companies to insert a new placement into the database
+      tags:
+        - "Placement"
+      parameters:
+        - in: query
+          description: a json containing all the information about the placement
+          required: true
+          name: Placement details
+          schema:
+            type: object
+            example:
+              {
+                position: "Full stack developer",
+                working_hours: 20,
+                start_period: "2020-11-11",
+                end_period: "2020-11-11",
+                salary: 600,
+                description_role: "An internship for you to learn how to be a full stack developer",
+                majors: [
+                  {id: 1, name: "Computer Science and Engineering"},
+                  {id: 2, name: "Management Engineering"},
+                ],
+                institutions: [
+                  {id: 1, name: "Politecnico di Milano"},
+                  {id: 1, name: "Politecnico di Torino"},
+                ],
+                skills: {
+                  technicalSkills: [
+                    {id: 1},
+                    {id: 2},
+                    {id: 3},
+                  ],
+                  softSkills: [
+                    {id: 4},
+                    {id: 5},
+                    {id: 6},
+                  ],
+                  otherSkills: [
+                    "Cooking",
+                    "Organizing events",
+                    "Trekking"
+                  ]
+                }
+              }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                description: Returns a json with the newly inserted placement and its id
+                type: object
+                example:
+                  {
+                    id: 3,
+                    position: "Full stack developer",
+                    working_hours: 20,
+                    start_period: "2020-11-11",
+                    end_period: "2020-11-11",
+                    salary: 600,
+                    description_role: "An internship for you to learn how to be a full stack developer",
+                    majors: [
+                      {id: 1, name: "Computer Science and Engineering"},
+                      {id: 2, name: "Management Engineering"},
+                    ],
+                    institutions: [
+                      {id: 1, name: "Politecnico di Milano"},
+                      {id: 1, name: "Politecnico di Torino"},
+                    ],
+                    skills: {
+                      technicalSkills: [
+                        {id: 1},
+                        {id: 2},
+                        {id: 3},
+                      ],
+                      softSkills: [
+                        {id: 4},
+                        {id: 5},
+                        {id: 6},
+                      ],
+                      otherSkills: [
+                        "Cooking",
+                        "Organizing events",
+                        "Trekking"
+                      ]
+                    }
+                  }
+  /majors:
+    get:
+      description: Returns all the majors in the database
+      tags: 
+        - "Majors"
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Major'
+                type: array
+                example:
+                  [
+                    {
+                      id: 1,
+                      name: "Computer Science and Engineering"
+                    },
+                    {
+                      id: 2,
+                      name: "Management Engineering"
+                    }
+                  ]
+
+  /institutions:
+    get:
+      description: Returns all the institutions in the database
+      tags:
+        - "Institutions"
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Institution'
+                type: array
+                example:
+                  [
+                    {
+                      id: 1,
+                      name: "Politecnico di Milano"
+                    },
+                    {
+                      id: 2,
+                      name: "MDH"
+                    },
+                    {
+                      id: 3,
+                      name: "MIT"
+                    }
+                  ]
+  
   /student/{id}/profile:
     post:
       description: Allows users to save additional information to the specified student profile
+      tags: 
+        - "Student"
       parameters:
         - in: path
           name: id
           required: true
           schema:
             type: string
+          example: 1
       requestBody:
         required: true
         content:
@@ -80,9 +507,12 @@ paths:
                     skill: 1
                   },
                 ]
+  
   /skills:
     get: 
       description: Provides all the skills in the database 
+      tags:
+        - "Skills"
       responses:
         '200':
           description: OK
@@ -140,3 +570,75 @@ paths:
                     },
                   ]
                 }
+                
+  /skills/{type}/{name}:
+    get:
+      description: Returns the skill in the database with the given name and type
+      deprecated: true
+      tags:
+        - "Skills"
+      parameters:
+        - in: path
+          required: true
+          name: type
+          schema:
+            type: string
+            example: "TECH"
+        - in: path
+          required: true
+          name: name
+          schema: 
+            type: string
+            example: "Flutter"
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Skills"
+                type: array
+                example: 
+                  [
+                    {
+                      id: 1,
+                      name: "Flutter",
+                      type: "TECH"
+                    }
+                  ]
+  
+  /skills/{type}:
+    get:
+      description: Returns all the skills in the database with the given type
+      tags:
+        - "Skills"
+      parameters:
+        - in: path
+          name: "type"
+          required: true
+          schema:
+            type: string
+            example: "TECH"
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Skills"
+                type: array
+                example: 
+                  [
+                    {
+                      id: 1,
+                      name: "JavaScript",
+                      type: "TECH"
+                    },
+                    {
+                      id: 2,
+                      name: "Flutter",
+                      type: "TECH"
+                    }
+                  ]

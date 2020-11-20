@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:frontend/models/placement.dart';
+import 'package:frontend/utils/routes_generator.dart';
 import 'package:frontend/widgets/otherskills.dart';
 import 'package:frontend/widgets/skillsbox.dart';
 import 'package:frontend/services/api_service.dart';
@@ -68,6 +69,6 @@ class SkillsForm extends StatelessWidget {
         body: placement);
     print(newPlacement);
 
-    Navigator.of(context).popAndPushNamed("/home");
+    Nav.navigatorKey.currentState.popAndPushNamed("/home");
   }
 }

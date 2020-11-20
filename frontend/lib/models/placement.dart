@@ -49,6 +49,7 @@ class Placement extends ChangeNotifier {
   }
 
   static Placement fromJson(Map<String, dynamic> json) {
+    if (json == null) return null;
     return Placement(
       id: json["id"],
       position: json["position"],
@@ -58,10 +59,15 @@ class Placement extends ChangeNotifier {
       salary: json["salary"],
       description: json["description_role"],
       institutions: json["institutions"]
-          .map((institution) => Institution.fromJson(institution))
-          .toList(),
-      majors: json["majors"].map((major) => Major.fromJson(major)).toList(),
+          ?.map((institution) => Institution.fromJson(institution))
+          ?.toList(),
+      majors: json["majors"]?.map((major) => Major.fromJson(major))?.toList(),
       skills: Skill.listFromJson(json["skills"]),
     );
+  }
+
+  static List<Placement> listFromJson(String json) {
+    final parsed = jsonDecode(json).cast<Map<String, dynamic>>();
+    return parsed.map((skillsJson) => Placement.fromJson(skillsJson)).toList();
   }
 }

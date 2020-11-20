@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_tindercard/flutter_tindercard.dart';
 import 'package:frontend/models/placement.dart';
+import 'package:frontend/models/match.dart';
 import 'package:frontend/screens/student_placement_list/local_widgets/placement_card.dart';
 import 'package:frontend/services/api_service.dart';
 import 'package:frontend/widgets/appbar.dart';
 import 'package:frontend/widgets/drawer.dart';
+import 'package:frontend/widgets/tinder_button.dart';
 
 class PlacementCardsList extends StatefulWidget {
   PlacementCardsList({Key key}) : super(key: key);
@@ -19,9 +21,9 @@ class _PlacementCardsListState extends State<PlacementCardsList>
 
   CardController _cardController;
 
+  final studentId = 1;
   @override
   void initState() {
-    final studentId = 1;
     APIService.route(
             ENDPOINTS.Recomendations, "/recommendation/id/seePlacements",
             urlArgs: studentId)
@@ -38,9 +40,12 @@ class _PlacementCardsListState extends State<PlacementCardsList>
       appBar: CustomAppBar.createAppBar(context, "PlaDat"),
       drawer: CustomDrawer.createDrawer(context),
       body: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        mainAxisSize: MainAxisSize.max,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Container(
-            height: size.height * .9,
+            height: size.height * .8,
             child: placements == null
                 ? Center(
                     child: CircularProgressIndicator(),
@@ -60,15 +65,38 @@ class _PlacementCardsListState extends State<PlacementCardsList>
                         PlacementCard(placement: placements[index]),
                     cardController: _cardController = CardController(),
                     swipeCompleteCallback: (orientation, index) {
-                      if (orientation == CardSwipeOrientation.LEFT) {
-                        // I don't like this placement
-                        print("I don't like this placement");
-                      } else if (orientation == CardSwipeOrientation.RIGHT) {
-                        // I like this placement
-                        print("I like this placement");
-                      }
+                      APIService.route(ENDPOINTS.Matches, "/matching",
+                          body: Match(
+                            studentID: studentId,
+                            placementID: placements[index].id,
+                            studentAccept:
+                                orientation == CardSwipeOrientation.LEFT
+                                    ? false
+                                    : true,
+                          )).then((match) {
+                        print(match);
+                      });
                     },
                   ),
+          ),
+          Container(
+            width: size.width * .9,
+            height: size.height * .05,
+            child: Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                TinderButton(
+                    label: "Discard",
+                    cardController: _cardController,
+                    discardButton: true),
+                TinderButton(
+                    label: "I'm interested",
+                    cardController: _cardController,
+                    discardButton: false),
+              ],
+            ),
           )
         ],
       ),
