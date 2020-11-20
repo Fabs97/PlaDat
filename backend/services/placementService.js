@@ -4,6 +4,7 @@ const skillService = require('./skillsService');
 const majorsDAO = require('../DAO/majorDAO');
 const institutionsDAO = require('../DAO/institutionDAO');
 const skillsDAO = require('../DAO/skillsDAO');
+const employerDAO = require('../DAO/employerDAO');
 
 module.exports = {
 
@@ -52,6 +53,7 @@ module.exports = {
         placement.institutions = await placementDAO.getPlacementInstitutions(placementId);
         placement.majors = await placementDAO.getPlacementMajors(placementId);
         placement.skills = await skillsDAO.getPlacementSkills(placementId);
+        placement.employer = await employerDAO.getPlacementEmployer(placement.employer_id);
         return placement;
     },
 

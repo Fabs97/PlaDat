@@ -33,7 +33,9 @@ module.exports = {
                 'start_period',
                 'end_period',
                 'salary',
-                'description_role')
+                'description_role',
+                'employer_id'
+                )
             .where('id', id);
         return result[0];
 
