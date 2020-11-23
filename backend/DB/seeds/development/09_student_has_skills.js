@@ -2,7 +2,7 @@
 exports.seed = function(knex) {
   // Deletes ALL existing entries
   return knex('student_has_skills').del()
-    .then(function () {
+    .then(async function () {
       // Inserts seed entries
       let students = await knex('student')
         .select('id', 'name')

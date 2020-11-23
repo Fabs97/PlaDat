@@ -1,7 +1,7 @@
 exports.seed = function(knex) {
   // Deletes ALL existing entries
   return knex('placement_has_skills').del()
-    .then(function () {
+    .then(async function () {
       // Inserts seed entries
       let placements = await knex('placements')
         .select('id', 'position')

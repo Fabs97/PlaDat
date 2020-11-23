@@ -1,7 +1,7 @@
 exports.seed = function(knex) {
   // Deletes ALL existing entries
   return knex('placement_has_major').del()
-    .then(function () {
+    .then(async function () {
       let placements = await knex('placements')
         .select('id', 'position')
         .whereIn('position', ['Frontend Developer', 'Backend Developer', 'Fullstack Developer', 'Project Manager', 'Quality Manager', 'DevOps', 'Designer', 'Accountant', 'Business Analyst', 'IT Project Manager']);
