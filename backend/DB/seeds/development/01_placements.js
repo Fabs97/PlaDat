@@ -5,7 +5,7 @@ exports.seed = function(knex) {
     .then(async function () {
       let employers = await knex('employer')
         .select('id', 'name')
-        .whereIn('name', ['Google', 'Amazon', 'Instagram', 'Pinterest', 'Facebook', 'Reply', 'Oracle'])
+        .whereIn('name', ['Google', 'Amazon', 'Instagram', 'Pinterest', 'Facebook', 'Reply', 'Oracle']);
       // Inserts seed entries
       return knex('placements').insert([
         {position: 'Frontend Developer', working_hours: "25", start_period: "2021/01/30", end_period: "2021/06/30", salary: "800", description_role: "Interesting role to improve personal skills", employer_id: employers[0].id},
