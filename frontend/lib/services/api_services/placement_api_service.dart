@@ -9,7 +9,7 @@ class PlacementAPIService extends APIInfo {
     switch (subRoute) {
       case "/placement/new-placement":
         return _postPlacement(subRoute, body);
-      case "placements":
+      case "/placement":
         return _getPlacements(subRoute);
       default:
         throw PlacementAPIException();

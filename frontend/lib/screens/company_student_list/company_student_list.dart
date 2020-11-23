@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_tindercard/flutter_tindercard.dart';
+import 'package:frontend/models/placement.dart';
 import 'package:frontend/models/student.dart';
 import 'package:frontend/screens/company_student_list/local_widgets/student_card.dart';
 import 'package:frontend/services/api_service.dart';
@@ -17,18 +18,39 @@ class StudentCardsList extends StatefulWidget {
 
 class _StudentCardsListState extends State<StudentCardsList> {
   List<Student> students;
+  List<Placement> _placements;
   CardController _cardController;
+  Placement _placement;
+  Map<int, List<Student>> recommendationMap = {};
 
-  final int placementId = 1;
   @override
   void initState() {
-    APIService.route(ENDPOINTS.Recomendations, "/recommendation/id/seeStudents",
-            urlArgs: placementId)
-        .then((studentsList) => setState(() {
-              students = studentsList.cast<Student>();
-              print(students);
+    APIService.route(ENDPOINTS.Placement, "/placement")
+        .then((placementsList) => setState(() {
+              _placements = placementsList;
+              _placement = _placements[0] ?? null;
             }));
     super.initState();
+  }
+
+  onChangeDropdownItem(Placement selectedPlacement) {
+    if (selectedPlacement == null) return;
+    setState(() {
+      _placement = selectedPlacement;
+      if (recommendationMap.containsKey(selectedPlacement.id)) {
+        setState(() {
+          students = recommendationMap[selectedPlacement.id];
+        });
+      } else {
+        APIService.route(
+                ENDPOINTS.Recomendations, "/recommendation/id/seeStudents",
+                urlArgs: _placement.id)
+            .then((studentsList) => setState(() {
+                  students = studentsList.cast<Student>();
+                  recommendationMap[_placement.id] = students;
+                }));
+      }
+    });
   }
 
   @override
@@ -42,6 +64,23 @@ class _StudentCardsListState extends State<StudentCardsList> {
         mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
+          Container(
+            child: _placements == null
+                ? Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : DropdownButton<Placement>(
+                    value: _placement,
+                    items: _placements?.map((placement) {
+                          return DropdownMenuItem<Placement>(
+                            value: placement,
+                            child: Text('Placement #${placement.id}'),
+                          );
+                        })?.toList() ??
+                        [],
+                    onChanged: onChangeDropdownItem,
+                  ),
+          ),
           Container(
             height: size.height * .8,
             child: students == null
@@ -66,13 +105,14 @@ class _StudentCardsListState extends State<StudentCardsList> {
                       APIService.route(ENDPOINTS.Matches, "/matching",
                           body: Match(
                             studentID: students[index].id,
-                            placementID: placementId,
+                            placementID: _placement.id,
                             placementAccept:
                                 orientation == CardSwipeOrientation.LEFT
                                     ? false
                                     : true,
                           )).then((match) {
-                        print(match);
+                        recommendationMap[_placement.id]
+                            .remove(students[index]);
                       });
                     },
                   ),
