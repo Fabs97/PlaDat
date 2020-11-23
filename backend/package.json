@@ -5,7 +5,6 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha",
-    "prestart": "if [$DEPLOY_ENV -eq 'staging'] || [$DEPLOY_ENV -eq 'production'] then npx knex migrate:latest && npx knex seed:run fi",
     "start": "node index.js",
     "serve": "nodemon dev index.js"
   },
