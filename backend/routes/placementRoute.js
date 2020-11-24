@@ -32,4 +32,9 @@ router.get('/placement', async (req, res, next) => {
 
 });
 
+router.get('/employer/:employerId/placements', async (req, res, next) => {
+    const placements = await placementService.getPlacementsByEmployerId(req.params.employerId);
+    res.json(placements);
+});
+
 module.exports = router;

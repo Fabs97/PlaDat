@@ -218,4 +218,10 @@ module.exports = {
             .where('phi.placement_id', id);
     },
 
+    getPlacementsByEmployerId: (employerId) => {
+        return database('placements')
+            .select()
+            .where('employer_id', employerId);
+    }
+
 }; 
