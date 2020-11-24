@@ -12,7 +12,7 @@ module.exports = {
         
         // This one is very similar to SQL
         let result = await database('student')
-            .select('id', 'name','surname')
+            .select('id', 'name','surname','email', 'description')
             .where('id', id);
         return result[0];
     },
@@ -22,8 +22,10 @@ module.exports = {
             .returning()
             .insert({
                 name: studentInfo.name,
-                surname: studentInfo.surname
-            },['id','name','surname']);
+                surname: studentInfo.surname,
+                email: studentInfo.email,
+                description: studentInfo.description
+            },['id','name','surname','email','description']);
     },
 
     setStudentSkills: (studentId, skills) => {
