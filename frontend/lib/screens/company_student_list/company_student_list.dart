@@ -17,15 +17,16 @@ class StudentCardsList extends StatefulWidget {
 }
 
 class _StudentCardsListState extends State<StudentCardsList> {
-  List<Student> students;
   List<Placement> _placements;
   CardController _cardController;
   Placement _placement;
   Map<int, List<Student>> recommendationMap = {};
+  int _employerId = 1;
 
   @override
   void initState() {
-    APIService.route(ENDPOINTS.Placement, "/placement")
+    APIService.route(ENDPOINTS.Employers, "/employer/:employerId/placements",
+            urlArgs: _employerId)
         .then((placementsList) => setState(() {
               _placements = placementsList;
               _placement = _placements[0] ?? null;
@@ -37,17 +38,13 @@ class _StudentCardsListState extends State<StudentCardsList> {
     if (selectedPlacement == null) return;
     setState(() {
       _placement = selectedPlacement;
-      if (recommendationMap.containsKey(selectedPlacement.id)) {
-        setState(() {
-          students = recommendationMap[selectedPlacement.id];
-        });
-      } else {
+      if (!recommendationMap.containsKey(selectedPlacement.id)) {
         APIService.route(
                 ENDPOINTS.Recomendations, "/recommendation/id/seeStudents",
                 urlArgs: _placement.id)
             .then((studentsList) => setState(() {
-                  students = studentsList.cast<Student>();
-                  recommendationMap[_placement.id] = students;
+                  recommendationMap[_placement.id] =
+                      studentsList.cast<Student>();
                 }));
       }
     });
@@ -83,38 +80,44 @@ class _StudentCardsListState extends State<StudentCardsList> {
           ),
           Container(
             height: size.height * .8,
-            child: students == null
-                ? Center(
-                    child: CircularProgressIndicator(),
-                  )
-                : TinderSwapCard(
+            child: _placement != null &&
+                    recommendationMap[_placement.id] != null
+                ? TinderSwapCard(
                     // swipeUp: true,
                     // swipeDown: true,
                     animDuration: 400,
                     orientation: AmassOrientation.BOTTOM,
-                    totalNum: students.length,
+                    totalNum: recommendationMap[_placement.id].length,
                     stackNum: 3,
                     maxWidth: size.width * .9,
                     maxHeight: size.height * .9,
                     minWidth: size.width * .8,
                     minHeight: size.height * .8,
-                    cardBuilder: (context, index) =>
-                        StudentCard(student: students[index]),
+                    cardBuilder: (context, index) => StudentCard(
+                        student: recommendationMap[_placement.id][index]),
                     cardController: _cardController = CardController(),
                     swipeCompleteCallback: (orientation, index) {
-                      APIService.route(ENDPOINTS.Matches, "/matching",
-                          body: Match(
-                            studentID: students[index].id,
-                            placementID: _placement.id,
-                            placementAccept:
-                                orientation == CardSwipeOrientation.LEFT
-                                    ? false
-                                    : true,
-                          )).then((match) {
-                        recommendationMap[_placement.id]
-                            .remove(students[index]);
-                      });
+                      if (orientation != CardSwipeOrientation.RECOVER)
+                        APIService.route(ENDPOINTS.Matches, "/matching",
+                            body: Match(
+                              studentID:
+                                  recommendationMap[_placement.id][index].id,
+                              placementID: _placement.id,
+                              placementAccept:
+                                  orientation == CardSwipeOrientation.LEFT
+                                      ? false
+                                      : true,
+                            )).then((match) {
+                          if (recommendationMap[_placement.id].isNotEmpty) {
+                            setState(() {
+                              recommendationMap[_placement.id].removeAt(index);
+                            });
+                          }
+                        });
                     },
+                  )
+                : Center(
+                    child: CircularProgressIndicator(),
                   ),
           ),
           Container(
