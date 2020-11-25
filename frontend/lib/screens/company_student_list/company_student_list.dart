@@ -30,6 +30,7 @@ class _StudentCardsListState extends State<StudentCardsList> {
         .then((placementsList) => setState(() {
               _placements = placementsList;
               _placement = _placements[0] ?? null;
+              _requestRecomendations();
             }));
     super.initState();
   }
@@ -39,15 +40,17 @@ class _StudentCardsListState extends State<StudentCardsList> {
     setState(() {
       _placement = selectedPlacement;
       if (!recommendationMap.containsKey(selectedPlacement.id)) {
-        APIService.route(
-                ENDPOINTS.Recomendations, "/recommendation/id/seeStudents",
-                urlArgs: _placement.id)
-            .then((studentsList) => setState(() {
-                  recommendationMap[_placement.id] =
-                      studentsList.cast<Student>();
-                }));
+        _requestRecomendations();
       }
     });
+  }
+
+  _requestRecomendations() {
+    APIService.route(ENDPOINTS.Recomendations, "/recommendation/id/seeStudents",
+            urlArgs: _placement.id)
+        .then((studentsList) => setState(() {
+              recommendationMap[_placement.id] = studentsList.cast<Student>();
+            }));
   }
 
   @override
