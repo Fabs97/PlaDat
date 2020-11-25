@@ -9,8 +9,6 @@ class PlacementAPIService extends APIInfo {
     switch (subRoute) {
       case "/placement/new-placement":
         return _postPlacement(subRoute, body);
-      case "placements":
-        return _getPlacements(subRoute);
       default:
         throw PlacementAPIException();
     }
@@ -27,14 +25,6 @@ class PlacementAPIService extends APIInfo {
     if (response.statusCode == 200) {
       final placement = Placement.fromJson(jsonDecode(response.body));
       return placement;
-    }
-  }
-
-  static Future<dynamic> _getPlacements(String subRoute) async {
-    var response = await http.get(APIInfo.apiEndpoint + subRoute);
-
-    if (response.statusCode == 200) {
-      return Placement.listFromJson(response.body);
     }
   }
 }
