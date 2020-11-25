@@ -42,8 +42,6 @@ components:
           format: password
         description: 
           type: string 
-        imgurl:
-          type: string
     Match:
       type: object
       properties:
