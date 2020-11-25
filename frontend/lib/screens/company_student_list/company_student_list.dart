@@ -21,12 +21,12 @@ class _StudentCardsListState extends State<StudentCardsList> {
   CardController _cardController;
   Placement _placement;
   Map<int, List<Student>> recommendationMap = {};
-  int _employer_id = 1;
+  int _employerId = 1;
 
   @override
   void initState() {
     APIService.route(ENDPOINTS.Employers, "/employer/:employerId/placements",
-            urlArgs: _employer_id)
+            urlArgs: _employerId)
         .then((placementsList) => setState(() {
               _placements = placementsList;
               _placement = _placements[0] ?? null;
