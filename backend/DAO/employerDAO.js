@@ -1,10 +1,11 @@
 const database = require('../DB/connection');
 
 module.exports = {
-    getPlacementEmployer: async (employer_id) => {
-        return database('employer')
+    getEmployer: async (employer_id) => {
+        let result = await database('employer')
            .select('name', 'location', 'urllogo')
             .where('id', employer_id);
+        return result[0];
    },
 
 };
