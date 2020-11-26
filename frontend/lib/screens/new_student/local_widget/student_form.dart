@@ -67,8 +67,8 @@ class _StudentFormState extends State<StudentForm> {
                         _createnameField(student),
                         _createsurnameField(student),
                         _createemailField(student),
-                        _createpasswordField(student),
                         _createDescriptionField(student),
+                        _createphoneField(student),
                       ],
                     ),
                   ),
@@ -102,7 +102,7 @@ class _StudentFormState extends State<StudentForm> {
   Widget _createnameField(Student student) {
     return TextFormField(
       decoration: const InputDecoration(
-        hintText: 'Student name',
+        hintText: 'Name',
       ),
       initialValue: student.name ?? '',
       onChanged: (value) {
@@ -122,7 +122,7 @@ class _StudentFormState extends State<StudentForm> {
 Widget _createsurnameField(Student student) {
     return TextFormField(
       decoration: const InputDecoration(
-        hintText: 'Student surname',
+        hintText: 'Surname',
       ),
       initialValue: student.surname ?? '',
       onChanged: (value) {
@@ -159,26 +159,6 @@ Widget _createsurnameField(Student student) {
     );
   }
 
-Widget _createpasswordField(Student student) {
-    return TextFormField(
-      decoration: const InputDecoration(
-        hintText: 'Student password',
-      ),
-      initialValue: student.password ?? '',
-      onChanged: (value) {
-        setState(() {
-          student.password = value;
-        });
-      },
-      validator: (value) {
-        if (value.isEmpty) {
-          return 'Please enter a student email';
-        }
-        return null;
-      },
-    );
-  }
-
 
 
   Widget _createDescriptionField(Student student) {
@@ -204,6 +184,25 @@ Widget _createpasswordField(Student student) {
     );
   }
 
+  Widget _createphoneField(Student student) {
+    return TextFormField(
+      decoration: const InputDecoration(
+        hintText: 'Phone number',
+      ),
+      initialValue: student.phone ?? '',
+      onChanged: (value) {
+        setState(() {
+          student.phone = value;
+        });
+      },
+      validator: (value) {
+        if (value.isEmpty) {
+          return 'Please enter a phone number';
+        }
+        return null;
+      },
+    );
+  }
 
 
 

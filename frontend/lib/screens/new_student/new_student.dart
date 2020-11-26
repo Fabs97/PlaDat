@@ -12,7 +12,7 @@ class NewStudent extends StatefulWidget {
 
 class _NewStudentState extends State<NewStudent> {
   bool _firstStep = true;
-  //Student _newStudent = Student(name: "Bassam", surname: "Zabad");
+  
   Student _newStudent = Student();
 
   void changeStep(bool step) {

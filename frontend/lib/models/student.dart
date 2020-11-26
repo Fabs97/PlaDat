@@ -10,9 +10,10 @@ class Student extends ChangeNotifier {
   String email;
   String password;
   String description;
+  String phone;
   Map<String, dynamic> skills;
 
-  Student({this.id, this.name, this.surname, this.email,this.password,this.description,this.skills});
+  Student({this.id, this.name, this.surname, this.email,this.password,this.description,this.phone,this.skills});
 
   String toJson() {
     return jsonEncode({
@@ -22,6 +23,7 @@ class Student extends ChangeNotifier {
       "email": this.email,
       "password":this.password,
       "description":this.description,
+      "phone":this.phone,
       "skills": this.skills.map((key, value) =>
           MapEntry(key, value.map((e) => e.toJsonMap()).toList()))
     });
@@ -35,6 +37,7 @@ class Student extends ChangeNotifier {
         email: json["email"],
         password: json["password"],
         description: json["description"],
+        phone:  json["phone"],
         skills: Skill.listFromJson(json["skills"]));
   }
 }
