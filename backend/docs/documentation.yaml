@@ -23,6 +23,8 @@ tags:
     description: All the APIs related to the "student" table
   - name: Matching
     description: All the APIs related to the matching algorithm
+  - name: Employer
+    description: All the APIs related to the "employer" algorithm
 
 components:
   schemas:
@@ -41,6 +43,17 @@ components:
           type: string
           format: password
         description: 
+          type: string 
+    Employer:
+      type: object
+      properties:
+        id:
+          type: integer
+        name: 
+          type: string
+        location: 
+          type: string
+        urllogo: 
           type: string 
     Match:
       type: object
@@ -107,6 +120,33 @@ components:
             - OTHER
 
 paths:
+  /employer/{id}:
+    get:
+      description: Provides the employer for the provided id 
+      tags:
+        - "Employer"
+      parameters:
+        - in: path
+          required: true
+          name: id
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                anyOf:
+                  - $ref: "#/components/schemas/Employer"
+                example: 
+                  {
+                    id: 1,
+                    name: "Google",
+                    location: "Milan, Italy",
+                    urllogo: "www.pladat.eu"
+                  }
   /recommendation/{id}/seePlacements:
     get:
       description: Provides all the placements recommendation for the provided student id, based on the algorithm
