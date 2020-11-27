@@ -54,8 +54,12 @@ class Placement extends ChangeNotifier {
       id: json["id"],
       position: json["position"],
       workingHours: json["working_hours"],
-      startPeriod: DateTime.parse(json["start_period"]),
-      endPeriod: DateTime.parse(json["end_period"]),
+      startPeriod: json["start_period"] != null
+          ? DateTime.parse(json["start_period"])
+          : null,
+      endPeriod: json["end_period"] != null
+          ? DateTime.parse(json["end_period"])
+          : null,
       salary: json["salary"],
       description: json["description_role"],
       institutions: json["institutions"]
@@ -68,6 +72,9 @@ class Placement extends ChangeNotifier {
 
   static List<Placement> listFromJson(String json) {
     final parsed = jsonDecode(json).cast<Map<String, dynamic>>();
-    return parsed.map((skillsJson) => Placement.fromJson(skillsJson)).toList();
+    return parsed
+        .map((placementsJason) => Placement.fromJson(placementsJason))
+        .toList()
+        .cast<Placement>();
   }
 }
