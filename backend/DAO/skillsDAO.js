@@ -35,10 +35,12 @@ module.exports = {
     },
 
     // this look for a skill, known the name and the type
-    getSkillByNameAndType: (name, type) => {
-        return database('skill')
+    getSkillByNameAndType: async  (name, type) => {
+        let result = await database('skill')
             .select('id', 'name', 'type')
-            .where(['name', 'type'], [name, type]);
+            .where('name', name)
+            .andWhere('type', type);
+        return result[0];
     },
 
     getStudentSkillsById: (studentID) => {
