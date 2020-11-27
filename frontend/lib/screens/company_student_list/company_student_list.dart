@@ -4,9 +4,11 @@ import 'package:frontend/models/placement.dart';
 import 'package:frontend/models/student.dart';
 import 'package:frontend/screens/company_student_list/local_widgets/student_card.dart';
 import 'package:frontend/services/api_service.dart';
+import 'package:frontend/utils/routes_generator.dart';
 import 'package:frontend/widgets/appbar.dart';
 import 'package:frontend/models/match.dart';
 import 'package:frontend/widgets/drawer.dart';
+import 'package:frontend/widgets/match_alert.dart';
 import 'package:frontend/widgets/tinder_button.dart';
 
 class StudentCardsList extends StatefulWidget {
@@ -111,7 +113,17 @@ class _StudentCardsListState extends State<StudentCardsList> {
                                   orientation == CardSwipeOrientation.LEFT
                                       ? false
                                       : true,
-                            )).then((match) {
+                            )).then((match) async {
+                          if (match.status == 'ACCEPTED') {
+                            await Nav.navigatorKey.currentState
+                                .push(MaterialPageRoute(
+                              builder: (builder) => MatchAlert(
+                                placement: _placement,
+                                object: recommendationMap[_placement.id][index],
+                              ),
+                              fullscreenDialog: true,
+                            ));
+                          }
                           if (recommendationMap[_placement.id].isNotEmpty) {
                             setState(() {
                               recommendationMap[_placement.id].removeAt(index);
