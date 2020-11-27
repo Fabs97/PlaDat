@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:frontend/models/student.dart';
@@ -67,8 +68,9 @@ class _StudentFormState extends State<StudentForm> {
                         _createnameField(student),
                         _createsurnameField(student),
                         _createemailField(student),
-                        _createDescriptionField(student),
                         _createphoneField(student),
+                        _createDescriptionField(student),
+                        
                       ],
                     ),
                   ),
@@ -154,6 +156,9 @@ Widget _createsurnameField(Student student) {
         if (value.isEmpty) {
           return 'Please enter a student email';
         }
+        else if(!EmailValidator.validate(value)){
+           return 'Please enter a valid email';
+        }
         return null;
       },
     );
@@ -189,6 +194,10 @@ Widget _createsurnameField(Student student) {
       decoration: const InputDecoration(
         hintText: 'Phone number',
       ),
+      keyboardType: TextInputType.number,
+      inputFormatters: [
+        FilteringTextInputFormatter.digitsOnly,
+      ],
       initialValue: student.phone ?? '',
       onChanged: (value) {
         setState(() {
@@ -203,6 +212,7 @@ Widget _createsurnameField(Student student) {
       },
     );
   }
+
 
 
 

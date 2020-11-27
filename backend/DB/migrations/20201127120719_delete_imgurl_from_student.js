@@ -1,7 +1,8 @@
 
 exports.up = function(knex) {
     return knex.schema.table('student', function(table) {
-        table.dropColumn('imgurl')
+      if(knex.schema.hasColumn(table, "imgurl")) {table.dropColumn('imgurl') }  
+      
       })
 };
 
