@@ -23,6 +23,7 @@ class _StudentCardsListState extends State<StudentCardsList> {
   Map<int, List<Student>> recommendationMap = {};
   int _employerId = 1;
 
+  final int placementId = 1;
   @override
   void initState() {
     APIService.route(ENDPOINTS.Employers, "/employer/:employerId/placements",
