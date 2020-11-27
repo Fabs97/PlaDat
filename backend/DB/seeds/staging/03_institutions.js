@@ -5,13 +5,13 @@ exports.seed = function(knex) {
     .then(function () {
       // Inserts seed entries
       return knex('institutions').insert([
-        {id: 1, name: 'Politecnico di Milano'},
-        {id: 2, name: 'Politecnico di Torino'},
-        {id: 3, name: 'Universita di Napoli'},
-        {id: 4, name: 'Universita di Bari'},
-        {id: 5, name: 'MDH'},
-        {id: 6, name: 'MIT'},
-        {id: 7, name: 'FER'},
+        {name: 'Politecnico di Milano'},
+        {name: 'Politecnico di Torino'},
+        {name: 'Universita di Napoli'},
+        {name: 'Universita di Bari'},
+        {name: 'MDH'},
+        {name: 'MIT'},
+        {name: 'FER'},
       ]);
     });
 };

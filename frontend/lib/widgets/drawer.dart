@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/utils/routes_generator.dart';
 
 class CustomDrawer {
   static Drawer createDrawer(BuildContext context) {
@@ -11,25 +12,21 @@ class CustomDrawer {
               color: Colors.blue,
             ),
           ),
-          // ListTile(
-          //   title: Text("Create placement"),
-          //   onTap: () => Navigator.pushNamed(context, "/new-placement"),
-          // ),
           ListTile(
             title: Text("Students list"),
-            onTap: () => Navigator.pushNamed(context, "/student-list"),
+            onTap: () => Nav.navigatorKey.currentState.pushNamed("/student-list"),
           ),
           ListTile(
-            title: Text("Placement list"),
-            onTap: () => Navigator.pushNamed(context, "/placement-list"),
+            title: Text("Placements list"),
+            onTap: () => Nav.navigatorKey.currentState.pushNamed("/placement-list"),
           ),
           ListTile(
             title: Text("Create placement"),
-            onTap: () => Navigator.pushNamed(context, "/new-placement"),
+            onTap: () => Nav.navigatorKey.currentState.pushNamed("/new-placement"),
           ),
           ListTile(
             title: Text("Create student"),
-            onTap: () => Navigator.pushNamed(context, "/new-student"),
+            onTap: () => Nav.navigatorKey.currentState.pushNamed("/new-student"),
           ),
         ],
       ),

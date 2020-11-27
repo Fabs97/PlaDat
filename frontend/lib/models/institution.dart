@@ -7,6 +7,7 @@ class Institution {
   Institution({this.id, this.name});
 
   factory Institution.fromJson(Map<String, dynamic> json) {
+    if (json == null) return null;
     return Institution(
       id: json["id"] as int,
       name: json["name"] as String,

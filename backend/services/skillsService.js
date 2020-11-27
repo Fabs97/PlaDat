@@ -40,7 +40,11 @@ const self = module.exports = {
         return await skillsDAO.getSkillByType(skillType);
     },
 
-    getStudentSkills: (studentID) => {
-        return skillsDAO.getStudentSkillsById(studentID);
-    }
+    getStudentSkills: async (studentID) => {
+        return await skillsDAO.getStudentSkills(studentID);
+    },
+
+    getPlacementSkills: async (placementID) => {
+        return await skillsDAO.getPlacementSkills(placementID);
+    },
 };

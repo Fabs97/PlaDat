@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:frontend/models/placement.dart';
+import 'package:frontend/models/student.dart';
 import 'package:http/http.dart' as http;
 import 'package:frontend/services/api_service.dart';
 
@@ -8,19 +9,33 @@ class RecomendationsAPIService extends APIInfo {
       {dynamic body, dynamic urlArgs}) {
     switch (subRoute) {
       case "/recommendation/id/seePlacements":
+        return _getPlacementRecomendations(subRoute, urlArgs);
+      case "/recommendation/id/seeStudents":
         return _getStudentRecomendations(subRoute, urlArgs);
       default:
         throw RecomendationsAPIException();
     }
   }
 
-  static Future<dynamic> _getStudentRecomendations(
+  static Future<dynamic> _getPlacementRecomendations(
       String subRoute, int id) async {
     var response = await http
         .get(APIInfo.apiEndpoint + "/recommendation/$id/seePlacements");
     if (response.statusCode == 200) {
       return jsonDecode(response.body)
           .map((placementJson) => Placement.fromJson(placementJson))
+          .toList();
+    }
+  }
+
+  static Future<dynamic> _getStudentRecomendations(
+      String subRoute, int id) async {
+    var response =
+        await http.get(APIInfo.apiEndpoint + "/recommendation/$id/seeStudents");
+    print(response.toString());
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body)
+          .map((studentJson) => Student.fromJson(studentJson))
           .toList();
     }
   }
