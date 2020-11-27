@@ -31,10 +31,9 @@ class MatchAlert extends StatelessWidget {
       ),
       body: Center(
         child: Column(
-          //mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             Container(
-              padding: const EdgeInsets.all(40.0),
               child: Column(
                 children: [
                   Text(
@@ -58,7 +57,6 @@ class MatchAlert extends StatelessWidget {
             ),
             isStudent
                 ? Container(
-                    padding: const EdgeInsets.all(40.0),
                     child: Column(
                       children: [
                         Text(
@@ -109,7 +107,6 @@ class MatchAlert extends StatelessWidget {
                     ],
                   ),
             Container(
-              padding: const EdgeInsets.all(40.0),
               child: Column(
                 children: [
                   Text(
