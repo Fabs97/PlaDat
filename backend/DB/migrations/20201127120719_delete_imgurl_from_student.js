@@ -1,7 +1,8 @@
 
-exports.up = function(knex) {
+exports.up = async function(knex) {
+    let check = await knex.schema.hasColumn('student', "imgurl");
     return knex.schema.table('student', function(table) {
-      if(knex.schema.hasColumn(table, "imgurl")) {table.dropColumn('imgurl') }  
+      if(check) {table.dropColumn('imgurl') }  
       
       })
 };
