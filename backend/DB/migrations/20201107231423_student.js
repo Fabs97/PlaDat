@@ -8,7 +8,6 @@ exports.up = async function(knex) {
         table.string('email');
         table.text('password');
         table.text('description');
-        table.text('imgurl');
     }) : null;
 };
   
