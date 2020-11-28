@@ -168,3 +168,62 @@ flutter run -d chrome --dart-define=API_ENDPOINT=https://pladat-staging.herokuap
 flutter run -d chrome --web-hostname=127.0.0.1 --web-port=8200
 flutter run -d chrome --web-hostname=localhost --web-port=8200
 ```
+
+- If you're using VSCode and you wish to debug with just the push of a button, you can use the following in your launch.json file:
+```
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Local frontend",
+      "cwd": "${workspaceFolder}/frontend",
+      "request": "launch",
+      "type": "dart",
+      "args": ["--web-hostname=127.0.0.1", "--web-port=8200"]
+    },
+    {      
+      "name": "Local backend",
+      "request": "launch",
+      "cwd": "${workspaceFolder}/backend",
+      "runtimeArgs": [
+        "run-script",
+        "serve",
+      ],
+      "runtimeExecutable": "npm",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "type": "pwa-node"
+    },
+    {
+      "name": "PlaDat frontend staging",
+      "cwd": "${workspaceFolder}/frontend",
+      "request": "launch",
+      "type": "dart",
+      "args": [
+        "--web-hostname=127.0.0.1",
+        "--web-port=8200",
+        "--dart-define=API_ENDPOINT=http://pladat-staging.herokuapp.com"
+      ]
+    },
+    {
+      "name": "PlaDat frontend production",
+      "cwd": "${workspaceFolder}/frontend",
+      "request": "launch",
+      "type": "dart",
+      "args": [
+        "--web-hostname=127.0.0.1",
+        "--web-port=8200",
+        "--dart-define=API_ENDPOINT=https://pladat.herokuapp.com"
+      ]
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Pladat development",
+      "configurations": ["Local frontend", "Local backend"]
+    }
+  ]
+}
+
+```
