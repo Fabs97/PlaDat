@@ -243,17 +243,17 @@ paths:
       description: Allows users to upsert the provided match to the matches table
       tags:
         - "Matching"
-      parameters:
-        - in: query
-          required: true
-          name: Match
-          schema:
-            type: object
-            example: {
-              studentID: 1,
-              placementID: 2,
-              studentAccept: true
-            }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              example: {
+                studentID: 1,
+                placementID: 2,
+                studentAccept: true
+              }
       responses:
         '200':
           description: OK
@@ -344,51 +344,51 @@ paths:
                   }
 
   /placement/new-placement:
-    get:
+    post:
       description: Allows companies to insert a new placement into the database
       tags:
         - "Placement"
-      parameters:
-        - in: query
-          description: a json containing all the information about the placement
-          required: true
-          name: Placement details
-          schema:
-            type: object
-            example:
-              {
-                position: "Full stack developer",
-                working_hours: 20,
-                start_period: "2020-11-11",
-                end_period: "2020-11-11",
-                salary: 600,
-                description_role: "An internship for you to learn how to be a full stack developer",
-                majors: [
-                  {id: 1, name: "Computer Science and Engineering"},
-                  {id: 2, name: "Management Engineering"},
-                ],
-                institutions: [
-                  {id: 1, name: "Politecnico di Milano"},
-                  {id: 1, name: "Politecnico di Torino"},
-                ],
-                skills: {
-                  technicalSkills: [
-                    {id: 1},
-                    {id: 2},
-                    {id: 3},
+      requestBody:
+        description: a json containing all the information about the placement
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                {
+                  position: "Full stack developer",
+                  workingHours: 20,
+                  startPeriod: "2020-11-11",
+                  endPeriod: "2020-11-11",
+                  salary: 600,
+                  descriptionRole: "An internship for you to learn how to be a full stack developer",
+                  majors: [
+                    {id: 1, name: "Computer Science and Engineering"},
+                    {id: 2, name: "Management Engineering"},
                   ],
-                  softSkills: [
-                    {id: 4},
-                    {id: 5},
-                    {id: 6},
+                  institutions: [
+                    {id: 1, name: "Politecnico di Milano"},
+                    {id: 1, name: "Politecnico di Torino"},
                   ],
-                  otherSkills: [
-                    "Cooking",
-                    "Organizing events",
-                    "Trekking"
-                  ]
+                  skills: {
+                    technicalSkills: [
+                      {id: 1},
+                      {id: 2},
+                      {id: 3},
+                    ],
+                    softSkills: [
+                      {id: 4},
+                      {id: 5},
+                      {id: 6},
+                    ],
+                    otherSkills: [
+                      "Cooking",
+                      "Organizing events",
+                      "Trekking"
+                    ]
+                  }
                 }
-              }
       responses:
         '200':
           description: OK
