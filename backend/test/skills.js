@@ -66,7 +66,7 @@ describe('skills api', () => {
                         response.body[i].should.have.property('id');
                         response.body[i].should.have.property('name');
                         response.body[i].should.have.property('type');
-                        response.body[i].type.should.be('TECH');
+                        response.body[i].type.should.equal('TECH');
                     }
 
                     done();
@@ -83,7 +83,7 @@ describe('skills api', () => {
                         response.body[i].should.have.property('id');
                         response.body[i].should.have.property('name');
                         response.body[i].should.have.property('type');
-                        response.body[i].type.should.be('SOFT');
+                        response.body[i].type.should.equal('SOFT');
                     }
 
                     done();
@@ -100,7 +100,7 @@ describe('skills api', () => {
                         response.body[i].should.have.property('id');
                         response.body[i].should.have.property('name');
                         response.body[i].should.have.property('type');
-                        response.body[i].type.should.be('OTHER');
+                        response.body[i].type.should.equal('OTHER');
                     }
 
                     done();

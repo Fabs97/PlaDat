@@ -25,7 +25,7 @@ describe('student API', () =>{
             
             chai.request(server)
                 .post('/student')
-                .set('content-ype', 'application/json')
+                .set('content-type', 'application/json')
                 .send({name: testStudent.name, surname: testStudent.surname, email: testStudent.email, description: testStudent.description, phone: testStudent.phone})
                 .end((err, response) => {
                     response.should.have.status(200);
@@ -52,7 +52,7 @@ describe('student API', () =>{
     describe('GET /student/:id', () => {
         it('should get the student details', (done) => {
             chai.request(server)
-                .get('/student/' + '1')
+                .get('/student/1')
                 .end((err, response) => {
                     response.should.have.status(200);
                     response.body.should.be.a('object');

@@ -53,10 +53,10 @@ describe('recommendation API', () => {
                         students[i].should.have.property('id');
                         students[i].should.have.property('name');
                         students[i].should.have.property('surname');
-                        students[i].should.have.property('email');
-                        students[i].should.have.property('description');
-                        students[i].should.have.property('phone');
-                        students[i].should.have.property('skills');
+                        //students[i].should.have.property('email');
+                        //students[i].should.have.property('description');
+                        //students[i].should.have.property('phone');
+                        //students[i].should.have.property('skills');
                         let skills = students[i].skills;
                         for(j = 0; j < skills.length; j++){
                             skills.should.have.property('id');
