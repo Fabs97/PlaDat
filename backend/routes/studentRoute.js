@@ -25,6 +25,16 @@ router.post("/student/:id/profile", async (req, res, next) => {
 
 });
 
+router.get("/students/last", async (req, res, next) => {
+    const lastStudent = await studentService.getLastStudent();
+    res.json(lastStudent);
+});
+
+router.delete("/student/:id", async (req, res, next) => {
+    let result = await studentService.deleteStudentById(req.params.id);
+    res.json(result);
+})
+
 
 // Here you can define further routes and their functionality
 

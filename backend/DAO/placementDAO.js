@@ -220,6 +220,12 @@ module.exports = {
         return database('placements')
             .select()
             .where('employer_id', employerId);
+    },
+    
+    deletePlacementById: (id) => {
+        return database('placements')
+            .where('id', id)
+            .del();
     }
 
 }; 

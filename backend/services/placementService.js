@@ -57,6 +57,10 @@ module.exports = {
 
     getPlacementsByEmployerId: (employerId) => {
         return placementDAO.getPlacementsByEmployerId(employerId);
+    },
+
+    deletePlacementById: (id) => {
+        return placementDAO.deletePlacementById(id);
     }
 
 };
