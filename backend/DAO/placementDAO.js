@@ -33,7 +33,9 @@ module.exports = {
                 'start_period',
                 'end_period',
                 'salary',
-                'description_role')
+                'description_role',
+                'employer_id'
+                )
             .where('id', id);
         return result[0];
 
@@ -151,12 +153,10 @@ module.exports = {
         let placementIDs =  placementData.map(placement => placement.id);
 
         let resultTemp = await database('placement_has_skills AS phs')
-            // .select('s.id', 's.name', 's.surname', 's.email', 's.description', 's.imgurl', 'sk.id AS skill_id', 'sk.name AS skill_name', 'sk.type AS skill_type')
             .leftJoin('skill AS s', 's.id', 'phs.skill_id')
             .whereIn('phs.placement_id', placementIDs)
             .orderBy('phs.placement_id');
         let result = [];
-        let indx = 0;
         let prev = 0;
 
         for (let p=0; p<placementData.length; p++) {
@@ -215,5 +215,17 @@ module.exports = {
             .leftJoin('placement_has_institution AS phi', 'i.id', 'phi.institution_id')
             .where('phi.placement_id', id);
     },
+
+    getPlacementsByEmployerId: (employerId) => {
+        return database('placements')
+            .select()
+            .where('employer_id', employerId);
+    },
+    
+    deletePlacementById: (id) => {
+        return database('placements')
+            .where('id', id)
+            .del();
+    }
 
 }; 

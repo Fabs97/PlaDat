@@ -4,8 +4,10 @@ import 'package:frontend/models/placement.dart';
 import 'package:frontend/models/match.dart';
 import 'package:frontend/screens/student_placement_list/local_widgets/placement_card.dart';
 import 'package:frontend/services/api_service.dart';
+import 'package:frontend/utils/routes_generator.dart';
 import 'package:frontend/widgets/appbar.dart';
 import 'package:frontend/widgets/drawer.dart';
+import 'package:frontend/widgets/match_alert.dart';
 import 'package:frontend/widgets/tinder_button.dart';
 
 class PlacementCardsList extends StatefulWidget {
@@ -73,8 +75,17 @@ class _PlacementCardsListState extends State<PlacementCardsList>
                                 orientation == CardSwipeOrientation.LEFT
                                     ? false
                                     : true,
-                          )).then((match) {
-                        print(match);
+                          )).then((match) async {
+                        if (match.status == 'ACCEPTED') {
+                          await Nav.navigatorKey.currentState
+                              .push(MaterialPageRoute(
+                            builder: (builder) => MatchAlert(
+                              placement: placements[index],
+                              object: null,
+                            ),
+                            fullscreenDialog: true,
+                          ));
+                        }
                       });
                     },
                   ),

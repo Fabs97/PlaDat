@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/models/student.dart';
 import 'package:frontend/widgets/card_skills_info.dart';
@@ -21,13 +22,30 @@ class StudentCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.max,
           children: [
-            _createStudentTitle(size, Theme.of(context).textTheme),
-            _createStudentDescription("This is a description about me..."),
-            _createStudentInfo(),
-            CardSkillsChips(
-                title: "Technical skills", skills: student.skills["TECH"] ?? []),
-            CardSkillsChips(
-                title: "Soft skills", skills: student.skills["SOFT"] ?? []),
+            Expanded(
+              child: _createStudentTitle(size, Theme.of(context).textTheme),
+              flex: 2,
+            ),
+            Expanded(
+              child: _createStudentDescription(
+                  "This is a description about me..."),
+              flex: 1,
+            ),
+            Expanded(
+              child: _createStudentInfo(),
+              flex: 1,
+            ),
+            Expanded(
+              child: CardSkillsChips(
+                  title: "Technical skills",
+                  skills: student.skills["TECH"] ?? []),
+              flex: 1,
+            ),
+            Expanded(
+              child: CardSkillsChips(
+                  title: "Soft skills", skills: student.skills["SOFT"] ?? []),
+              flex: 1,
+            ),
           ],
         ),
       ),
@@ -35,57 +53,56 @@ class StudentCard extends StatelessWidget {
   }
 
   Widget _createStudentTitle(Size size, TextTheme textTheme) {
-    return Padding(
-      padding: EdgeInsets.symmetric(
-        horizontal: 20.0,
-        vertical: 10.0,
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        mainAxisSize: MainAxisSize.max,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Container(
-            // Image container
-            decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: ExactAssetImage("/images/image0.jpg"),
-                  fit: BoxFit.fill,
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      mainAxisSize: MainAxisSize.max,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Container(
+          // Image container
+          decoration: BoxDecoration(
+              image: DecorationImage(
+                image: ExactAssetImage("/images/image0.jpg"),
+                fit: BoxFit.fill,
+              ),
+              border: Border.all(
+                color: Colors.grey,
+                width: 2.0,
+              ),
+              borderRadius: BorderRadius.circular(10.0)),
+          width: size.width * .2,
+          height: size.width * .2,
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ConstrainedBox(
+                constraints: BoxConstraints.loose(
+                  Size(
+                    size.width * .5,
+                    size.height * .1,
+                  ),
                 ),
-                border: Border.all(
-                  color: Colors.grey,
-                  width: 2.0,
-                ),
-                borderRadius: BorderRadius.circular(10.0)),
-            width: size.width * .2,
-            height: size.width * .2,
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
+                child: AutoSizeText(
                   "${student.name} ${student.surname}",
                   style: textTheme.headline4.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 0.0),
-                  child: Text(
-                    "Find out more",
-                    style: TextStyle(
-                      decoration: TextDecoration.underline,
-                    ),
-                  ),
+              ),
+              Text(
+                "Find out more",
+                style: TextStyle(
+                  decoration: TextDecoration.underline,
                 ),
-              ],
-            ),
-          )
-        ],
-      ),
+              ),
+            ],
+          ),
+        )
+      ],
     );
   }
 

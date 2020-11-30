@@ -41,7 +41,7 @@ describe('skills api', () => {
                     }
 
                     softSkills.should.be.a('array');
-                    for(let i=0; i<technicalSkills.length; i++) {
+                    for(let i=0; i<softSkills.length; i++) {
                         softSkills[i].should.have.property('id');
                         softSkills[i].should.have.property('name');
                         softSkills[i].should.have.property('type');
@@ -51,6 +51,61 @@ describe('skills api', () => {
                     done();
                 })
         })
+
     })
 
+    describe('GET /skills/:type', () => {
+        it('should get all the techinical skills if TECH is selected', (done) => {
+            chai.request(server)
+                .get('/skills/TECH')
+                .end((err, response) => {
+                    response.should.have.status(200);
+                    response.body.should.be.a('array');
+                    
+                    for(let i=0; i<response.body.length; i++){
+                        response.body[i].should.have.property('id');
+                        response.body[i].should.have.property('name');
+                        response.body[i].should.have.property('type');
+                        response.body[i].type.should.equal('TECH');
+                    }
+
+                    done();
+                })
+        })
+        it('should get all the soft skills if SOFT is selected', (done) => {
+            chai.request(server)
+                .get('/skills/SOFT')
+                .end((err, response) => {
+                    response.should.have.status(200);
+                    response.body.should.be.a('array');
+                    
+                    for(let i=0; i<response.body.length; i++){
+                        response.body[i].should.have.property('id');
+                        response.body[i].should.have.property('name');
+                        response.body[i].should.have.property('type');
+                        response.body[i].type.should.equal('SOFT');
+                    }
+
+                    done();
+                })
+        })
+        it('should get all the other skills if OTHER is selected', (done) => {
+            chai.request(server)
+                .get('/skills/OTHER')
+                .end((err, response) => {
+                    response.should.have.status(200);
+                    response.body.should.be.a('array');
+                    
+                    for(let i=0; i<response.body.length; i++){
+                        response.body[i].should.have.property('id');
+                        response.body[i].should.have.property('name');
+                        response.body[i].should.have.property('type');
+                        response.body[i].type.should.equal('OTHER');
+                    }
+
+                    done();
+                })
+        })
+    })
+    
 });

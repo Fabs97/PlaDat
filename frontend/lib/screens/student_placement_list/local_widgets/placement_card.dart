@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/models/placement.dart';
 import 'package:frontend/widgets/card_skills_info.dart';
@@ -22,13 +23,29 @@ class PlacementCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.max,
           children: [
-            _createPlacementTitle(size, Theme.of(context).textTheme),
-            _createPlacementDescription(placement.description),
-            _createPlacementWorkingInfo(),
-            CardSkillsChips(
-                title: "Technical skills", skills: placement.skills["TECH"] ?? []),
-            CardSkillsChips(
-                title: "Soft skills", skills: placement.skills["SOFT"] ?? []),
+            Expanded(
+              child: _createPlacementTitle(size, Theme.of(context).textTheme),
+              flex: 2,
+            ),
+            Expanded(
+              child: _createPlacementDescription(placement.description, size),
+              flex: 1,
+            ),
+            Expanded(
+              child: _createPlacementWorkingInfo(),
+              flex: 1,
+            ),
+            Expanded(
+              child: CardSkillsChips(
+                  title: "Technical skills",
+                  skills: placement.skills["TECH"] ?? []),
+              flex: 1,
+            ),
+            Expanded(
+              child: CardSkillsChips(
+                  title: "Soft skills", skills: placement.skills["SOFT"] ?? []),
+              flex: 1,
+            ),
           ],
         ),
       ),
@@ -36,66 +53,81 @@ class PlacementCard extends StatelessWidget {
   }
 
   Widget _createPlacementTitle(Size size, TextTheme textTheme) {
-    return Padding(
-      padding: EdgeInsets.symmetric(
-        horizontal: 20.0,
-        vertical: 10.0,
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        mainAxisSize: MainAxisSize.max,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Container(
-            // Image container
-            decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: ExactAssetImage("/images/image0.jpg"),
-                  fit: BoxFit.fill,
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      mainAxisSize: MainAxisSize.max,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Container(
+          // Image container
+          decoration: BoxDecoration(
+              image: DecorationImage(
+                image: ExactAssetImage("/images/image0.jpg"),
+                fit: BoxFit.fill,
+              ),
+              border: Border.all(
+                color: Colors.grey,
+                width: 2.0,
+              ),
+              borderRadius: BorderRadius.circular(10.0)),
+          width: size.width * .2,
+          height: size.width * .2,
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ConstrainedBox(
+                constraints: BoxConstraints.loose(
+                  Size(
+                    size.width * .5,
+                    size.height * .2,
+                  ),
                 ),
-                border: Border.all(
-                  color: Colors.grey,
-                  width: 2.0,
-                ),
-                borderRadius: BorderRadius.circular(10.0)),
-            width: size.width * .2,
-            height: size.width * .2,
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
+                child: AutoSizeText(
                   placement.position,
+                  overflow: TextOverflow.fade,
+                  maxLines: 2,
                   style: textTheme.headline4.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                Text(
-                  "Company name",
-                  style: textTheme.headline6,
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 0.0), // TODO: fix this padding
-                  child: Text(
-                    "Find out more",
-                    style: TextStyle(
-                      decoration: TextDecoration.underline,
-                    ),
+              ),
+              Text(
+                "Company name",
+                style: textTheme.headline6,
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 0.0),
+                child: Text(
+                  "Find out more",
+                  style: TextStyle(
+                    decoration: TextDecoration.underline,
                   ),
                 ),
-              ],
-            ),
-          )
-        ],
-      ),
+              ),
+            ],
+          ),
+        )
+      ],
     );
   }
 
-  Widget _createPlacementDescription(String description) {
-    return Text(description);
+  Widget _createPlacementDescription(String description, Size screenSize) {
+    return ConstrainedBox(
+      constraints: BoxConstraints.loose(
+        Size(
+          screenSize.width * .8,
+          screenSize.height * .3,
+        ),
+      ),
+      child: AutoSizeText(
+        description,
+        maxLines: 5,
+      ),
+    );
   }
 
   Widget _createPlacementWorkingInfo() {
@@ -107,7 +139,8 @@ class PlacementCard extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisSize: MainAxisSize.max,
       children: [
-        _createPlacementWorkingInfoBox("Working period", "from $startMonth to $endMonth $endYear"),
+        _createPlacementWorkingInfoBox(
+            "Working period", "from $startMonth to $endMonth $endYear"),
         _createPlacementWorkingInfoBox(
             "Working hours", "${placement.workingHours} hours a week"),
         _createPlacementWorkingInfoBox("Salary", "${placement.salary} €"),
@@ -117,10 +150,9 @@ class PlacementCard extends StatelessWidget {
 
   Widget _createPlacementWorkingInfoBox(String title, String subTitle) {
     return Expanded(
-      flex: 3,
       child: Padding(
         padding: const EdgeInsets.symmetric(
-          horizontal: 20.0,
+          horizontal: 5.0,
         ),
         child: Container(
           decoration: BoxDecoration(
@@ -130,16 +162,22 @@ class PlacementCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Center(
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 10.0),
                 child: Text(
                   title,
+                  textAlign: TextAlign.center,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
-              Center(
-                child: Text(subTitle),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 10.0),
+                child: Text(
+                  subTitle,
+                  textAlign: TextAlign.center,
+                ),
               ),
             ],
           ),

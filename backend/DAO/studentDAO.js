@@ -12,7 +12,7 @@ module.exports = {
         
         // This one is very similar to SQL
         let result = await database('student')
-            .select('id', 'name','surname')
+            .select('id', 'name','surname','email', 'description', 'phone')
             .where('id', id);
         return result[0];
     },
@@ -22,8 +22,11 @@ module.exports = {
             .returning()
             .insert({
                 name: studentInfo.name,
-                surname: studentInfo.surname
-            },['id','name','surname']);
+                surname: studentInfo.surname,
+                email: studentInfo.email,
+                description: studentInfo.description,
+                phone: studentInfo.phone
+            },['id','name','surname','email','description', 'phone']);
     },
 
     setStudentSkills: (studentId, skills) => {
@@ -78,7 +81,7 @@ module.exports = {
         studentIDs = studentIDs.map(student => student.student_id);
 
         let resultTemp = await database('student AS s')
-            .select('s.id', 's.name', 's.surname', 's.email', 's.description', 's.imgurl', 'sk.id AS skill_id', 'sk.name AS skill_name', 'sk.type AS skill_type')
+            .select('s.id', 's.name', 's.surname', 's.email', 's.description', 'sk.id AS skill_id', 'sk.name AS skill_name', 'sk.type AS skill_type')
             .leftJoin('student_has_skills AS shs', 's.id', 'shs.student_id')
             .leftJoin('skill AS sk', 'shs.skill_id', 'sk.id')
             .whereIn('s.id', studentIDs)
@@ -113,6 +116,21 @@ module.exports = {
 
         return result;
     },
+
+    getLastStudent: async () => {
+        let result = await database("student")
+            .select("id")
+            .orderBy("id", "desc")
+            .limit(1);
+        return result[0];
+    },
+
+    deleteStudentById: (id) => {
+        return database('student')
+            .where('id', id)
+            .del();
+            
+    }
 
 
 };

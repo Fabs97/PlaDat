@@ -5,7 +5,6 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha",
-    "prestart": "npx knex migrate:latest && npx knex seed:run",
     "start": "node index.js",
     "serve": "nodemon dev index.js"
   },
@@ -18,7 +17,7 @@
     "express": "^4.17.1",
     "js-yaml": "^3.14.0",
     "knex": "^0.21.12",
-    "pg": "^8.4.2",
+    "pg": "^8.5.1",
     "swagger-ui-express": "^4.1.4"
   },
   "devDependencies": {
