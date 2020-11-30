@@ -8,5 +8,10 @@ router.get("/employer/:id", async (req, res, next) => {
 
 });
 
+router.get('/employers/last', async (req, res, next) => {
+    const employerId = await employerService.getLastEmployer();
+    res.json(employerId)
+})
+
 
 module.exports = router;

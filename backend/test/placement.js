@@ -15,6 +15,7 @@ chai.use(chaiJsonSchema);
 describe('placement API', () => {
 
     describe('POST /placement/new-placement', () => {
+        let placementId;
         it('should add a new placement to the db and return the details with the id', (done) => {
             chai.request(server)
                 .post('/placement/new-placement')
@@ -34,6 +35,7 @@ describe('placement API', () => {
                     response.should.have.status(200);
                     response.body.should.be.a('object');
                     response.body.should.have.property('id');
+                    placementId = response.body.id;
                     response.body.should.have.property('position');
                     response.body.should.have.property('working_hours');
                     response.body.should.have.property('start_period');
@@ -69,17 +71,28 @@ describe('placement API', () => {
                     done();
                 })
         })
+
+        afterEach(async () =>{
+            await chai.request(server)
+                .delete('/placement/' + placementId)
+        })
     })
 
     describe('GET /placement/:id', () => {
+        
+
         it('should return the placement with all its details', (done) => {
             chai.request(server)
-                .get('/placement/1')
+            .get('/placement')
+            .end((err, response) => {
+                let placementId = response.body[0].id
+                chai.request(server)
+                .get('/placement/' + placementId)
                 .end((err, response) => {
                     response.should.have.status(200);
                     response.body.should.be.a('object');
                     response.body.should.have.property('id');
-                    response.body.id.should.equal(1);
+                    response.body.id.should.equal(placementId);
                     response.body.should.have.property('position');
                     response.body.should.have.property('working_hours');
                     response.body.should.have.property('start_period');
@@ -122,7 +135,9 @@ describe('placement API', () => {
 
                     done();
                 })
-        })
+            })
+            
+        }).timeout(10000)
     })
 
     describe('GET /placement', () => {
@@ -145,24 +160,29 @@ describe('placement API', () => {
     describe('GET /employer/:employerId/placements', () => {
         it('should get an array of placements with a little details on them', (done) => {
             chai.request(server)
-                .get('/employer/1/placements')
+                .get('/employers/last')
                 .end((err, response) => {
-                    response.should.have.status(200);
-                    response.body.should.be.a('array');
-                    let placements = response.body;
-                    for(let i=0; i<placements.length; i++){
-                        placements[i].should.be.a('object');
-                        placements[i].should.have.property('id');
-                        placements[i].should.have.property('position');
-                        placements[i].should.have.property('working_hours');
-                        placements[i].should.have.property('start_period');
-                        placements[i].should.have.property('end_period');
-                        placements[i].should.have.property('salary');
-                        placements[i].should.have.property('description_role');
-                        placements[i].should.have.property('employer_id');
-                    }
-                    done();
+                    chai.request(server)
+                        .get('/employer/' + response.body.id + '/placements')
+                        .end((err, response) => {
+                            response.should.have.status(200);
+                            response.body.should.be.a('array');
+                            let placements = response.body;
+                            for(let i=0; i<placements.length; i++){
+                                placements[i].should.be.a('object');
+                                placements[i].should.have.property('id');
+                                placements[i].should.have.property('position');
+                                placements[i].should.have.property('working_hours');
+                                placements[i].should.have.property('start_period');
+                                placements[i].should.have.property('end_period');
+                                placements[i].should.have.property('salary');
+                                placements[i].should.have.property('description_role');
+                                placements[i].should.have.property('employer_id');
+                            }
+                            done();
+                        })
                 })
+            
         })
     })
 

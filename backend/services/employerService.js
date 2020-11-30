@@ -4,4 +4,8 @@ module.exports = {
     getEmployer: (id) => {
         return employerDAO.getEmployer(id);
     },
+
+    getLastEmployer: async () => {
+        return await employerDAO.getLastEmployer();
+    }
 };

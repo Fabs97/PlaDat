@@ -117,5 +117,20 @@ module.exports = {
         return result;
     },
 
+    getLastStudent: async () => {
+        let result = await database("student")
+            .select("id")
+            .orderBy("id", "desc")
+            .limit(1);
+        return result[0];
+    },
+
+    deleteStudentById: (id) => {
+        return database('student')
+            .where('id', id)
+            .del();
+            
+    }
+
 
 };

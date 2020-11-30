@@ -39,5 +39,13 @@ module.exports = {
         let profile = await studentDAO.getStudentById(id);
         profile.skills = await skillService.getStudentSkills(profile.id);
         return profile;
+    },
+
+    getLastStudent: async () => {
+        return await studentDAO.getLastStudent();
+    },
+
+    deleteStudentById: (id) => {
+        return studentDAO.deleteStudentById(id);
     }
 };

@@ -41,7 +41,7 @@ describe('skills api', () => {
                     }
 
                     softSkills.should.be.a('array');
-                    for(let i=0; i<technicalSkills.length; i++) {
+                    for(let i=0; i<softSkills.length; i++) {
                         softSkills[i].should.have.property('id');
                         softSkills[i].should.have.property('name');
                         softSkills[i].should.have.property('type');
