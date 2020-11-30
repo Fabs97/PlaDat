@@ -35,9 +35,9 @@ describe('recommendation API', () => {
                                 placements[i].should.have.property('skills');
                                 let skills = placements[i].skills;
                                 for(j = 0; j < skills.length; j++){
-                                    skills.should.have.property('id');
-                                    skills.should.have.property('name');
-                                    skills.should.have.property('type');
+                                    skills[i].should.have.property('id');
+                                    skills[i].should.have.property('name');
+                                    skills[i].should.have.property('type');
                                 }
                             }
                             done();
@@ -69,9 +69,9 @@ describe('recommendation API', () => {
                                 //students[i].should.have.property('skills');
                                 let skills = students[i].skills;
                                 for(j = 0; j < skills.length; j++){
-                                    skills.should.have.property('id');
-                                    skills.should.have.property('name');
-                                    skills.should.have.property('type');
+                                    skills[i].should.have.property('id');
+                                    skills[i].should.have.property('name');
+                                    skills[i].should.have.property('type');
                                 }
                             }
                             done();
