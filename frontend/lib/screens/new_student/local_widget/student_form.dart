@@ -3,9 +3,6 @@ import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:frontend/models/student.dart';
-import 'package:frontend/services/api_service.dart';
-import 'package:frontend/utils/routes_generator.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 
@@ -19,14 +16,6 @@ class StudentForm extends StatefulWidget {
 
 class _StudentFormState extends State<StudentForm> {
   final _formKey = GlobalKey<FormState>();
-
-  
-  
-  @override
-  void initState() {
-    
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +59,6 @@ class _StudentFormState extends State<StudentForm> {
                         _createemailField(student),
                         _createphoneField(student),
                         _createDescriptionField(student),
-                        
                       ],
                     ),
                   ),
@@ -84,7 +72,6 @@ class _StudentFormState extends State<StudentForm> {
                       // the form is invalid.
                       if (_formKey.currentState.validate()) {
                         widget.changeStep(false);
-                        
                       }
                     },
                     child: Text(
