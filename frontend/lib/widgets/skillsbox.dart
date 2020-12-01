@@ -38,10 +38,11 @@ class SkillBoxState extends State<SkillBox> {
   _onItemChanged(String value) {
     setState(() {
       //riempi suggested skills con le skill che hanno i name che combaciano
-      suggestedSkills = skills
-          .where(
-              (skill) => skill.name.toLowerCase().contains(value.toLowerCase()))
-          .toList();
+      suggestedSkills = skills.where((skill) {
+        widget._chosenSkills.map((e) => print(e.name));
+        return skill.name.toLowerCase().contains(value.toLowerCase()) &&
+            !widget._chosenSkills.contains(skill);
+      }).toList();
     });
   }
 
@@ -52,7 +53,9 @@ class SkillBoxState extends State<SkillBox> {
         .then((dynamicSkills) => setState(() {
               List<Skill> castedSkills = List<Skill>.from(dynamicSkills);
               skills = castedSkills;
-              suggestedSkills = skills?.sublist(0, 1) ?? [];
+              suggestedSkills =
+                  skills?.sublist(0, skills.length < 4 ? skills.length : 4) ??
+                      [];
             }));
     super.initState();
   }
