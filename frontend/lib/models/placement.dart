@@ -16,6 +16,7 @@ class Placement extends ChangeNotifier {
   List<dynamic> institutions;
   List<dynamic> majors;
   Map<String, dynamic> skills;
+  int employerId;
 
   Placement(
       {this.id,
@@ -27,7 +28,8 @@ class Placement extends ChangeNotifier {
       this.description,
       this.institutions,
       this.majors,
-      this.skills});
+      this.skills,
+      this.employerId});
 
   String toJson() {
     return jsonEncode({
@@ -44,7 +46,8 @@ class Placement extends ChangeNotifier {
           .toList(),
       "majors": this.majors.map((major) => major.toJsonMap()).toList(),
       "skills": this.skills.map((key, value) =>
-          MapEntry(key, value.map((e) => e.toJsonMap()).toList()))
+          MapEntry(key, value.map((e) => e.toJsonMap()).toList())),
+      "employerId" : this.employerId,
     });
   }
 
@@ -67,6 +70,7 @@ class Placement extends ChangeNotifier {
           ?.toList(),
       majors: json["majors"]?.map((major) => Major.fromJson(major))?.toList(),
       skills: Skill.listFromJson(json["skills"]),
+      employerId: json["employer_id"],
     );
   }
 
