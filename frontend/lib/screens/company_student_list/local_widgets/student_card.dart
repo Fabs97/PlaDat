@@ -62,7 +62,7 @@ class StudentCard extends StatelessWidget {
           // Image container
           decoration: BoxDecoration(
               image: DecorationImage(
-                image: ExactAssetImage("/images/image0.jpg"),
+                image: AssetImage("images/image0.jpg"),
                 fit: BoxFit.fill,
               ),
               border: Border.all(
