@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/main.dart';
+import 'package:frontend/screens/chat_screen/chat_screen.dart';
 import 'package:frontend/screens/company_student_list/company_student_list.dart';
 import 'package:frontend/screens/new_placement/new_placement.dart';
 import 'package:frontend/screens/new_student/new_student.dart';
 import 'package:frontend/screens/student_placement_list/student_placement_list.dart';
-import 'package:frontend/widgets/match_alert.dart';
 
 class RoutesGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -28,6 +28,14 @@ class RoutesGenerator {
       case '/new-student':
         {
           return _createRoute(NewStudent(), settings);
+        }
+      case '/chat-screen':
+        {
+          return _createRoute(
+              ChatScreen(
+                args: settings.arguments,
+              ),
+              settings);
         }
       default:
         {
