@@ -16,7 +16,9 @@ class _RegistrationState extends State<Registration> {
   final _formKey = GlobalKey<FormState>();
   String _email = "";
   String _password = "";
+  bool _obscurePassword = true;
   String _secondPassword = "";
+  bool _obscureSecondPassword = true;
   AccountType _accountType = AccountType.Student;
 
   @override
@@ -90,9 +92,8 @@ class _RegistrationState extends State<Registration> {
             SizedBox(
               width: screenSize.width * .8,
               child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20.0)
-                ),
+                decoration:
+                    BoxDecoration(borderRadius: BorderRadius.circular(20.0)),
                 child: RaisedButton(
                   child: Text("Register"),
                   onPressed: _registerToPlaDat(),
@@ -129,9 +130,19 @@ class _RegistrationState extends State<Registration> {
   _createPasswordInputField() {
     return TextFormField(
       keyboardType: TextInputType.visiblePassword,
-      obscureText: true,
+      obscureText: _obscurePassword,
       decoration: InputDecoration(
         labelText: "Password",
+        suffixIcon: IconButton(
+            icon: Icon(_obscurePassword
+          ? Icons.visibility_off
+          : Icons.visibility),
+            onPressed: () {
+        setState(() {
+          _obscurePassword = !_obscurePassword;
+        });
+            },
+          ),
       ),
       initialValue: _password,
       validator: (value) {
@@ -147,9 +158,19 @@ class _RegistrationState extends State<Registration> {
   _createSecondPasswordInputField() {
     return TextFormField(
       keyboardType: TextInputType.visiblePassword,
-      obscureText: true,
+      obscureText: _obscureSecondPassword,
       decoration: InputDecoration(
         labelText: "Password",
+        suffixIcon: IconButton(
+          icon: Icon(_obscureSecondPassword
+              ? Icons.visibility_off
+              : Icons.visibility),
+          onPressed: () {
+            setState(() {
+              _obscureSecondPassword = !_obscureSecondPassword;
+            });
+          },
+        ),
       ),
       initialValue: _secondPassword,
       validator: (value) {
