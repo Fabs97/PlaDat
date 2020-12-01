@@ -16,12 +16,14 @@ class OtherSkillsState extends State<OtherSkills> {
   TextEditingController _textController = TextEditingController();
 
   onItemPressed(String skillName) {
-    setState(() {
-      widget._otherSkills.add(Skill(
-        name: skillName,
-        type: "OTHER",
-      ));
-    });
+    if(!widget._otherSkills.map((e) => e.name).contains(skillName)){
+      setState(() {
+        widget._otherSkills.add(Skill(
+          name: skillName,
+          type: "OTHER",
+        ));
+      });
+    }
   }
 
   @override
