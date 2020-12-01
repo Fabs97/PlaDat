@@ -4,6 +4,7 @@ import 'package:frontend/models/placement.dart';
 import 'package:frontend/models/match.dart';
 import 'package:frontend/screens/student_placement_list/local_widgets/placement_card.dart';
 import 'package:frontend/services/api_service.dart';
+import 'package:frontend/services/auth_service.dart';
 import 'package:frontend/utils/routes_generator.dart';
 import 'package:frontend/widgets/appbar.dart';
 import 'package:frontend/widgets/drawer.dart';
@@ -23,7 +24,7 @@ class _PlacementCardsListState extends State<PlacementCardsList>
 
   CardController _cardController;
 
-  final studentId = 1;
+  final studentId = AuthService().loggedStudent.id;
   @override
   void initState() {
     APIService.route(
