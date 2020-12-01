@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:frontend/models/placement.dart';
 import 'package:frontend/utils/routes_generator.dart';
@@ -9,15 +7,17 @@ import 'package:frontend/services/api_service.dart';
 import 'package:provider/provider.dart';
 
 class SkillsForm extends StatelessWidget {
-  final SkillBox technicalSkillsBox = SkillBox(
-    title: "Technical skills",
-    skillsType: "TECH",
-  );
-  final SkillBox softSkillsBox = SkillBox(
-    title: "Soft skills",
-    skillsType: "SOFT",
-  );
-  final OtherSkills otherSkills = OtherSkills();
+  final List<dynamic> skillsBoxes = [
+    SkillBox(
+      title: "Technical skills",
+      skillsType: "TECH",
+    ),
+    SkillBox(
+      title: "Soft skills",
+      skillsType: "SOFT",
+    ),
+    OtherSkills()
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -37,9 +37,13 @@ class SkillsForm extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           mainAxisSize: MainAxisSize.max,
           children: [
-            technicalSkillsBox,
-            softSkillsBox,
-            otherSkills,
+            SizedBox(
+              height: size.height * .7,
+              child: ListView.builder(
+                itemCount: skillsBoxes.length,
+                itemBuilder: (_, index) => skillsBoxes[index],
+              ),
+            ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 16.0),
               child: RaisedButton(
@@ -59,9 +63,9 @@ class SkillsForm extends StatelessWidget {
 
   void _savePlacementToDB(BuildContext context, Placement placement) async {
     placement.skills = {
-      "technicalSkills": technicalSkillsBox.chosenSkills,
-      "softSkills": softSkillsBox.chosenSkills,
-      "otherSkills": otherSkills.otherSkills,
+      "technicalSkills": skillsBoxes[0].chosenSkills,
+      "softSkills": skillsBoxes[1].chosenSkills,
+      "otherSkills": skillsBoxes[2].otherSkills,
     };
 
     Placement newPlacement = await APIService.route(
