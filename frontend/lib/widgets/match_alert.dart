@@ -3,6 +3,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/models/placement.dart';
 import 'package:frontend/models/student.dart';
+import 'package:frontend/screens/chat_screen/chat_screen.dart';
+import 'package:frontend/services/auth_service.dart';
+import 'package:frontend/utils/routes_generator.dart';
 
 class MatchAlert extends StatelessWidget {
   final Placement placement;
@@ -126,6 +129,21 @@ class MatchAlert extends StatelessWidget {
                     ),
                   ),
                 ],
+              ),
+            ),
+            SizedBox(
+              width: size.width * .8,
+              child: Expanded(
+                child: TextButton(
+                  onPressed: () {
+                    Nav.navigatorKey.currentState.popAndPushNamed("chat-screen",
+                        arguments: ChatScreenArguments(
+                          isStudent ? object.id : AuthService().loggedUserId,
+                          placement.employerId,
+                        ));
+                  },
+                  child: Text("Start a conversation"),
+                ),
               ),
             ),
           ],
