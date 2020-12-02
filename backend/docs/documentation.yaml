@@ -699,7 +699,7 @@ paths:
                     }
                   ]
 
-  /message/{sudentId}/{employerId}:
+  /message/{studentId}/{employerId}:
     get:
       description: Returns all the messages in the database between a student and an employer in chronological order
       tags:
@@ -709,7 +709,13 @@ paths:
           name: "studentId"
           required: true
           schema:
-            type: intger
+            type: integer
+            example: 1
+        - in: path
+          name: "employerId"
+          required: true
+          schema:
+            type: integer
             example: 1
       responses:
         '200':
