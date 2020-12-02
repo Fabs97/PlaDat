@@ -25,6 +25,8 @@ tags:
     description: All the APIs related to the matching algorithm
   - name: Employer
     description: All the APIs related to the "employer" algorithm
+  - name: Registration
+    description: All the APIs related to the "registration" table
 
 components:
   schemas:
@@ -118,6 +120,22 @@ components:
             - TECH
             - SOFT
             - OTHER
+    Registration:
+      type: object
+      properties:
+        id:
+          type: integer
+        email:
+          type: string
+        password:
+          type: string
+        type:
+          type: string
+          enum: 
+            - EMPLOYER
+            - STUDENT
+        
+        
 
 paths:
   /employer/{id}:
@@ -680,3 +698,43 @@ paths:
                       type: "TECH"
                     }
                   ]
+  /registration:
+    post:
+      description: Allows users to register to the application
+      tags:
+        - "Registration"
+      requestBody:
+        description: a json containing all the information about the user
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                {
+                  email: "paolo@gmail.com",
+                  password: "ejti7ldjfs",
+                  type: "STUDENT"
+
+                }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                description: Returns a json with the newly inserted user
+                type: object
+                example:
+                  {
+                    id: 2,
+                    email: "paolo@gmail.com",
+                    password: "ejti7ldjfs",
+                    type: "STUDENT"
+                  }
+        '409':
+          description: 'The request could not be processed because of conflict in the current state of the database'
+        '500':
+          description: 'Is impossible to make a connection to the database'
+
+                
