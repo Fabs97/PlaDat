@@ -10,4 +10,12 @@ module.exports = {
         return await messageDAO.getConversation(studentId,emplyerId);
     },
 
+    deleteMessage: async (msgDetails) => {
+        return await messageDAO.deleteMessage(msgDetails);
+    },
+
+    getLastMessage: async () => {
+        return await messageDAO.getLastMessage();
+    },
+
 }

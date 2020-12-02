@@ -28,5 +28,21 @@ module.exports = {
                 console.log(error);  
             });
     },
+    
+    deleteMessage: (details) => {
+        return database('message')
+            .where('student_id', details.studentId)
+            .andWhere('employer_id', details.employerId)
+            .andWhere('send_date', details.sendDate)
+            .del();
+    },
+
+    getLastMessage: async () =>{
+        let result = await database('message')
+            .select('student_id', 'employer_id', 'send_date')
+            .orderBy('send_date', 'desc')
+            .limit(1)
+        return result[0];
+    }, 
 
 }
