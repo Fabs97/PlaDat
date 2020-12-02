@@ -134,7 +134,7 @@ class _PlacementCardsListState extends State<PlacementCardsList>
               color: Colors.black,
               blurRadius: 2.0,
               spreadRadius: 0.0,
-              offset: Offset(2.0, 2.0), // shadow direction: bottom right
+              offset: Offset(2.0, 2.0),
             )
           ],
         ),
@@ -166,35 +166,35 @@ class _PlacementCardsListState extends State<PlacementCardsList>
           modalType: S2ModalType.popupDialog,
           modalFilter: false,
           modalHeader: true,
-          modalHeaderBuilder: (context, value) {
-            // final size = MediaQuery.of(context).size;
+          modalHeaderBuilder: (context, _) {
             return Padding(
               padding: const EdgeInsets.fromLTRB(15.0, 15.0, 15.0, 15.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                mainAxisSize: MainAxisSize.max,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Icon(Icons.filter_alt_outlined),
-                  Text(
-                    "Filter",
-                    style: TextStyle(
-                      fontSize: 20.0,
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.max,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Icon(Icons.filter_alt_outlined),
+                    Text(
+                      "Filter",
+                      style: TextStyle(
+                        fontSize: 20.0,
+                      ),
                     ),
-                  ),
-                  Spacer(),
-                  Icon(Icons.keyboard_arrow_up)
-                ],
+                    Spacer(),
+                    Icon(Icons.keyboard_arrow_up)
+                  ],
+                ),
               ),
             );
           },
           modalHeaderStyle: S2ModalHeaderStyle(
             centerTitle: true,
           ),
-          // choiceHeader: (context, state, group) {
-          //   print(group);
-          //   return Text(group ?? "");
-          // },
           choiceGrouped: true,
           choiceItems: S2Choice.listFrom(
             source: _filters,
