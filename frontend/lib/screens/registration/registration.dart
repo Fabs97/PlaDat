@@ -1,9 +1,13 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:frontend/models/user.dart';
+import 'package:frontend/services/api_service.dart';
+import 'package:frontend/services/api_services/registration_api_service.dart';
+import 'package:frontend/utils/routes_generator.dart';
 import 'package:frontend/widgets/appbar.dart';
 import 'package:frontend/widgets/drawer.dart';
-
-enum AccountType { Student, Employer }
+import 'package:http/http.dart';
 
 class Registration extends StatefulWidget {
   Registration({Key key}) : super(key: key);
@@ -96,7 +100,7 @@ class _RegistrationState extends State<Registration> {
                     BoxDecoration(borderRadius: BorderRadius.circular(20.0)),
                 child: RaisedButton(
                   child: Text("Register"),
-                  onPressed: _registerToPlaDat(),
+                  onPressed: _registerToPlaDat,
                 ),
               ),
             )
@@ -134,15 +138,14 @@ class _RegistrationState extends State<Registration> {
       decoration: InputDecoration(
         labelText: "Password",
         suffixIcon: IconButton(
-            icon: Icon(_obscurePassword
-          ? Icons.visibility_off
-          : Icons.visibility),
-            onPressed: () {
-        setState(() {
-          _obscurePassword = !_obscurePassword;
-        });
-            },
-          ),
+          icon:
+              Icon(_obscurePassword ? Icons.visibility_off : Icons.visibility),
+          onPressed: () {
+            setState(() {
+              _obscurePassword = !_obscurePassword;
+            });
+          },
+        ),
       ),
       initialValue: _password,
       validator: (value) {
@@ -162,9 +165,8 @@ class _RegistrationState extends State<Registration> {
       decoration: InputDecoration(
         labelText: "Password",
         suffixIcon: IconButton(
-          icon: Icon(_obscureSecondPassword
-              ? Icons.visibility_off
-              : Icons.visibility),
+          icon: Icon(
+              _obscureSecondPassword ? Icons.visibility_off : Icons.visibility),
           onPressed: () {
             setState(() {
               _obscureSecondPassword = !_obscureSecondPassword;
@@ -241,6 +243,29 @@ class _RegistrationState extends State<Registration> {
   }
 
   _registerToPlaDat() {
-    //TODO register to PlaDat
+    if (_formKey.currentState.validate()) {
+      APIService.route(
+        ENDPOINTS.Registration,
+        "/registration",
+        body: User(
+          email: _email,
+          password: _password,
+          type: _accountType,
+        ),
+      ).then((response) {
+        String message;
+        if (response is User){
+          message = "User correctly registered";
+          Nav.navigatorKey.currentState.pop();
+        }
+        else
+          message = response;
+
+        Fluttertoast.showToast(msg: message);
+      }).catchError((error) {
+        print(error);
+        Fluttertoast.showToast(msg: error);
+      });
+    }
   }
 }
