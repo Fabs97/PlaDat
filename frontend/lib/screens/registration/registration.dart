@@ -254,14 +254,24 @@ class _RegistrationState extends State<Registration> {
         ),
       ).then((response) {
         String message;
-        if (response is User){
+        Color toastColor;
+        if (response is User) {
           message = "User correctly registered";
+          toastColor = Colors.blue[700];
           Nav.navigatorKey.currentState.pop();
-        }
-        else
+        } else {
           message = response;
-
-        Fluttertoast.showToast(msg: message);
+          toastColor = Colors.redAccent;
+        }
+        Fluttertoast.showToast(
+          msg: message,
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: toastColor,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
       }).catchError((error) {
         print(error);
         Fluttertoast.showToast(msg: error);
