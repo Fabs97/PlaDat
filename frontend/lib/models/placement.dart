@@ -5,6 +5,51 @@ import 'package:frontend/models/institution.dart';
 import 'package:frontend/models/major.dart';
 import 'package:frontend/models/skill.dart';
 
+enum EmploymentType { FULLTIME, PARTTIME, INTERNSHIP, CONTRACT }
+
+extension EmploymentTypeExtension on EmploymentType {
+  String get string {
+    switch (this) {
+      case EmploymentType.FULLTIME:
+        return "FULL_TIME";
+      case EmploymentType.PARTTIME:
+        return "PART_TIME";
+      case EmploymentType.INTERNSHIP:
+        return "INTERNSHIP";
+      case EmploymentType.CONTRACT:
+        return "CONTRACT";
+    }
+  }
+
+  String get niceString {
+    switch (this) {
+      case EmploymentType.FULLTIME:
+        return "Full Time";
+      case EmploymentType.PARTTIME:
+        return "Part Time";
+      case EmploymentType.INTERNSHIP:
+        return "Internship";
+      case EmploymentType.CONTRACT:
+        return "Contract";
+    }
+  }
+
+  static String fromBadToNice(String type) {
+    switch (type) {
+      case "FULL_TIME":
+        return EmploymentType.FULLTIME.niceString;
+      case "PART_TIME":
+        return EmploymentType.PARTTIME.niceString;
+      case "CONTRACT":
+        return EmploymentType.CONTRACT.niceString;
+      case "INTERNSHIP":
+        return EmploymentType.INTERNSHIP.niceString;
+      default:
+        return "";
+    }
+  }
+}
+
 class Placement extends ChangeNotifier {
   int id;
   String position;
@@ -53,7 +98,9 @@ class Placement extends ChangeNotifier {
     return Placement(
       id: json["id"],
       position: json["position"],
-      employmentType: json["employment_type"],
+      employmentType: json["employment_type"] != null
+          ? EmploymentTypeExtension.fromBadToNice(json["employment_type"])
+          : "",
       startPeriod: json["start_period"] != null
           ? DateTime.parse(json["start_period"])
           : null,

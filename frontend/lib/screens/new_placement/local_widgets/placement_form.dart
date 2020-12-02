@@ -13,23 +13,6 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:date_range_picker/date_range_picker.dart' as DateRagePicker;
 
-enum EmploymentType { FULLTIME, PARTTIME, INTERNSHIP, CONTRACT }
-
-extension EmploymentTypeExtension on EmploymentType {
-  String get string {
-    switch (this) {
-      case EmploymentType.FULLTIME:
-        return "Full Time";
-      case EmploymentType.PARTTIME:
-        return "Part Time";
-      case EmploymentType.INTERNSHIP:
-        return "Internship";
-      case EmploymentType.CONTRACT:
-        return "Contract";
-    }
-  }
-}
-
 class PlacementForm extends StatefulWidget {
   final Function(bool) changeStep;
 
@@ -186,7 +169,7 @@ class _PlacementFormState extends State<PlacementForm> {
 
   Widget _createDropdownButtonEmploymentTypeItem(EmploymentType type) {
     return DropdownMenuItem(
-      child: Text(type.string),
+      child: Text(type.niceString),
       value: type,
     );
   }
