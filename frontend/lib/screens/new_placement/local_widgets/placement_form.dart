@@ -88,7 +88,7 @@ class _PlacementFormState extends State<PlacementForm> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         _createPlacementField(placement),
-                        _createWorkingHoursField(placement),
+                        _createTypeOfEmploymentField(placement),
                         _createWorkingPeriodField(placement),
                         _createSalaryField(placement),
                         _createDescriptionField(placement),
@@ -145,30 +145,32 @@ class _PlacementFormState extends State<PlacementForm> {
     );
   }
 
-  Widget _createWorkingHoursField(Placement placement) {
-    return TextFormField(
-      decoration: const InputDecoration(
-        labelText: 'Working hours per week',
-        hintText: 'Insert only digits 0-9',
-      ),
-      initialValue: placement.workingHours?.toString(),
-      onChanged: (value) {
-        setState(() {
-          placement.workingHours = value != null ? int.parse(value) : "";
-        });
-      },
-      keyboardType: TextInputType.number,
-      inputFormatters: [
-        FilteringTextInputFormatter.digitsOnly,
-      ],
+  Widget _createTypeOfEmploymentField(Placement placement) {
+    return DropdownButtonFormField<EmploymentType>(
+      icon: Icon(Icons.keyboard_arrow_down),
+      iconSize: 24,
+      elevation: 16,
+      hint: Text("Employment Type"),
       validator: (value) {
-        if (value.isEmpty) {
-          return 'Specify the amout of working hours per week';
-        } else if (int.parse(value) >= 40) {
-          return 'Too many working hours';
-        }
+        if (value == null) return "Please choose an employment type";
         return null;
       },
+      onChanged: (employmentType) => setState(() {
+        placement.employmentType = employmentType.string;
+      }),
+      items: [
+        _createDropdownButtonEmploymentTypeItem(EmploymentType.FULLTIME),
+        _createDropdownButtonEmploymentTypeItem(EmploymentType.PARTTIME),
+        _createDropdownButtonEmploymentTypeItem(EmploymentType.CONTRACT),
+        _createDropdownButtonEmploymentTypeItem(EmploymentType.INTERNSHIP),
+      ],
+    );
+  }
+
+  Widget _createDropdownButtonEmploymentTypeItem(EmploymentType type) {
+    return DropdownMenuItem(
+      child: Text(type.niceString),
+      value: type,
     );
   }
 
