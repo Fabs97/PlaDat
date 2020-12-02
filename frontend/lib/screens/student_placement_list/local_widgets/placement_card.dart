@@ -142,7 +142,7 @@ class PlacementCard extends StatelessWidget {
         _createPlacementWorkingInfoBox(
             "Working period", "from $startMonth to $endMonth $endYear"),
         _createPlacementWorkingInfoBox(
-            "Employment Type", "${EmploymentTypeExtension.fromBadToNice(placement.employmentType)}"),
+            "Type", "${placement.employmentType.niceString}"),
         _createPlacementWorkingInfoBox("Salary", "${placement.salary} €"),
       ],
     );

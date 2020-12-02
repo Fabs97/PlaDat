@@ -26,6 +26,7 @@ dependencies:
   date_range_picker: ^1.0.5
   multiselect_formfield: ^0.1.4
   intl: ^0.16.1
+  smart_select: ^4.3.2
   http: ^0.12.2
   flutter_tindercard: ^0.2.0
   email_validator: '^1.0.5'
