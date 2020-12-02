@@ -26,6 +26,7 @@ const skillsRoute = require("./routes/skillsRoute");
 const recommendationRoute = require('./routes/recommendationRoute');
 const matchRoute = require('./routes/matchRoute');
 const employerRoute = require('./routes/employerRoute');
+const messageRoute = require('./routes/messageRoute');
 app.use('/', studentRoute);
 app.use('/', majorRoute);
 app.use('/', institutionRoute);
@@ -34,6 +35,7 @@ app.use('/', skillsRoute);
 app.use('/', recommendationRoute);
 app.use('/', matchRoute);
 app.use('/', employerRoute);
+app.use('/', messageRoute);
 
 
 

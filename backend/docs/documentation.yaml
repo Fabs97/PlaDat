@@ -25,6 +25,8 @@ tags:
     description: All the APIs related to the matching algorithm
   - name: Employer
     description: All the APIs related to the "employer" algorithm
+  - name: Message
+    description: All the APIs related to the "message" table
 
 components:
   schemas:
@@ -118,6 +120,22 @@ components:
             - TECH
             - SOFT
             - OTHER
+    Message:
+      type: object
+      properties:          
+        student_id:
+          type: integer
+        employer_id:
+          type: integer
+        message:
+          type: string
+        send_date: 
+          type: date-time
+        sender:
+          type: string
+          enum:
+            - STUDENT
+            - EMPLOYER
 
 paths:
   /employer/{id}:
@@ -680,3 +698,85 @@ paths:
                       type: "TECH"
                     }
                   ]
+
+  /message/{sudentId}/{employerId}:
+    get:
+      description: Returns all the messages in the database between a student and an employer in chronological order
+      tags:
+        - "Message"
+      parameters:
+        - in: path
+          name: "studentId"
+          required: true
+          schema:
+            type: intger
+            example: 1
+      responses:
+        '200':
+          description: OK
+          content: 
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Message"
+                type: array
+                example:
+                  [
+                    {
+                      student_id: 1,
+                      employer_id: 1,
+                      message: "Hi, I would like to work for your company",
+                      send_date: "2020-11-10T12:30:00.000Z",
+                      sender: "STUDENT"
+                    },
+                    {
+                      student_id: 1,
+                      employer_id: 1,
+                      message: "hi, would you like to have an interview tomorrow?",
+                      send_date: "2020-11-10T12:40:00.000Z",
+                      sender: "EMPLOYER"
+                    }
+                  ]
+
+  /message:
+    post: 
+      description: Allows the user to save a message for another use on the database
+      tags: 
+        - "Message"
+      requestBody: 
+        description: a json containing all the information about the message
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                {
+                  studentId: 1,
+                  employerId: 1, 
+                  message: "Thank you for offering me to do an interview.",
+                  sendDate: "2020-11-10T12:50:00.000Z",
+                  sender: "STUDENT"
+                }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                description: Returns a json with the newly inserted message
+                allOf:
+                  - $ref: "#/components/schemas/Message"
+                type: object
+                example:
+                  {
+                    student_id: 1,
+                    employer_id: 1, 
+                    message: "Thank you for offering me to do an interview.",
+                    send_date: "2020-11-10T12:50:00.000Z",
+                    sender: "STUDENT"
+                  }
+
+
+      
+
