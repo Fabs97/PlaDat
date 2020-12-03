@@ -36,10 +36,7 @@ class MessagesAPIService extends APIInfo {
       body: message.toJson(),
     );
     if (response.statusCode == 200) {
-      // final parsed = jsonDecode(response.body).cast<Map<String, dynamic>>();
-      // return parsed
-      //     .map((messageJson) => Message.fromJson(messageJson))
-      //     .toList();
+      return Message.fromJson(jsonDecode(response.body));
     }
   }
 }

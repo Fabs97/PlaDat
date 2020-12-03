@@ -3,7 +3,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:frontend/models/message.dart';
 import 'package:frontend/screens/chat_screen/local_widgets/message_card.dart';
 import 'package:frontend/services/api_service.dart';
-import 'package:frontend/services/api_services/employers_api_service.dart';
 import 'package:frontend/widgets/appbar.dart';
 import 'package:frontend/widgets/drawer.dart';
 
@@ -28,6 +27,8 @@ class _ChatScreenState extends State<ChatScreen> {
   bool _sendingMessage = false;
   final _formKey = GlobalKey<FormState>();
   String _newMessage = "";
+  ScrollController _scrollController =
+      ScrollController(initialScrollOffset: 0.0);
 
   @override
   void initState() {
@@ -40,7 +41,7 @@ class _ChatScreenState extends State<ChatScreen> {
             urlArgs: widget.args)
         .then((messagesList) {
       setState(() {
-        widget._messages = messagesList.cast<Message>();
+        widget._messages = List.from((messagesList.cast<Message>()).reversed);
       });
     });
   }
@@ -48,7 +49,6 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
-    print(widget._messages.length);
     return Scaffold(
       //TODO: change it with the student/company name
       appBar: CustomAppBar.createAppBar(context, "Student Name"),
@@ -64,13 +64,19 @@ class _ChatScreenState extends State<ChatScreen> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     SizedBox(
-                      height: screenSize.height * .8,
+                      height:
+                          screenSize.height * (_creatingNewMessage ? .3 : .8),
                       child: ListView.builder(
-                        physics: const AlwaysScrollableScrollPhysics(),
-                        itemCount: widget._messages.length,
-                        itemBuilder: (_, index) =>
-                            MessageCard(message: widget._messages[index]),
-                      ),
+                          physics: const AlwaysScrollableScrollPhysics(),
+                          itemCount: widget._messages.length,
+                          reverse: true,
+                          itemBuilder: (_, index) {
+                            final message = widget._messages[index];
+                            return MessageCard(
+                              message: message,
+                              isByMe: message.sender == Sender.STUDENT,
+                            );
+                          }),
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -83,11 +89,20 @@ class _ChatScreenState extends State<ChatScreen> {
                                   child: CircularProgressIndicator(),
                                 )
                               : !_creatingNewMessage && !_sendingMessage
-                                  ? TextButton(
-                                      child: Text("Create new message"),
-                                      onPressed: _createNewMessageButtonPressed,
+                                  ? Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 16.0),
+                                      child: RaisedButton(
+                                        color: Colors.grey[600],
+                                        onPressed:
+                                            _createNewMessageButtonPressed,
+                                        child: Text(
+                                          'Create new message',
+                                          style: TextStyle(color: Colors.white),
+                                        ),
+                                      ),
                                     )
-                                  : _createMessageBoxAndButton(screenSize),
+                                  : _createSendMessageButton(screenSize),
                         ),
                       ],
                     )
@@ -112,43 +127,79 @@ class _ChatScreenState extends State<ChatScreen> {
       setState(() {
         _sendingMessage = true;
       });
-      APIService.route(ENDPOINTS.Messages, "/message")
-          .then((messageSent) => setState(() {
-                _sendingMessage = false;
-                if (messageSent) {
-                  Fluttertoast.showToast(msg: "Message sent!");
-                } else {
-                  Fluttertoast.showToast(
-                      msg:
-                          "Something went wrong while sending the message, please try again");
-                }
-              }));
+      APIService.route(
+        ENDPOINTS.Messages,
+        "/message",
+        body: Message(
+          studentId: widget.args.studentId,
+          employerId: widget.args.employerId,
+          message: _newMessage,
+          // TODO: this has to be understood from the logged in user, PLAD-77 merging
+          sender: Sender.STUDENT,
+          sendDate: DateTime.now(),
+        ),
+      ).then((sentMessage) => setState(() {
+            _sendingMessage = false;
+            _creatingNewMessage = false;
+            _newMessage = "";
+            if (sentMessage != null) {
+              Fluttertoast.showToast(msg: "Message sent!");
+              widget._messages.insert(0, sentMessage);
+            } else {
+              Fluttertoast.showToast(
+                  msg:
+                      "Something went wrong while sending the message, please try again");
+            }
+          }));
     }
   }
 
-  _createMessageBoxAndButton(Size screenSize) {
+  _createSendMessageButton(Size screenSize) {
     return SizedBox(
       height: screenSize.height * .5,
       child: Form(
         key: _formKey,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           mainAxisSize: MainAxisSize.max,
           children: [
             TextFormField(
+              decoration: InputDecoration(
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                    borderSide: BorderSide(
+                      color: Colors.grey,
+                      width: 1.5,
+                    )),
+                focusedBorder: InputBorder.none,
+                enabledBorder: InputBorder.none,
+                errorBorder: InputBorder.none,
+                disabledBorder: InputBorder.none,
+                fillColor: Colors.white54,
+                filled: true,
+                hintText: "Write your message here",
+              ),
               initialValue: _newMessage,
               onFieldSubmitted: _setMessage,
               onSaved: _setMessage,
+              onChanged: _setMessage,
               validator: (value) {
                 if (value.isEmpty) return "Message can not be empty";
                 return null;
               },
               maxLines: 5,
             ),
-            TextButton(
-              child: Text("Send message"),
-              onPressed: _sendMessageButtonPressed,
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 16.0),
+              child: RaisedButton(
+                color: Colors.grey[600],
+                onPressed: _sendMessageButtonPressed,
+                child: Text(
+                  'Send message',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
             ),
           ],
         ),
