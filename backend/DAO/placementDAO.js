@@ -1,5 +1,7 @@
 //You need to import the DB instance in order to use it and make requests
-const database = require('../DB/connection')
+const database = require('../DB/connection');
+const SuperError = require('../errors').SuperError;
+const ERR_INTERNAL_SERVER_ERROR = require('../errors').ERR_INTERNAL_SERVER_ERROR;
 
 module.exports = {
 
@@ -17,7 +19,12 @@ module.exports = {
                 end_period: details.endPeriod, 
                 salary: salary,
                 description_role: details.descriptionRole
-            }, ['id', 'position', 'working_hours', 'start_period', 'end_period', 'salary', 'description_role']);
+            }, ['id', 'position', 'working_hours', 'start_period', 'end_period', 'salary', 'description_role'])
+            .catch(error => {
+                if(error) {
+                    throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There has been a problem saving your placement. Please try again')
+                }
+            });
 
         return result[0];
 
