@@ -3,12 +3,12 @@ info:
   title: PlaDat APIs
   version: '1.0'
 servers:
+  - url: http://localhost:3000/
+    description: Local development environment
   - url: https://pladat.herokuapp.com/
     description: Production backend server
   - url: https://pladat-staging.herokuapp.com/
     description: Staging backend server
-  - url: http://localhost:3000/
-    description: Local development environment
   
 tags:
   - name: Skills
@@ -17,6 +17,8 @@ tags:
     description: All the APIs related to the "majors" table
   - name: Institutions
     description: All the APIs related to the "institutions" table
+  - name: Degree
+    description: All the APIs related to the "degree" table
   - name: Placement
     description: All the APIs related to the "placements" table
   - name: Student
@@ -455,6 +457,31 @@ paths:
                     {
                       id: 2,
                       name: "Management Engineering"
+                    }
+                  ]
+  /degrees:
+    get:
+      description: Returns all the degrees in the database
+      tags: 
+        - "Degree"
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Degree'
+                type: array
+                example:
+                  [
+                    {
+                      id: 1,
+                      name: "Bachelor"
+                    },
+                    {
+                      id: 2,
+                      name: "Master"
                     }
                   ]
 
