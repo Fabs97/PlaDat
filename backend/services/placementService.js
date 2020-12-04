@@ -3,6 +3,8 @@ const placementDAO = require('../DAO/placementDAO');
 const skillService = require('./skillsService');
 const skillsService = require('./skillsService');
 const employerService = require('./employerService');
+const SuperError = require('../errors').SuperError;
+const ERR_INTERNAL_SERVER_ERROR = require('../errors').ERR_INTERNAL_SERVER_ERROR;
 
 module.exports = {
 
@@ -15,25 +17,43 @@ module.exports = {
 
     savePlacementPage: async (placementDetails) => {
 
-        let newPlacement = await placementDAO.createNewPlacement(placementDetails);
+        let newPlacement = {};
 
-        newPlacement.institutions = await placementDAO.setPlacementInstitutions(newPlacement.id, placementDetails.institutions);
-        newPlacement.majors = await placementDAO.setPlacementMajors(newPlacement.id, placementDetails.majors);
+        try {
 
-        let placementInfos = placementDetails.skills;
+            newPlacement = await placementDAO.createNewPlacement(placementDetails);
 
-        let newSkills = [];
-        if(placementInfos.technicalSkills && placementInfos.technicalSkills.length > 0) {
-            newSkills = [...newSkills, ...placementInfos.technicalSkills];
-        } 
-        if(placementInfos.softSkills && placementInfos.softSkills.length > 0) {
-            newSkills = [...newSkills, ...placementInfos.softSkills];
+            if(placementDetails.institutions) {
+                newPlacement.institutions = await placementDAO.setPlacementInstitutions(newPlacement.id, placementDetails.institutions);
+            }
+            if(placementDetails.majors) {
+                newPlacement.majors = await placementDAO.setPlacementMajors(newPlacement.id, placementDetails.majors);
+            }
+
+            if(placementDetails.skills) {
+                let placementInfos = placementDetails.skills;
+
+                let newSkills = [];
+                if(placementInfos.technicalSkills && placementInfos.technicalSkills.length > 0) {
+                    newSkills = [...newSkills, ...placementInfos.technicalSkills];
+                } 
+                if(placementInfos.softSkills && placementInfos.softSkills.length > 0) {
+                    newSkills = [...newSkills, ...placementInfos.softSkills];
+                }
+                if(placementInfos.otherSkills && placementInfos.otherSkills.length > 0) {
+                    const otherSkills = await skillService.saveOtherSkills(placementInfos.otherSkills);
+                    newSkills = [...newSkills, ...otherSkills];  
+                }
+                newPlacement.skills = await placementDAO.setPlacementSkills(newPlacement.id, newSkills);
+
+            }
+
+        } catch(error) {
+            if(!error.code) {
+                throw new SuperError(ERR_INTERNAL_SERVER_ERROR, error.message || "Server Error");
+            }
+            throw error; 
         }
-        if(placementInfos.otherSkills && placementInfos.otherSkills.length > 0) {
-            const otherSkills = await skillService.saveOtherSkills(placementInfos.otherSkills);
-            newSkills = [...newSkills, ...otherSkills];  
-        }
-        newPlacement.skills = await placementDAO.setPlacementSkills(newPlacement.id, newSkills);
         
         return newPlacement;
     },
