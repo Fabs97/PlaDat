@@ -83,6 +83,23 @@ describe('message API', () => {
                 .set('content-type', 'application/json')
                 .send({
                     studentId: msg.studentId,
+                    employerId: msg.employerId + 1,
+                    message: msg.message,
+                    sendDate: msg.sendDate,
+                    sender: msg.sender
+                })
+                .end((err, response) => {
+                    response.should.have.status(500);
+                    done();
+                })
+        })
+
+        it('should get a 500: Internal Server Error answer if the server cannot save the message', (done) => {
+            chai.request(server)
+                .post('/message')
+                .set('content-type', 'application/json')
+                .send({
+                    studentId: msg.studentId,
                     employerId: msg.employerId,
                     sendDate: msg.sendDate,
                     sender: msg.sender
