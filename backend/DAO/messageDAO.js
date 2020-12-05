@@ -1,4 +1,6 @@
 const database = require('../DB/connection');
+const SuperError = require('../errors').SuperError;
+const ERR_INTERNAL_SERVER_ERROR = require('../errors').ERR_INTERNAL_SERVER_ERROR;
 
 module.exports = {
 
@@ -13,7 +15,9 @@ module.exports = {
                 sender: messageBody.sender
             },['student_id', 'employer_id', 'message', 'send_date', 'sender'])
             .catch(error => {
-                console.log(error);  
+                if(error){
+                    throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There has been a problem saving your message. Please try again');
+                }
             });
         return result[0];
     },
@@ -25,7 +29,7 @@ module.exports = {
             .andWhere('employer_id', employerId)
             .orderBy('send_date', 'asc')
             .catch(error => {
-                console.log(error);  
+                throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There has been a problem looking for this conversation. Please try again');  
             });
     },
     

@@ -743,6 +743,24 @@ paths:
                       sender: "EMPLOYER"
                     }
                   ]
+        '400': 
+          description: Bad Request
+          content:
+            text/html:
+              schema:
+                type: string
+                example:
+                  "Your request did not provided valid values for ids. Please try again."
+        '500':
+          description: Internal Server Error
+          content: 
+            text/html:
+              schema:
+                type: string
+                example:
+                  "There has been a problem looking for this conversation. Please try again"
+
+
 
   /message:
     post: 
@@ -782,4 +800,21 @@ paths:
                     send_date: "2020-11-10T12:50:00.000Z",
                     sender: "STUDENT"
                   }
+        '400':
+          description: Bad Request
+          content: 
+            text/html: 
+              schema:
+                type: string
+                example:
+                  "Your request structure contains some mistakes. Please try again."
+        '500':
+          description: Internal Server Error
+          content:
+            text/html:
+              schema:
+                type: string
+                example:
+                  "There has been a problem saving your message. Please try again"
+
               
