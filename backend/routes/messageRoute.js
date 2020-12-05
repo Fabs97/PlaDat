@@ -7,7 +7,7 @@ const ERR_BAD_REQUEST_ERROR = require('../errors').ERR_BAD_REQUEST_ERROR;
 
 
 router.post('/message', async (req, res, next) => {
-    if(typeof(req.body.studentId) != 'number' || typeof(req.body.employerId) != 'number' || typeof(req.body.sendDate) != 'string' || (req.body.sender != 'STUDENT' && req.body.sender != 'EMPLOYER') || typeof(req.body.message) != 'string'){
+    if(isNaN(req.body.studentId) || isNaN(req.body.employerId)|| typeof(req.body.sendDate) != 'string' || (req.body.sender != 'STUDENT' && req.body.sender != 'EMPLOYER') || typeof(req.body.message) != 'string'){
         res.status(ERR_BAD_REQUEST_ERROR).send('Your request structure contains some mistakes. Please try again.');
     } else {
         let message = await messageService.saveNewMessage(req.body)
@@ -20,7 +20,7 @@ router.post('/message', async (req, res, next) => {
 });
 
 router.get('/message/:studentId/:employerId', async (req, res, next) => {
-    if( typeof(req.params.studentId) === 'number' && typeof(req.params.employerId) === 'number'){
+    if( !isNaN(req.params.studentId) && !isNaN(req.params.employerId)){
         let conversation = await messageService.getConversation(req.params.studentId, req.params.employerId)
         .catch(error => {
             res.status(error.code).send(error.message);

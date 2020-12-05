@@ -29,6 +29,7 @@ describe('message API', () => {
         beforeEach(async () => {
             msg.employerId = (await chai.request(server)
                 .get('/employers/last')).body.id
+
         })
 
         beforeEach(async () =>{
@@ -75,6 +76,22 @@ describe('message API', () => {
                     sendDate: msg.sendDate
                 })
         })
+
+        it('should get a 400: Bad Request answer if the body of the request has wrong structure', (done) => {
+            chai.request(server)
+                .post('/message')
+                .set('content-type', 'application/json')
+                .send({
+                    studentId: msg.studentId,
+                    employerId: msg.employerId,
+                    sendDate: msg.sendDate,
+                    sender: msg.sender
+                })
+                .end((err, response) => {
+                    response.should.have.status(400);
+                    done();
+                })
+        })
         
     })
 
@@ -113,6 +130,15 @@ describe('message API', () => {
                     }
                     done();
 
+                })
+        })
+
+        it('should get a 400: Bad Request answer if the parameter of the request are not numbers', (done) =>{
+            chai.request(server)
+                .get('/message/' + msgDetails.studentId + '/lacipolla')
+                .end((err, response) => {
+                    response.should.have.status(400);
+                    done();
                 })
         })
 
