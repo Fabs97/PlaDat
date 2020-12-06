@@ -8,18 +8,17 @@ module.exports = {
     // This creates a new placement in the database 
     createNewPlacement: async (details) => {
 
-        const workingHs = parseInt(details.workingHours);
         const salary = parseInt(details.salary);
         let result = await database('placements')
             .returning()
             .insert({
                 position: details.position,
-                working_hours: workingHs,
+                employment_type: details.employmentType,
                 start_period: details.startPeriod,
                 end_period: details.endPeriod, 
                 salary: salary,
                 description_role: details.descriptionRole
-            }, ['id', 'position', 'working_hours', 'start_period', 'end_period', 'salary', 'description_role'])
+            }, ['id', 'position', 'employment_type', 'start_period', 'end_period', 'salary', 'description_role'])
             .catch(error => {
                 if(error) {
                     throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There has been a problem saving your placement. Please try again')
@@ -36,7 +35,7 @@ module.exports = {
         let result = await database('placements')
             .select('id',
                 'position',
-                'working_hours',
+                'employment_type',
                 'start_period',
                 'end_period',
                 'salary',
@@ -147,7 +146,7 @@ module.exports = {
     getPlacementsForSkills: async (skills) => {
 
         let placementData = await database('placements AS p')
-            .select(['p.id', 'p.position', 'p.working_hours', 'start_period', 'end_period', 'salary', 'description_role'])
+            .select(['p.id', 'p.position', 'p.employment_type', 'start_period', 'end_period', 'salary', 'description_role'])
             .leftJoin('placement_has_skills AS phs', 'phs.placement_id', 'p.id')
             .leftJoin(database.raw('(select p.id, count(phs.skill_id) as count_total from placements p join placement_has_skills phs on p.id = phs.placement_id group by p.id) as p2'), 'p.id','p2.id') //here we count the total number of skills for each placement
             .whereIn('phs.skill_id', skills)
@@ -184,7 +183,7 @@ module.exports = {
                         result.push({
                             id: placementData[p].id,
                             position: placementData[p].position,
-                            working_hours: placementData[p].working_hours,
+                            employment_type: placementData[p].employment_type,
                             start_period: placementData[p].start_period,
                             end_period: placementData[p].end_period,
                             end_period: placementData[p].end_period,
