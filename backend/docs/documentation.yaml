@@ -732,9 +732,7 @@ paths:
                     password: "ejti7ldjfs",
                     type: "STUDENT"
                   }
-        '409':
-          description: 'The request could not be processed because of conflict in the current state of the database'
         '500':
-          description: 'Is impossible to make a connection to the database'
+          description: 'There has been a problem saving your registration. Please try again'
 
                 
