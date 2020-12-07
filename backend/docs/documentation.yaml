@@ -48,6 +48,27 @@ components:
           format: password
         description: 
           type: string 
+        skills:
+          type: object
+          properties: 
+            technicalSkills: 
+              type: array
+              items:
+                $ref: "#/components/schemas/Skill"
+            softSkills: 
+              type: array
+              items:
+                $ref: "#/components/schemas/Skill"
+        work: 
+          type: array
+          items:
+            $ref: "#/components/schemas/Work"
+        education:
+          type: array
+          items: 
+            $ref: "#/components/schemas/Education"
+
+
     Employer:
       type: object
       properties:
@@ -109,7 +130,7 @@ components:
           type: integer
         name: 
           type: string
-    Skills:
+    Skill:
       type: object
       properties:
         id:
@@ -136,9 +157,36 @@ components:
           enum: 
             - EMPLOYER
             - STUDENT
+    Work:
+      type: object
+      properties:
+        id:
+          type: integer
+        companyName:
+          type: string
+        position:
+          type: string
+        description:
+          type: string
+        workPeriod: 
+          type: string
+    Education: 
+      type: object
+      properties:
+        id:
+          type: integer
+        majorId:
+          type: integer
+        degreeId:
+          type: integer
+        institutionId:
+          type: integer
+        description: 
+          type: string
+        period: 
+          type: string
         
         
-
 paths:
   /employer/{id}:
     get:
@@ -533,42 +581,58 @@ paths:
                     }
                   ]
   
-  /student/{id}/profile:
+  /student:
     post:
-      description: Allows users to save additional information to the specified student profile
+      description: Allows students to fill in the details of their profile
       tags: 
         - "Student"
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: string
-          example: 1
       requestBody:
         required: true
         content:
           application/json:
             schema:
               oneOf:
-                - $ref: '#/components/schemas/Skills'
+                - $ref: '#/components/schemas/Student'
               type: object
               example:
-                {
-                  technicalSkills: [
-                    {
-                      id: 1
-                    },
-                    {
-                      id: 2
-                    },
-                  ],
-                  softSkills: [
-                    {
-                      id: 4,
-                    }
-                  ]
-                }
+                name: John
+                surname: Dow
+                email: aa@aaa.com
+                description: I am a happy student
+                phone: '5478929202'
+                education:
+                - majorId: 3
+                  degreeId: 1
+                  institutionId: 3
+                  description: Difficult job
+                  period: September 2020 - October 2021
+                - majorId: 1
+                  degreeId: 2
+                  institutionId: 1
+                  description: Difficult job
+                  period: September 2020 - October 2021
+                - majorId: 1
+                  degreeId: 1
+                  institutionId: 4
+                  description: Difficult job
+                  period: September 2020 - October 2021
+                skills:
+                  technicalSkills:
+                  - id: 1
+                  - id: 2
+                  softSkills:
+                  - id: 17
+                  - id: 18
+                work:
+                - companyName: Google
+                  position: Difficult Job
+                  description: Difficult job
+                  workPeriod: September 2020 - October 2021
+                - companyName: Facebook
+                  position: Very Difficult Job
+                  description: Very Difficult job
+                  workPeriod: September 2019 - December 2020
+
       responses:
         '200':
           description: OK
@@ -576,21 +640,61 @@ paths:
             application/json:
               schema:
                 description: Returns a json from the table matching the student id with the skills ids
-                example: [
-                  {
-                    student: 5,
+                example: 
+                  id: 129
+                  name: John
+                  surname: " Edu"
+                  email: aa@aaa.com
+                  description: desgn
+                  phone: '5478929202'
+                  skills:
+                  - student: 129
                     skill: 1
-                  },
-                  {
-                    student: 5,
-                    skill: 1
-                  },
-                  {
-                    student: 5,
-                    skill: 1
-                  },
-                ]
-  
+                  - student: 129
+                    skill: 2
+                  - student: 129
+                    skill: 17
+                  - student: 129
+                    skill: 18
+                  work:
+                  - id: 71
+                    companyName: Google
+                    position: Difficult Job
+                    workPeriod: September 2020 - October 2021
+                    description: Difficult job
+                  - id: 72
+                    companyName: Facebook
+                    position: Very Difficult Job
+                    workPeriod: September 2019 - December 2020
+                    description: Very Difficult job
+                  education:
+                  - studentId: 129
+                    educationId: 4
+                    description: Difficult job
+                    period: September 2020 - October 2021
+                    majorId: 3
+                    degreeId: 1
+                    institutionId: 3
+                  - studentId: 129
+                    educationId: 5
+                    description: Difficult job
+                    period: September 2020 - October 2021
+                    majorId: 1
+                    degreeId: 2
+                    institutionId: 1
+                  - studentId: 129
+                    educationId: 6
+                    description: Difficult job
+                    period: September 2020 - October 2021
+                    majorId: 1
+                    degreeId: 1
+                    institutionId: 4
+        '500':
+          description: INTERNAL SERVER ERROR - Offers an explanation about what caused the error
+          content:
+            text/plain:
+              text: Offers an explanation about what caused the error
+
   /skills:
     get: 
       description: Provides all the skills in the database 
@@ -610,13 +714,13 @@ paths:
                     type: array
                     items:
                       allOf:
-                        - $ref: '#/components/schemas/Skills'
+                        - $ref: '#/components/schemas/Skill'
                   softSkills: 
                     description: All the soft skills in the database
                     type: array
                     items:
                       allOf:
-                        - $ref: '#/components/schemas/Skills'
+                        - $ref: '#/components/schemas/Skill'
                 example: {
                   technicalSkills: [
                     {
@@ -680,7 +784,7 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: "#/components/schemas/Skills"
+                  - $ref: "#/components/schemas/Skill"
                 type: array
                 example: 
                   [
@@ -710,7 +814,7 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: "#/components/schemas/Skills"
+                  - $ref: "#/components/schemas/Skill"
                 type: array
                 example: 
                   [
