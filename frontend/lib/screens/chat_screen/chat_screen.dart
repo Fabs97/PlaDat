@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:frontend/models/message.dart';
+import 'package:frontend/models/user.dart';
 import 'package:frontend/screens/chat_screen/local_widgets/message_card.dart';
 import 'package:frontend/services/api_service.dart';
+import 'package:frontend/services/auth_service.dart';
 import 'package:frontend/widgets/appbar.dart';
 import 'package:frontend/widgets/drawer.dart';
 
@@ -49,15 +51,20 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
+    final loggedUserType = AuthService().loggedUser.type;
     return Scaffold(
-      //TODO: change it with the student/company name
-      appBar: CustomAppBar.createAppBar(context, "Student Name"),
+      // TODO: needs to be chagend with the real name
+      appBar: CustomAppBar.createAppBar(
+          context,
+          loggedUserType == AccountType.Employer
+              ? "Student Name"
+              : "Company Name"),
       drawer: CustomDrawer.createDrawer(context),
       body: RefreshIndicator(
         onRefresh: () async => _requestMessages(),
         child: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: widget._messages != null 
+          child: widget._messages != null
               ? Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   mainAxisSize: MainAxisSize.max,
@@ -72,9 +79,13 @@ class _ChatScreenState extends State<ChatScreen> {
                           reverse: true,
                           itemBuilder: (_, index) {
                             final message = widget._messages[index];
+                            final messageSender = message.sender;
                             return MessageCard(
                               message: message,
-                              isByMe: message.sender == Sender.STUDENT,
+                              isByMe: (messageSender == Sender.STUDENT &&
+                                      loggedUserType == AccountType.Student) ||
+                                  (messageSender == Sender.EMPLOYER &&
+                                      loggedUserType == AccountType.Employer),
                             );
                           }),
                     ),
@@ -98,8 +109,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                             _createNewMessageButtonPressed,
                                         child: Text(
                                           'Create new message',
-                                          style:
-                                              TextStyle(color: Colors.white),
+                                          style: TextStyle(color: Colors.white),
                                         ),
                                       ),
                                     )
@@ -135,8 +145,9 @@ class _ChatScreenState extends State<ChatScreen> {
           studentId: widget.args.studentId,
           employerId: widget.args.employerId,
           message: _newMessage,
-          // TODO: this has to be understood from the logged in user, PLAD-77 merging
-          sender: Sender.STUDENT,
+          sender: AuthService().loggedUser.type == AccountType.Student
+              ? Sender.STUDENT
+              : Sender.EMPLOYER,
           sendDate: DateTime.now(),
         ),
       ).then((response) => setState(() {
@@ -146,7 +157,7 @@ class _ChatScreenState extends State<ChatScreen> {
             if (response is Message) {
               Fluttertoast.showToast(msg: "Message sent!");
               widget._messages.insert(0, response);
-            } else if(response is String){
+            } else if (response is String) {
               Fluttertoast.showToast(
                   msg:
                       "Something went wrong while sending the message, please try again");

@@ -138,7 +138,7 @@ class MatchAlert extends StatelessWidget {
                   onPressed: () {
                     Nav.navigatorKey.currentState.popAndPushNamed("/chat-screen",
                         arguments: ChatScreenArguments(
-                          isStudent ? object.id : AuthService().loggedStudent.id,
+                          isStudent ? object.id : AuthService().loggedAccountInfo.id,
                           placement.employerId,
                         ));
                   },

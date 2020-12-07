@@ -24,7 +24,7 @@ class _PlacementCardsListState extends State<PlacementCardsList>
 
   CardController _cardController;
 
-  final studentId = AuthService().loggedStudent.id;
+  final studentId = AuthService().loggedAccountInfo.id;
   @override
   void initState() {
     APIService.route(
