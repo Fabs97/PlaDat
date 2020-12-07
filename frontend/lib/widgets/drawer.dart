@@ -28,6 +28,10 @@ class CustomDrawer {
             title: Text("Create student"),
             onTap: () => Nav.navigatorKey.currentState.pushNamed("/new-student"),
           ),
+          ListTile(
+            title: Text("Register to PlaDat"),
+            onTap: () => Nav.navigatorKey.currentState.pushNamed("/registration"),
+          ),
         ],
       ),
     );
