@@ -57,7 +57,7 @@ class _ChatScreenState extends State<ChatScreen> {
         onRefresh: () async => _requestMessages(),
         child: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: widget._messages.isNotEmpty
+          child: widget._messages != null 
               ? Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   mainAxisSize: MainAxisSize.max,
@@ -98,7 +98,8 @@ class _ChatScreenState extends State<ChatScreen> {
                                             _createNewMessageButtonPressed,
                                         child: Text(
                                           'Create new message',
-                                          style: TextStyle(color: Colors.white),
+                                          style:
+                                              TextStyle(color: Colors.white),
                                         ),
                                       ),
                                     )
@@ -138,14 +139,14 @@ class _ChatScreenState extends State<ChatScreen> {
           sender: Sender.STUDENT,
           sendDate: DateTime.now(),
         ),
-      ).then((sentMessage) => setState(() {
+      ).then((response) => setState(() {
             _sendingMessage = false;
             _creatingNewMessage = false;
             _newMessage = "";
-            if (sentMessage != null) {
+            if (response is Message) {
               Fluttertoast.showToast(msg: "Message sent!");
-              widget._messages.insert(0, sentMessage);
-            } else {
+              widget._messages.insert(0, response);
+            } else if(response is String){
               Fluttertoast.showToast(
                   msg:
                       "Something went wrong while sending the message, please try again");

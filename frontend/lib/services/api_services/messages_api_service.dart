@@ -21,11 +21,16 @@ class MessagesAPIService extends APIInfo {
       String subRoute, ChatScreenArguments args) async {
     var response = await http.get(
         APIInfo.apiEndpoint + "/message/${args.studentId}/${args.employerId}");
-    if (response.statusCode == 200) {
-      final parsed = jsonDecode(response.body).cast<Map<String, dynamic>>();
-      return parsed
-          .map((messageJson) => Message.fromJson(messageJson))
-          .toList();
+    switch (response.statusCode) {
+      case 200:
+        {
+          final parsed = jsonDecode(response.body).cast<Map<String, dynamic>>();
+          return parsed
+              .map((messageJson) => Message.fromJson(messageJson))
+              .toList();
+        }
+      default:
+        return response.body;
     }
   }
 
@@ -35,9 +40,15 @@ class MessagesAPIService extends APIInfo {
       headers: {"Content-Type": "application/json"},
       body: message.toJson(),
     );
-    if (response.statusCode == 200) {
-      return Message.fromJson(jsonDecode(response.body));
+    switch (response.statusCode) {
+      case 200:
+        {
+          return Message.fromJson(jsonDecode(response.body));
+        }
+      default:
+        return response.body;
     }
+    if (response.statusCode == 200) {}
   }
 }
 
