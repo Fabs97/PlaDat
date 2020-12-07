@@ -1,6 +1,5 @@
 //You need to import the DB instance in order to use it and make requests
 const database = require('../DB/connection');
-const connection = require('../DB/connection');
 
 module.exports = {
     // Here we add methods that have to make operation on the database: create, select, delete, etc
@@ -17,8 +16,8 @@ module.exports = {
         return result[0];
     },
 
-    createStudentAccount: (studentInfo) => {
-        return database('student')
+    createStudentAccount: async (studentInfo) => {
+        let result = await database('student')
             .returning()
             .insert({
                 name: studentInfo.name,
@@ -26,7 +25,10 @@ module.exports = {
                 email: studentInfo.email,
                 description: studentInfo.description,
                 phone: studentInfo.phone
-            },['id','name','surname','email','description', 'phone']);
+            },['id','name','surname','email','description', 'phone'])
+            .catch(error => {console.log(error)});
+
+        return result[0];
     },
 
     setStudentSkills: (studentId, skills) => {

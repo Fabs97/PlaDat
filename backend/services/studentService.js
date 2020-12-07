@@ -1,8 +1,10 @@
 
 const studentDAO = require('../DAO/studentDAO');
 const skillService = require('../services/skillsService')
+const educationService = require('../services/educationService')
+const workService = require('../services/workService')
 
-module.exports = {
+self = module.exports = {
     // Here you can add all kinds of methods that manage or handle data, or do specific tasks. 
     // This is the place where the business logic is.
     getStudent: (id) => {
@@ -11,11 +13,23 @@ module.exports = {
         return studentDAO.getStudentById(id);
     },
 
-    createStudentAccount: (studentInfo) => {
-        return studentDAO.createStudentAccount(studentInfo);
+    createStudentAccount: async (studentInfo) => {
+        let studentProfile = {};
+
+        studentProfile = await studentDAO.createStudentAccount(studentInfo);
+        console.log(studentProfile);
+        if(studentInfo.skills) {
+            studentProfile.skills = await self.saveStudentSkills(studentProfile.id, studentInfo.skills);
+        }
+        if(studentInfo.work) {
+            studentProfile.work = await workService.saveStudentWork(studentProfile.id, studentInfo.work);
+        }
+        // studentProfile.education = await educationService.saveStudentWork(studentProfile.id, studentInfo.education);
+
+        return studentProfile;
     },
 
-    saveStudentProfile: async (studentId, studentInfo) => {
+    saveStudentSkills: async (studentId, studentInfo) => {
         let skills = [];
         if(studentInfo.technicalSkills && studentInfo.technicalSkills.length > 0) {
             skills = [...skills, ...studentInfo.technicalSkills];
