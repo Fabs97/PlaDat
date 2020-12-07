@@ -3,6 +3,7 @@ import 'package:frontend/services/api_services/majors_api_service.dart';
 import 'package:frontend/services/api_services/messages_api_service.dart';
 import 'package:frontend/services/api_services/placement_api_service.dart';
 import 'package:frontend/services/api_services/recomendations_api_service.dart';
+import 'package:frontend/services/api_services/registration_api_service.dart';
 import 'package:frontend/services/api_services/students_api_service.dart';
 import 'api_services/employers_api_service.dart';
 import 'api_services/matches_API_service.dart';
@@ -19,6 +20,7 @@ enum ENDPOINTS {
   Matches,
   Employers,
   Messages,
+  Registration
 }
 
 class APIInfo {
@@ -56,6 +58,9 @@ class APIService {
           return MatchesAPIService.route(subRoute, body: body);
         case ENDPOINTS.Employers:
           return EmployersAPIService.route(subRoute,
+              urlArgs: urlArgs, body: body);
+        case ENDPOINTS.Registration:
+          return RegistrationAPIService.route(subRoute,
               urlArgs: urlArgs, body: body);
         case ENDPOINTS.Messages:
           return MessagesAPIService.route(subRoute,

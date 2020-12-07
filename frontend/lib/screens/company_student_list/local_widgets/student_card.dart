@@ -58,21 +58,6 @@ class StudentCard extends StatelessWidget {
       mainAxisSize: MainAxisSize.max,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Container(
-          // Image container
-          decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage("images/image0.jpg"),
-                fit: BoxFit.fill,
-              ),
-              border: Border.all(
-                color: Colors.grey,
-                width: 2.0,
-              ),
-              borderRadius: BorderRadius.circular(10.0)),
-          width: size.width * .2,
-          height: size.width * .2,
-        ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
           child: Column(
@@ -82,7 +67,7 @@ class StudentCard extends StatelessWidget {
               ConstrainedBox(
                 constraints: BoxConstraints.loose(
                   Size(
-                    size.width * .5,
+                    size.width * .7,
                     size.height * .1,
                   ),
                 ),
