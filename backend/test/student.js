@@ -135,6 +135,43 @@ describe('student API', () =>{
                 })
         })
 
+        it('should return a 500 server error when the skills are not able to be saved', (done) => {
+            
+            let saveInfo = testStudent.skills.technicalSkills[0].id;
+            testStudent.skills.technicalSkills[0].id = 1000000;
+
+            chai.request(server)
+                .post('/student')
+                .set('content-type', 'application/json')
+                .send(testStudent)
+                .end((err, response) => {
+                    response.should.have.status(500);
+                    response.should.have.property('text');
+
+                    testStudent.skills.technicalSkills[0].id = saveInfo;
+
+                    done();
+                })
+        })
+
+        it('should return a 500 server error when the education experiences are not saved', (done) => {
+            
+            let saveInfo = testStudent.education[0].degreeId;
+            testStudent.education[0].degreeId = 1000000;
+
+            chai.request(server)
+                .post('/student')
+                .set('content-type', 'application/json')
+                .send(testStudent)
+                .end((err, response) => {
+                    response.should.have.status(500);
+                    response.should.have.property('text');
+
+                    testStudent.education[0].degreeId = saveInfo;
+                    done();
+                })
+        })
+
         afterEach(async () =>{
             await chai.request(server)
                 .delete('/student/' + testStudent.id)
