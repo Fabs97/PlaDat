@@ -713,7 +713,7 @@ paths:
               example:
                 {
                   email: "paolo@gmail.com",
-                  password: "ejti7ldjfs",
+                  password: "Iloveyou_3000",
                   type: "STUDENT"
 
                 }
@@ -723,13 +723,12 @@ paths:
           content:
             application/json:
               schema:
-                description: Returns a json with the newly inserted user
+                description: Returns a json with the newly inserted user, without the hashed password
                 type: object
                 example:
                   {
                     id: 2,
                     email: "paolo@gmail.com",
-                    password: "ejti7ldjfs",
                     type: "STUDENT"
                   }
         '500':
