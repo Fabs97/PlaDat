@@ -14,7 +14,10 @@ router.get("/student/:id", async (req, res, next) => {
 });
 
 router.post("/student", async (req, res, next) => {
-    const studentAccount = await studentService.createStudentAccount(req.body);
+    const studentAccount = await studentService.createStudentAccount(req.body)
+        .catch(error => {
+            res.status(error.code).send(error.message);
+        });
     res.json(studentAccount);
 })
 

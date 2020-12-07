@@ -16,16 +16,21 @@ self = module.exports = {
     createStudentAccount: async (studentInfo) => {
         let studentProfile = {};
 
-        studentProfile = await studentDAO.createStudentAccount(studentInfo);
-        console.log(studentProfile);
-        if(studentInfo.skills) {
-            studentProfile.skills = await self.saveStudentSkills(studentProfile.id, studentInfo.skills);
-        }
-        if(studentInfo.work) {
-            studentProfile.work = await workService.saveStudentWork(studentProfile.id, studentInfo.work);
-        }
-        // studentProfile.education = await educationService.saveStudentWork(studentProfile.id, studentInfo.education);
+        try {
+            studentProfile = await studentDAO.createStudentAccount(studentInfo);
 
+            if(studentInfo.skills) {
+                studentProfile.skills = await self.saveStudentSkills(studentProfile.id, studentInfo.skills);
+            }
+            if(studentInfo.work) {
+                studentProfile.work = await workService.saveStudentWork(studentProfile.id, studentInfo.work);
+            }
+            // studentProfile.education = await educationService.saveStudentWork(studentProfile.id, studentInfo.education);
+    
+        } catch(error) {
+            throw error;
+        }
+       
         return studentProfile;
     },
 
@@ -41,7 +46,7 @@ self = module.exports = {
             const otherSkills = await skillService.saveOtherSkills(studentInfo.otherSkills);
             skills = [...skills, ...otherSkills];  
         }
-        return studentDAO.setStudentSkills(studentId, skills)    
+        return studentDAO.setStudentSkills(studentId, skills);  
     },
 
     getStudentsBySkills: async (skills) => {
