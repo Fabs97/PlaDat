@@ -56,7 +56,7 @@ module.exports = {
     saveStudentLocation: async (id, details) => {
         let student = await studentDAO.getStudentById(id);
         if (student == undefined){
-            throw new SuperError(ERR_BAD_REQUEST, 'The student account does not exists. Please try again');
+            throw new SuperError(ERR_BAD_REQUEST, 'The student account does not exists. Please try again.');
         }
         let location = await locationService.addNewLocationIfNeeded(details);
         let result = await studentDAO.setStudentLocation(id, location.id)

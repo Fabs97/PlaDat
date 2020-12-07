@@ -14,7 +14,7 @@ module.exports = {
             }, ['id', 'country', 'city'])
             .catch(error => {
                 if(error){
-                    throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'there has been a problem saving your location. Please try again.')
+                    throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There has been a problem saving your location. Please try again.')
                 }
             });
         return result[0];
@@ -27,7 +27,7 @@ module.exports = {
             .andWhere('city', details.city)
             .catch(error => {
                 if(error){
-                    throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'there has been a problem looking up your location. Please try again.')
+                    throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There has been a problem looking up your location. Please try again.')
                 }
             });
         return result[0];
