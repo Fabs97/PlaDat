@@ -4,6 +4,7 @@ const skillService = require('../services/skillsService')
 const locationService = require('../services/locationService');
 const SuperError = require('../errors').SuperError;
 const ERR_BAD_REQUEST = require('../errors').ERR_BAD_REQUEST;
+const ERR_INTERNAL_SERVER_ERROR = require('../errors').ERR_INTERNAL_SERVER_ERROR;
 
 
 module.exports = {
@@ -60,6 +61,9 @@ module.exports = {
         }
         let location = await locationService.addNewLocationIfNeeded(details);
         let result = await studentDAO.setStudentLocation(id, location.id)
+        if (result != 1){
+            throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There has been a problem setting your student profile location. Please try again')
+        }
         return location;
     },
 };

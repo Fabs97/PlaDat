@@ -144,7 +144,7 @@ module.exports = {
                     throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There has been a problem setting your student profile location. Please try again')
                 }
             });
-        return result[0];
+        return result;
     },
 
 
