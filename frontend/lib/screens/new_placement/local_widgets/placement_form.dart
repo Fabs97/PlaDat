@@ -208,9 +208,9 @@ class _PlacementFormState extends State<PlacementForm> {
   Widget _createSalaryField(Placement placement) {
     return TextFormField(
       decoration: const InputDecoration(
-        labelText: 'Salary per month',
+        labelText: 'Yearly salary',
         hintText: 'Insert only digits 0-9',
-        prefixText: "€ ",
+        prefixText: "£ ",
       ),
       keyboardType: TextInputType.number,
       inputFormatters: [
