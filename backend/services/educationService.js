@@ -1,6 +1,7 @@
 const majorDAO = require('../DAO/majorDAO');
 const institutionDAO = require('../DAO/institutionDAO');
 const degreeDAO = require('../DAO/degreeDAO');
+const educationDAO = require('../DAO/educationDAO');
 
 module.exports = {
     getMajors: () => {   
@@ -21,4 +22,7 @@ module.exports = {
     getDegreeById: (id) => {
         return degreeDAO.getDegreeById(id);
     },
+    saveStudentEducations: (studentId, education) => {
+        return educationDAO.createEducationExperiences(studentId, education);
+    }
 };

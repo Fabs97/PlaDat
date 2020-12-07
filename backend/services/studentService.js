@@ -25,7 +25,9 @@ self = module.exports = {
             if(studentInfo.work) {
                 studentProfile.work = await workService.saveStudentWork(studentProfile.id, studentInfo.work);
             }
-            // studentProfile.education = await educationService.saveStudentWork(studentProfile.id, studentInfo.education);
+            if(studentInfo.education){
+                studentProfile.education = await educationService.saveStudentEducations(studentProfile.id, studentInfo.education);
+            }
     
         } catch(error) {
             throw error;
