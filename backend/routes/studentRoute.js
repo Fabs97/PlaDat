@@ -2,6 +2,8 @@ const router = require('express').Router();
 
 const studentService = require('../services/studentService');
 
+const ERR_BAD_REQUEST = require('../errors').ERR_BAD_REQUEST;
+
 router.get("/student/:id", async (req, res, next) => {
 
     // This is where the requests of type "http://localhost:3000/student/1" will arrive. 
@@ -33,6 +35,19 @@ router.get("/students/last", async (req, res, next) => {
 router.delete("/student/:id", async (req, res, next) => {
     let result = await studentService.deleteStudentById(req.params.id);
     res.json(result);
+});
+
+router.post("/student/:id/location", async (req, res, next) => {
+    if(isNaN(req.params.id) || typeof(req.body.country) != 'string' || typeof(req.body.city) != 'string'){
+        res.status(ERR_BAD_REQUEST).send('Your request\'s structure contains some mistake. Please try again.');
+
+    } else {
+        let location = await studentService.saveStudentLocation(req.params.id, req.body)
+        .catch(error => {
+            res.status(error.code).send(error.message);
+        })
+        res.json(location);
+    }
 })
 
 

@@ -1,6 +1,10 @@
 
 const studentDAO = require('../DAO/studentDAO');
 const skillService = require('../services/skillsService')
+const locationService = require('../services/locationService');
+const SuperError = require('../errors').SuperError;
+const ERR_BAD_REQUEST = require('../errors').ERR_BAD_REQUEST;
+
 
 module.exports = {
     // Here you can add all kinds of methods that manage or handle data, or do specific tasks. 
@@ -47,5 +51,15 @@ module.exports = {
 
     deleteStudentById: (id) => {
         return studentDAO.deleteStudentById(id);
-    }
+    },
+
+    saveStudentLocation: async (id, details) => {
+        let student = await studentDAO.getStudentById(id);
+        if (student == undefined){
+            throw new SuperError(ERR_BAD_REQUEST, 'The student account does not exists. Please try again');
+        }
+        let location = await locationService.addNewLocationIfNeeded(details);
+        let result = await studentDAO.setStudentLocation(id, location.id)
+        return location;
+    },
 };

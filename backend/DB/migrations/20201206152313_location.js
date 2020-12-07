@@ -5,7 +5,6 @@ exports.up = async function(knex) {
         table.increments();
         table.string('country');
         table.string('city');
-        table.string('postal_code');
     }) : null;
   
 };
