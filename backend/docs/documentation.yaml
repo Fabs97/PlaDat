@@ -130,7 +130,8 @@ components:
         message:
           type: string
         send_date: 
-          type: date-time
+          type: string
+          format: date-time
         sender:
           type: string
           enum:
