@@ -7,6 +7,7 @@ exports.up = async function(knex) {
         table.string('position');
         table.string('work_period');
         table.text('description');
+        table.integer('student_id').references('id').inTable('student').onDelete('CASCADE').alter();
     }) : null; 
 };
 
