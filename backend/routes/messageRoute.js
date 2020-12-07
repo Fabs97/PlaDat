@@ -3,12 +3,12 @@ const router = require('express').Router();
 const messageService = require('../services/messageService');
 
 const SuperError = require('../errors').SuperError;
-const ERR_BAD_REQUEST_ERROR = require('../errors').ERR_BAD_REQUEST_ERROR;
+const ERR_BAD_REQUEST = require('../errors').ERR_BAD_REQUEST;
 
 
 router.post('/message', async (req, res, next) => {
     if(isNaN(req.body.studentId) || isNaN(req.body.employerId)|| typeof(req.body.sendDate) != 'string' || (req.body.sender != 'STUDENT' && req.body.sender != 'EMPLOYER') || typeof(req.body.message) != 'string'){
-        res.status(ERR_BAD_REQUEST_ERROR).send('Your request structure contains some mistakes. Please try again.');
+        res.status(ERR_BAD_REQUEST).send('Your request structure contains some mistakes. Please try again.');
     } else {
         let message = await messageService.saveNewMessage(req.body)
         .catch(error => {
@@ -27,7 +27,7 @@ router.get('/message/:studentId/:employerId', async (req, res, next) => {
         });
         res.json(conversation);
     } else {
-        res.status(ERR_BAD_REQUEST_ERROR).send('Your request did not provided valid values for ids. Please try again.');
+        res.status(ERR_BAD_REQUEST).send('Your request did not provided valid values for ids. Please try again.');
     }
      
 });
