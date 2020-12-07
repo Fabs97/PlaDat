@@ -3,9 +3,6 @@ import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:frontend/models/student.dart';
-import 'package:frontend/services/api_service.dart';
-import 'package:frontend/utils/routes_generator.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 
