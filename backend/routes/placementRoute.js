@@ -8,7 +8,10 @@ const placementService = require('../services/placementService');
  */
 router.post("/placement/new-placement", async (req, res, next) => {
 
-    newPlacement = await placementService.savePlacementPage(req.body);
+    let newPlacement = await placementService.savePlacementPage(req.body)
+        .catch(error => {
+            res.status(error.code).send(error.message);
+        });
     res.json(newPlacement);
 
 });

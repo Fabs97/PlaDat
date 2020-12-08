@@ -81,7 +81,7 @@ class MatchAlert extends StatelessWidget {
                   )
                 : Column(
                     children: [
-                      Container(
+                      ! isStudent ? Container(
                         // Image container
                         decoration: BoxDecoration(
                             image: DecorationImage(
@@ -95,7 +95,7 @@ class MatchAlert extends StatelessWidget {
                             borderRadius: BorderRadius.circular(10.0)),
                         width: size.width * .2,
                         height: size.width * .2,
-                      ),
+                      ) : Spacer(),
                       Text(
                         'Google, Zurich',
                         maxLines: 20,

@@ -4,6 +4,7 @@ import 'package:frontend/screens/company_placement_list/company_placement_list.d
 import 'package:frontend/screens/company_student_list/company_student_list.dart';
 import 'package:frontend/screens/new_placement/new_placement.dart';
 import 'package:frontend/screens/new_student/new_student.dart';
+import 'package:frontend/screens/registration/registration.dart';
 import 'package:frontend/screens/student_placement_list/student_placement_list.dart';
 import 'package:frontend/widgets/match_alert.dart';
 
@@ -33,6 +34,10 @@ class RoutesGenerator {
       case '/company-placements':
         {
           return _createRoute(MyPlacements(), settings);
+        }
+      case '/registration':
+        {
+          return _createRoute(Registration(), settings);
         }
       default:
         {
