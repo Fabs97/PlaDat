@@ -19,8 +19,8 @@ module.exports = {
         return result[0];
     },
 
-    createStudentAccount: (studentInfo) => {
-        return database('student')
+    createStudentAccount: async (studentInfo) => {
+        let result = await database('student')
             .returning()
             .insert({
                 name: studentInfo.name,
@@ -29,6 +29,7 @@ module.exports = {
                 description: studentInfo.description,
                 phone: studentInfo.phone
             },['id','name','surname','email','description', 'phone']);
+        return result[0];
     },
 
     setStudentSkills: (studentId, skills) => {

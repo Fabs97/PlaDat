@@ -3,11 +3,10 @@ const studentDAO = require('../DAO/studentDAO');
 const skillService = require('../services/skillsService')
 const locationService = require('../services/locationService');
 const SuperError = require('../errors').SuperError;
-const ERR_BAD_REQUEST = require('../errors').ERR_BAD_REQUEST;
 const ERR_INTERNAL_SERVER_ERROR = require('../errors').ERR_INTERNAL_SERVER_ERROR;
 
 
-module.exports = {
+self = module.exports = {
     // Here you can add all kinds of methods that manage or handle data, or do specific tasks. 
     // This is the place where the business logic is.
     getStudent: (id) => {
@@ -16,11 +15,27 @@ module.exports = {
         return studentDAO.getStudentById(id);
     },
 
-    createStudentAccount: (studentInfo) => {
-        return studentDAO.createStudentAccount(studentInfo);
+    createStudentAccount: async (studentInfo) => {
+        let studentProfile = {};
+
+        try {
+            studentProfile = await studentDAO.createStudentAccount(studentInfo);
+
+            if(studentInfo.skills) {
+                studentProfile.skills = await self.saveStudentSkills(studentProfile.id, studentInfo.skills);
+            }
+            if(studentInfo.location){
+                studentProfile.location = await self.saveStudentLocation(studentProfile.id, studentInfo.location);
+            }
+    
+        } catch(error) {
+            throw error;
+        }
+       
+        return studentProfile;
     },
 
-    saveStudentProfile: async (studentId, studentInfo) => {
+    saveStudentSkills: async (studentId, studentInfo) => {
         let skills = [];
         if(studentInfo.technicalSkills && studentInfo.technicalSkills.length > 0) {
             skills = [...skills, ...studentInfo.technicalSkills];
@@ -55,13 +70,10 @@ module.exports = {
     },
 
     saveStudentLocation: async (id, details) => {
-        let student = await studentDAO.getStudentById(id);
-        if (student == undefined){
-            throw new SuperError(ERR_BAD_REQUEST, 'The student account does not exists. Please try again.');
-        }
         let location = await locationService.addNewLocationIfNeeded(details);
         let result = await studentDAO.setStudentLocation(id, location.id)
         if (result != 1){
+            locationService.deleteLocationById(location.id);
             throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There has been a problem setting your student profile location. Please try again')
         }
         return location;

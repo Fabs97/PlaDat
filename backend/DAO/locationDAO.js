@@ -31,7 +31,13 @@ module.exports = {
                 }
             });
         return result[0];
-    }
+    },
+
+    deleteLocationById: async (id) => {
+        await database('location')
+            .where('id', id)
+            .del();
+    },
 
 
 }

@@ -35,6 +35,7 @@ module.exports = {
                 let location = await locationService.addNewLocationIfNeeded(placementDetails.location);
                 let addedLocation = await placementDAO.setPlacementLocation(newPlacement.id, location.id);
                 if (addedLocation != 1){
+                    await locationService.deleteLocationById(location.id);
                     throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There has been a problem setting your student profile location. Please try again')
                 }
                 newPlacement.location = location;

@@ -1,6 +1,6 @@
 const locationDAO = require('../DAO/locationDAO');
 
-module.exports = {
+self = module.exports = {
     saveLocation: async (locationDetails) => {
         return await locationDAO.saveLocation(locationDetails);
     },
@@ -17,5 +17,9 @@ module.exports = {
         }
         
         return location;
+    },
+
+    deleteLocationById: async (id) => {
+        await locationDAO.deleteLocationById(id);
     }
 }

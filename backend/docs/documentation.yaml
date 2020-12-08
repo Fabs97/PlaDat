@@ -44,6 +44,24 @@ components:
           format: password
         description: 
           type: string 
+        location:
+          type: object
+          properties:
+            country:
+              type: string
+            city:
+              type: string
+        skills:
+          type: object
+          properties: 
+            technicalSkills: 
+              type: array
+              items:
+                $ref: "#/components/schemas/Skill"
+            softSkills: 
+              type: array
+              items:
+                $ref: "#/components/schemas/Skill"
     Employer:
       type: object
       properties:
@@ -381,6 +399,10 @@ paths:
                     {id: 1, name: "Politecnico di Milano"},
                     {id: 1, name: "Politecnico di Torino"},
                   ],
+                  location: {
+                    country: "Italy",
+                    city: "Milan"
+                  },
                   skills: {
                     technicalSkills: [
                       {id: 1},
@@ -424,6 +446,10 @@ paths:
                       {id: 1, name: "Politecnico di Milano"},
                       {id: 1, name: "Politecnico di Torino"},
                     ],
+                    location: {
+                      country: "Italy",
+                      city: "Milan"
+                    },
                     skills: {
                       technicalSkills: [
                         {id: 1},
@@ -498,42 +524,36 @@ paths:
                     }
                   ]
   
-  /student/{id}/profile:
+  /student:
     post:
-      description: Allows users to save additional information to the specified student profile
+      description: Allows students to fill in the details of their profile
       tags: 
         - "Student"
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: string
-          example: 1
       requestBody:
         required: true
         content:
           application/json:
             schema:
               oneOf:
-                - $ref: '#/components/schemas/Skills'
+                - $ref: '#/components/schemas/Student'
               type: object
               example:
-                {
-                  technicalSkills: [
-                    {
-                      id: 1
-                    },
-                    {
-                      id: 2
-                    },
-                  ],
-                  softSkills: [
-                    {
-                      id: 4,
-                    }
-                  ]
-                }
+                name: John
+                surname: Dow
+                email: aa@aaa.com
+                description: I am a happy student
+                phone: '5478929202'
+                location:
+                  country: "Italy"
+                  city: "Milan"
+                skills:
+                  technicalSkills:
+                  - id: 1
+                  - id: 2
+                  softSkills:
+                  - id: 17
+                  - id: 18
+
       responses:
         '200':
           description: OK
@@ -541,75 +561,31 @@ paths:
             application/json:
               schema:
                 description: Returns a json from the table matching the student id with the skills ids
-                example: [
-                  {
-                    student: 5,
-                    skill: 1
-                  },
-                  {
-                    student: 5,
-                    skill: 1
-                  },
-                  {
-                    student: 5,
-                    skill: 1
-                  },
-                ]
-  /student/{id}/location:
-    post:
-      desctipion: Allows the student to add a location to their profile. 
-      tags:
-       - "Student"
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: string
-          example: 1
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              example:
-                {
-                  country: "Italy",
-                  city: "Milan"
-                }
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                oneOf:
-                  - $ref: '#/components/schemas/Location'
-                type: object
-                description: Returns a json with the information of the location and the id. 
-                example:
-                  {
-                    id: 1,
-                    country: "Italy",
-                    city: "Milan"
-                  }
-        '400': 
-          description: Bad Request
-          content:
-            text/html:
-              schema: 
-                type: string
                 example: 
-                  "The student account does not exists. Please try again."
+                  id: 129
+                  name: John
+                  surname: " Edu"
+                  email: aa@aaa.com
+                  description: desgn
+                  phone: '5478929202'
+                  location:
+                    country: "Italy"
+                    city: "Milan"
+                  skills:
+                  - student: 129
+                    skill: 1
+                  - student: 129
+                    skill: 2
+                  - student: 129
+                    skill: 17
+                  - student: 129
+                    skill: 18
+
         '500':
-          description: Internal Server Error
-          content: 
-            text/html:
-              schema: 
-                type: string
-                example:
-                  "There has been a problem looking up your location. Please try again."
+          description: INTERNAL SERVER ERROR - Offers an explanation about what caused the error
+          content:
+            text/plain:
+              text: Offers an explanation about what caused the error
         
   /skills:
     get: 

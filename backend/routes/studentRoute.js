@@ -16,7 +16,10 @@ router.get("/student/:id", async (req, res, next) => {
 });
 
 router.post("/student", async (req, res, next) => {
-    const studentAccount = await studentService.createStudentAccount(req.body);
+    const studentAccount = await studentService.createStudentAccount(req.body)
+        .catch(error => {
+            res.status(error.code).send(error.message);
+        });
     res.json(studentAccount);
 })
 
@@ -37,18 +40,7 @@ router.delete("/student/:id", async (req, res, next) => {
     res.json(result);
 });
 
-router.post("/student/:id/location", async (req, res, next) => {
-    if(isNaN(req.params.id) || typeof(req.body.country) != 'string' || typeof(req.body.city) != 'string'){
-        res.status(ERR_BAD_REQUEST).send('Your request\'s structure contains some mistake. Please try again.');
 
-    } else {
-        let location = await studentService.saveStudentLocation(req.params.id, req.body)
-        .catch(error => {
-            res.status(error.code).send(error.message);
-        })
-        res.json(location);
-    }
-})
 
 
 // Here you can define further routes and their functionality
