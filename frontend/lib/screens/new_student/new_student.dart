@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/screens/new_student/local_widget/educations_form.dart';
+import 'package:frontend/screens/new_student/local_widget/experiences_form.dart';
 import 'package:frontend/screens/new_student/local_widget/skills_form.dart';
 import 'package:frontend/screens/new_student/local_widget/student_form.dart';
 import 'package:frontend/models/student.dart';
-import 'package:frontend/screens/new_student/local_widget/work_form.dart';
 import 'package:provider/provider.dart';
 
 class FormStepper extends ChangeNotifier {
@@ -26,7 +25,16 @@ class NewStudent extends StatefulWidget {
 }
 
 class _NewStudentState extends State<NewStudent> {
-  final _steps = [StudentForm(), EducationsForm(), WorkExperiencesForm(), SkillsForm()];
+  final _steps = [
+    StudentForm(),
+    ExperiencesForm(
+      isEducationsForm: true,
+    ),
+    ExperiencesForm(
+      isEducationsForm: false,
+    ),
+    SkillsForm(),
+  ];
 
   @override
   Widget build(BuildContext context) {
