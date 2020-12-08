@@ -82,9 +82,5 @@ module.exports = {
 
     deletePlacementById: (id) => {
         return placementDAO.deletePlacementById(id);
-    },
-
-    getPlacementsMatchWithStudent: (studentId) => {
-        return matchService.getMatchesByStudentId(studentId);
     }
 };

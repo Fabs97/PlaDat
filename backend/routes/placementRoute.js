@@ -45,9 +45,4 @@ router.delete('/placement/:id', async (req, res, next) => {
     res.json(result);
 })
 
-router.get('/student/:studentId/placements', async (req, res, next) => {
-    const placements = await placementService.getPlacementsMatchWithStudent(req.params.studentId);
-    res.json(placements);
-});
-
 module.exports = router;
