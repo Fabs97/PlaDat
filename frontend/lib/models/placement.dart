@@ -48,12 +48,27 @@ extension EmploymentTypeExtension on EmploymentType {
         return "";
     }
   }
+
+  static EmploymentType fromString(String type){
+    switch (type) {
+      case "FULL_TIME":
+        return EmploymentType.FULLTIME;
+      case "PART_TIME":
+        return EmploymentType.PARTTIME;
+      case "CONTRACT":
+        return EmploymentType.CONTRACT;
+      case "INTERNSHIP":
+        return EmploymentType.INTERNSHIP;
+      default:
+        return null;
+    }
+  }
 }
 
 class Placement extends ChangeNotifier {
   int id;
   String position;
-  String employmentType;
+  EmploymentType employmentType;
   DateTime startPeriod;
   DateTime endPeriod;
   int salary;
@@ -78,7 +93,7 @@ class Placement extends ChangeNotifier {
     return jsonEncode({
       "id": this.id,
       "position": this.position,
-      "employmentType": this.employmentType,
+      "employmentType": this.employmentType.string,
       "startPeriod": this.startPeriod.toString(),
       "endPeriod": this.endPeriod.toString(),
       "salary": this.salary,
@@ -98,9 +113,7 @@ class Placement extends ChangeNotifier {
     return Placement(
       id: json["id"],
       position: json["position"],
-      employmentType: json["employment_type"] != null
-          ? EmploymentTypeExtension.fromBadToNice(json["employment_type"])
-          : "",
+      employmentType: EmploymentTypeExtension.fromString(json["employment_type"]) ?? null,
       startPeriod: json["start_period"] != null
           ? DateTime.parse(json["start_period"])
           : null,
