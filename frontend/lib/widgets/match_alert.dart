@@ -84,21 +84,23 @@ class MatchAlert extends StatelessWidget {
                   )
                 : Column(
                     children: [
-                      ! isStudent ? Container(
-                        // Image container
-                        decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: AssetImage("images/image0.jpg"),
-                              fit: BoxFit.fill,
-                            ),
-                            border: Border.all(
-                              color: Colors.grey,
-                              width: 2.0,
-                            ),
-                            borderRadius: BorderRadius.circular(10.0)),
-                        width: size.width * .2,
-                        height: size.width * .2,
-                      ) : Spacer(),
+                      !isStudent
+                          ? Container(
+                              // Image container
+                              decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                    image: AssetImage("images/image0.jpg"),
+                                    fit: BoxFit.fill,
+                                  ),
+                                  border: Border.all(
+                                    color: Colors.grey,
+                                    width: 2.0,
+                                  ),
+                                  borderRadius: BorderRadius.circular(10.0)),
+                              width: size.width * .2,
+                              height: size.width * .2,
+                            )
+                          : Spacer(),
                       Text(
                         'Google, Zurich',
                         maxLines: 20,
@@ -134,15 +136,25 @@ class MatchAlert extends StatelessWidget {
             SizedBox(
               width: size.width * .8,
               child: Expanded(
-                child: TextButton(
-                  onPressed: () {
-                    Nav.navigatorKey.currentState.popAndPushNamed("/chat-screen",
-                        arguments: ChatScreenArguments(
-                          isStudent ? object.id : AuthService().loggedAccountInfo.id,
-                          placement.employerId,
-                        ));
-                  },
-                  child: Text("Start a conversation"),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 16.0),
+                  child: RaisedButton(
+                    color: Colors.grey[600],
+                    child: Text(
+                      "Start a conversation",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    onPressed: () {
+                      Nav.navigatorKey.currentState
+                          .popAndPushNamed("/chat-screen",
+                              arguments: ChatScreenArguments(
+                                isStudent
+                                    ? object.id
+                                    : AuthService().loggedAccountInfo.id,
+                                placement.employerId,
+                              ));
+                    },
+                  ),
                 ),
               ),
             ),
