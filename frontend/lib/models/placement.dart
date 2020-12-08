@@ -49,7 +49,7 @@ extension EmploymentTypeExtension on EmploymentType {
     }
   }
 
-  static EmploymentType fromString(String type){
+  static EmploymentType fromString(String type) {
     switch (type) {
       case "FULL_TIME":
         return EmploymentType.FULLTIME;
@@ -117,8 +117,8 @@ class Placement extends ChangeNotifier {
         id: json["id"],
         position: json["position"],
         employmentType: json["employment_type"] != null
-            ? EmploymentTypeExtension.fromBadToNice(json["employment_type"])
-            : "",
+            ? EmploymentTypeExtension.fromString(json["employment_type"])
+            : null,
         startPeriod: json["start_period"] != null
             ? DateTime.parse(json["start_period"])
             : null,
@@ -132,9 +132,7 @@ class Placement extends ChangeNotifier {
             ?.toList(),
         majors: json["majors"]?.map((major) => Major.fromJson(major))?.toList(),
         skills: Skill.listFromJson(json["skills"]),
-        countMatches: json["count_matches"]);      
-    );
-
+        countMatches: json["count_matches"]);
   }
 
   static List<Placement> listFromJson(String json) {
