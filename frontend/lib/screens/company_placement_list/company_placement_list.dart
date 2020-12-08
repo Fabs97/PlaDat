@@ -46,7 +46,9 @@ class _MyPlacementsState extends State<MyPlacements> {
                 return Card(
                   child: ListTile(
                     title: Text(_placement.position + " No.$index"),
-                    subtitle: Text("matches"),
+                    subtitle: Text(_placement.countMatches != null
+                        ? "${_placement.countMatches}" + " matches"
+                        : "0 matches"),
                   ),
                 );
               },
