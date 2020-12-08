@@ -152,7 +152,7 @@ class _PlacementFormState extends State<PlacementForm> {
         return null;
       },
       onChanged: (employmentType) => setState(() {
-        placement.employmentType = employmentType.string;
+        placement.employmentType = employmentType;
       }),
       items: [
         _createDropdownButtonEmploymentTypeItem(EmploymentType.FULLTIME),
