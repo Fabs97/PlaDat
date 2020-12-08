@@ -37,5 +37,14 @@ module.exports = {
                 student_accept : choice.studentAccept,
                 status: choice.studentAccept === true ? 'ACCEPTED' : 'REJECTED'
             }, ['student_id', 'placement_id', 'student_accept', 'placement_accept', 'status'])
+    },
+
+    getMatchesByStudentId: (studentId) => {
+        return database('student_has_placement as shp')
+            .select('shp.placement_id', 'p.position', 'p.employer_id', 'e.name')
+            .leftJoin('placements as p', 'p.id', 'shp.placement_id')
+            .leftJoin('employer as e', 'e.id', 'p.employer_id')
+            .where('shp.status','ACCEPTED')
+            .andWhere('shp.student_id', studentId);
     }
 };
