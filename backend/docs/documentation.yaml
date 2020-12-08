@@ -734,4 +734,49 @@ paths:
         '500':
           description: 'There has been a problem saving your registration. Please try again'
 
+  /student/{studentId}/placements:
+    get:
+      description: Returns all the placements that a student has been matched with
+      tags: 
+        - "Matching"
+      parameters:
+        - in: path
+          name: studentId
+          required: true
+          schema:
+            type: string
+          example: 1
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  properties:
+                    placementId: 
+                      type: integer
+                    position:
+                      type: string
+                    employerId:
+                      type: integer
+                    employerName:
+                      type: string
+                example:
+                  [
+                    {
+                        "placementId": 63,
+                        "position": "Fullstack Developer",
+                        "employerId": 43,
+                        "employerName": "Google"
+                    },
+                    {
+                        "placementId": 61,
+                        "position": "Frontend Developer",
+                        "employerId": 43,
+                        "employerName": "Google"
+                    }
+                ]
+
                 
