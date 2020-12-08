@@ -181,24 +181,7 @@ paths:
                       salary: 600,
                       description_role: "An internship for you to learn how to be a full stack developer",
                       employer_id: 1,
-                      count_matches: 3,
-                      majors: [
-                        {id: 1, name: "Computer Science and Engineering"},
-                      ],
-                      institutions: [
-                        {id: 1, name: "Politecnico di Milano"},
-                      ],
-                      skills: {
-                        technicalSkills: [
-                          {id: 1, name: "Flutter", type: "TECH"},
-                        ],
-                        softSkills: [
-                          {id: 4, name: "Team Management", type: "SOFT"},
-                        ],
-                        otherSkills: [
-                          {id: 7, name: "Skiing", type: "OTHER"},
-                        ]
-                      }
+                      count_matches: 3
                     }
                   ]
   /recommendation/{id}/seePlacements:
