@@ -14,7 +14,6 @@ exports.seed = function(knex) {
 
       let experiences = [];
       for (let i=0; i<students.length; i++) {
-        console.log(i%3)
         experiences.push({
           student_id: students[i].id,
           education_id: education[i%3].id,
