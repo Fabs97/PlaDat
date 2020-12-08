@@ -1,28 +1,29 @@
 
 exports.seed = function(knex) {
   // Deletes ALL existing entries
-  return knex('education').del()
-    .then(function () {
+  return knex('student_has_education').del()
+    .then( async function () {
+
+      let students = await knex('student')
+        .select('id', 'name')
+        .whereIn('name', ['Alice #TEST','Fabrizio #TEST','Anna #TEST','Aida #TEST','Andela #TEST','William #TEST','Bassam #TEST','Jhonny #TEST','Maryl #TEST','Freddy #TEST']);
+      
+      let education = await knex('education')
+        .select('id')
+        .limit(3)
+
+      let experiences = [];
+      for (let i=0; i<students.length; i++) {
+        console.log(i%3)
+        experiences.push({
+          student_id: students[i].id,
+          education_id: education[i%3].id,
+          description: "Difficult study",
+          period: "September 2020 - October 2021"
+        })
+      }
+
       // Inserts seed entries
-      return knex('education').insert([
-        {
-          student_id: 1,
-          education_id: 2,
-          description: "Difficult Master",
-          period: "September 2020 - October 2021"
-        },
-        {
-          student_id: 2,
-          education_id: 1,
-          description: "Difficult Master",
-          period: "September 2020 - October 2021"
-        },
-        {
-          student_id: 3,
-          education_id: 2,
-          description: "Difficult Master",
-          period: "September 2020 - October 2021"
-        }
-      ]);
+      return knex('student_has_education').insert(experiences);
     })
 };

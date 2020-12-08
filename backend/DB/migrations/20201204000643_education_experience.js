@@ -2,9 +2,12 @@ exports.up = async function(knex) {
     let hasTable = await knex.schema.hasTable('education')
     return !hasTable ? knex.schema.createTable('education', (table) => {
         table.increments();
-        table.integer('institution_id').unsigned().references('id').inTable('institutions').notNullable();
-        table.integer('degree_id').unsigned().references('id').inTable('degree').notNullable();
-        table.integer('major_id').unsigned().references('id').inTable('majors').notNullable();
+        table.integer('institution_id').unsigned().notNullable();
+        table.foreign('institution_id').references('institutions.id').onDelete('CASCADE');
+        table.integer('degree_id').unsigned().notNullable();
+        table.foreign('degree_id').references('degree.id').onDelete('CASCADE');
+        table.integer('major_id').unsigned().notNullable();
+        table.foreign('major_id').references('majors.id').onDelete('CASCADE');
     }) : null; 
 };
 
