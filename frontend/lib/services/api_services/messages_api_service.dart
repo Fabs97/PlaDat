@@ -48,7 +48,6 @@ class MessagesAPIService extends APIInfo {
       default:
         return response.body;
     }
-    if (response.statusCode == 200) {}
   }
 }
 
