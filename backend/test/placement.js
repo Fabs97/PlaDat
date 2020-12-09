@@ -37,7 +37,7 @@ describe('placement API', () => {
                     response.body.should.have.property('id');
                     placementId = response.body.id;
                     response.body.should.have.property('position');
-                    response.body.should.have.property('working_hours');
+                    response.body.should.have.property('employment_type');
                     response.body.should.have.property('start_period');
                     response.body.should.have.property('end_period');
                     response.body.should.have.property('salary');
@@ -94,7 +94,7 @@ describe('placement API', () => {
                     response.body.should.have.property('id');
                     response.body.id.should.equal(placementId);
                     response.body.should.have.property('position');
-                    response.body.should.have.property('working_hours');
+                    response.body.should.have.property('employment_type');
                     response.body.should.have.property('start_period');
                     response.body.should.have.property('end_period');
                     response.body.should.have.property('salary');
