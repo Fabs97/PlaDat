@@ -49,7 +49,7 @@ extension EmploymentTypeExtension on EmploymentType {
     }
   }
 
-  static EmploymentType fromString(String type){
+  static EmploymentType fromString(String type) {
     switch (type) {
       case "FULL_TIME":
         return EmploymentType.FULLTIME;
@@ -76,6 +76,8 @@ class Placement extends ChangeNotifier {
   List<dynamic> institutions;
   List<dynamic> majors;
   Map<String, dynamic> skills;
+  int employerId;
+  String employerName;
 
   Placement(
       {this.id,
@@ -87,7 +89,9 @@ class Placement extends ChangeNotifier {
       this.description,
       this.institutions,
       this.majors,
-      this.skills});
+      this.skills,
+      this.employerId,
+      this.employerName});
 
   String toJson() {
     return jsonEncode({
@@ -104,30 +108,34 @@ class Placement extends ChangeNotifier {
           .toList(),
       "majors": this.majors.map((major) => major.toJsonMap()).toList(),
       "skills": this.skills.map((key, value) =>
-          MapEntry(key, value.map((e) => e.toJsonMap()).toList()))
+          MapEntry(key, value.map((e) => e.toJsonMap()).toList())),
+      "employerId": this.employerId,
+      "employerName": this.employerName
     });
   }
 
   static Placement fromJson(Map<String, dynamic> json) {
     if (json == null) return null;
     return Placement(
-      id: json["id"],
-      position: json["position"],
-      employmentType: EmploymentTypeExtension.fromString(json["employment_type"]) ?? null,
-      startPeriod: json["start_period"] != null
-          ? DateTime.parse(json["start_period"])
-          : null,
-      endPeriod: json["end_period"] != null
-          ? DateTime.parse(json["end_period"])
-          : null,
-      salary: json["salary"],
-      description: json["description_role"],
-      institutions: json["institutions"]
-          ?.map((institution) => Institution.fromJson(institution))
-          ?.toList(),
-      majors: json["majors"]?.map((major) => Major.fromJson(major))?.toList(),
-      skills: Skill.listFromJson(json["skills"]),
-    );
+        id: json["id"],
+        position: json["position"],
+        employmentType:
+            EmploymentTypeExtension.fromString(json["employment_type"]) ?? null,
+        startPeriod: json["start_period"] != null
+            ? DateTime.parse(json["start_period"])
+            : null,
+        endPeriod: json["end_period"] != null
+            ? DateTime.parse(json["end_period"])
+            : null,
+        salary: json["salary"],
+        description: json["description_role"],
+        institutions: json["institutions"]
+            ?.map((institution) => Institution.fromJson(institution))
+            ?.toList(),
+        majors: json["majors"]?.map((major) => Major.fromJson(major))?.toList(),
+        skills: Skill.listFromJson(json["skills"]),
+        employerId: json["employerId"],
+        employerName: json["employerName"]);
   }
 
   static List<Placement> listFromJson(String json) {
