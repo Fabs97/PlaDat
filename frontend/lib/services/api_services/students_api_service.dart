@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:frontend/models/placement.dart';
 import 'package:frontend/models/skill.dart';
 import 'package:http/http.dart' as http;
 import 'package:frontend/models/student.dart';
@@ -12,6 +13,8 @@ class StudentsAPIService extends APIInfo {
         return _postStudent(subRoute, body);
       case "/student/id/skills":
         return _postStudentSkills(subRoute, urlArgs, body);
+      case "/student/{studentId}/placements":
+        return _getMatchedPlacementsByStudentId(subRoute, urlArgs);
       default:
         throw StudentAPIException();
     }
@@ -39,6 +42,15 @@ class StudentsAPIService extends APIInfo {
 
     if (response.statusCode == 200) {
       return response;
+    }
+  }
+
+  static Future<dynamic> _getMatchedPlacementsByStudentId(
+      String subRoute, int id) async {
+    var response =
+        await http.get(APIInfo.apiEndpoint + "/student/$id/placements");
+    if (response.statusCode == 200) {
+      return Placement.listFromJson(response.body);
     }
   }
 }

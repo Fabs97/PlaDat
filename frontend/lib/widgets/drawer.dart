@@ -14,23 +14,33 @@ class CustomDrawer {
           ),
           ListTile(
             title: Text("Students list"),
-            onTap: () => Nav.navigatorKey.currentState.pushNamed("/student-list"),
+            onTap: () =>
+                Nav.navigatorKey.currentState.pushNamed("/student-list"),
           ),
           ListTile(
             title: Text("Placements list"),
-            onTap: () => Nav.navigatorKey.currentState.pushNamed("/placement-list"),
+            onTap: () =>
+                Nav.navigatorKey.currentState.pushNamed("/placement-list"),
           ),
           ListTile(
             title: Text("Create placement"),
-            onTap: () => Nav.navigatorKey.currentState.pushNamed("/new-placement"),
+            onTap: () =>
+                Nav.navigatorKey.currentState.pushNamed("/new-placement"),
           ),
           ListTile(
             title: Text("Create student"),
-            onTap: () => Nav.navigatorKey.currentState.pushNamed("/new-student"),
+            onTap: () =>
+                Nav.navigatorKey.currentState.pushNamed("/new-student"),
           ),
           ListTile(
             title: Text("Register to PlaDat"),
-            onTap: () => Nav.navigatorKey.currentState.pushNamed("/registration"),
+            onTap: () =>
+                Nav.navigatorKey.currentState.pushNamed("/registration"),
+          ),
+          ListTile(
+            title: Text("My matches"),
+            onTap: () =>
+                Nav.navigatorKey.currentState.pushNamed("/student-matches"),
           ),
         ],
       ),
