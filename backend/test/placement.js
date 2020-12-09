@@ -16,18 +16,23 @@ describe('placement API', () => {
 
     describe('POST /placement/new-placement', () => {
         let placementId;
+        let locationId;
         it('should add a new placement to the db and return the details with the id', (done) => {
             chai.request(server)
                 .post('/placement/new-placement')
                 .set('content-type', 'application/json')
                 .send({
                         position: "test position",
-                        workingHours: 0,
                         startDate: "test start date",
+                        employmentType: "PART_TIME",
                         endDate: "test end date",
                         salary: 0,
                         descriptionRole: "test description role", 
                         employerID: 0,
+                        location: {
+                            country: "test placement country",
+                            city: "test placement city"
+                        },
                         institutions: [],
                         majors: [],
                         skills: []})
@@ -37,12 +42,17 @@ describe('placement API', () => {
                     response.body.should.have.property('id');
                     placementId = response.body.id;
                     response.body.should.have.property('position');
-                    response.body.should.have.property('working_hours');
                     response.body.should.have.property('start_period');
                     response.body.should.have.property('end_period');
                     response.body.should.have.property('salary');
                     response.body.should.have.property('description_role');
                     response.body.should.have.property('institutions');
+                    response.body.should.have.property('employment_type');
+                    response.body.should.have.property('location');
+                    response.body.location.should.have.property('id');
+                    locationId = response.body.location.id;
+                    response.body.location.should.have.property('country');
+                    response.body.location.should.have.property('city');
                     let institutions = response.body.institutions;
                     institutions.should.be.a('array');
                     for(let i=0; i<institutions.length; i++){
@@ -74,7 +84,10 @@ describe('placement API', () => {
 
         afterEach(async () =>{
             await chai.request(server)
-                .delete('/placement/' + placementId)
+                .delete('/placement/' + placementId);
+
+            await chai.request(server)
+                .delete('/location/' + locationId)
         })
     })
 
@@ -94,7 +107,7 @@ describe('placement API', () => {
                     response.body.should.have.property('id');
                     response.body.id.should.equal(placementId);
                     response.body.should.have.property('position');
-                    response.body.should.have.property('working_hours');
+                    response.body.should.have.property('employment_type');
                     response.body.should.have.property('start_period');
                     response.body.should.have.property('end_period');
                     response.body.should.have.property('salary');
@@ -172,7 +185,7 @@ describe('placement API', () => {
                                 placements[i].should.be.a('object');
                                 placements[i].should.have.property('id');
                                 placements[i].should.have.property('position');
-                                placements[i].should.have.property('working_hours');
+                                placements[i].should.have.property('employment_type');
                                 placements[i].should.have.property('start_period');
                                 placements[i].should.have.property('end_period');
                                 placements[i].should.have.property('salary');

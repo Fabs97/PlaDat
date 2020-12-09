@@ -19,21 +19,19 @@ app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(APIDocumentation));
 app.use(express.json());
 
 const studentRoute = require("./routes/studentRoute");
-const majorRoute = require("./routes/majorRoute");
-const institutionRoute = require("./routes/institutionRoute");
 const placementRoute = require("./routes/placementRoute");
 const skillsRoute = require("./routes/skillsRoute");
 const recommendationRoute = require('./routes/recommendationRoute');
 const matchRoute = require('./routes/matchRoute');
 const employerRoute = require('./routes/employerRoute');
+const locationRoute = require('./routes/locationRoute');
 app.use('/', studentRoute);
-app.use('/', majorRoute);
-app.use('/', institutionRoute);
 app.use('/', placementRoute);
 app.use('/', skillsRoute);
 app.use('/', recommendationRoute);
 app.use('/', matchRoute);
 app.use('/', employerRoute);
+app.use('/', locationRoute);
 
 app.get('/', (req, res) => res.send('Hello World!'));
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));
