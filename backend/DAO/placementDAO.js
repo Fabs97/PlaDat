@@ -146,7 +146,7 @@ module.exports = {
     getPlacementsForSkills: async (skills) => {
 
         let placementData = await database('placements AS p')
-            .select(['p.id', 'p.position', 'p.employment_type', 'start_period', 'end_period', 'salary', 'description_role'])
+            .select(['p.id', 'p.position', 'p.employment_type', 'start_period', 'end_period', 'salary', 'description_role', 'employer_id'])
             .leftJoin('placement_has_skills AS phs', 'phs.placement_id', 'p.id')
             .leftJoin(database.raw('(select p.id, count(phs.skill_id) as count_total from placements p join placement_has_skills phs on p.id = phs.placement_id group by p.id) as p2'), 'p.id','p2.id') //here we count the total number of skills for each placement
             .whereIn('phs.skill_id', skills)
@@ -189,6 +189,7 @@ module.exports = {
                             end_period: placementData[p].end_period,
                             salary: placementData[p].salary,
                             description_role: placementData[p].description_role,
+                            employer_id: placementData[p].employer_id,
                             skills: [{
                                 id: resultTemp[i].skill_id,
                                 name: resultTemp[i].name,

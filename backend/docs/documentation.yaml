@@ -95,6 +95,8 @@ components:
           type: integer
         description_role:
           type: string
+        employer_id: 
+          type: integer
     Institution:
       type: object
       properties:
@@ -184,9 +186,9 @@ paths:
                     location: "Milan, Italy",
                     urllogo: "www.pladat.eu"
                   }
-  /recommendation/{id}/seePlacements:
+  /recommendation/{id}/seeStudents:
     get:
-      description: Provides all the placements recommendation for the provided student id, based on the algorithm
+      description: Provides all the students recommendation for the provided placement id, based on the algorithm
       tags:
         - "Matching"
       parameters:
@@ -225,9 +227,9 @@ paths:
                       }
                     }
                   ]
-  /recommendation/{id}/seeStudents:
+  /recommendation/{id}/seePlacements:
     get:
-      description: Provides all the students recommendation for the provided placement id, based on the algorithm
+      description: Provides all placements recommendation for the provided student id, based on the algorithm
       tags:
         - "Matching"
       parameters:
@@ -256,6 +258,7 @@ paths:
                       end_period: "2020-11-11",
                       salary: 600,
                       description_role: "An internship for you to learn how to be a full stack developer",
+                      employer_id: 1,
                       majors: [
                         {id: 1, name: "Computer Science and Engineering"},
                       ],
