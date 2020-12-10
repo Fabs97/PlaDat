@@ -18,41 +18,75 @@ describe('student API', () =>{
         surname: "test surname",
         email: "test email",
         description: "test description",
-        phone: "test phone"
-    }
+        phone: "test phone",
+        location: {
+            country: "test country",
+            city: "test city"
+        },
+        skills: {
+            technicalSkills : [],
+            softSkills : []
+        }
+
+    };
 
     describe('POST /student', () =>{
+        let locationId;
         it('should add a student in the db and recieve its data and id as an answer', (done) => {
             
             chai.request(server)
                 .post('/student')
                 .set('content-type', 'application/json')
-                .send({name: testStudent.name, surname: testStudent.surname, email: testStudent.email, description: testStudent.description, phone: testStudent.phone})
+                .send(testStudent)
                 .end((err, response) => {
                     response.should.have.status(200);
-                    response.body[0].should.be.a('object');
-                    response.body[0].should.have.property('id');
-                    response.body[0].should.have.property('name');
-                    response.body[0].should.have.property('surname');
-                    response.body[0].should.have.property('email');
-                    response.body[0].should.have.property('description');
-                    response.body[0].should.have.property('phone');
-                    testStudent.id = response.body[0].id;
-                    response.body[0].name.should.equal(testStudent.name);
-                    response.body[0].surname.should.equal(testStudent.surname);
-                    response.body[0].email.should.equal(testStudent.email);
-                    response.body[0].description.should.equal(testStudent.description);
-                    response.body[0].phone.should.equal(testStudent.phone);
+                    let newStudent = response.body;
+                    newStudent.should.be.a('object');
+                    newStudent.should.have.property('id');
+                    newStudent.should.have.property('name');
+                    newStudent.should.have.property('surname');
+                    newStudent.should.have.property('email');
+                    newStudent.should.have.property('description');
+                    newStudent.should.have.property('phone');
+                    newStudent.should.have.property('skills');
+                    newStudent.should.have.property('location');
+                    newStudent.location.should.have.property('id');
+                    newStudent.location.should.have.property('country');
+                    newStudent.location.should.have.property('city');
 
+                    testStudent.id = newStudent.id;
+                    locationId = newStudent.location.id;
 
+                    newStudent.name.should.equal(testStudent.name);
+                    newStudent.surname.should.equal(testStudent.surname);
+                    newStudent.email.should.equal(testStudent.email);
+                    newStudent.description.should.equal(testStudent.description);
+                    newStudent.phone.should.equal(testStudent.phone);
+                    newStudent.location.country.should.equal(testStudent.location.country);
+                    newStudent.location.city.should.equal(testStudent.location.city);
+
+                    //skills
+                    let skills = newStudent.skills;
+                    skills.should.be.a('array');
+                    for(let i=0; i<skills.length; i++){
+                        skills[i].should.have.property('student');
+                        skills[i].should.have.property('skill');
+                    }
+
+                    
                     done();
                 })
         })
 
+
+
         afterEach(async () =>{
             await chai.request(server)
-                .delete('/student/' + testStudent.id)
+                .delete('/student/' + testStudent.id);
+            await chai.request(server)
+                .delete('/location/' + locationId);
         })
+
     })
 
     describe('GET /student/:id', () => {
