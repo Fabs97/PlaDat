@@ -93,6 +93,8 @@ components:
           type: integer
         description_role:
           type: string
+        employer_id:
+          type: integer
     Institution:
       type: object
       properties:
@@ -165,6 +167,41 @@ paths:
                     location: "Milan, Italy",
                     urllogo: "www.pladat.eu"
                   }
+  /employer/:employerId/placements:
+    get:
+      description: Provides all the placements of the selected employer id,
+      tags:
+        - "Employer"
+      parameters:
+        - in: path
+          required: true
+          name: id
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                anyOf:
+                  - $ref: "#/components/schemas/Placement"
+                example:
+                  [
+                    {
+                      id: 1,
+                      position: "Full stack developer",
+                      working_hours: 20,
+                      start_period: "2020-11-11",
+                      end_period: "2020-11-11",
+                      salary: 600,
+                      description_role: "An internship for you to learn how to be a full stack developer",
+                      employer_id: 1,
+                      count_matches: 3
+                    }
+                  ]
   /recommendation/{id}/seePlacements:
     get:
       description: Provides all the placements recommendation for the provided student id, based on the algorithm
@@ -237,6 +274,7 @@ paths:
                       end_period: "2020-11-11",
                       salary: 600,
                       description_role: "An internship for you to learn how to be a full stack developer",
+                      employer_id: 1,
                       majors: [
                         {id: 1, name: "Computer Science and Engineering"},
                       ],
@@ -334,6 +372,7 @@ paths:
                     end_period: "2020-11-11",
                     salary: 600,
                     description_role: "An internship for you to learn how to be a full stack developer",
+                    employer_id: 1,
                     majors: [
                       {id: 1, name: "Computer Science and Engineering"},
                       {id: 2, name: "Management Engineering"},
@@ -381,6 +420,7 @@ paths:
                   endPeriod: "2020-11-11",
                   salary: 600,
                   descriptionRole: "An internship for you to learn how to be a full stack developer",
+                  employer_id: 1,
                   majors: [
                     {id: 1, name: "Computer Science and Engineering"},
                     {id: 2, name: "Management Engineering"},
@@ -424,6 +464,7 @@ paths:
                     end_period: "2020-11-11",
                     salary: 600,
                     description_role: "An internship for you to learn how to be a full stack developer",
+                    employer_id: 1,
                     majors: [
                       {id: 1, name: "Computer Science and Engineering"},
                       {id: 2, name: "Management Engineering"},
