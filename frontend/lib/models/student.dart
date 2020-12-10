@@ -13,7 +13,6 @@ class Student extends ChangeNotifier {
   String description;
   String phone;
   Map<String, dynamic> skills;
-//  Map<String, dynamic> location;
   Place location;
   Student(
       {this.id,
@@ -37,11 +36,6 @@ class Student extends ChangeNotifier {
       "phone": this.phone,
       "skills": this.skills.map((key, value) =>
           MapEntry(key, value.map((e) => e.toJsonMap()).toList())),
-     /*
-      "location": this
-          .location
-          .map((key, value) => MapEntry(key, value.map((e) => e.toJsonMap()))),
-    */
     "location":this.location.toJsonMap(),
     });
     

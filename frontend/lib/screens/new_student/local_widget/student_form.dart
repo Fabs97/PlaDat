@@ -36,12 +36,6 @@ class _StudentFormState extends State<StudentForm> {
     super.initState();
   }
 
-/*
-void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-  */
   @override
   Widget build(BuildContext context) {
     final student = Provider.of<Student>(context);
@@ -230,7 +224,6 @@ void dispose() {
       decoration: const InputDecoration(
         hintText: 'Address',
       ),
-      //initialValue: _controller.text ?? ' ',
       onTap: () async {
         final Place result = await showSearch(
           context: context,
@@ -244,11 +237,6 @@ void dispose() {
             List<String> splits = result.description.split(",");
             result.country = splits[splits.length - 1];
             result.city = splits[splits.length - 2];
-            /*
-            student.location = {
-              "city": result.city,
-              "country": result.country,
-            };*/
             student.location = result;
           
           });
