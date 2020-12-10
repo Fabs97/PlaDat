@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/main.dart';
+import 'package:frontend/screens/company_placement_list/company_placement_list.dart';
 import 'package:frontend/screens/chat_screen/chat_screen.dart';
 import 'package:frontend/screens/company_student_list/company_student_list.dart';
 import 'package:frontend/screens/new_placement/new_placement.dart';
@@ -29,6 +30,10 @@ class RoutesGenerator {
       case '/new-student':
         {
           return _createRoute(NewStudent(), settings);
+        }
+      case '/company-placements':
+        {
+          return _createRoute(MyPlacements(), settings);
         }
       case '/registration':
         {

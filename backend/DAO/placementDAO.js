@@ -224,9 +224,10 @@ module.exports = {
     },
 
     getPlacementsByEmployerId: (employerId) => {
-        return database('placements')
-            .select()
-            .where('employer_id', employerId);
+        return database('placements as p')
+            .select('p.id', 'p.position', 'p.start_period', 'p.end_period', 'p.salary', 'p.description_role', 'p.employer_id', 'p.employment_type', 't1.count_matches')
+            .leftJoin(database.raw("(select shp.placement_id, count(shp.student_id) as count_matches from student_has_placement as shp where shp.status='ACCEPTED' group by shp.placement_id) as t1"), 'p.id','t1.placement_id') //here we count the total number of matches for each placement
+            .where('p.employer_id', employerId);
     },
     
     deletePlacementById: (id) => {
