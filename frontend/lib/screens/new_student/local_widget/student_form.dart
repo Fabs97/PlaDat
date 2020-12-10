@@ -5,9 +5,10 @@ import 'package:flutter/services.dart';
 import 'package:frontend/models/student.dart';
 import 'package:frontend/services/api_service.dart';
 import 'package:frontend/utils/routes_generator.dart';
+import 'package:frontend/widgets/address_search.dart';
+import 'package:frontend/models/place.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-
 
 class StudentForm extends StatefulWidget {
   final Function(bool) changeStep;
@@ -19,15 +20,28 @@ class StudentForm extends StatefulWidget {
 
 class _StudentFormState extends State<StudentForm> {
   final _formKey = GlobalKey<FormState>();
+  TextEditingController _controller = TextEditingController();
 
-  
-  
   @override
   void initState() {
-    
+    _controller.addListener(() {
+      final text = _controller.text.toLowerCase();
+      _controller.value = _controller.value.copyWith(
+        text: text,
+        selection:
+            TextSelection(baseOffset: text.length, extentOffset: text.length),
+        composing: TextRange.empty,
+      );
+    });
     super.initState();
   }
 
+/*
+void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+  */
   @override
   Widget build(BuildContext context) {
     final student = Provider.of<Student>(context);
@@ -70,7 +84,7 @@ class _StudentFormState extends State<StudentForm> {
                         _createemailField(student),
                         _createphoneField(student),
                         _createDescriptionField(student),
-                        
+                        _cretaeautocompleteField(student),
                       ],
                     ),
                   ),
@@ -84,7 +98,6 @@ class _StudentFormState extends State<StudentForm> {
                       // the form is invalid.
                       if (_formKey.currentState.validate()) {
                         widget.changeStep(false);
-                        
                       }
                     },
                     child: Text(
@@ -121,7 +134,7 @@ class _StudentFormState extends State<StudentForm> {
     );
   }
 
-Widget _createsurnameField(Student student) {
+  Widget _createsurnameField(Student student) {
     return TextFormField(
       decoration: const InputDecoration(
         hintText: 'Surname',
@@ -155,16 +168,13 @@ Widget _createsurnameField(Student student) {
       validator: (value) {
         if (value.isEmpty) {
           return 'Please enter a student email';
-        }
-        else if(!EmailValidator.validate(value)){
-           return 'Please enter a valid email';
+        } else if (!EmailValidator.validate(value)) {
+          return 'Please enter a valid email';
         }
         return null;
       },
     );
   }
-
-
 
   Widget _createDescriptionField(Student student) {
     return TextFormField(
@@ -213,7 +223,45 @@ Widget _createsurnameField(Student student) {
     );
   }
 
+  Widget _cretaeautocompleteField(Student student) {
+    return TextFormField(
+      controller: _controller,
+      readOnly: true,
+      decoration: const InputDecoration(
+        hintText: 'Address',
+      ),
+      //initialValue: _controller.text ?? ' ',
+      onTap: () async {
+        final Place result = await showSearch(
+          context: context,
+          delegate: AddressSearch(),
+        );
 
+        // This will change the text displayed in the TextField
+        if (result != null) {
+          setState(() {
+            _controller.text = result.description;
+            List<String> splits = result.description.split(",");
+            result.country = splits[splits.length - 1];
+            result.city = splits[splits.length - 2];
+            /*
+            student.location = {
+              "city": result.city,
+              "country": result.country,
+            };*/
+            student.location = result;
+          
+          });
+          
+        }
+      },
 
-
+      validator: (value) {
+        if (value.isEmpty) {
+          return 'Please enter your address';
+        }
+        return null;
+      },
+    );
+  }
 }

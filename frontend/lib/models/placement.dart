@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:frontend/models/institution.dart';
 import 'package:frontend/models/major.dart';
+import 'package:frontend/models/place.dart';
 import 'package:frontend/models/skill.dart';
 
 enum EmploymentType { FULLTIME, PARTTIME, INTERNSHIP, CONTRACT }
@@ -61,6 +62,7 @@ class Placement extends ChangeNotifier {
   List<dynamic> institutions;
   List<dynamic> majors;
   Map<String, dynamic> skills;
+  Place location;
 
   Placement(
       {this.id,
@@ -72,7 +74,8 @@ class Placement extends ChangeNotifier {
       this.description,
       this.institutions,
       this.majors,
-      this.skills});
+      this.skills,
+      this.location});
 
   String toJson() {
     return jsonEncode({
@@ -88,8 +91,10 @@ class Placement extends ChangeNotifier {
           .map((institution) => institution.toJsonMap())
           .toList(),
       "majors": this.majors.map((major) => major.toJsonMap()).toList(),
+      
       "skills": this.skills.map((key, value) =>
-          MapEntry(key, value.map((e) => e.toJsonMap()).toList()))
+          MapEntry(key, value.map((e) => e.toJsonMap()).toList())),
+      "location":this.location.toJsonMap(),
     });
   }
 
@@ -98,6 +103,7 @@ class Placement extends ChangeNotifier {
     return Placement(
       id: json["id"],
       position: json["position"],
+      
       employmentType: json["employment_type"] != null
           ? EmploymentTypeExtension.fromBadToNice(json["employment_type"])
           : "",
@@ -114,6 +120,7 @@ class Placement extends ChangeNotifier {
           ?.toList(),
       majors: json["majors"]?.map((major) => Major.fromJson(major))?.toList(),
       skills: Skill.listFromJson(json["skills"]),
+    location: Place.fromJson(json['location']),
     );
   }
 

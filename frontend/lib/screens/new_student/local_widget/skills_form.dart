@@ -67,11 +67,13 @@ class SkillsForm extends StatelessWidget {
       "softSkills": skillsBoxes[1].chosenSkills,
       "otherSkills": skillsBoxes[2].otherSkills,
     };
-
+    
     Student newStudent = await APIService.route(
       ENDPOINTS.Student,
       "/student",
       body: student,
+      
+      
     );
 
     if (newStudent != null) {
@@ -81,5 +83,8 @@ class SkillsForm extends StatelessWidget {
       print(response.toString());
     }
     Nav.navigatorKey.currentState.popAndPushNamed("/home");
+
+
+
   }
 }

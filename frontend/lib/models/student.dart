@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:frontend/models/skill.dart';
+import 'package:frontend/models/place.dart';
 
 class Student extends ChangeNotifier {
   int id;
@@ -12,8 +13,18 @@ class Student extends ChangeNotifier {
   String description;
   String phone;
   Map<String, dynamic> skills;
-
-  Student({this.id, this.name, this.surname, this.email,this.password,this.description,this.phone,this.skills});
+//  Map<String, dynamic> location;
+  Place location;
+  Student(
+      {this.id,
+      this.name,
+      this.surname,
+      this.email,
+      this.password,
+      this.description,
+      this.phone,
+      this.skills,
+      this.location});
 
   String toJson() {
     return jsonEncode({
@@ -21,12 +32,20 @@ class Student extends ChangeNotifier {
       "name": this.name,
       "surname": this.surname,
       "email": this.email,
-      "password":this.password,
-      "description":this.description,
-      "phone":this.phone,
+      "password": this.password,
+      "description": this.description,
+      "phone": this.phone,
       "skills": this.skills.map((key, value) =>
-          MapEntry(key, value.map((e) => e.toJsonMap()).toList()))
+          MapEntry(key, value.map((e) => e.toJsonMap()).toList())),
+     /*
+      "location": this
+          .location
+          .map((key, value) => MapEntry(key, value.map((e) => e.toJsonMap()))),
+    */
+    "location":this.location.toJsonMap(),
     });
+    
+
   }
 
   static Student fromJson(Map<String, dynamic> json) {
@@ -37,7 +56,8 @@ class Student extends ChangeNotifier {
         email: json["email"],
         password: json["password"],
         description: json["description"],
-        phone:  json["phone"],
+        phone: json["phone"],
+        location: Place.fromJson(json['location']),
         skills: Skill.listFromJson(json["skills"]));
   }
 }
