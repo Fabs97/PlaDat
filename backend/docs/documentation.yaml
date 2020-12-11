@@ -116,6 +116,8 @@ components:
           type: integer
         description_role:
           type: string
+        employer_id:
+          type: integer
     Institution:
       type: object
       properties:
@@ -215,6 +217,41 @@ paths:
                     location: "Milan, Italy",
                     urllogo: "www.pladat.eu"
                   }
+  /employer/:employerId/placements:
+    get:
+      description: Provides all the placements of the selected employer id,
+      tags:
+        - "Employer"
+      parameters:
+        - in: path
+          required: true
+          name: id
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                anyOf:
+                  - $ref: "#/components/schemas/Placement"
+                example:
+                  [
+                    {
+                      id: 1,
+                      position: "Full stack developer",
+                      working_hours: 20,
+                      start_period: "2020-11-11",
+                      end_period: "2020-11-11",
+                      salary: 600,
+                      description_role: "An internship for you to learn how to be a full stack developer",
+                      employer_id: 1,
+                      count_matches: 3
+                    }
+                  ]
   /recommendation/{id}/seePlacements:
     get:
       description: Provides all the placements recommendation for the provided student id, based on the algorithm
@@ -287,6 +324,7 @@ paths:
                       end_period: "2020-11-11",
                       salary: 600,
                       description_role: "An internship for you to learn how to be a full stack developer",
+                      employer_id: 1,
                       majors: [
                         {id: 1, name: "Computer Science and Engineering"},
                       ],
@@ -384,6 +422,7 @@ paths:
                     end_period: "2020-11-11",
                     salary: 600,
                     description_role: "An internship for you to learn how to be a full stack developer",
+                    employer_id: 1,
                     majors: [
                       {id: 1, name: "Computer Science and Engineering"},
                       {id: 2, name: "Management Engineering"},
@@ -431,6 +470,7 @@ paths:
                   endPeriod: "2020-11-11",
                   salary: 600,
                   descriptionRole: "An internship for you to learn how to be a full stack developer",
+                  employer_id: 1,
                   majors: [
                     {id: 1, name: "Computer Science and Engineering"},
                     {id: 2, name: "Management Engineering"},
@@ -474,6 +514,7 @@ paths:
                     end_period: "2020-11-11",
                     salary: 600,
                     description_role: "An internship for you to learn how to be a full stack developer",
+                    employer_id: 1,
                     majors: [
                       {id: 1, name: "Computer Science and Engineering"},
                       {id: 2, name: "Management Engineering"},
@@ -865,4 +906,54 @@ paths:
         '500':
           description: 'There has been a problem saving your registration. Please try again'
 
+  /student/{studentId}/placements:
+    get:
+      description: Returns all the placements that a student has been matched with
+      tags: 
+        - "Matching"
+      parameters:
+        - in: path
+          name: studentId
+          required: true
+          schema:
+            type: string
+          example: 1
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  properties:
+                    placementId: 
+                      type: integer
+                    position:
+                      type: string
+                    description_role:
+                      type: string
+                    employerId:
+                      type: integer
+                    employerName:
+                      type: string
+                example:
+                  [
+                    {
+                        "placementId": 63,
+                        "position": "Fullstack Developer",
+                        "description_role": "This is a good job",
+                        "employerId": 43,
+                        "employerName": "Google"
+                    },
+                    {
+                        "placementId": 61,
+                        "position": "Frontend Developer",
+                        "description_role": "This is a good job",
+                        "employerId": 43,
+                        "employerName": "Google"
+                    }
+                ]
+        '500': 
+          description: 'There has been a problem retrieving your matches. Please try again'
                 
