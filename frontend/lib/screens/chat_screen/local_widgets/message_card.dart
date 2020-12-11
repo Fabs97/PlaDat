@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/models/message.dart';
-import 'package:frontend/services/auth_service.dart';
 
 class MessageCard extends StatelessWidget {
   final Message message;
@@ -12,7 +11,6 @@ class MessageCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
     return Row(
-      //TODO: refactor this after PLAD-74 merge to dev
       mainAxisAlignment:
           isByMe ? MainAxisAlignment.end : MainAxisAlignment.start,
       mainAxisSize: MainAxisSize.max,
