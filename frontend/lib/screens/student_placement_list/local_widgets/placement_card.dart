@@ -58,21 +58,6 @@ class PlacementCard extends StatelessWidget {
       mainAxisSize: MainAxisSize.max,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Container(
-          // Image container
-          decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage("images/image0.jpg"),
-                fit: BoxFit.fill,
-              ),
-              border: Border.all(
-                color: Colors.grey,
-                width: 2.0,
-              ),
-              borderRadius: BorderRadius.circular(10.0)),
-          width: size.width * .2,
-          height: size.width * .2,
-        ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
           child: Column(
@@ -141,8 +126,8 @@ class PlacementCard extends StatelessWidget {
       children: [
         _createPlacementWorkingInfoBox(
             "Working period", "from $startMonth to $endMonth $endYear"),
-        _createPlacementWorkingInfoBox(
-            "Employment Type", "${EmploymentTypeExtension.fromBadToNice(placement.employmentType)}"),
+        _createPlacementWorkingInfoBox("Employment Type",
+            "${EmploymentTypeExtension.fromBadToNice(placement.employmentType)}"),
         _createPlacementWorkingInfoBox("Salary", "${placement.salary} €"),
       ],
     );
