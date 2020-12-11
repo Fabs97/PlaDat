@@ -782,5 +782,6 @@ paths:
                         "employerName": "Google"
                     }
                 ]
-
+        '500': 
+          description: 'There has been a problem retrieving your matches. Please try again'
                 

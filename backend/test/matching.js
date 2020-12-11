@@ -12,28 +12,27 @@ chai.use(chaiJsonSchema);
 describe('matching API', () => {
 
     describe('GET /student/:studentId/placements', () => {
-        let placementId;
+        let studentId;
+
+        beforeEach(async () =>{
+            studentId = (await chai.request(server).get('/students/last')).body.id;
+        })
+
         it('should get all the placements that the student has matched with', (done) => {
-           chai.request(server)
-            .get('/students/last')
+            chai.request(server)
+            .get('/student/' + studentId + '/placements')
             .end((err, response) => {
-                let studentId = response.body.id
-                chai.request(server)
-                .get('/student/' + studentId + '/placements')
-                .end((err, response) => {
-                    response.should.have.status(200);
-                    response.body.should.be.a('array');
-                    let placements = response.body;
-                    for(let i=0; i<placements.length; i++) {
-                        placements[i].should.have.property('placementId');
-                        placements[i].should.have.property('position');
-                        placements[i].should.have.property('employerId');
-                        placements[i].should.have.property('employerName');
-                    }
-                    done();
-                })
-            })
-            
+                response.should.have.status(200);
+                response.body.should.be.a('array');
+                let placements = response.body;
+                for(let i=0; i<placements.length; i++) {
+                    placements[i].should.have.property('placementId');
+                    placements[i].should.have.property('position');
+                    placements[i].should.have.property('employerId');
+                    placements[i].should.have.property('employerName');
+                }
+                done();
+            });
         }).timeout(10000)
     })
 
