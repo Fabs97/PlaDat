@@ -49,8 +49,13 @@ class StudentsAPIService extends APIInfo {
       String subRoute, int id) async {
     var response =
         await http.get(APIInfo.apiEndpoint + "/student/$id/placements");
-    if (response.statusCode == 200) {
-      return Placement.listFromJson(response.body);
+    switch (response.statusCode) {
+      case 200:
+        {
+          return Placement.listFromJson(response.body);
+        }
+      default:
+        return response.body;
     }
   }
 }
