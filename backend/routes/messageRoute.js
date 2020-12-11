@@ -7,15 +7,13 @@ const ERR_BAD_REQUEST = require('../errors').ERR_BAD_REQUEST;
 
 
 router.post('/message', async (req, res, next) => {
-    if(isNaN(req.body.studentId) || isNaN(req.body.employerId)|| typeof(req.body.sendDate) != 'string' || (req.body.sender != 'STUDENT' && req.body.sender != 'EMPLOYER') || typeof(req.body.message) != 'string'){
-        res.status(ERR_BAD_REQUEST).send('Your request structure contains some mistakes. Please try again.');
-    } else {
-        let message = await messageService.saveNewMessage(req.body)
-        .catch(error => {
-            res.status(error.code).send(error.message);
-        });
-        res.json(message);
-    }
+    
+    let message = await messageService.saveNewMessage(req.body)
+    .catch(error => {
+        res.status(error.code).send(error.message);
+    });
+    res.json(message);
+    
     
 });
 

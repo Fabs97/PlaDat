@@ -2,8 +2,8 @@
 exports.up = async function(knex) {
     let hasTable = await knex.schema.hasTable('message')
     return !hasTable ? knex.schema.createTable('message', (table)=>{
-        table.integer('student_id').unsigned().references('id').inTable('student').notNullable();
-        table.integer('employer_id').unsigned().references('id').inTable('employer').notNullable();
+        table.integer('student_id').unsigned().references('id').inTable('student').notNullable().onDelete('CASCADE');
+        table.integer('employer_id').unsigned().references('id').inTable('employer').notNullable().onDelete('CASCADE');
         table.string('message');
         table.datetime('send_date');
         table.enum('sender', ['STUDENT', 'EMPLOYER']);

@@ -115,13 +115,18 @@ describe('message API', () => {
 
     describe('GET /message/:studentId/:employerId', () =>{
 
-        let msgDetails = {};
+        let msgDetails = {
+            studentId: 1,
+            employerId: 1
+        };
         
         beforeEach(async () => {
             let result = await chai.request(server)
                 .get('/messages/last');
-            msgDetails.studentId = result.body.student_id;
-            msgDetails.employerId = result.body.employer_id;
+            if(result.body.student_id != undefined && result.body.employer_id != undefined){
+                msgDetails.studentId = result.body.student_id;
+                msgDetails.employerId = result.body.employer_id;
+            }
         })
 
         it('should return a list of messages between the two users, in chronological order', (done) => {

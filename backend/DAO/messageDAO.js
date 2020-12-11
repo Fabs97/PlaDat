@@ -45,7 +45,7 @@ module.exports = {
         let result = await database('message')
             .select('student_id', 'employer_id', 'send_date')
             .orderBy('send_date', 'desc')
-            .limit(1)
+            .limit(1);
         return result[0];
     }, 
 
