@@ -33,6 +33,11 @@ class CustomDrawer {
                 Nav.navigatorKey.currentState.pushNamed("/new-student"),
           ),
           ListTile(
+            title: Text("My placements"),
+            onTap: () =>
+                Nav.navigatorKey.currentState.pushNamed("/company-placements"),
+          ),
+          ListTile(
             title: Text("Register to PlaDat"),
             onTap: () =>
                 Nav.navigatorKey.currentState.pushNamed("/registration"),

@@ -78,6 +78,7 @@ class Placement extends ChangeNotifier {
   Map<String, dynamic> skills;
   int employerId;
   String employerName;
+  String countMatches;
 
   Placement(
       {this.id,
@@ -91,7 +92,8 @@ class Placement extends ChangeNotifier {
       this.majors,
       this.skills,
       this.employerId,
-      this.employerName});
+      this.employerName,
+      this.countMatches});
 
   String toJson() {
     return jsonEncode({
@@ -110,7 +112,8 @@ class Placement extends ChangeNotifier {
       "skills": this.skills.map((key, value) =>
           MapEntry(key, value.map((e) => e.toJsonMap()).toList())),
       "employerId": this.employerId,
-      "employerName": this.employerName
+      "employerName": this.employerName,
+      "countMatches": this.countMatches,
     });
   }
 
@@ -119,8 +122,9 @@ class Placement extends ChangeNotifier {
     return Placement(
         id: json["id"],
         position: json["position"],
-        employmentType:
-            EmploymentTypeExtension.fromString(json["employment_type"]) ?? null,
+        employmentType: json["employment_type"] != null
+            ? EmploymentTypeExtension.fromString(json["employment_type"])
+            : null,
         startPeriod: json["start_period"] != null
             ? DateTime.parse(json["start_period"])
             : null,
@@ -135,7 +139,8 @@ class Placement extends ChangeNotifier {
         majors: json["majors"]?.map((major) => Major.fromJson(major))?.toList(),
         skills: Skill.listFromJson(json["skills"]),
         employerId: json["employerId"],
-        employerName: json["employerName"]);
+        employerName: json["employerName"],
+        countMatches: json["count_matches"]);
   }
 
   static List<Placement> listFromJson(String json) {
