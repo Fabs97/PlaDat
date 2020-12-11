@@ -43,7 +43,7 @@ module.exports = {
 
     getMatchesByStudentId: (studentId) => {
         return database('student_has_placement as shp')
-            .select('shp.placement_id as placementId', 'p.position', 'p.description_role', 'p.employer_id as employerId', 'e.name as employerName')
+            .select('shp.placement_id as placementId', 'p.position', 'p.description_role', 'p.employer_id', 'e.name')
             .leftJoin('placements as p', 'p.id', 'shp.placement_id')
             .leftJoin('employer as e', 'e.id', 'p.employer_id')
             .where('shp.status','ACCEPTED')
