@@ -25,6 +25,8 @@ tags:
     description: All the APIs related to the matching algorithm
   - name: Employer
     description: All the APIs related to the "employer" algorithm
+  - name: Google Maps
+    description: All the APIs related to the access to the google maps service
 
 components:
   schemas:
@@ -721,3 +723,135 @@ paths:
                       type: "TECH"
                     }
                   ]
+
+  /googleMaps:
+    get:
+      description: Provides the required informations retrieved from the Google Maps API
+      tags:
+        - "Google Maps"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              example: 
+                {
+                  input: "Piazza Leonardo Da Vinci Milano"
+                }
+      responses:
+        '200':
+          description: OK
+          content:
+            text/html:
+              schema:
+                example: 
+                  {
+                    predictions : [
+                      {
+                        description : "Piazza Leonardo da Vinci, Milano, Metropolitan City of Milan, Italy",
+                        matched_substrings : [
+                          {
+                            length : 24,
+                            offset : 0
+                          },
+                          {
+                            length : 6,
+                            offset : 26
+                          }
+                        ],
+                        place_id :
+                          "EkNQaWF6emEgTGVvbmFyZG8gZGEgVmluY2ksIE1pbGFubywgTWV0cm9wb2xpdGFuIENpdHkgb2YgTWlsYW4sIEl0YWx5Ii4qLAoUChIJJW9DMvLGhkcRzXotUCwiNgYSFAoSCed1Ej9JwYZHEY0OdMYTzf88",
+                        reference :
+                          "EkNQaWF6emEgTGVvbmFyZG8gZGEgVmluY2ksIE1pbGFubywgTWV0cm9wb2xpdGFuIENpdHkgb2YgTWlsYW4sIEl0YWx5Ii4qLAoUChIJJW9DMvLGhkcRzXotUCwiNgYSFAoSCed1Ej9JwYZHEY0OdMYTzf88",
+                        structured_formatting : {
+                          main_text : "Piazza Leonardo da Vinci",
+                          main_text_matched_substrings : [
+                            {
+                              length : 24,
+                              offset : 0
+                            }
+                          ],
+                          secondary_text : "Milano, Metropolitan City of Milan, Italy",
+                          secondary_text_matched_substrings : [
+                            {
+                              length : 6,
+                              offset : 0
+                            }
+                          ]
+                        },
+                        terms : [
+                          {
+                            offset : 0,
+                            value : "Piazza Leonardo da Vinci"
+                          },
+                          {
+                            offset : 26,
+                            value : "Milano"
+                          },
+                          {
+                            offset : 34,
+                            value : "Metropolitan City of Milan"
+                          },
+                          {
+                            offset : 62,
+                            value : "Italy"
+                          }
+                        ],
+                        types : [ "route", "geocode" ]
+                      },
+                      {
+                        description : "Piazza Leonardo da Vinci, Basiglio, Metropolitan City of Milan, Italy",
+                        matched_substrings : [
+                          {
+                            length : 24,
+                            offset : 0
+                          },
+                          {
+                            length : 26,
+                            offset : 36
+                          }
+                        ],
+                        place_id :
+                          "EkVQaWF6emEgTGVvbmFyZG8gZGEgVmluY2ksIEJhc2lnbGlvLCBNZXRyb3BvbGl0YW4gQ2l0eSBvZiBNaWxhbiwgSXRhbHkiLiosChQKEglzoKNnZtuGRxEsA7AmwRWvJRIUChIJn7s-7WTbhkcR3pgYQNsPFks",
+                        reference :
+                          "EkVQaWF6emEgTGVvbmFyZG8gZGEgVmluY2ksIEJhc2lnbGlvLCBNZXRyb3BvbGl0YW4gQ2l0eSBvZiBNaWxhbiwgSXRhbHkiLiosChQKEglzoKNnZtuGRxEsA7AmwRWvJRIUChIJn7s-7WTbhkcR3pgYQNsPFks",
+                        structured_formatting : {
+                          main_text : "Piazza Leonardo da Vinci",
+                          main_text_matched_substrings : [
+                            {
+                              length : 24,
+                              offset : 0
+                            }
+                          ],
+                          secondary_text : "Basiglio, Metropolitan City of Milan, Italy",
+                          secondary_text_matched_substrings : [
+                            {
+                              length : 26,
+                              offset : 10
+                            }
+                          ]
+                        },  
+                        terms : [
+                          {
+                            offset : 0,
+                            value : "Piazza Leonardo da Vinci"
+                          },
+                          {
+                            offset : 26,
+                            value : "Basiglio"
+                          },
+                          {
+                            offset : 36,
+                            value : "Metropolitan City of Milan"
+                          },
+                          {  
+                            offset : 64,
+                            value : "Italy"
+                          }
+                        ],
+                        types : [ "route", "geocode" ]
+                      }
+                    ],
+                    status : "OK"
+                  }

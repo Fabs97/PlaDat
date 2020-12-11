@@ -5,6 +5,9 @@ const APIDocumentation = require('./docs/openapi');
 const cors = require('cors');
 const port = process.env.PORT || 3000;
 
+
+
+
 const originWhitelist = [
     'http://127.0.0.1:8200/#/',
     'http://localhost:8200/#/',
@@ -25,6 +28,7 @@ const recommendationRoute = require('./routes/recommendationRoute');
 const matchRoute = require('./routes/matchRoute');
 const employerRoute = require('./routes/employerRoute');
 const locationRoute = require('./routes/locationRoute');
+const googleMapsRoute = require('./routes/googleMapsRoute');
 app.use('/', studentRoute);
 app.use('/', placementRoute);
 app.use('/', skillsRoute);
@@ -32,6 +36,7 @@ app.use('/', recommendationRoute);
 app.use('/', matchRoute);
 app.use('/', employerRoute);
 app.use('/', locationRoute);
+app.use('/', googleMapsRoute);
 
 app.get('/', (req, res) => res.send('Hello World!'));
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));
