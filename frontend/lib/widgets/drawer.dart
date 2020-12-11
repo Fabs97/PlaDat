@@ -39,7 +39,13 @@ class CustomDrawer {
           ),
           ListTile(
             title: Text("Register to PlaDat"),
-            onTap: () => Nav.navigatorKey.currentState.pushNamed("/registration"),
+            onTap: () =>
+                Nav.navigatorKey.currentState.pushNamed("/registration"),
+          ),
+          ListTile(
+            title: Text("My matches"),
+            onTap: () =>
+                Nav.navigatorKey.currentState.pushNamed("/student-matches"),
           ),
         ],
       ),
