@@ -139,7 +139,7 @@ class Placement extends ChangeNotifier {
         majors: json["majors"]?.map((major) => Major.fromJson(major))?.toList(),
         skills: Skill.listFromJson(json["skills"]),
         employerId: json["employer_id"],
-        employerName: json["employerName"],
+        employerName: json["employer_name"],
         countMatches: json["count_matches"]);
   }
 
