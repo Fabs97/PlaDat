@@ -76,6 +76,8 @@ class Placement extends ChangeNotifier {
   List<dynamic> institutions;
   List<dynamic> majors;
   Map<String, dynamic> skills;
+  int employerId;
+  String employerName;
   String countMatches;
 
   Placement(
@@ -89,6 +91,8 @@ class Placement extends ChangeNotifier {
       this.institutions,
       this.majors,
       this.skills,
+      this.employerId,
+      this.employerName,
       this.countMatches});
 
   String toJson() {
@@ -107,6 +111,8 @@ class Placement extends ChangeNotifier {
       "majors": this.majors.map((major) => major.toJsonMap()).toList(),
       "skills": this.skills.map((key, value) =>
           MapEntry(key, value.map((e) => e.toJsonMap()).toList())),
+      "employerId": this.employerId,
+      "employerName": this.employerName,
       "countMatches": this.countMatches,
     });
   }
@@ -132,6 +138,8 @@ class Placement extends ChangeNotifier {
             ?.toList(),
         majors: json["majors"]?.map((major) => Major.fromJson(major))?.toList(),
         skills: Skill.listFromJson(json["skills"]),
+        employerId: json["employerId"],
+        employerName: json["employerName"],
         countMatches: json["count_matches"]);
   }
 
