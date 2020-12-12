@@ -62,6 +62,7 @@ class SkillBoxState extends State<SkillBox> {
 
   @override
   Widget build(BuildContext context) {
+    final themeData = Theme.of(context);
     return Container(
       child: Column(
         children: [
@@ -100,10 +101,10 @@ class SkillBoxState extends State<SkillBox> {
                     runSpacing: 5.0,
                     children: widget._chosenSkills.map((skill) {
                       return Chip(
-                        backgroundColor: Colors.grey[600],
+                        //backgroundColor: Colors.grey[600],
                         label: Text(
                           skill.name,
-                          style: TextStyle(color: Colors.white),
+                          //style: TextStyle(color: Colors.white),
                         ),
                         deleteIcon: Icon(Icons.close),
                         onDeleted: () => _onItemDeleted(skill),
@@ -118,6 +119,10 @@ class SkillBoxState extends State<SkillBox> {
                   runSpacing: 5.0,
                   children: suggestedSkills.map((skill) {
                     return ActionChip(
+                      backgroundColor: themeData.accentColor,
+                      labelStyle: TextStyle(
+                        color: Color(0xffe23300),
+                      ),
                       label: Text(skill.name),
                       onPressed: () => _onItemPressed(skill),
                     );
