@@ -18,7 +18,8 @@ exports.seed = function(knex) {
           student_id: students[i].id,
           education_id: education[i%3].id,
           description: "Difficult study",
-          period: "September 2020 - October 2021"
+          start_period: "2020/01/30",
+          end_period: "2020/06/30"
         })
       }
 

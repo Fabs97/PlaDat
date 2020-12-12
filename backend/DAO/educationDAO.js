@@ -16,7 +16,7 @@ eDAO = module.exports = {
                         .catch(trx.rollback);
                 } 
                 if (educationExp) {
-                    savedEducation = await eDAO.saveEducationExperience(studentID, educationExp.id, education[i].description, education[i].period)
+                    savedEducation = await eDAO.saveEducationExperience(studentID, educationExp.id, education[i])
                         .catch(trx.rollback);
                 }
                 if(savedEducation) {
@@ -56,14 +56,15 @@ eDAO = module.exports = {
             .andWhere('institution_id', institutionId);
         return education.length ? education[0] : null;
     },
-    saveEducationExperience: async (studentID, experienceID, description, period) => {
+    saveEducationExperience: async (studentID, experienceID, education) => {
         let experience = await database('student_has_education')
             .insert({
                 student_id: studentID,
                 education_id: experienceID,
-                description: description,
-                period: period
-            },['student_id as studentId', 'education_id as educationId', 'description', 'period']);
+                description: education.description,
+                start_period: education.startPeriod, 
+                end_period: education.endPeriod,
+            },['student_id as studentId', 'education_id as educationId', 'description', 'start_period as startPeriod', 'end_period as endPeriod']);
         return experience.length ? experience[0] : null;
     }
 };

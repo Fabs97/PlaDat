@@ -6,7 +6,8 @@ exports.up = async function(knex) {
         table.integer('education_id').unsigned().notNullable();
         table.foreign('education_id').references('education.id').onDelete('CASCADE');
         table.text('description');
-        table.string('period');
+        table.date('start_period');
+        table.date('end_period');
         table.primary(['student_id', 'education_id']);
     }) : null; 
 };
