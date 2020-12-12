@@ -29,6 +29,7 @@ dependencies:
   smart_select: ^4.3.2
   fluttertoast: ^7.1.5
   http: ^0.12.2
+  google_fonts: ^1.1.1
   flutter_tindercard: ^0.2.0
   email_validator: '^1.0.5'
   auto_size_text: ^2.1.0
