@@ -39,10 +39,11 @@ class WorkExperiencesFormState extends State<WorkExperiencesForm> {
         children: [
           _createAddExperienceRow(),
           _creatingExperience ? _createExperienceForm(student) : Container(),
-          SizedBox.shrink(
-            // height: size.height * (_creatingExperience ? .5 : .7),
+          SizedBox(
+            height: size.height * (_creatingExperience ? .5 : .7),
             child: _experiences.isNotEmpty
                 ? ListView.builder(
+                  itemCount: _experiences.length,
                     itemBuilder: (_, index) {
                       return ExperienceCard(
                         experience: _experiences[index],
@@ -175,7 +176,7 @@ class WorkExperiencesFormState extends State<WorkExperiencesForm> {
           hintText: _newExperience.startPeriod != null &&
                   _newExperience.endPeriod != null
               ? "${formatter.format(_newExperience.startPeriod)} - ${formatter.format(_newExperience.endPeriod)} "
-              : "Working period",
+              : "Period of work",
         ),
         readOnly: true,
       ),
@@ -209,7 +210,11 @@ class WorkExperiencesFormState extends State<WorkExperiencesForm> {
             FlatButton(
               child: Text("Save"),
               onPressed: () {
-                //TODO: implement save button onPressed
+                setState(() {
+                  _experiences.add(_newExperience);
+                  _newExperience = new WorkExperience();
+                  _creatingExperience = false;
+                });
               },
             ),
           ],
