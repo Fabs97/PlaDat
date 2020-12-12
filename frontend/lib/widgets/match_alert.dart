@@ -122,7 +122,6 @@ class MatchAlert extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 16.0),
                   child: RaisedButton(
-                    color: Colors.grey[600],
                     child: Text(
                       "Start a conversation",
                       style: TextStyle(color: Colors.white),

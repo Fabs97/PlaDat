@@ -39,11 +39,29 @@ class _StudentMatchesState extends State<StudentMatches> {
                 _placement = _placements[index];
                 return Card(
                   child: ListTile(
-                    leading: Icon(Icons.work),
-                    title: Text(_placement.position + " No.$index"),
-                    subtitle: Text(_placement.employerName +
-                        '\n${_placement.description}'),
-                  ),
+                      leading: Icon(Icons.work, color: Color(0xff4c60d2)),
+                      title: Text(_placement.position + " No.$index"),
+                      subtitle: Text(_placement.employerName +
+                          '\n${_placement.description}'),
+                      trailing: PopupMenuButton<String>(
+                        padding: EdgeInsets.zero,
+                        itemBuilder: (context) => <PopupMenuEntry<String>>[
+                          PopupMenuItem<String>(
+                            child: ListTile(
+                              leading:
+                                  Icon(Icons.delete, color: Color(0xff4c60d2)),
+                              title: Text("Remove the match",
+                                  style: TextStyle(color: Color(0xff4c60d2))),
+                              onTap: () {
+                                setState(() {
+                                  _placements.remove(_placement);
+                                  Navigator.pop(context);
+                                });
+                              },
+                            ),
+                          )
+                        ],
+                      )),
                 );
               },
             ),
