@@ -16,11 +16,7 @@ class Skill {
   }
 
   String toJson() {
-    return jsonEncode({
-      "id": this.id,
-      "name": this.name,
-      "type": this.type,
-    });
+    return jsonEncode(this.toJsonMap());
   }
 
   Map<String, dynamic> toJsonMap() {

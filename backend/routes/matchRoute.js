@@ -8,4 +8,12 @@ router.post("/matching", async (req, res, next) => {
 
 });
 
+router.get('/student/:studentId/placements', async (req, res, next) => {
+    const placements = await matchService.getMatchesByStudentId(req.params.studentId)
+        .catch(error => {
+            res.status(error.code).send(error.message);
+        });
+    res.json(placements);
+});
+
 module.exports = router;

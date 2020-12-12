@@ -17,14 +17,6 @@ class StudentForm extends StatefulWidget {
 class _StudentFormState extends State<StudentForm> {
   final _formKey = GlobalKey<FormState>();
 
-  
-  
-  @override
-  void initState() {
-    
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     final student = Provider.of<Student>(context);
@@ -67,7 +59,6 @@ class _StudentFormState extends State<StudentForm> {
                         _createemailField(student),
                         _createphoneField(student),
                         _createDescriptionField(student),
-                        
                       ],
                     ),
                   ),
@@ -81,7 +72,6 @@ class _StudentFormState extends State<StudentForm> {
                       // the form is invalid.
                       if (_formKey.currentState.validate()) {
                         widget.changeStep(false);
-                        
                       }
                     },
                     child: Text(

@@ -2,13 +2,9 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:frontend/models/institution.dart';
-import 'package:frontend/models/major.dart';
 import 'package:frontend/models/placement.dart';
 import 'package:frontend/screens/new_placement/local_widgets/dropdown.dart';
 import 'package:frontend/services/api_service.dart';
-import 'package:frontend/services/api_services/majors_api_service.dart';
-import 'package:frontend/utils/routes_generator.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:date_range_picker/date_range_picker.dart' as DateRagePicker;
@@ -156,7 +152,7 @@ class _PlacementFormState extends State<PlacementForm> {
         return null;
       },
       onChanged: (employmentType) => setState(() {
-        placement.employmentType = employmentType.string;
+        placement.employmentType = employmentType;
       }),
       items: [
         _createDropdownButtonEmploymentTypeItem(EmploymentType.FULLTIME),
