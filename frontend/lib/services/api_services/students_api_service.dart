@@ -11,6 +11,8 @@ class StudentsAPIService extends APIInfo {
     switch (subRoute) {
       case "/student":
         return _postStudent(subRoute, body);
+      case "/student/:id":
+        return _getStudentById(urlArgs);
       case "/student/id/skills":
         return _postStudentSkills(subRoute, urlArgs, body);
       case "/student/{studentId}/placements":
@@ -42,6 +44,13 @@ class StudentsAPIService extends APIInfo {
 
     if (response.statusCode == 200) {
       return response;
+    }
+  }
+
+  static Future<dynamic> _getStudentById(String id) async {
+    var response = await http.get(APIInfo.apiEndpoint + "/student/$id");
+    if (response.statusCode == 200) {
+      return Student.fromJson(jsonDecode(response.body));
     }
   }
 
