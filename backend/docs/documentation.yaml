@@ -823,7 +823,7 @@ paths:
                       type: string
                     employerId:
                       type: integer
-                    employerName:
+                    employer_name:
                       type: string
                 example:
                   [
@@ -832,14 +832,14 @@ paths:
                         "position": "Fullstack Developer",
                         "description_role": "This is a good job",
                         "employerId": 43,
-                        "employerName": "Google"
+                        "employer_name": "Google"
                     },
                     {
                         "placementId": 61,
                         "position": "Frontend Developer",
                         "description_role": "This is a good job",
                         "employerId": 43,
-                        "employerName": "Google"
+                        "employer_name": "Google"
                     }
                 ]
         '500': 
