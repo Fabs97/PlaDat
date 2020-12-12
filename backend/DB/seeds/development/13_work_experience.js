@@ -3,10 +3,6 @@ exports.seed = function(knex) {
   // Deletes ALL existing entries
   return knex('work').del()
     .then(async function () {
-      let students = await knex('student')
-        .select('id', 'name')
-        .whereIn('name', ['Alice #TEST','Fabrizio #TEST','Anna #TEST','Aida #TEST','Andela #TEST','William #TEST','Bassam #TEST','Jhonny #TEST','Maryl #TEST','Freddy #TEST']);
-      
       // Inserts seed entries
       return knex('work').insert([
         {
@@ -15,7 +11,6 @@ exports.seed = function(knex) {
           description: "Difficult job",
           start_period: "2020/01/30",
           end_period: "2020/06/30",
-          student_id: students[0].id
         },
         {
           company_name: "Facebook",
@@ -23,7 +18,6 @@ exports.seed = function(knex) {
           description: "Difficult job",
           start_period: "2020/01/30",
           end_period: "2020/06/30",
-          student_id: students[1].id
         },
         {
           company_name: "Airbnb",
@@ -31,7 +25,6 @@ exports.seed = function(knex) {
           description: "Difficult job",
           start_period: "2020/01/30",
           end_period: "2020/06/30",
-          student_id: students[2].id
         },
         {
           company_name: "Amazon",
@@ -39,7 +32,6 @@ exports.seed = function(knex) {
           description: "Difficult job",
           start_period: "2020/01/30",
           end_period: "2020/06/30",
-          student_id: students[3].id
         },
         {
           company_name: "Netflix",
@@ -47,7 +39,6 @@ exports.seed = function(knex) {
           description: "Difficult job",
           start_period: "2020/01/30",
           end_period: "2020/06/30",
-          student_id: students[4].id
         },
         {
           company_name: "Spotify",
@@ -55,7 +46,6 @@ exports.seed = function(knex) {
           description: "Difficult job",
           start_period: "2020/01/30",
           end_period: "2020/06/30",
-          student_id: students[5].id
         }
       ]);
     })
