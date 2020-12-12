@@ -27,6 +27,8 @@ tags:
     description: All the APIs related to the "employer" algorithm
   - name: Registration
     description: All the APIs related to the "registration" table
+  - name: Message
+    description: All the APIs related to the "message" table
 
 components:
   schemas:
@@ -122,6 +124,23 @@ components:
             - TECH
             - SOFT
             - OTHER
+    Message:
+      type: object
+      properties:          
+        student_id:
+          type: integer
+        employer_id:
+          type: integer
+        message:
+          type: string
+        send_date: 
+          type: string
+          format: date-time
+        sender:
+          type: string
+          enum:
+            - STUDENT
+            - EMPLOYER
     Registration:
       type: object
       properties:
@@ -202,9 +221,9 @@ paths:
                       count_matches: 3
                     }
                   ]
-  /recommendation/{id}/seePlacements:
+  /recommendation/{id}/seeStudents:
     get:
-      description: Provides all the placements recommendation for the provided student id, based on the algorithm
+      description: Provides all the students recommendation for the provided placement id, based on the algorithm
       tags:
         - "Matching"
       parameters:
@@ -243,9 +262,9 @@ paths:
                       }
                     }
                   ]
-  /recommendation/{id}/seeStudents:
+  /recommendation/{id}/seePlacements:
     get:
-      description: Provides all the students recommendation for the provided placement id, based on the algorithm
+      description: Provides all placements recommendation for the provided student id, based on the algorithm
       tags:
         - "Matching"
       parameters:
@@ -804,7 +823,7 @@ paths:
                       type: string
                     employerId:
                       type: integer
-                    employerName:
+                    employer_name:
                       type: string
                 example:
                   [
@@ -813,16 +832,137 @@ paths:
                         "position": "Fullstack Developer",
                         "description_role": "This is a good job",
                         "employerId": 43,
-                        "employerName": "Google"
+                        "employer_name": "Google"
                     },
                     {
                         "placementId": 61,
                         "position": "Frontend Developer",
                         "description_role": "This is a good job",
                         "employerId": 43,
-                        "employerName": "Google"
+                        "employer_name": "Google"
                     }
                 ]
         '500': 
           description: 'There has been a problem retrieving your matches. Please try again'
                 
+
+
+  /message/{studentId}/{employerId}:
+    get:
+      description: Returns all the messages in the database between a student and an employer in chronological order
+      tags:
+        - "Message"
+      parameters:
+        - in: path
+          name: "studentId"
+          required: true
+          schema:
+            type: integer
+            example: 1
+        - in: path
+          name: "employerId"
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: OK
+          content: 
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Message"
+                type: array
+                example:
+                  [
+                    {
+                      student_id: 1,
+                      employer_id: 1,
+                      message: "Hi, I would like to work for your company",
+                      send_date: "2020-11-10T12:30:00.000Z",
+                      sender: "STUDENT"
+                    },
+                    {
+                      student_id: 1,
+                      employer_id: 1,
+                      message: "hi, would you like to have an interview tomorrow?",
+                      send_date: "2020-11-10T12:40:00.000Z",
+                      sender: "EMPLOYER"
+                    }
+                  ]
+        '400': 
+          description: Bad Request
+          content:
+            text/html:
+              schema:
+                type: string
+                example:
+                  "Your request did not provided valid values for ids. Please try again."
+        '500':
+          description: Internal Server Error
+          content: 
+            text/html:
+              schema:
+                type: string
+                example:
+                  "There has been a problem looking for this conversation. Please try again"
+
+
+
+  /message:
+    post: 
+      description: Allows the user to save a message for another use on the database
+      tags: 
+        - "Message"
+      requestBody: 
+        description: a json containing all the information about the message
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                {
+                  studentId: 1,
+                  employerId: 1, 
+                  message: "Thank you for offering me to do an interview.",
+                  sendDate: "2020-11-10T12:50:00.000Z",
+                  sender: "STUDENT"
+                }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                description: Returns a json with the newly inserted message
+                allOf:
+                  - $ref: "#/components/schemas/Message"
+                type: object
+                example:
+                  {
+                    student_id: 1,
+                    employer_id: 1, 
+                    message: "Thank you for offering me to do an interview.",
+                    send_date: "2020-11-10T12:50:00.000Z",
+                    sender: "STUDENT"
+                  }
+        '400':
+          description: Bad Request
+          content: 
+            text/html: 
+              schema:
+                type: string
+                example:
+                  "Your request structure contains some mistakes. Please try again."
+        '500':
+          description: Internal Server Error
+          content:
+            text/html:
+              schema:
+                type: string
+                example:
+                  "There has been a problem saving your message. Please try again"
+
+              
