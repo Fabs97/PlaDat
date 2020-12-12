@@ -15,8 +15,7 @@ class SkillsForm extends StatelessWidget {
     SkillBox(
       title: "Soft skills",
       skillsType: "SOFT",
-    ),
-    OtherSkills()
+    )
   ];
 
   @override
@@ -64,8 +63,7 @@ class SkillsForm extends StatelessWidget {
   void _saveStudentToDB(BuildContext context, Student student) async {
     student.skills = {
       "technicalSkills": skillsBoxes[0].chosenSkills,
-      "softSkills": skillsBoxes[1].chosenSkills,
-      "otherSkills": skillsBoxes[2].otherSkills,
+      "softSkills": skillsBoxes[1].chosenSkills
     };
 
     Student newStudent = await APIService.route(
