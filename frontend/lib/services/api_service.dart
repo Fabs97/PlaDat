@@ -1,3 +1,4 @@
+import 'package:frontend/services/api_services/degree_api_service.dart';
 import 'package:frontend/services/api_services/institutions_api_service.dart';
 import 'package:frontend/services/api_services/majors_api_service.dart';
 import 'package:frontend/services/api_services/messages_api_service.dart';
@@ -20,7 +21,8 @@ enum ENDPOINTS {
   Matches,
   Employers,
   Messages,
-  Registration
+  Registration,
+  Degree
 }
 
 class APIInfo {
@@ -64,6 +66,9 @@ class APIService {
               urlArgs: urlArgs, body: body);
         case ENDPOINTS.Messages:
           return MessagesAPIService.route(subRoute,
+              urlArgs: urlArgs, body: body);
+        case ENDPOINTS.Degree:
+          return DegreeAPIService.route(subRoute,
               urlArgs: urlArgs, body: body);
         default:
           throw APIException();
