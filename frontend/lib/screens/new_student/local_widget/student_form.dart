@@ -5,7 +5,6 @@ import 'package:flutter/services.dart';
 import 'package:frontend/models/student.dart';
 import 'package:provider/provider.dart';
 
-
 class StudentForm extends StatefulWidget {
   final Function(bool) changeStep;
 
@@ -66,7 +65,6 @@ class _StudentFormState extends State<StudentForm> {
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 16.0),
                   child: RaisedButton(
-                    color: Colors.grey[600],
                     onPressed: () {
                       // Validate will return true if the form is valid, or false if
                       // the form is invalid.
@@ -108,7 +106,7 @@ class _StudentFormState extends State<StudentForm> {
     );
   }
 
-Widget _createsurnameField(Student student) {
+  Widget _createsurnameField(Student student) {
     return TextFormField(
       decoration: const InputDecoration(
         hintText: 'Surname',
@@ -142,16 +140,13 @@ Widget _createsurnameField(Student student) {
       validator: (value) {
         if (value.isEmpty) {
           return 'Please enter a student email';
-        }
-        else if(!EmailValidator.validate(value)){
-           return 'Please enter a valid email';
+        } else if (!EmailValidator.validate(value)) {
+          return 'Please enter a valid email';
         }
         return null;
       },
     );
   }
-
-
 
   Widget _createDescriptionField(Student student) {
     return TextFormField(
@@ -199,8 +194,4 @@ Widget _createsurnameField(Student student) {
       },
     );
   }
-
-
-
-
 }
