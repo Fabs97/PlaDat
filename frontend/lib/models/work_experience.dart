@@ -1,18 +1,20 @@
 import 'dart:convert';
 
 class WorkExperience {
-  final int id;
-  final String companyName;
-  final String position;
-  final String description;
-  final DateTime workPeriod;
+  int id;
+  String companyName;
+  String position;
+  String description;
+  DateTime startPeriod;
+  DateTime endPeriod;
 
   WorkExperience({
     this.id,
     this.companyName,
     this.position,
     this.description,
-    this.workPeriod,
+    this.startPeriod,
+    this.endPeriod,
   });
 
   String toJson() {
@@ -25,7 +27,8 @@ class WorkExperience {
       "companyName": this.companyName,
       "position": this.position,
       "description": this.description,
-      "workPeriod": this.workPeriod.toString(),
+      "startPeriod": this.startPeriod.toString(),
+      "endPeriod": this.endPeriod.toString(),
     };
   }
 
@@ -35,9 +38,19 @@ class WorkExperience {
       companyName: json["companyName"] as String,
       position: json["position"] as String,
       description: json["description"] as String,
-      workPeriod: json["workPeriod"] != null
-          ? DateTime.parse(json["workPeriod"])
+      startPeriod: json["startPeriod"] != null
+          ? DateTime.parse(json["startPeriod"])
           : null,
+      endPeriod:
+          json["endPeriod"] != null ? DateTime.parse(json["endPeriod"]) : null,
     );
+  }
+
+  static List<WorkExperience> listFromJson(String json) {
+    final parsed = jsonDecode(json).cast<Map<String, dynamic>>();
+    return parsed
+        .map((experiencesJson) => WorkExperience.fromJson(experiencesJson))
+        .toList()
+        .cast<WorkExperience>();
   }
 }
