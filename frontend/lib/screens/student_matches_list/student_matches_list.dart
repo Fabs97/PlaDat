@@ -1,9 +1,20 @@
+import 'dart:html';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:frontend/models/placement.dart';
 import 'package:frontend/services/api_service.dart';
+import 'package:frontend/services/auth_service.dart';
 import 'package:frontend/widgets/appbar.dart';
 import 'package:frontend/widgets/drawer.dart';
+
+class MatchArgs {
+  int studentId;
+  int placementId;
+
+  MatchArgs(this.studentId, this.placementId);
+}
 
 class StudentMatches extends StatefulWidget {
   @override
@@ -13,7 +24,7 @@ class StudentMatches extends StatefulWidget {
 class _StudentMatchesState extends State<StudentMatches> {
   List<Placement> _placements;
   Placement _placement;
-  int _studentId = 1;
+  int _studentId = AuthService().loggedAccountInfo.id;
   @override
   void initState() {
     APIService.route(ENDPOINTS.Student, "/student/{studentId}/placements",
@@ -50,13 +61,23 @@ class _StudentMatchesState extends State<StudentMatches> {
                             child: ListTile(
                               leading:
                                   Icon(Icons.delete, color: Color(0xff4c60d2)),
-                              title: Text("Remove the match",
-                                  style: TextStyle(color: Color(0xff4c60d2))),
+                              title: Text(
+                                "Remove the match",
+                              ),
                               onTap: () {
-                                setState(() {
-                                  _placements.remove(_placement);
-                                  Navigator.pop(context);
-                                });
+                                APIService.route(ENDPOINTS.Matches,
+                                        "/match/:studentId/:placementId",
+                                        urlArgs: MatchArgs(
+                                            _placement.id, _studentId))
+                                    .then((value) => setState(() {
+                                          print(value);
+                                          if (value is bool && value) {
+                                            _placements.remove(_placement);
+                                            Navigator.pop(context);
+                                          } else {
+                                            Fluttertoast.showToast(msg: value);
+                                          }
+                                        }));
                               },
                             ),
                           )
