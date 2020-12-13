@@ -31,7 +31,11 @@ class Student extends ChangeNotifier {
   });
 
   String toJson() {
-    return jsonEncode({
+    return jsonEncode(this.toJsonMap());
+  }
+
+  Map<String, dynamic> toJsonMap() {
+    return {
       "id": this.id,
       "name": this.name,
       "surname": this.surname,
@@ -41,28 +45,30 @@ class Student extends ChangeNotifier {
       "phone": this.phone,
       "skills": this.skills.map((key, value) =>
           MapEntry(key, value.map((e) => e.toJsonMap()).toList())),
-      "educations":
+      "education":
           this.educations.map((education) => education.toJsonMap()).toList(),
-      "works": this.works.map((work) => work.toJsonMap()).toList()
-    });
+      "work": this.works.map((work) => work.toJsonMap()).toList(),
+    };
   }
 
   static Student fromJson(Map<String, dynamic> json) {
     return Student(
-      id: json["id"],
-      name: json["name"],
-      surname: json["surname"],
-      email: json["email"],
-      password: json["password"],
-      description: json["description"],
-      phone: json["phone"],
-      skills: Skill.listFromJson(json["skills"]),
-      educations: json["educations"]
-          ?.map((education) => EducationExperience.fromJson(education))
-          ?.toList(),
-      works: json["works"]
-          ?.map((work) => WorkExperience.fromJson(work))
-          ?.toList()
-    );
+        id: json["id"],
+        name: json["name"],
+        surname: json["surname"],
+        email: json["email"],
+        password: json["password"],
+        description: json["description"],
+        phone: json["phone"],
+        skills: Skill.listFromJson(json["skills"]),
+        educations: json["education"]
+            ?.map((education) => EducationExperience.fromJson(education))
+            ?.toList()
+            ?.cast<EducationExperience>(),
+        works: json["work"]
+            ?.map((work) => WorkExperience.fromJson(work))
+            ?.toList()
+            ?.cast<WorkExperience>(),
+            );
   }
 }

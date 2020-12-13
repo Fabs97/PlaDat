@@ -22,14 +22,14 @@ class WorkExperience {
   }
 
   Map<String, dynamic> toJsonMap() {
-    return {
-      "id": this.id,
-      "companyName": this.companyName,
-      "position": this.position,
-      "description": this.description,
-      "startPeriod": this.startPeriod.toString(),
-      "endPeriod": this.endPeriod.toString(),
-    };
+    Map<String, dynamic> res = {};
+    if (this.id != null) res["id"] = this.id;
+    if (this.companyName != null) res["companyName"] = this.companyName;
+    if (this.position != null) res["position"] = this.position;
+    if (this.description != null) res["description"] = this.description;
+    if (this.startPeriod != null) res["startPeriod"] = this.startPeriod.toString();
+    if (this.endPeriod != null) res["endPeriod"] = this.endPeriod.toString();
+    return res;
   }
 
   static WorkExperience fromJson(Map<String, dynamic> json) {

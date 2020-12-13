@@ -28,9 +28,13 @@ class StudentsAPIService extends APIInfo {
       headers: {"Content-Type": "application/json"},
       body: student.toJson(),
     );
-
-    if (response.statusCode == 200) {
-      return Student.fromJson(jsonDecode(response.body)[0]);
+    switch (response.statusCode) {
+      case 200:
+        {
+          return Student.fromJson(jsonDecode(response.body));
+        }
+      default:
+        return response.body;
     }
   }
 
