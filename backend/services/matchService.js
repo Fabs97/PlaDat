@@ -11,7 +11,12 @@ module.exports = {
         }
         return result;
     },
+
     getMatchesByStudentId: (studentId) => {
         return matchDAO.getMatchesByStudentId(studentId);
-    } 
+    },
+    
+    deleteMatch: async (studentId, placementId) => {
+        return await matchDAO.deleteMatch(studentId, placementId);
+    },
 };

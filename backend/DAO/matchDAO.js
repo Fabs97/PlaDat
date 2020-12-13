@@ -53,5 +53,12 @@ module.exports = {
                     throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There has been a problem retrieving your matches. Please try again')
                 }
             })
-    }
+    },
+
+    deleteMatch: (studentId, placementId) => {
+        return database('student_has_placement as shp')
+            .where('student_id', studentId)
+            .andWhere('placement_id', placementId)
+            .del();
+    },
 };
