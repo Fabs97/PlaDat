@@ -229,7 +229,7 @@ class WorkExperiencesFormState extends State<WorkExperiencesForm> {
       initialFirstDate: _newExperience.startPeriod ?? DateTime.now(),
       initialLastDate: _newExperience.endPeriod ??
           (new DateTime.now()).add(new Duration(days: 7)),
-      firstDate: DateTime.now(),
+      firstDate: DateTime.now().subtract(Duration(days: 365 * 100)),
       lastDate: (DateTime.now()).add(Duration(days: 365 * 100)),
     );
     if (picked != null && picked.length == 2) {
