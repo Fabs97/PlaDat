@@ -37,13 +37,21 @@ class WorkExperiencesFormState extends State<WorkExperiencesForm> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          _createAddExperienceRow(),
-          _creatingExperience ? _createExperienceForm(student) : Container(),
-          SizedBox(
-            height: size.height * (_creatingExperience ? .5 : .7),
+          Flexible(
+            child: _createAddExperienceRow(),
+            flex: 1,
+          ),
+          _creatingExperience
+              ? Flexible(
+                  child: _createExperienceForm(student),
+                  flex: 3,
+                )
+              : Container(),
+          Flexible(
+            flex: _creatingExperience ? 1 : 4,
             child: _experiences.isNotEmpty
                 ? ListView.builder(
-                  itemCount: _experiences.length,
+                    itemCount: _experiences.length,
                     itemBuilder: (_, index) {
                       return ExperienceCard(
                         experience: _experiences[index],
@@ -52,8 +60,8 @@ class WorkExperiencesFormState extends State<WorkExperiencesForm> {
                   )
                 : Container(),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 16.0),
+          Flexible(
+            flex: 1,
             child: RaisedButton(
               color: Colors.grey[600],
               onPressed: () {
@@ -200,25 +208,22 @@ class WorkExperiencesFormState extends State<WorkExperiencesForm> {
           return null;
         },
       ),
-      Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          mainAxisSize: MainAxisSize.max,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            FlatButton(
-              child: Text("Save"),
-              onPressed: () {
-                setState(() {
-                  _experiences.add(_newExperience);
-                  _newExperience = new WorkExperience();
-                  _creatingExperience = false;
-                });
-              },
-            ),
-          ],
-        ),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        mainAxisSize: MainAxisSize.max,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          FlatButton(
+            child: Text("Save"),
+            onPressed: () {
+              setState(() {
+                _experiences.add(_newExperience);
+                _newExperience = new WorkExperience();
+                _creatingExperience = false;
+              });
+            },
+          ),
+        ],
       ),
     ];
   }

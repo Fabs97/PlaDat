@@ -69,10 +69,18 @@ class EducationExperiencesFormState extends State<EducationExperiencesForm> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          _createAddExperienceRow(),
-          _creatingExperience ? _createExperienceForm(student) : Container(),
-          SizedBox(
-            height: size.height * (_creatingExperience ? .5 : .7),
+          Flexible(
+            child: _createAddExperienceRow(),
+            flex: 1,
+          ),
+          _creatingExperience
+              ? Flexible(
+                  child: _createExperienceForm(student),
+                  flex: 3,
+                )
+              : Container(),
+          Flexible(
+            flex: _creatingExperience ? 1 : 4,
             child: _experiences.isNotEmpty
                 ? ListView.builder(
                     itemCount: _experiences.length,
@@ -84,14 +92,16 @@ class EducationExperiencesFormState extends State<EducationExperiencesForm> {
                   )
                 : Container(),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 16.0),
+          Flexible(
+            flex: 1,
             child: RaisedButton(
               color: Colors.grey[600],
               onPressed: () {
                 if (!_creatingExperience ||
-                    (_creatingExperience && _formKey.currentState.validate())) {
-                  student.educations = _experiences.cast<EducationExperience>();
+                    (_creatingExperience &&
+                        _formKey.currentState.validate())) {
+                  student.educations =
+                      _experiences.cast<EducationExperience>();
                   setState(() {
                     formStepper.goToNextFormStep();
                   });
@@ -255,25 +265,22 @@ class EducationExperiencesFormState extends State<EducationExperiencesForm> {
           return null;
         },
       ),
-      Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          mainAxisSize: MainAxisSize.max,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            FlatButton(
-              child: Text("Save"),
-              onPressed: () {
-                setState(() {
-                  _experiences.add(_newExperience);
-                  _newExperience = new EducationExperience();
-                  _creatingExperience = false;
-                });
-              },
-            ),
-          ],
-        ),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        mainAxisSize: MainAxisSize.max,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          FlatButton(
+            child: Text("Save"),
+            onPressed: () {
+              setState(() {
+                _experiences.add(_newExperience);
+                _newExperience = new EducationExperience();
+                _creatingExperience = false;
+              });
+            },
+          ),
+        ],
       ),
     ];
   }
