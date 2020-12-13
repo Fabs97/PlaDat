@@ -2,12 +2,16 @@ import 'dart:convert';
 import 'package:frontend/models/match.dart';
 import 'package:http/http.dart' as http;
 import 'package:frontend/services/api_service.dart';
+import 'package:frontend/screens/student_matches_list/student_matches_list.dart';
 
 class MatchesAPIService extends APIInfo {
-  static Future<dynamic> route(String subRoute, {dynamic body}) {
+  static Future<dynamic> route(String subRoute,
+      {dynamic body, dynamic urlArgs}) {
     switch (subRoute) {
       case "/matching":
         return _postMatch(subRoute, body);
+      case "/match/:studentId/:placementId":
+        return _deleteMatch(subRoute, urlArgs);
       default:
         throw MatchesAPIException();
     }
@@ -21,6 +25,19 @@ class MatchesAPIService extends APIInfo {
     );
     if (response.statusCode == 200) {
       return Match.fromJson(jsonDecode(response.body)[0]);
+    }
+  }
+
+  static Future<dynamic> _deleteMatch(String subRoute, MatchArgs args) async {
+    var response = await http.delete(
+        APIInfo.apiEndpoint + "/match/${args.studentId}/${args.placementId}");
+    switch (response.statusCode) {
+      case 200:
+        {
+          return true;
+        }
+      default:
+        return response.body;
     }
   }
 }

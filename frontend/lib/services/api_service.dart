@@ -55,7 +55,8 @@ class APIService {
           return RecomendationsAPIService.route(subRoute,
               body: body, urlArgs: urlArgs);
         case ENDPOINTS.Matches:
-          return MatchesAPIService.route(subRoute, body: body);
+          return MatchesAPIService.route(subRoute,
+              urlArgs: urlArgs, body: body);
         case ENDPOINTS.Employers:
           return EmployersAPIService.route(subRoute,
               urlArgs: urlArgs, body: body);
