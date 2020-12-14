@@ -19,13 +19,13 @@ self = module.exports = {
         try {
             studentProfile = await studentDAO.createStudentAccount(studentInfo);
 
-            if(studentInfo.skills) {
+            if(studentInfo.skills && studentInfo.skills.length > 0) {
                 studentProfile.skills = await self.saveStudentSkills(studentProfile.id, studentInfo.skills);
             }
-            if(studentInfo.work) {
+            if(studentInfo.work && studentInfo.work.length > 0) {
                 studentProfile.work = await workService.saveStudentWork(studentProfile.id, studentInfo.work);
             }
-            if(studentInfo.education){
+            if(studentInfo.education && studentInfo.education.length > 0){
                 studentProfile.education = await educationService.saveStudentEducations(studentProfile.id, studentInfo.education);
             }
     
