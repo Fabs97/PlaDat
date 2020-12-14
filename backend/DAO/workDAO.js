@@ -6,7 +6,7 @@ const ERR_INTERNAL_SERVER_ERROR = require('../errors').ERR_INTERNAL_SERVER_ERROR
 module.exports = {
 
     createWorkExperiences: async (studentID, work) => {
-
+        if (!work || !work.length) return [];
         let workToInsert = utils.toUnderscore(work);
 
         studentID = parseInt(studentID);

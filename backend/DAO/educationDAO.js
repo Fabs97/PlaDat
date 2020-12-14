@@ -7,7 +7,8 @@ eDAO = module.exports = {
 
     createEducationExperiences: async (studentID, education) => {
         let educationExperiences = [];
-        await database.transaction( async (trx) => {
+        await database.transaction(async (trx) => {
+            if (!education || !education.length) return;
             for(let i=0; i<education.length; i++) {
                 let savedEducation = {};
                 let educationExp = await eDAO.getEducation(education[i].majorId, education[i].degreeId, education[i].institutionId);
