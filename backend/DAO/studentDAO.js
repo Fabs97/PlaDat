@@ -1,6 +1,10 @@
 //You need to import the DB instance in order to use it and make requests
 const database = require('../DB/connection');
-const connection = require('../DB/connection');
+
+//Error handling imports
+const SuperError = require('../errors').SuperError;
+const ERR_INTERNAL_SERVER_ERROR = require('../errors').ERR_INTERNAL_SERVER_ERROR;
+const ERR_NOT_FOUND = require('../errors').ERR_NOT_FOUND;
 
 module.exports = {
     // Here we add methods that have to make operation on the database: create, select, delete, etc
@@ -17,8 +21,8 @@ module.exports = {
         return result[0];
     },
 
-    createStudentAccount: (studentInfo) => {
-        return database('student')
+    createStudentAccount: async (studentInfo) => {
+        let result = await database('student')
             .returning()
             .insert({
                 name: studentInfo.name,
@@ -26,19 +30,35 @@ module.exports = {
                 email: studentInfo.email,
                 description: studentInfo.description,
                 phone: studentInfo.phone
-            },['id','name','surname','email','description', 'phone']);
+            },['id','name','surname','email','description', 'phone'])
+            .catch(error => {
+                if(error) {
+                    throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There was an error saving your profile');
+                }
+            });
+
+        return result[0];
     },
 
     setStudentSkills: (studentId, skills) => {
         studentId = parseInt(studentId);
         return new Promise(async (resolve, reject) => {
-            let studentToSkills = []
+            let studentToSkills = [];
+            let errorState = false;
             for(let i=0, len=skills.length; i<len; i++) {
 
                 let result = await database('student_has_skills')
                     .select()
                     .where('student_id', studentId)
-                    .andWhere('skill_id', skills[i].id);
+                    .andWhere('skill_id', skills[i].id)
+                    .catch(error => {
+                        if(error) {
+                            reject(new SuperError(ERR_NOT_FOUND, 'There was an error saving your skills')); 
+                            errorState = true;
+                            return error;
+                        }
+                    });
+                if(errorState) return;
 
                 if(result.length == 0) {
                     result = await database('student_has_skills')
@@ -48,9 +68,14 @@ module.exports = {
                         skill_id: skills[i].id
                         }, ['student_id', 'skill_id'])
                         .catch(error => {
-                            console.log(error);  
+                            if(error) {
+                                reject(new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There was an error saving your skills'));
+                                errorState = true;
+                            }
                         });
                 }
+                if(errorState) return;
+
                  
                 if(result) {
                     studentToSkills.push({

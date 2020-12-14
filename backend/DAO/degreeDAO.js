@@ -2,18 +2,16 @@ const database = require('../DB/connection');
 
 module.exports = {
 
-  getMajors: async () => {
-    return database('majors')
+  getDegrees: () => {
+    return database('degree')
       .select('id', 'name');
   },
 
-  getMajorById: async (id) => {
-    let major = await database('majors')
+  getDegreeById: async (id) => {
+    let degree = await database('degree')
       .select('id', 'name')
       .where('id', id);
-    return major[0];
+    return degree[0];
   },
-
-
 
 };

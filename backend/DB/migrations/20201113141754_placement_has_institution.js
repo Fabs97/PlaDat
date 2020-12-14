@@ -2,8 +2,10 @@
 exports.up = async function(knex) {
     let hasTable = await knex.schema.hasTable('placement_has_institution')
     return !hasTable ? knex.schema.createTable('placement_has_institution', (table)=>{  
-        table.integer('placement_id').unsigned().references('id').inTable('placements').notNullable();
-        table.integer('institution_id').unsigned().references('id').inTable('institutions').notNullable();
+        table.integer('placement_id').unsigned().notNullable();
+        table.foreign('placement_id').references('placements.id').onDelete('CASCADE');
+        table.integer('institution_id').unsigned().notNullable();
+        table.foreign('institution_id').references('institutions.id').onDelete('CASCADE');
         table.primary(['placement_id', 'institution_id']);
     }) : null;
 };

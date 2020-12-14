@@ -1,8 +1,10 @@
 
 const studentDAO = require('../DAO/studentDAO');
 const skillService = require('../services/skillsService')
+const educationService = require('../services/educationService')
+const workService = require('../services/workService')
 
-module.exports = {
+self = module.exports = {
     // Here you can add all kinds of methods that manage or handle data, or do specific tasks. 
     // This is the place where the business logic is.
     getStudent: (id) => {
@@ -11,11 +13,30 @@ module.exports = {
         return studentDAO.getStudentById(id);
     },
 
-    createStudentAccount: (studentInfo) => {
-        return studentDAO.createStudentAccount(studentInfo);
+    createStudentAccount: async (studentInfo) => {
+        let studentProfile = {};
+
+        try {
+            studentProfile = await studentDAO.createStudentAccount(studentInfo);
+
+            if(studentInfo.skills && studentInfo.skills.length > 0) {
+                studentProfile.skills = await self.saveStudentSkills(studentProfile.id, studentInfo.skills);
+            }
+            if(studentInfo.work && studentInfo.work.length > 0) {
+                studentProfile.work = await workService.saveStudentWork(studentProfile.id, studentInfo.work);
+            }
+            if(studentInfo.education && studentInfo.education.length > 0){
+                studentProfile.education = await educationService.saveStudentEducations(studentProfile.id, studentInfo.education);
+            }
+    
+        } catch(error) {
+            throw error;
+        }
+       
+        return studentProfile;
     },
 
-    saveStudentProfile: async (studentId, studentInfo) => {
+    saveStudentSkills: async (studentId, studentInfo) => {
         let skills = [];
         if(studentInfo.technicalSkills && studentInfo.technicalSkills.length > 0) {
             skills = [...skills, ...studentInfo.technicalSkills];
@@ -27,7 +48,7 @@ module.exports = {
             const otherSkills = await skillService.saveOtherSkills(studentInfo.otherSkills);
             skills = [...skills, ...otherSkills];  
         }
-        return studentDAO.setStudentSkills(studentId, skills)    
+        return studentDAO.setStudentSkills(studentId, skills);  
     },
 
     getStudentsBySkills: async (skills) => {

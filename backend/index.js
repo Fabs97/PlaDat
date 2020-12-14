@@ -19,8 +19,6 @@ app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(APIDocumentation));
 app.use(express.json());
 
 const studentRoute = require("./routes/studentRoute");
-const majorRoute = require("./routes/majorRoute");
-const institutionRoute = require("./routes/institutionRoute");
 const placementRoute = require("./routes/placementRoute");
 const skillsRoute = require("./routes/skillsRoute");
 const recommendationRoute = require('./routes/recommendationRoute');
@@ -28,15 +26,15 @@ const matchRoute = require('./routes/matchRoute');
 const employerRoute = require('./routes/employerRoute');
 const registrationRoute = require('./routes/registrationRoute');
 const messageRoute = require('./routes/messageRoute');
+const educationRoute = require('./routes/educationRoute');
 app.use('/', studentRoute);
-app.use('/', majorRoute);
-app.use('/', institutionRoute);
 app.use('/', placementRoute);
 app.use('/', skillsRoute);
 app.use('/', recommendationRoute);
 app.use('/', matchRoute);
 app.use('/', employerRoute);
 app.use('/', registrationRoute);
+app.use('/', educationRoute);
 app.use('/', messageRoute);
 
 app.get('/', (req, res) => res.send('Hello World!'));
