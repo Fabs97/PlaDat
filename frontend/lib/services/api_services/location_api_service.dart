@@ -21,7 +21,7 @@ class LocationsAPIService extends APIInfo {
     );
 
     if (response.statusCode == 200) {
-      var preObjsJson = jsonDecode(response.body)['predictions'] as List;
+      var preObjsJson = jsonDecode(utf8.decode(response.bodyBytes))['predictions'] as List;
       List<Place> tagObjs =
           preObjsJson.map((tagJson) => Place.fromJson(tagJson)).toList();
       return tagObjs;
