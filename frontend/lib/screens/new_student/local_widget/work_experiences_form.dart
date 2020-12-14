@@ -29,7 +29,7 @@ class WorkExperiencesFormState extends State<WorkExperiencesForm> {
     final size = MediaQuery.of(context).size;
     final student = Provider.of<Student>(context);
     final formStepper = Provider.of<FormStepper>(context);
-    final List<WorkExperience> works = [...student.works, ..._experiences];
+    final List<WorkExperience> works = [...student.works ?? [], ..._experiences].toSet().toList().cast<WorkExperience>();
     return SizedBox(
       width: size.width * .9,
       height: size.height * .85,
@@ -224,6 +224,10 @@ class WorkExperiencesFormState extends State<WorkExperiencesForm> {
             onPressed: () {
               setState(() {
                 _experiences.add(_newExperience);
+                student.works = [
+                  ...student.works ?? [],
+                  ..._experiences,
+                ];
                 _newExperience = new WorkExperience();
                 _creatingExperience = false;
               });

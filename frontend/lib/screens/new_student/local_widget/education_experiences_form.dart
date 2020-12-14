@@ -61,7 +61,10 @@ class EducationExperiencesFormState extends State<EducationExperiencesForm> {
     final size = MediaQuery.of(context).size;
     final student = Provider.of<Student>(context);
     final formStepper = Provider.of<FormStepper>(context);
-    final List<EducationExperience> educations = [...student.educations, ..._experiences];
+    final List<EducationExperience> educations = [
+      ...student.educations ?? [],
+      ..._experiences
+    ].toSet().toList().cast<EducationExperience>();
     return SizedBox(
       width: size.width * .9,
       height: size.height * .85,
@@ -279,6 +282,10 @@ class EducationExperiencesFormState extends State<EducationExperiencesForm> {
             onPressed: () {
               setState(() {
                 _experiences.add(_newExperience);
+                student.educations = [
+                  ...student.educations ?? [],
+                  ..._experiences,
+                ];
                 _newExperience = new EducationExperience();
                 _creatingExperience = false;
               });

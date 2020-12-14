@@ -46,8 +46,8 @@ class Student extends ChangeNotifier {
       "skills": this.skills.map((key, value) =>
           MapEntry(key, value.map((e) => e.toJsonMap()).toList())),
       "education":
-          this.educations.map((education) => education.toJsonMap()).toList(),
-      "work": this.works.map((work) => work.toJsonMap()).toList(),
+          this.educations?.map((education) => education.toJsonMap())?.toList() ?? [],
+      "work": this.works?.map((work) => work.toJsonMap())?.toList() ?? [],
     };
   }
 
