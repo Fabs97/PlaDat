@@ -26,7 +26,7 @@ class AddressSearch extends SearchDelegate<Place> {
     return FutureBuilder(
       future: query == ""
           ? null
-          : APIService.route(ENDPOINTS.Locations, "/location",urlArgs: query),
+          : APIService.route(ENDPOINTS.Locations, "/googleMaps",urlArgs: query),
       builder: (context, snapshot) => query == ''
           ? Container(
               padding: EdgeInsets.all(16.0),

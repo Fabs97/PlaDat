@@ -4,8 +4,8 @@ import 'package:frontend/utils/routes_generator.dart';
 import 'package:frontend/widgets/appbar.dart';
 import 'package:frontend/widgets/drawer.dart';
 
-Future<void> main() async {
-  await DotEnv().load('.env');
+ main()  {
+  //await DotEnv().load('.env');
   runApp(MyApp());
 }
 
