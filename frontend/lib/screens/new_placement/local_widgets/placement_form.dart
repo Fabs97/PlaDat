@@ -2,9 +2,15 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:frontend/models/institution.dart';
+import 'package:frontend/models/major.dart';
+import 'package:frontend/models/place.dart';
 import 'package:frontend/models/placement.dart';
 import 'package:frontend/screens/new_placement/local_widgets/dropdown.dart';
 import 'package:frontend/services/api_service.dart';
+import 'package:frontend/services/api_services/majors_api_service.dart';
+import 'package:frontend/utils/routes_generator.dart';
+import 'package:frontend/widgets/address_search.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:date_range_picker/date_range_picker.dart' as DateRagePicker;
@@ -28,6 +34,7 @@ class _PlacementFormState extends State<PlacementForm> {
     title: 'Preferred Institutions',
   );
 
+TextEditingController _controller= new TextEditingController();
   @override
   void initState() {
     APIService.route(ENDPOINTS.Majors, "/majors").then((majors) {
@@ -43,6 +50,18 @@ class _PlacementFormState extends State<PlacementForm> {
     }).catchError((err) {
       print(err);
     });
+
+    _controller.addListener(() {
+      final text = _controller.text.toLowerCase();
+      _controller.value = _controller.value.copyWith(
+        text: text,
+        selection:
+            TextSelection(baseOffset: text.length, extentOffset: text.length),
+        composing: TextRange.empty,
+      );
+    });
+
+
     super.initState();
   }
 
@@ -90,6 +109,7 @@ class _PlacementFormState extends State<PlacementForm> {
                         _createDescriptionField(placement),
                         majorsWidget ?? Container(),
                         institutionsWidget ?? Container(),
+                        _cretaeautocompleteField(placement),
                       ],
                     ),
                   ),
@@ -249,4 +269,40 @@ class _PlacementFormState extends State<PlacementForm> {
       },
     );
   }
+
+ Widget _cretaeautocompleteField(Placement placement) {
+    return TextFormField(
+      controller: _controller,
+      readOnly: true,
+      decoration: const InputDecoration(
+        hintText: 'Address',
+      ),
+      //initialValue: _controller.text ?? ' ',
+      onTap: () async {
+        final Place result = await showSearch(
+          context: context,
+          delegate: AddressSearch(),
+        );
+
+        // This will change the text displayed in the TextField
+        if (result != null) {
+          setState(() {
+            _controller.text = result.description;
+            List<String> splits = result.description.split(",");
+            result.country = splits[splits.length - 1];
+            result.city = splits[splits.length - 2];
+            placement.location=result;
+          });
+        }
+      },
+
+      validator: (value) {
+        if (value.isEmpty) {
+          return 'Please enter your address';
+        }
+        return null;
+      },
+    );
+  }
+
 }

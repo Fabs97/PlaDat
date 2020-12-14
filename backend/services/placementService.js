@@ -3,6 +3,7 @@ const placementDAO = require('../DAO/placementDAO');
 const skillService = require('./skillsService');
 const skillsService = require('./skillsService');
 const employerService = require('./employerService');
+const locationService = require('./locationService');
 const matchService = require('./matchService');
 const SuperError = require('../errors').SuperError;
 const ERR_INTERNAL_SERVER_ERROR = require('../errors').ERR_INTERNAL_SERVER_ERROR;
@@ -31,6 +32,16 @@ module.exports = {
                 newPlacement.majors = await placementDAO.setPlacementMajors(newPlacement.id, placementDetails.majors);
             }
 
+            if(placementDetails.location){
+                let location = await locationService.addNewLocationIfNeeded(placementDetails.location);
+                let addedLocation = await placementDAO.setPlacementLocation(newPlacement.id, location.id);
+                if (addedLocation != 1){
+                    await locationService.deleteLocationById(location.id);
+                    throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There has been a problem setting your placement location. Please try again')
+                }
+                newPlacement.location = location;
+            }
+
             if(placementDetails.skills) {
                 let placementInfos = placementDetails.skills;
 
@@ -48,6 +59,8 @@ module.exports = {
                 newPlacement.skills = await placementDAO.setPlacementSkills(newPlacement.id, newSkills);
 
             }
+
+            
 
         } catch(error) {
             if(!error.code) {

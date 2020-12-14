@@ -1,5 +1,6 @@
 //You need to import the DB instance in order to use it and make requests
 const database = require('../DB/connection');
+const connection = require('../DB/connection');
 
 //Error handling imports
 const SuperError = require('../errors').SuperError;
@@ -155,7 +156,20 @@ module.exports = {
             .where('id', id)
             .del();
             
-    }
+    },
+
+    setStudentLocation: async (studentId, locationId) => {
+        let result = await database('student')
+            .returning()
+            .where('id', studentId)
+            .update('location_id', locationId)
+            .catch(error => {
+                if(error) {
+                    throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There has been a problem setting your student profile location. Please try again')
+                }
+            });
+        return result;
+    },
 
 
 };

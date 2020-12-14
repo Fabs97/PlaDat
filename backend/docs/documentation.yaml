@@ -27,6 +27,8 @@ tags:
     description: All the APIs related to the matching algorithm
   - name: Employer
     description: All the APIs related to the "employer" algorithm
+  - name: Google Maps
+    description: All the APIs related to the access to the google maps service
   - name: Registration
     description: All the APIs related to the "registration" table
   - name: Message
@@ -57,6 +59,13 @@ components:
           format: password
         description: 
           type: string 
+        location:
+          type: object
+          properties:
+            country:
+              type: string
+            city:
+              type: string
         skills:
           type: object
           properties: 
@@ -76,7 +85,6 @@ components:
           type: array
           items: 
             $ref: "#/components/schemas/Education"
-
 
     Employer:
       type: object
@@ -154,6 +162,15 @@ components:
             - TECH
             - SOFT
             - OTHER
+    Location:
+      type: object
+      properties:
+        id: 
+          type: integer
+        country: 
+          type: string
+        city:
+          type: string
     Message:
       type: object
       properties:          
@@ -505,6 +522,10 @@ paths:
                     {id: 1, name: "Politecnico di Milano"},
                     {id: 1, name: "Politecnico di Torino"},
                   ],
+                  location: {
+                    country: "Italy",
+                    city: "Milan"
+                  },
                   skills: {
                     technicalSkills: [
                       {id: 1},
@@ -549,6 +570,10 @@ paths:
                       {id: 1, name: "Politecnico di Milano"},
                       {id: 1, name: "Politecnico di Torino"},
                     ],
+                    location: {
+                      country: "Italy",
+                      city: "Milan"
+                    },
                     skills: {
                       technicalSkills: [
                         {id: 1},
@@ -667,6 +692,9 @@ paths:
                 email: aa@aaa.com
                 description: I am a happy student
                 phone: '5478929202'
+                location:
+                  country: "Italy"
+                  city: "Milan"
                 education:
                 - majorId: 3
                   degreeId: 1
@@ -714,6 +742,9 @@ paths:
                   email: aa@aaa.com
                   description: desgn
                   phone: '5478929202'
+                  location:
+                    country: "Italy"
+                    city: "Milan"
                   skills:
                   - student: 129
                     skill: 1
@@ -723,39 +754,6 @@ paths:
                     skill: 17
                   - student: 129
                     skill: 18
-                  work:
-                  - id: 71
-                    companyName: Google
-                    position: Difficult Job
-                    workPeriod: September 2020 - October 2021
-                    description: Difficult job
-                  - id: 72
-                    companyName: Facebook
-                    position: Very Difficult Job
-                    workPeriod: September 2019 - December 2020
-                    description: Very Difficult job
-                  education:
-                  - studentId: 129
-                    educationId: 4
-                    description: Difficult job
-                    period: September 2020 - October 2021
-                    majorId: 3
-                    degreeId: 1
-                    institutionId: 3
-                  - studentId: 129
-                    educationId: 5
-                    description: Difficult job
-                    period: September 2020 - October 2021
-                    majorId: 1
-                    degreeId: 2
-                    institutionId: 1
-                  - studentId: 129
-                    educationId: 6
-                    description: Difficult job
-                    period: September 2020 - October 2021
-                    majorId: 1
-                    degreeId: 1
-                    institutionId: 4
         '500':
           description: INTERNAL SERVER ERROR - Offers an explanation about what caused the error
   /skills:
@@ -892,6 +890,133 @@ paths:
                       type: "TECH"
                     }
                   ]
+  /googleMaps/{input}:
+    get:
+      description: Provides the required informations retrieved from the Google Maps API
+      tags:
+        - "Google Maps"
+      parameters:
+        - in: query
+          name: input
+          required: true
+          schema: 
+            example:  "Piazza Leonardo Da Vinci, Milano"
+      responses:
+        '200':
+          description: OK
+          content:
+            text/html:
+              schema:
+                example: 
+                  {
+                    predictions : [
+                      {
+                        description : "Piazza Leonardo da Vinci, Milano, Metropolitan City of Milan, Italy",
+                        matched_substrings : [
+                          {
+                            length : 24,
+                            offset : 0
+                          },
+                          {
+                            length : 6,
+                            offset : 26
+                          }
+                        ],
+                        place_id :
+                          "EkNQaWF6emEgTGVvbmFyZG8gZGEgVmluY2ksIE1pbGFubywgTWV0cm9wb2xpdGFuIENpdHkgb2YgTWlsYW4sIEl0YWx5Ii4qLAoUChIJJW9DMvLGhkcRzXotUCwiNgYSFAoSCed1Ej9JwYZHEY0OdMYTzf88",
+                        reference :
+                          "EkNQaWF6emEgTGVvbmFyZG8gZGEgVmluY2ksIE1pbGFubywgTWV0cm9wb2xpdGFuIENpdHkgb2YgTWlsYW4sIEl0YWx5Ii4qLAoUChIJJW9DMvLGhkcRzXotUCwiNgYSFAoSCed1Ej9JwYZHEY0OdMYTzf88",
+                        structured_formatting : {
+                          main_text : "Piazza Leonardo da Vinci",
+                          main_text_matched_substrings : [
+                            {
+                              length : 24,
+                              offset : 0
+                            }
+                          ],
+                          secondary_text : "Milano, Metropolitan City of Milan, Italy",
+                          secondary_text_matched_substrings : [
+                            {
+                              length : 6,
+                              offset : 0
+                            }
+                          ]
+                        },
+                        terms : [
+                          {
+                            offset : 0,
+                            value : "Piazza Leonardo da Vinci"
+                          },
+                          {
+                            offset : 26,
+                            value : "Milano"
+                          },
+                          {
+                            offset : 34,
+                            value : "Metropolitan City of Milan"
+                          },
+                          {
+                            offset : 62,
+                            value : "Italy"
+                          }
+                        ],
+                        types : [ "route", "geocode" ]
+                      },
+                      {
+                        description : "Piazza Leonardo da Vinci, Basiglio, Metropolitan City of Milan, Italy",
+                        matched_substrings : [
+                          {
+                            length : 24,
+                            offset : 0
+                          },
+                          {
+                            length : 26,
+                            offset : 36
+                          }
+                        ],
+                        place_id :
+                          "EkVQaWF6emEgTGVvbmFyZG8gZGEgVmluY2ksIEJhc2lnbGlvLCBNZXRyb3BvbGl0YW4gQ2l0eSBvZiBNaWxhbiwgSXRhbHkiLiosChQKEglzoKNnZtuGRxEsA7AmwRWvJRIUChIJn7s-7WTbhkcR3pgYQNsPFks",
+                        reference :
+                          "EkVQaWF6emEgTGVvbmFyZG8gZGEgVmluY2ksIEJhc2lnbGlvLCBNZXRyb3BvbGl0YW4gQ2l0eSBvZiBNaWxhbiwgSXRhbHkiLiosChQKEglzoKNnZtuGRxEsA7AmwRWvJRIUChIJn7s-7WTbhkcR3pgYQNsPFks",
+                        structured_formatting : {
+                          main_text : "Piazza Leonardo da Vinci",
+                          main_text_matched_substrings : [
+                            {
+                              length : 24,
+                              offset : 0
+                            }
+                          ],
+                          secondary_text : "Basiglio, Metropolitan City of Milan, Italy",
+                          secondary_text_matched_substrings : [
+                            {
+                              length : 26,
+                              offset : 10
+                            }
+                          ]
+                        },  
+                        terms : [
+                          {
+                            offset : 0,
+                            value : "Piazza Leonardo da Vinci"
+                          },
+                          {
+                            offset : 26,
+                            value : "Basiglio"
+                          },
+                          {
+                            offset : 36,
+                            value : "Metropolitan City of Milan"
+                          },
+                          {  
+                            offset : 64,
+                            value : "Italy"
+                          }
+                        ],
+                        types : [ "route", "geocode" ]
+                      }
+                    ],
+                    status : "OK"
+                  }
   /registration:
     post:
       description: Allows users to register to the application
@@ -909,15 +1034,13 @@ paths:
                   email: "paolo@gmail.com",
                   password: "Iloveyou_3000",
                   type: "STUDENT"
-
                 }
       responses:
         '200':
-          description: OK
+          description: Returns a json with the newly inserted user, without the hashed password
           content:
             application/json:
               schema:
-                description: Returns a json with the newly inserted user, without the hashed password
                 type: object
                 example:
                   {
@@ -1098,5 +1221,3 @@ paths:
                 type: string
                 example:
                   "There has been a problem saving your message. Please try again"
-
-              

@@ -32,6 +32,7 @@ dependencies:
   flutter_tindercard: ^0.2.0
   email_validator: '^1.0.5'
   auto_size_text: ^2.1.0
+  
 
   provider: ^4.3.2+2
  
@@ -54,6 +55,7 @@ flutter:
   uses-material-design: true
  
   # To add assets to your application, add an assets section, like this:
+
   # assets:    
  
   # An image asset can refer to one or more resolution-specific "variants", see

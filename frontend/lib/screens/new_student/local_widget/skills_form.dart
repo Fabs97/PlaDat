@@ -81,7 +81,6 @@ class SkillsForm extends StatelessWidget {
     } else {
       message = "Something really wrong happened";
     }
-
     Fluttertoast.showToast(msg: message);
   }
 }

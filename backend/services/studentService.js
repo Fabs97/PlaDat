@@ -1,6 +1,9 @@
 
 const studentDAO = require('../DAO/studentDAO');
 const skillService = require('../services/skillsService')
+const locationService = require('../services/locationService');
+const SuperError = require('../errors').SuperError;
+const ERR_INTERNAL_SERVER_ERROR = require('../errors').ERR_INTERNAL_SERVER_ERROR;
 const educationService = require('../services/educationService')
 const workService = require('../services/workService')
 
@@ -19,7 +22,11 @@ self = module.exports = {
         try {
             studentProfile = await studentDAO.createStudentAccount(studentInfo);
 
-            if(studentInfo.skills && studentInfo.skills.length > 0) {
+            if(studentInfo.location){
+                studentProfile.location = await self.saveStudentLocation(studentProfile.id, studentInfo.location);
+            }
+
+            if(studentInfo.skills) {
                 studentProfile.skills = await self.saveStudentSkills(studentProfile.id, studentInfo.skills);
             }
             if(studentInfo.work && studentInfo.work.length > 0) {
@@ -68,5 +75,15 @@ self = module.exports = {
 
     deleteStudentById: (id) => {
         return studentDAO.deleteStudentById(id);
-    }
+    },
+
+    saveStudentLocation: async (id, details) => {
+        let location = await locationService.addNewLocationIfNeeded(details);
+        let result = await studentDAO.setStudentLocation(id, location.id)
+        if (result != 1){
+            locationService.deleteLocationById(location.id);
+            throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There has been a problem setting your student profile location. Please try again')
+        }
+        return location;
+    },
 };

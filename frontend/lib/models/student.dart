@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:frontend/models/education_experience.dart';
 import 'package:frontend/models/skill.dart';
+import 'package:frontend/models/place.dart';
 import 'package:frontend/models/work_experience.dart';
 
 class Student extends ChangeNotifier {
@@ -14,6 +15,7 @@ class Student extends ChangeNotifier {
   String description;
   String phone;
   Map<String, dynamic> skills;
+  Place location;
   List<EducationExperience> educations;
   List<WorkExperience> works;
 
@@ -28,6 +30,7 @@ class Student extends ChangeNotifier {
     this.skills,
     this.educations,
     this.works,
+    this.location,
   });
 
   String toJson() {
@@ -45,30 +48,35 @@ class Student extends ChangeNotifier {
       "phone": this.phone,
       "skills": this.skills.map((key, value) =>
           MapEntry(key, value.map((e) => e.toJsonMap()).toList())),
-      "education":
-          this.educations?.map((education) => education.toJsonMap())?.toList() ?? [],
+      "location": this.location?.toJsonMap() ?? null,
+      "education": this
+              .educations
+              ?.map((education) => education.toJsonMap())
+              ?.toList() ??
+          [],
       "work": this.works?.map((work) => work.toJsonMap())?.toList() ?? [],
     };
   }
 
   static Student fromJson(Map<String, dynamic> json) {
     return Student(
-        id: json["id"],
-        name: json["name"],
-        surname: json["surname"],
-        email: json["email"],
-        password: json["password"],
-        description: json["description"],
-        phone: json["phone"],
-        skills: Skill.listFromJson(json["skills"]),
-        educations: json["education"]
-            ?.map((education) => EducationExperience.fromJson(education))
-            ?.toList()
-            ?.cast<EducationExperience>(),
-        works: json["work"]
-            ?.map((work) => WorkExperience.fromJson(work))
-            ?.toList()
-            ?.cast<WorkExperience>(),
-            );
+      id: json["id"],
+      name: json["name"],
+      surname: json["surname"],
+      email: json["email"],
+      password: json["password"],
+      description: json["description"],
+      phone: json["phone"],
+      location: json["location"] != null ? Place.fromJson(json['location']) : null,
+      skills: Skill.listFromJson(json["skills"]),
+      educations: json["education"]
+          ?.map((education) => EducationExperience.fromJson(education))
+          ?.toList()
+          ?.cast<EducationExperience>(),
+      works: json["work"]
+          ?.map((work) => WorkExperience.fromJson(work))
+          ?.toList()
+          ?.cast<WorkExperience>(),
+    );
   }
 }

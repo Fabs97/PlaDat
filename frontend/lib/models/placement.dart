@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:frontend/models/institution.dart';
 import 'package:frontend/models/major.dart';
+import 'package:frontend/models/place.dart';
 import 'package:frontend/models/skill.dart';
 
 enum EmploymentType { FULLTIME, PARTTIME, INTERNSHIP, CONTRACT }
@@ -76,6 +77,7 @@ class Placement extends ChangeNotifier {
   List<dynamic> institutions;
   List<dynamic> majors;
   Map<String, dynamic> skills;
+  Place location;
   int employerId;
   String employerName;
   String countMatches;
@@ -91,6 +93,7 @@ class Placement extends ChangeNotifier {
       this.institutions,
       this.majors,
       this.skills,
+      this.location,
       this.employerId,
       this.employerName,
       this.countMatches});
@@ -111,6 +114,7 @@ class Placement extends ChangeNotifier {
       "majors": this.majors.map((major) => major.toJsonMap()).toList(),
       "skills": this.skills.map((key, value) =>
           MapEntry(key, value.map((e) => e.toJsonMap()).toList())),
+      "location": this.location?.toJsonMap() ?? null,
       "employerId": this.employerId,
       "employerName": this.employerName,
       "countMatches": this.countMatches,
@@ -120,27 +124,29 @@ class Placement extends ChangeNotifier {
   static Placement fromJson(Map<String, dynamic> json) {
     if (json == null) return null;
     return Placement(
-        id: json["id"],
-        position: json["position"],
-        employmentType: json["employment_type"] != null
-            ? EmploymentTypeExtension.fromString(json["employment_type"])
-            : null,
-        startPeriod: json["start_period"] != null
-            ? DateTime.parse(json["start_period"])
-            : null,
-        endPeriod: json["end_period"] != null
-            ? DateTime.parse(json["end_period"])
-            : null,
-        salary: json["salary"],
-        description: json["description_role"],
-        institutions: json["institutions"]
-            ?.map((institution) => Institution.fromJson(institution))
-            ?.toList(),
-        majors: json["majors"]?.map((major) => Major.fromJson(major))?.toList(),
-        skills: Skill.listFromJson(json["skills"]),
-        employerId: json["employer_id"],
-        employerName: json["employer_name"],
-        countMatches: json["count_matches"]);
+      id: json["id"],
+      position: json["position"],
+      employmentType: json["employment_type"] != null
+          ? EmploymentTypeExtension.fromString(json["employment_type"])
+          : null,
+      startPeriod: json["start_period"] != null
+          ? DateTime.parse(json["start_period"])
+          : null,
+      endPeriod: json["end_period"] != null
+          ? DateTime.parse(json["end_period"])
+          : null,
+      salary: json["salary"],
+      description: json["description_role"],
+      institutions: json["institutions"]
+          ?.map((institution) => Institution.fromJson(institution))
+          ?.toList(),
+      majors: json["majors"]?.map((major) => Major.fromJson(major))?.toList(),
+      skills: Skill.listFromJson(json["skills"]),
+      employerId: json["employer_id"],
+      employerName: json["employer_name"],
+      countMatches: json["count_matches"],
+      location: json["location"] != null ? Place.fromJson(json['location']) : null,
+    );
   }
 
   static List<Placement> listFromJson(String json) {
