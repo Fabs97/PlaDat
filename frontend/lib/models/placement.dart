@@ -112,10 +112,9 @@ class Placement extends ChangeNotifier {
           .map((institution) => institution.toJsonMap())
           .toList(),
       "majors": this.majors.map((major) => major.toJsonMap()).toList(),
-      
       "skills": this.skills.map((key, value) =>
           MapEntry(key, value.map((e) => e.toJsonMap()).toList())),
-      "location":this.location.toJsonMap(),
+      "location": this.location?.toJsonMap() ?? null,
       "employerId": this.employerId,
       "employerName": this.employerName,
       "countMatches": this.countMatches,
@@ -125,28 +124,28 @@ class Placement extends ChangeNotifier {
   static Placement fromJson(Map<String, dynamic> json) {
     if (json == null) return null;
     return Placement(
-        id: json["id"],
-        position: json["position"],
-        employmentType: json["employment_type"] != null
-            ? EmploymentTypeExtension.fromString(json["employment_type"])
-            : null,
-        startPeriod: json["start_period"] != null
-            ? DateTime.parse(json["start_period"])
-            : null,
-        endPeriod: json["end_period"] != null
-            ? DateTime.parse(json["end_period"])
-            : null,
-        salary: json["salary"],
-        description: json["description_role"],
-        institutions: json["institutions"]
-            ?.map((institution) => Institution.fromJson(institution))
-            ?.toList(),
-        majors: json["majors"]?.map((major) => Major.fromJson(major))?.toList(),
-        skills: Skill.listFromJson(json["skills"]),
-        employerId: json["employer_id"],
-        employerName: json["employer_name"],
-        countMatches: json["count_matches"],
-        location: Place.fromJson(json['location']),
+      id: json["id"],
+      position: json["position"],
+      employmentType: json["employment_type"] != null
+          ? EmploymentTypeExtension.fromString(json["employment_type"])
+          : null,
+      startPeriod: json["start_period"] != null
+          ? DateTime.parse(json["start_period"])
+          : null,
+      endPeriod: json["end_period"] != null
+          ? DateTime.parse(json["end_period"])
+          : null,
+      salary: json["salary"],
+      description: json["description_role"],
+      institutions: json["institutions"]
+          ?.map((institution) => Institution.fromJson(institution))
+          ?.toList(),
+      majors: json["majors"]?.map((major) => Major.fromJson(major))?.toList(),
+      skills: Skill.listFromJson(json["skills"]),
+      employerId: json["employer_id"],
+      employerName: json["employer_name"],
+      countMatches: json["count_matches"],
+      location: json["location"] != null ? Place.fromJson(json['location']) : null,
     );
   }
 
