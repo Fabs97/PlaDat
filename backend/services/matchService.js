@@ -11,4 +11,7 @@ module.exports = {
         }
         return result;
     },
+    getMatchesByStudentId: (studentId) => {
+        return matchDAO.getMatchesByStudentId(studentId);
+    } 
 };

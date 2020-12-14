@@ -4,7 +4,8 @@ const skillService = require('../services/skillsService')
 const locationService = require('../services/locationService');
 const SuperError = require('../errors').SuperError;
 const ERR_INTERNAL_SERVER_ERROR = require('../errors').ERR_INTERNAL_SERVER_ERROR;
-
+const educationService = require('../services/educationService')
+const workService = require('../services/workService')
 
 self = module.exports = {
     // Here you can add all kinds of methods that manage or handle data, or do specific tasks. 
@@ -21,11 +22,14 @@ self = module.exports = {
         try {
             studentProfile = await studentDAO.createStudentAccount(studentInfo);
 
-            if(studentInfo.skills) {
+            if(studentInfo.skills && studentInfo.skills.length > 0) {
                 studentProfile.skills = await self.saveStudentSkills(studentProfile.id, studentInfo.skills);
             }
-            if(studentInfo.location){
-                studentProfile.location = await self.saveStudentLocation(studentProfile.id, studentInfo.location);
+            if(studentInfo.work && studentInfo.work.length > 0) {
+                studentProfile.work = await workService.saveStudentWork(studentProfile.id, studentInfo.work);
+            }
+            if(studentInfo.education && studentInfo.education.length > 0){
+                studentProfile.education = await educationService.saveStudentEducations(studentProfile.id, studentInfo.education);
             }
     
         } catch(error) {
@@ -47,7 +51,7 @@ self = module.exports = {
             const otherSkills = await skillService.saveOtherSkills(studentInfo.otherSkills);
             skills = [...skills, ...otherSkills];  
         }
-        return studentDAO.setStudentSkills(studentId, skills)    
+        return studentDAO.setStudentSkills(studentId, skills);  
     },
 
     getStudentsBySkills: async (skills) => {

@@ -8,12 +8,12 @@ import 'package:frontend/utils/routes_generator.dart';
 import 'package:frontend/widgets/address_search.dart';
 import 'package:frontend/models/place.dart';
 import 'package:intl/intl.dart';
+import 'package:frontend/screens/new_student/new_student.dart';
 import 'package:provider/provider.dart';
 
 class StudentForm extends StatefulWidget {
-  final Function(bool) changeStep;
 
-  const StudentForm({Key key, this.changeStep}) : super(key: key);
+  const StudentForm({Key key}) : super(key: key);
   @override
   _StudentFormState createState() => _StudentFormState();
 }
@@ -39,6 +39,7 @@ class _StudentFormState extends State<StudentForm> {
   @override
   Widget build(BuildContext context) {
     final student = Provider.of<Student>(context);
+    final formStepper = Provider.of<FormStepper>(context);
     final size = MediaQuery.of(context).size;
     return SizedBox(
       width: size.width * .9,
@@ -91,7 +92,9 @@ class _StudentFormState extends State<StudentForm> {
                       // Validate will return true if the form is valid, or false if
                       // the form is invalid.
                       if (_formKey.currentState.validate()) {
-                        widget.changeStep(false);
+                        setState(() {
+                          formStepper.goToNextFormStep();
+                        });
                       }
                     },
                     child: Text(

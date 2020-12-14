@@ -147,7 +147,7 @@ module.exports = {
     getPlacementsForSkills: async (skills) => {
 
         let placementData = await database('placements AS p')
-            .select(['p.id', 'p.position', 'p.employment_type', 'start_period', 'end_period', 'salary', 'description_role'])
+            .select(['p.id', 'p.position', 'p.employment_type', 'start_period', 'end_period', 'salary', 'description_role', 'employer_id'])
             .leftJoin('placement_has_skills AS phs', 'phs.placement_id', 'p.id')
             .leftJoin(database.raw('(select p.id, count(phs.skill_id) as count_total from placements p join placement_has_skills phs on p.id = phs.placement_id group by p.id) as p2'), 'p.id','p2.id') //here we count the total number of skills for each placement
             .whereIn('phs.skill_id', skills)
@@ -190,6 +190,7 @@ module.exports = {
                             end_period: placementData[p].end_period,
                             salary: placementData[p].salary,
                             description_role: placementData[p].description_role,
+                            employer_id: placementData[p].employer_id,
                             skills: [{
                                 id: resultTemp[i].skill_id,
                                 name: resultTemp[i].name,
@@ -224,9 +225,10 @@ module.exports = {
     },
 
     getPlacementsByEmployerId: (employerId) => {
-        return database('placements')
-            .select()
-            .where('employer_id', employerId);
+        return database('placements as p')
+            .select('p.id', 'p.position', 'p.start_period', 'p.end_period', 'p.salary', 'p.description_role', 'p.employer_id', 'p.employment_type', 't1.count_matches')
+            .leftJoin(database.raw("(select shp.placement_id, count(shp.student_id) as count_matches from student_has_placement as shp where shp.status='ACCEPTED' group by shp.placement_id) as t1"), 'p.id','t1.placement_id') //here we count the total number of matches for each placement
+            .where('p.employer_id', employerId);
     },
     
     deletePlacementById: (id) => {

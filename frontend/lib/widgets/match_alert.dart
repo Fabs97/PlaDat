@@ -3,6 +3,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/models/placement.dart';
 import 'package:frontend/models/student.dart';
+import 'package:frontend/screens/chat_screen/chat_screen.dart';
+import 'package:frontend/services/auth_service.dart';
+import 'package:frontend/utils/routes_generator.dart';
 
 class MatchAlert extends StatelessWidget {
   final Placement placement;
@@ -81,21 +84,6 @@ class MatchAlert extends StatelessWidget {
                   )
                 : Column(
                     children: [
-                      Container(
-                        // Image container
-                        decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: AssetImage("images/image0.jpg"),
-                              fit: BoxFit.fill,
-                            ),
-                            border: Border.all(
-                              color: Colors.grey,
-                              width: 2.0,
-                            ),
-                            borderRadius: BorderRadius.circular(10.0)),
-                        width: size.width * .2,
-                        height: size.width * .2,
-                      ),
                       Text(
                         'Google, Zurich',
                         maxLines: 20,
@@ -126,6 +114,31 @@ class MatchAlert extends StatelessWidget {
                     ),
                   ),
                 ],
+              ),
+            ),
+            SizedBox(
+              width: size.width * .8,
+              child: Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 16.0),
+                  child: RaisedButton(
+                    color: Colors.grey[600],
+                    child: Text(
+                      "Start a conversation",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    onPressed: () {
+                      Nav.navigatorKey.currentState
+                          .popAndPushNamed("/chat-screen",
+                              arguments: ChatScreenArguments(
+                                isStudent
+                                    ? object.id
+                                    : AuthService().loggedAccountInfo.id,
+                                placement.employerId,
+                              ));
+                    },
+                  ),
+                ),
               ),
             ),
           ],

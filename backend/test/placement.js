@@ -42,6 +42,7 @@ describe('placement API', () => {
                     response.body.should.have.property('id');
                     placementId = response.body.id;
                     response.body.should.have.property('position');
+                    response.body.should.have.property('employment_type');
                     response.body.should.have.property('start_period');
                     response.body.should.have.property('end_period');
                     response.body.should.have.property('salary');
@@ -171,7 +172,7 @@ describe('placement API', () => {
     })
 
     describe('GET /employer/:employerId/placements', () => {
-        it('should get an array of placements with a little details on them', (done) => {
+        it('should get an array of placements details belonging to a specific employer', (done) => {
             chai.request(server)
                 .get('/employers/last')
                 .end((err, response) => {
@@ -191,6 +192,7 @@ describe('placement API', () => {
                                 placements[i].should.have.property('salary');
                                 placements[i].should.have.property('description_role');
                                 placements[i].should.have.property('employer_id');
+                                placements[i].should.have.property('count_matches');
                             }
                             done();
                         })

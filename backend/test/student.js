@@ -23,11 +23,54 @@ describe('student API', () =>{
             country: "test country",
             city: "test city"
         },
+        education: [
+            {
+                majorId: 1,
+                degreeId: 1,
+                institutionId: 1,
+                description: "Test description",
+                period: "test period : September 2020 - October 2021"
+            },
+            {
+                majorId: 2,
+                degreeId: 1,
+                institutionId: 2,
+                description: "Test description 2",
+                period: "test period : September 2019 - October 2020"
+            }
+        ],
         skills: {
-            technicalSkills : [],
-            softSkills : []
-        }
-
+            technicalSkills : [ 
+                {
+                    "id": 1
+                },
+                {
+                    "id": 1
+                }
+            ],
+            softSkills : [ 
+                {
+                    "id": 17
+                },
+                {
+                    "id": 18
+                }
+            ]
+        },
+        work: [
+            {
+                companyName: "Test Company name",
+                position: "Test position",
+                description: "Test job description",
+                workPeriod: "Test date : September 2020 - October 2021"
+            },
+            {
+                companyName: "Test Company name 2",
+                position: "Test position 2",
+                description: "Test job description 2",
+                workPeriod: "Test date : September 2020 - October 2021 2"
+            },
+        ]
     };
 
     describe('POST /student', () =>{
@@ -48,8 +91,11 @@ describe('student API', () =>{
                     newStudent.should.have.property('email');
                     newStudent.should.have.property('description');
                     newStudent.should.have.property('phone');
-                    newStudent.should.have.property('skills');
                     newStudent.should.have.property('location');
+                    newStudent.should.have.property('education');
+                    newStudent.should.have.property('work');
+                    newStudent.should.have.property('skills');
+
                     newStudent.location.should.have.property('id');
                     newStudent.location.should.have.property('country');
                     newStudent.location.should.have.property('city');
@@ -73,7 +119,67 @@ describe('student API', () =>{
                         skills[i].should.have.property('skill');
                     }
 
-                    
+                    //work
+                    let work = newStudent.work;
+                    work.should.be.a('array');
+                    for(let i=0; i<work.length; i++){
+                        work[i].should.have.property('id');
+                        work[i].should.have.property('companyName');
+                        work[i].should.have.property('position');
+                        work[i].should.have.property('workPeriod');
+                        work[i].should.have.property('description');
+                    }
+
+                    //education
+                    let education = newStudent.education;
+                    education.should.be.a('array');
+                    for(let i=0; i<education.length; i++){
+                        education[i].should.have.property('studentId');
+                        education[i].should.have.property('educationId');
+                        education[i].should.have.property('description');
+                        education[i].should.have.property('period');
+                        education[i].should.have.property('majorId');
+                        education[i].should.have.property('degreeId');
+                        education[i].should.have.property('institutionId');
+                    }
+
+                    done();
+                })
+        })
+
+        it('should return a 500 server error when the skills are not able to be saved', (done) => {
+            
+            let saveInfo = testStudent.skills.technicalSkills[0].id;
+            testStudent.skills.technicalSkills[0].id = 1000000;
+
+            chai.request(server)
+                .post('/student')
+                .set('content-type', 'application/json')
+                .send(testStudent)
+                .end((err, response) => {
+                    response.should.have.status(500);
+                    response.should.have.property('text');
+
+                    testStudent.skills.technicalSkills[0].id = saveInfo;
+
+                    done();
+                })
+        })
+
+        it('should return a 500 server error when the education experiences are not saved', (done) => {
+            
+            let saveInfo = testStudent.education[0].degreeId;
+            testStudent.education[0].degreeId = 1000000;
+
+            chai.request(server)
+                .post('/student')
+                .set('content-type', 'application/json')
+                .send(testStudent)
+                .end((err, response) => {
+                    response.should.have.status(500);
+                    response.should.have.property('text');
+
+                    testStudent.education[0].degreeId = saveInfo;
                     done();
                 })
         })

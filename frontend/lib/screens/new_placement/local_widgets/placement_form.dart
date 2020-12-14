@@ -172,7 +172,7 @@ TextEditingController _controller= new TextEditingController();
         return null;
       },
       onChanged: (employmentType) => setState(() {
-        placement.employmentType = employmentType.string;
+        placement.employmentType = employmentType;
       }),
       items: [
         _createDropdownButtonEmploymentTypeItem(EmploymentType.FULLTIME),
@@ -224,9 +224,9 @@ TextEditingController _controller= new TextEditingController();
   Widget _createSalaryField(Placement placement) {
     return TextFormField(
       decoration: const InputDecoration(
-        labelText: 'Salary per month',
+        labelText: 'Yearly salary',
         hintText: 'Insert only digits 0-9',
-        prefixText: "€ ",
+        prefixText: "£ ",
       ),
       keyboardType: TextInputType.number,
       inputFormatters: [

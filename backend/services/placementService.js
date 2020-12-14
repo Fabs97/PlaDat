@@ -4,6 +4,7 @@ const skillService = require('./skillsService');
 const skillsService = require('./skillsService');
 const employerService = require('./employerService');
 const locationService = require('./locationService');
+const matchService = require('./matchService');
 const SuperError = require('../errors').SuperError;
 const ERR_INTERNAL_SERVER_ERROR = require('../errors').ERR_INTERNAL_SERVER_ERROR;
 
@@ -95,5 +96,4 @@ module.exports = {
     deletePlacementById: (id) => {
         return placementDAO.deletePlacementById(id);
     }
-
 };
