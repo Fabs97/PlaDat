@@ -61,6 +61,7 @@ class EducationExperiencesFormState extends State<EducationExperiencesForm> {
     final size = MediaQuery.of(context).size;
     final student = Provider.of<Student>(context);
     final formStepper = Provider.of<FormStepper>(context);
+    final List<EducationExperience> educations = [...student.educations, ..._experiences];
     return SizedBox(
       width: size.width * .9,
       height: size.height * .85,
@@ -81,12 +82,12 @@ class EducationExperiencesFormState extends State<EducationExperiencesForm> {
               : Container(),
           Flexible(
             flex: _creatingExperience ? 1 : 4,
-            child: _experiences.isNotEmpty
+            child: educations.isNotEmpty
                 ? ListView.builder(
-                    itemCount: _experiences.length,
+                    itemCount: educations.length,
                     itemBuilder: (_, index) {
                       return ExperienceCard(
-                        experience: _experiences[index],
+                        experience: educations[index],
                       );
                     },
                   )
@@ -99,7 +100,7 @@ class EducationExperiencesFormState extends State<EducationExperiencesForm> {
               onPressed: () {
                 if (!_creatingExperience ||
                     (_creatingExperience && _formKey.currentState.validate())) {
-                  student.educations = _experiences.cast<EducationExperience>();
+                  student.educations = educations.cast<EducationExperience>();
                   setState(() {
                     formStepper.goToNextFormStep();
                   });

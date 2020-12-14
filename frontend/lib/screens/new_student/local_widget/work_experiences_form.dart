@@ -29,6 +29,7 @@ class WorkExperiencesFormState extends State<WorkExperiencesForm> {
     final size = MediaQuery.of(context).size;
     final student = Provider.of<Student>(context);
     final formStepper = Provider.of<FormStepper>(context);
+    final List<WorkExperience> works = [...student.works, ..._experiences];
     return SizedBox(
       width: size.width * .9,
       height: size.height * .85,
@@ -49,12 +50,12 @@ class WorkExperiencesFormState extends State<WorkExperiencesForm> {
               : Container(),
           Flexible(
             flex: _creatingExperience ? 1 : 4,
-            child: _experiences.isNotEmpty
+            child: works.isNotEmpty
                 ? ListView.builder(
-                    itemCount: _experiences.length,
+                    itemCount: works.length,
                     itemBuilder: (_, index) {
                       return ExperienceCard(
-                        experience: _experiences[index],
+                        experience: works[index],
                       );
                     },
                   )
@@ -67,7 +68,7 @@ class WorkExperiencesFormState extends State<WorkExperiencesForm> {
               onPressed: () {
                 if (!_creatingExperience ||
                     (_creatingExperience && _formKey.currentState.validate())) {
-                  student.works = _experiences.cast<WorkExperience>();
+                  student.works = works.cast<WorkExperience>();
                   setState(() {
                     formStepper.goToNextFormStep();
                   });
