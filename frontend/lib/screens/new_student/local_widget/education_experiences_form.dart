@@ -98,10 +98,8 @@ class EducationExperiencesFormState extends State<EducationExperiencesForm> {
               color: Colors.grey[600],
               onPressed: () {
                 if (!_creatingExperience ||
-                    (_creatingExperience &&
-                        _formKey.currentState.validate())) {
-                  student.educations =
-                      _experiences.cast<EducationExperience>();
+                    (_creatingExperience && _formKey.currentState.validate())) {
+                  student.educations = _experiences.cast<EducationExperience>();
                   setState(() {
                     formStepper.goToNextFormStep();
                   });
@@ -244,6 +242,11 @@ class EducationExperiencesFormState extends State<EducationExperiencesForm> {
               : "Period of study",
         ),
         readOnly: true,
+        validator: (_) {
+          if (_newExperience.startPeriod.isAfter(DateTime.now()))
+            return "Starting date can't be in the future";
+          return null;
+        },
       ),
       TextFormField(
         decoration: const InputDecoration(

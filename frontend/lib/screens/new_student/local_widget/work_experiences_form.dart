@@ -187,6 +187,11 @@ class WorkExperiencesFormState extends State<WorkExperiencesForm> {
               : "Period of work",
         ),
         readOnly: true,
+        validator: (_) {
+          if (_newExperience.startPeriod.isAfter(DateTime.now()))
+            return "Starting date can't be in the future";
+          return null;
+        },
       ),
       TextFormField(
         decoration: const InputDecoration(
