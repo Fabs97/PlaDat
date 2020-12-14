@@ -22,7 +22,11 @@ self = module.exports = {
         try {
             studentProfile = await studentDAO.createStudentAccount(studentInfo);
 
-            if(studentInfo.skills && studentInfo.skills.length > 0) {
+            if(studentInfo.location){
+                studentProfile.location = await self.saveStudentLocation(studentProfile.id, studentInfo.location);
+            }
+
+            if(studentInfo.skills) {
                 studentProfile.skills = await self.saveStudentSkills(studentProfile.id, studentInfo.skills);
             }
             if(studentInfo.work && studentInfo.work.length > 0) {

@@ -29,14 +29,16 @@ describe('student API', () =>{
                 degreeId: 1,
                 institutionId: 1,
                 description: "Test description",
-                period: "test period : September 2020 - October 2021"
+                startPeriod: "2020-12-14",
+                endPeriod: "2020-12-14",
             },
             {
                 majorId: 2,
                 degreeId: 1,
                 institutionId: 2,
                 description: "Test description 2",
-                period: "test period : September 2019 - October 2020"
+                startPeriod: "2020-12-14",
+                endPeriod: "2020-12-14",
             }
         ],
         skills: {
@@ -62,13 +64,15 @@ describe('student API', () =>{
                 companyName: "Test Company name",
                 position: "Test position",
                 description: "Test job description",
-                workPeriod: "Test date : September 2020 - October 2021"
+                startPeriod: "2020-12-14",
+                endPeriod: "2020-12-14",
             },
             {
                 companyName: "Test Company name 2",
                 position: "Test position 2",
                 description: "Test job description 2",
-                workPeriod: "Test date : September 2020 - October 2021 2"
+                startPeriod: "2020-12-14",
+                endPeriod: "2020-12-14",
             },
         ]
     };
@@ -126,7 +130,8 @@ describe('student API', () =>{
                         work[i].should.have.property('id');
                         work[i].should.have.property('companyName');
                         work[i].should.have.property('position');
-                        work[i].should.have.property('workPeriod');
+                        work[i].should.have.property('startPeriod');
+                        work[i].should.have.property('endPeriod');
                         work[i].should.have.property('description');
                     }
 
@@ -137,7 +142,8 @@ describe('student API', () =>{
                         education[i].should.have.property('studentId');
                         education[i].should.have.property('educationId');
                         education[i].should.have.property('description');
-                        education[i].should.have.property('period');
+                        education[i].should.have.property('startPeriod');
+                        education[i].should.have.property('endPeriod');
                         education[i].should.have.property('majorId');
                         education[i].should.have.property('degreeId');
                         education[i].should.have.property('institutionId');

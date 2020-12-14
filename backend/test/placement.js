@@ -17,18 +17,25 @@ describe('placement API', () => {
     describe('POST /placement/new-placement', () => {
         let placementId;
         let locationId;
+        let employerId;
+
+        beforeEach(async () => {
+            employerId = (await chai.request(server)
+                .get('/employers/last')).body.id;
+        })
+
         it('should add a new placement to the db and return the details with the id', (done) => {
             chai.request(server)
                 .post('/placement/new-placement')
                 .set('content-type', 'application/json')
                 .send({
                         position: "test position",
-                        startDate: "test start date",
+                        startDate: "2020-12-14",
                         employmentType: "PART_TIME",
-                        endDate: "test end date",
+                        endDate: "2020-12-14",
                         salary: 0,
                         descriptionRole: "test description role", 
-                        employerID: 0,
+                        employerId: employerId,
                         location: {
                             country: "test placement country",
                             city: "test placement city"
