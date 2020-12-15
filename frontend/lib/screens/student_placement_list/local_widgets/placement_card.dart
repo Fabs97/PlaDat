@@ -1,6 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/models/placement.dart';
+import 'package:frontend/utils/routes_generator.dart';
 import 'package:frontend/widgets/card_skills_info.dart';
 
 class PlacementCard extends StatelessWidget {
@@ -84,12 +85,20 @@ class PlacementCard extends StatelessWidget {
                 "Company name",
                 style: textTheme.headline6,
               ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 0.0),
-                child: Text(
-                  "Find out more",
-                  style: TextStyle(
-                    decoration: TextDecoration.underline,
+              GestureDetector(
+                onTap: () {
+                  Nav.navigatorKey.currentState.pushNamed(
+                    "/profile",
+                    arguments: placement,
+                  );
+                },
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 0.0),
+                  child: Text(
+                    "Find out more",
+                    style: TextStyle(
+                      decoration: TextDecoration.underline,
+                    ),
                   ),
                 ),
               ),
@@ -128,7 +137,7 @@ class PlacementCard extends StatelessWidget {
             "Working period", "from $startMonth to $endMonth $endYear"),
         _createPlacementWorkingInfoBox(
             "Type", "${placement.employmentType.niceString}"),
-        _createPlacementWorkingInfoBox("Salary", "${placement.salary} €"),
+        _createPlacementWorkingInfoBox("Salary", "${placement.salary} £"),
       ],
     );
   }

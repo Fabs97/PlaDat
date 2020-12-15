@@ -50,7 +50,7 @@ class CustomDrawer {
           ),
           ListTile(
             title: Text("My profile"),
-            onTap: () => Nav.navigatorKey.currentState.pushNamed("/my-profile"),
+            onTap: () => Nav.navigatorKey.currentState.pushNamed("/profile", arguments: AuthService().loggedAccountInfo),
           ),
         ],
       ),

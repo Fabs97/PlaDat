@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/models/student.dart';
-import 'package:frontend/screens/profile/local_widgets/employer_profile.dart';
+import 'package:frontend/screens/profile/local_widgets/placement_profile.dart';
 import 'package:frontend/screens/profile/local_widgets/student_profile.dart';
-import 'package:frontend/services/auth_service.dart';
 import 'package:frontend/widgets/appbar.dart';
 import 'package:frontend/widgets/drawer.dart';
 
 class Profile extends StatelessWidget {
-  final dynamic profile = AuthService().loggedAccountInfo;
-  Profile({Key key}) : super(key: key);
+  final dynamic profile;
+  Profile({Key key, @required this.profile}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +37,7 @@ class Profile extends StatelessWidget {
                   padding: const EdgeInsets.all(8.0),
                   child: profile is Student
                       ? StudentProfile(student: profile)
-                      : EmployerProfile(employer: profile),
+                      : PlacementProfile(placement: profile),
                 ),
               ),
             ),

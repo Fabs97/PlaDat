@@ -9,6 +9,7 @@ import 'package:frontend/screens/profile/profile.dart';
 import 'package:frontend/screens/registration/registration.dart';
 import 'package:frontend/screens/student_matches_list/student_matches_file.dart';
 import 'package:frontend/screens/student_placement_list/student_placement_list.dart';
+import 'package:frontend/services/auth_service.dart';
 
 class RoutesGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -45,9 +46,10 @@ class RoutesGenerator {
         {
           return _createRoute(StudentMatches(), settings);
         }
-      case '/my-profile':
+      case '/profile':
         {
-          return _createRoute(Profile(), settings);
+          return _createRoute(
+              Profile(profile: settings.arguments), settings);
         }
       case '/chat-screen':
         {

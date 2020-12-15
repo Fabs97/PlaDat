@@ -3,8 +3,6 @@ import 'package:frontend/models/skill.dart';
 import 'package:frontend/models/student.dart';
 import 'package:frontend/screens/profile/local_widgets/education_container.dart';
 import 'package:frontend/screens/profile/local_widgets/work_container.dart';
-import 'package:frontend/widgets/card_skills_info.dart';
-import 'package:intl/intl.dart';
 
 class StudentProfile extends StatelessWidget {
   final Student student;
