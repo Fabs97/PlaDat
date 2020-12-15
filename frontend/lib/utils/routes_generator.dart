@@ -5,6 +5,7 @@ import 'package:frontend/screens/chat_screen/chat_screen.dart';
 import 'package:frontend/screens/company_student_list/company_student_list.dart';
 import 'package:frontend/screens/new_placement/new_placement.dart';
 import 'package:frontend/screens/new_student/new_student.dart';
+import 'package:frontend/screens/profile/profile.dart';
 import 'package:frontend/screens/registration/registration.dart';
 import 'package:frontend/screens/student_matches_list/student_matches_file.dart';
 import 'package:frontend/screens/student_placement_list/student_placement_list.dart';
@@ -43,6 +44,10 @@ class RoutesGenerator {
       case '/student-matches':
         {
           return _createRoute(StudentMatches(), settings);
+        }
+      case '/my-profile':
+        {
+          return _createRoute(Profile(), settings);
         }
       case '/chat-screen':
         {

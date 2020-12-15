@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/services/auth_service.dart';
 import 'package:frontend/utils/routes_generator.dart';
 
 class CustomDrawer {
@@ -46,6 +47,10 @@ class CustomDrawer {
             title: Text("My matches"),
             onTap: () =>
                 Nav.navigatorKey.currentState.pushNamed("/student-matches"),
+          ),
+          ListTile(
+            title: Text("My profile"),
+            onTap: () => Nav.navigatorKey.currentState.pushNamed("/my-profile"),
           ),
         ],
       ),
