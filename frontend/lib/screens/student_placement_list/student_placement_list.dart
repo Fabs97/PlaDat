@@ -6,6 +6,7 @@ import 'package:frontend/screens/student_placement_list/local_widgets/placement_
 import 'package:frontend/screens/student_placement_list/local_widgets/placement_filter.dart';
 import 'package:frontend/services/api_service.dart';
 import 'package:frontend/services/auth_service.dart';
+import 'package:frontend/utils/custom_theme.dart';
 import 'package:frontend/utils/routes_generator.dart';
 import 'package:frontend/widgets/appbar.dart';
 import 'package:frontend/widgets/drawer.dart';
@@ -61,8 +62,6 @@ class _PlacementCardsListState extends State<PlacementCardsList>
                     child: CircularProgressIndicator(),
                   )
                 : TinderSwapCard(
-                    // swipeUp: true,
-                    // swipeDown: true,
                     animDuration: 400,
                     orientation: AmassOrientation.BOTTOM,
                     totalNum: _filteredPlacements.length,
@@ -182,11 +181,13 @@ class _PlacementCardsListState extends State<PlacementCardsList>
                     Text(
                       "Filter",
                       style: TextStyle(
+                        color: CustomTheme().primaryColor,
                         fontSize: 20.0,
                       ),
                     ),
                     Spacer(),
-                    Icon(Icons.keyboard_arrow_up)
+                    Icon(Icons.keyboard_arrow_up,
+                        color: CustomTheme().primaryColor)
                   ],
                 ),
               ),
