@@ -68,6 +68,7 @@ class RoutesGenerator {
       return Scaffold(
         appBar: AppBar(
           title: Text("Error"),
+          elevation: 0,
         ),
         body: Center(
           child: Text("ERROR IN ROUTING"),

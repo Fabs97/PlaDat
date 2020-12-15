@@ -35,6 +35,7 @@ class _NewPlacementState extends State<NewPlacement> {
             "Create Placement",
             textAlign: TextAlign.center,
           ),
+          elevation: 0,
           leading: _firstStep
               ? null
               : IconButton(

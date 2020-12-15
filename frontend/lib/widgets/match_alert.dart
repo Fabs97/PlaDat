@@ -23,7 +23,7 @@ class MatchAlert extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         automaticallyImplyLeading: false,
-        elevation: 0.0,
+        elevation: 0,
         actions: [
           IconButton(
             icon: Icon(Icons.close),

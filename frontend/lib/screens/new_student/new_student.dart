@@ -52,6 +52,7 @@ class _NewStudentState extends State<NewStudent> {
               "Student Profile",
               textAlign: TextAlign.center,
             ),
+            elevation: 0,
             leading: stepper.step == 0
                 ? null
                 : IconButton(
