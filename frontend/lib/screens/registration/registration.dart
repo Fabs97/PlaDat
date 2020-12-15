@@ -3,11 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:frontend/models/user.dart';
 import 'package:frontend/services/api_service.dart';
-import 'package:frontend/services/api_services/registration_api_service.dart';
 import 'package:frontend/utils/routes_generator.dart';
 import 'package:frontend/widgets/appbar.dart';
 import 'package:frontend/widgets/drawer.dart';
-import 'package:http/http.dart';
 
 class Registration extends StatefulWidget {
   Registration({Key key}) : super(key: key);
