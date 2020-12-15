@@ -277,7 +277,7 @@ TextEditingController _controller= new TextEditingController();
       decoration: const InputDecoration(
         hintText: 'Address',
       ),
-      //initialValue: _controller.text ?? ' ',
+      initialValue: placement.location?.description ?? ' ',
       onTap: () async {
         final Place result = await showSearch(
           context: context,

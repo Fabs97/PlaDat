@@ -227,6 +227,7 @@ class _StudentFormState extends State<StudentForm> {
       decoration: const InputDecoration(
         hintText: 'Address',
       ),
+      initialValue: student.location?.description ?? '',
       onTap: () async {
         final Place result = await showSearch(
           context: context,
