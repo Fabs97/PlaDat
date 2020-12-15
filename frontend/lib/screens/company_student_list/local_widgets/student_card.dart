@@ -1,6 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/models/student.dart';
+import 'package:frontend/utils/custom_theme.dart';
 import 'package:frontend/widgets/card_skills_info.dart';
 
 class StudentCard extends StatelessWidget {
@@ -11,10 +12,6 @@ class StudentCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Card(
-      shadowColor: Colors.black,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10.0),
-      ),
       child: Padding(
         padding: const EdgeInsets.all(10.0),
         child: Column(
@@ -36,14 +33,20 @@ class StudentCard extends StatelessWidget {
               flex: 1,
             ),
             Expanded(
-              child: CardSkillsChips(
-                  title: "Technical skills",
-                  skills: student.skills["TECH"] ?? []),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                child: CardSkillsChips(
+                    title: "Technical skills",
+                    skills: student.skills["TECH"] ?? []),
+              ),
               flex: 1,
             ),
             Expanded(
-              child: CardSkillsChips(
-                  title: "Soft skills", skills: student.skills["SOFT"] ?? []),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                child: CardSkillsChips(
+                    title: "Soft skills", skills: student.skills["SOFT"] ?? []),
+              ),
               flex: 1,
             ),
           ],
@@ -71,17 +74,14 @@ class StudentCard extends StatelessWidget {
                     size.height * .1,
                   ),
                 ),
-                child: AutoSizeText(
-                  "${student.name} ${student.surname}",
-                  style: textTheme.headline4.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+                child: AutoSizeText("${student.name} ${student.surname}",
+                    style: TextStyle(
+                        color: CustomTheme().textColor, fontSize: 20)),
               ),
               Text(
                 "Find out more",
                 style: TextStyle(
-                  decoration: TextDecoration.underline,
+                  color: CustomTheme().secondaryColor,
                 ),
               ),
             ],
@@ -92,7 +92,10 @@ class StudentCard extends StatelessWidget {
   }
 
   Widget _createStudentDescription(String description) {
-    return Text(description);
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+      child: Text(description),
+    );
   }
 
   Widget _createStudentInfo() {
@@ -114,7 +117,7 @@ class StudentCard extends StatelessWidget {
       ),
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.grey,
+          color: CustomTheme().backgroundColor,
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,

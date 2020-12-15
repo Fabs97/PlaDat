@@ -4,6 +4,7 @@ import 'package:frontend/models/placement.dart';
 import 'package:frontend/models/student.dart';
 import 'package:frontend/screens/company_student_list/local_widgets/student_card.dart';
 import 'package:frontend/services/api_service.dart';
+import 'package:frontend/utils/custom_theme.dart';
 import 'package:frontend/utils/routes_generator.dart';
 import 'package:frontend/widgets/appbar.dart';
 import 'package:frontend/models/match.dart';
@@ -73,11 +74,17 @@ class _StudentCardsListState extends State<StudentCardsList> {
                     child: CircularProgressIndicator(),
                   )
                 : DropdownButton<Placement>(
+                    icon: Icon(Icons.arrow_drop_down,
+                        color: CustomTheme().primaryColor),
                     value: _placement,
                     items: _placements?.map((placement) {
                           return DropdownMenuItem<Placement>(
                             value: placement,
-                            child: Text('Placement #${placement.id}'),
+                            child: Text(
+                              'Placement #${placement.id}',
+                              style:
+                                  TextStyle(color: CustomTheme().primaryColor),
+                            ),
                           );
                         })?.toList() ??
                         [],
