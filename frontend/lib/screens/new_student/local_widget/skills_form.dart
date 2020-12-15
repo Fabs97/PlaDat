@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:frontend/utils/routes_generator.dart';
 import 'package:frontend/models/student.dart';
-import 'package:frontend/widgets/otherskills.dart';
 import 'package:frontend/widgets/skillsbox.dart';
 import 'package:frontend/services/api_service.dart';
 import 'package:provider/provider.dart';
@@ -15,8 +15,7 @@ class SkillsForm extends StatelessWidget {
     SkillBox(
       title: "Soft skills",
       skillsType: "SOFT",
-    ),
-    OtherSkills()
+    )
   ];
 
   @override
@@ -64,22 +63,24 @@ class SkillsForm extends StatelessWidget {
   void _saveStudentToDB(BuildContext context, Student student) async {
     student.skills = {
       "technicalSkills": skillsBoxes[0].chosenSkills,
-      "softSkills": skillsBoxes[1].chosenSkills,
-      "otherSkills": skillsBoxes[2].otherSkills,
+      "softSkills": skillsBoxes[1].chosenSkills
     };
 
-    Student newStudent = await APIService.route(
+    dynamic response = await APIService.route(
       ENDPOINTS.Student,
       "/student",
       body: student,
     );
 
-    if (newStudent != null) {
-      dynamic response = await APIService.route(
-          ENDPOINTS.Student, "/student/id/skills",
-          urlArgs: newStudent.id, body: student.skills);
-      print(response.toString());
+    String message;
+    if (response is Student) {
+      message = "Profile saved successfully";
+      Nav.navigatorKey.currentState.popAndPushNamed("/home");
+    } else if (response is String) {
+      message = response;
+    } else {
+      message = "Something really wrong happened";
     }
-    Nav.navigatorKey.currentState.popAndPushNamed("/home");
+    Fluttertoast.showToast(msg: message);
   }
 }

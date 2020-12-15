@@ -27,11 +27,12 @@ describe('recommendation API', () => {
                             for(let i = 0; i < placements.length; i++) {
                                 placements[i].should.have.property('id');
                                 placements[i].should.have.property('position');
-                                placements[i].should.have.property('working_hours');
+                                placements[i].should.have.property('employment_type');
                                 placements[i].should.have.property('start_period');
                                 placements[i].should.have.property('end_period');
                                 placements[i].should.have.property('salary');
                                 placements[i].should.have.property('description_role');
+                                placements[i].should.have.property('employer_id');
                                 placements[i].should.have.property('skills');
                                 let skills = placements[i].skills;
                                 for(j = 0; j < skills.length; j++){
@@ -63,15 +64,17 @@ describe('recommendation API', () => {
                                 students[i].should.have.property('id');
                                 students[i].should.have.property('name');
                                 students[i].should.have.property('surname');
-                                //students[i].should.have.property('email');
-                                //students[i].should.have.property('description');
-                                //students[i].should.have.property('phone');
-                                //students[i].should.have.property('skills');
+                                students[i].should.have.property('email');
+                                students[i].should.have.property('description');
+                            
+                                students[i].should.have.property('skills');
                                 let skills = students[i].skills;
+                                skills.should.be.a('array');
                                 for(j = 0; j < skills.length; j++){
-                                    skills[i].should.have.property('id');
-                                    skills[i].should.have.property('name');
-                                    skills[i].should.have.property('type');
+                                    skills[j].should.be.a('object');
+                                    skills[j].should.have.property('id');
+                                    skills[j].should.have.property('name');
+                                    skills[j].should.have.property('type');
                                 }
                             }
                             done();

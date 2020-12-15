@@ -1,5 +1,6 @@
 //You need to import the DB instance in order to use it and make requests
 const database = require('../DB/connection');
+const { setStudentLocation } = require('./studentDAO');
 const SuperError = require('../errors').SuperError;
 const ERR_INTERNAL_SERVER_ERROR = require('../errors').ERR_INTERNAL_SERVER_ERROR;
 
@@ -8,18 +9,18 @@ module.exports = {
     // This creates a new placement in the database 
     createNewPlacement: async (details) => {
 
-        const workingHs = parseInt(details.workingHours);
         const salary = parseInt(details.salary);
         let result = await database('placements')
             .returning()
             .insert({
                 position: details.position,
-                working_hours: workingHs,
+                employment_type: details.employmentType,
                 start_period: details.startPeriod,
                 end_period: details.endPeriod, 
                 salary: salary,
-                description_role: details.descriptionRole
-            }, ['id', 'position', 'working_hours', 'start_period', 'end_period', 'salary', 'description_role'])
+                description_role: details.descriptionRole,
+                employer_id: details.employerId
+            }, ['id', 'position', 'employment_type', 'start_period', 'end_period', 'salary', 'description_role', 'employer_id'])
             .catch(error => {
                 if(error) {
                     throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There has been a problem saving your placement. Please try again')
@@ -36,7 +37,7 @@ module.exports = {
         let result = await database('placements')
             .select('id',
                 'position',
-                'working_hours',
+                'employment_type',
                 'start_period',
                 'end_period',
                 'salary',
@@ -147,7 +148,7 @@ module.exports = {
     getPlacementsForSkills: async (skills) => {
 
         let placementData = await database('placements AS p')
-            .select(['p.id', 'p.position', 'p.working_hours', 'start_period', 'end_period', 'salary', 'description_role'])
+            .select(['p.id', 'p.position', 'p.employment_type', 'start_period', 'end_period', 'salary', 'description_role', 'employer_id'])
             .leftJoin('placement_has_skills AS phs', 'phs.placement_id', 'p.id')
             .leftJoin(database.raw('(select p.id, count(phs.skill_id) as count_total from placements p join placement_has_skills phs on p.id = phs.placement_id group by p.id) as p2'), 'p.id','p2.id') //here we count the total number of skills for each placement
             .whereIn('phs.skill_id', skills)
@@ -184,12 +185,13 @@ module.exports = {
                         result.push({
                             id: placementData[p].id,
                             position: placementData[p].position,
-                            working_hours: placementData[p].working_hours,
+                            employment_type: placementData[p].employment_type,
                             start_period: placementData[p].start_period,
                             end_period: placementData[p].end_period,
                             end_period: placementData[p].end_period,
                             salary: placementData[p].salary,
                             description_role: placementData[p].description_role,
+                            employer_id: placementData[p].employer_id,
                             skills: [{
                                 id: resultTemp[i].skill_id,
                                 name: resultTemp[i].name,
@@ -224,15 +226,29 @@ module.exports = {
     },
 
     getPlacementsByEmployerId: (employerId) => {
-        return database('placements')
-            .select()
-            .where('employer_id', employerId);
+        return database('placements as p')
+            .select('p.id', 'p.position', 'p.start_period', 'p.end_period', 'p.salary', 'p.description_role', 'p.employer_id', 'p.employment_type', 't1.count_matches')
+            .leftJoin(database.raw("(select shp.placement_id, count(shp.student_id) as count_matches from student_has_placement as shp where shp.status='ACCEPTED' group by shp.placement_id) as t1"), 'p.id','t1.placement_id') //here we count the total number of matches for each placement
+            .where('p.employer_id', employerId);
     },
     
     deletePlacementById: (id) => {
         return database('placements')
             .where('id', id)
             .del();
-    }
+    },
+
+    setPlacementLocation: async (placementId, locationId) => {
+        let result = await database('placements')
+            .returning()
+            .where('id', placementId)
+            .update('location_id', locationId)
+            .catch(error => {
+                if(error) {
+                    throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There has been a problem setting your student profile location. Please try again')
+                }
+            });
+        return result;
+    },
 
 }; 
