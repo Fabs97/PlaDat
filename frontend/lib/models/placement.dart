@@ -5,6 +5,7 @@ import 'package:frontend/models/institution.dart';
 import 'package:frontend/models/major.dart';
 import 'package:frontend/models/place.dart';
 import 'package:frontend/models/skill.dart';
+import 'package:frontend/services/auth_service.dart';
 
 enum EmploymentType { FULLTIME, PARTTIME, INTERNSHIP, CONTRACT }
 
@@ -115,8 +116,8 @@ class Placement extends ChangeNotifier {
       "skills": this.skills.map((key, value) =>
           MapEntry(key, value.map((e) => e.toJsonMap()).toList())),
       "location": this.location?.toJsonMap() ?? null,
-      "employerId": this.employerId,
-      "employerName": this.employerName,
+      "employerId": this.employerId ?? AuthService().loggedAccountInfo.id,
+      "employerName": this.employerName ?? AuthService().loggedAccountInfo.name,
       "countMatches": this.countMatches,
     });
   }
