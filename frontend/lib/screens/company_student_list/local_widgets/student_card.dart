@@ -11,6 +11,7 @@ class StudentCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final themeData = Theme.of(context);
     return Card(
       shadowColor: Color(0xffced5ff),
       shape: RoundedRectangleBorder(
@@ -27,35 +28,20 @@ class StudentCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.max,
           children: [
-            Expanded(
-              child: _createStudentTitle(size, Theme.of(context).textTheme),
-              flex: 2,
+            _createStudentTitle(size, themeData.textTheme),
+            _createStudentDescription(
+                "This is a description about me...", themeData),
+            _createStudentInfo(themeData),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: CardSkillsChips(
+                  title: "Technical skills",
+                  skills: student.skills["TECH"] ?? []),
             ),
-            Expanded(
-              child: _createStudentDescription(
-                  "This is a description about me..."),
-              flex: 1,
-            ),
-            Expanded(
-              child: _createStudentInfo(),
-              flex: 1,
-            ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                child: CardSkillsChips(
-                    title: "Technical skills",
-                    skills: student.skills["TECH"] ?? []),
-              ),
-              flex: 1,
-            ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                child: CardSkillsChips(
-                    title: "Soft skills", skills: student.skills["SOFT"] ?? []),
-              ),
-              flex: 1,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: CardSkillsChips(
+                  title: "Soft skills", skills: student.skills["SOFT"] ?? []),
             ),
           ],
         ),
@@ -72,7 +58,7 @@ class StudentCard extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               ConstrainedBox(
@@ -82,14 +68,23 @@ class StudentCard extends StatelessWidget {
                     size.height * .1,
                   ),
                 ),
-                child: AutoSizeText("${student.name} ${student.surname}",
-                    style: TextStyle(
-                        color: CustomTheme().textColor, fontSize: 20)),
+                child: AutoSizeText(
+                  "${student.name} ${student.surname}",
+                  style: textTheme.headline5.copyWith(
+                    color: CustomTheme().textColor,
+                    fontWeight: FontWeight.w700,
+                    fontSize: 20,
+                  ),
+                ),
               ),
-              Text(
-                "Find out more",
-                style: TextStyle(
-                  color: CustomTheme().secondaryColor,
+              Padding(
+                padding: const EdgeInsets.only(top: 8.0),
+                child: Text(
+                  "Find out more",
+                  style: textTheme.subtitle1.copyWith(
+                    color: CustomTheme().secondaryColor,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               ),
             ],
@@ -99,48 +94,65 @@ class StudentCard extends StatelessWidget {
     );
   }
 
-  Widget _createStudentDescription(String description) {
+  Widget _createStudentDescription(String description, ThemeData themeData) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20.0),
-      child: Text(description),
-    );
-  }
-
-  Widget _createStudentInfo() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisSize: MainAxisSize.max,
-      children: [
-        _createStudentInfoBox("School of Life", "Jan 2020 - July 2022"),
-        _createStudentInfoBox("School of Life", "Jan 2020 - July 2022"),
-      ],
-    );
-  }
-
-  Widget _createStudentInfoBox(String title, String subTitle) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-        vertical: 10.0,
+      child: Text(
+        description,
+        style:
+            themeData.textTheme.subtitle1.copyWith(fontWeight: FontWeight.w400),
       ),
+    );
+  }
+
+  Widget _createStudentInfo(ThemeData themeData) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 9.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          _createStudentInfoBox(
+              "School of Life", "Jan 2020 - July 2022", themeData),
+          _createStudentInfoBox(
+              "School of Life", "Jan 2020 - July 2022", themeData),
+        ],
+      ),
+    );
+  }
+
+  Widget _createStudentInfoBox(
+      String title, String subTitle, ThemeData themeData) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
       child: Container(
         decoration: BoxDecoration(
           color: CustomTheme().backgroundColor,
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Center(
+            Padding(
+              padding: const EdgeInsets.fromLTRB(10.0, 4.0, 10.0, 0.0),
               child: Text(
                 title,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
+                textAlign: TextAlign.start,
+                style: themeData.textTheme.subtitle1.copyWith(
+                  fontWeight: FontWeight.w500,
                 ),
               ),
             ),
-            Center(
-              child: Text(subTitle),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(10.0, 1.0, 10.0, 8.0),
+              child: Text(
+                subTitle,
+                style: themeData.textTheme.caption.copyWith(
+                  fontStyle: FontStyle.italic,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
             ),
           ],
         ),

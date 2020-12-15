@@ -21,6 +21,7 @@ class MatchAlert extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.grey[850],
       appBar: AppBar(
+        centerTitle: true,
         backgroundColor: Colors.transparent,
         automaticallyImplyLeading: false,
         elevation: 0,
@@ -118,26 +119,26 @@ class MatchAlert extends StatelessWidget {
             ),
             SizedBox(
               width: size.width * .8,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 16.0),
-                  child: RaisedButton(
-                    child: Text(
-                      "Start a conversation",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    onPressed: () {
-                      Nav.navigatorKey.currentState
-                          .popAndPushNamed("/chat-screen",
-                              arguments: ChatScreenArguments(
-                                isStudent
-                                    ? object.id
-                                    : AuthService().loggedAccountInfo.id,
-                                placement.employerId,
-                              ));
-                    },
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 16.0),
+                child: RaisedButton(
+                  child: Text(
+                    "Start a conversation",
+                    style: TextStyle(color: Colors.white),
                   ),
+                  onPressed: () {
+                    Nav.navigatorKey.currentState
+                        .popAndPushNamed("/chat-screen",
+                            arguments: ChatScreenArguments(
+                              isStudent
+                                  ? object.id
+                                  : AuthService().loggedAccountInfo.id,
+                              placement.employerId,
+                            ));
+                  },
                 ),
               ),
+            ),
           ],
         ),
       ),

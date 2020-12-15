@@ -25,7 +25,10 @@ class TinderButton extends StatelessWidget {
           : CustomTheme().primaryColor,
       textColor: _discardButton ? CustomTheme().accentTextColor : Colors.white,
       elevation: 5.0,
-      child: Text(_label),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 28.0, vertical: 8.0),
+        child: Text(_label),
+      ),
       onPressed: () {
         _discardButton
             ? _cardController.triggerLeft()

@@ -48,6 +48,7 @@ class _NewStudentState extends State<NewStudent> {
         final stepper = context.watch<FormStepper>();
         return Scaffold(
           appBar: AppBar(
+            centerTitle: true,
             title: Text(
               "Student Profile",
               textAlign: TextAlign.center,

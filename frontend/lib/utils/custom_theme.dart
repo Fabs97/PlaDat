@@ -26,6 +26,32 @@ class CustomTheme {
   ThemeData get appThemeData => ThemeData(
         primaryColor: _backgroundColor,
         accentColor: _accentColor,
+        textTheme: TextTheme(
+          headline6: GoogleFonts.roboto(
+            color: _textColor,
+          ),
+          subtitle1: GoogleFonts.roboto(
+            color: _textColor,
+          ),
+          subtitle2: GoogleFonts.roboto(
+            color: _textColor,
+          ),
+          bodyText1: GoogleFonts.roboto(
+            color: _textColor,
+          ),
+          bodyText2: GoogleFonts.roboto(
+            color: _textColor,
+          ),
+          button: GoogleFonts.roboto(
+            color: _textColor,
+            fontSize: 16.0,
+            fontStyle: FontStyle.normal,
+            fontWeight: FontWeight.w400
+          ),
+          caption: GoogleFonts.roboto(
+            color: _textColor,
+          ),
+        ),
         appBarTheme: AppBarTheme(
           iconTheme: IconThemeData(color: _primaryColor),
           textTheme: TextTheme(
@@ -57,7 +83,8 @@ class CustomTheme {
           disabledColor: Color(0xff7e7e7e),
         ),
         elevatedButtonTheme: ElevatedButtonThemeData(
-            style: TextButton.styleFrom(primary: Colors.white)),
+          style: TextButton.styleFrom(primary: Colors.white),
+        ),
         buttonColor: _primaryColor,
         // cardTheme: CardTheme(
         //   shadowColor: Color(0xffced5ff),

@@ -144,11 +144,11 @@ class _StudentCardsListState extends State<StudentCardsList> {
                   ),
           ),
           Container(
-            width: size.width * .9,
+            width: size.width * .855,
             height: size.height * .05,
             child: Row(
               mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 TinderButton(

@@ -67,6 +67,7 @@ class RoutesGenerator {
     return MaterialPageRoute(builder: (_) {
       return Scaffold(
         appBar: AppBar(
+          centerTitle: true,
           title: Text("Error"),
           elevation: 0,
         ),

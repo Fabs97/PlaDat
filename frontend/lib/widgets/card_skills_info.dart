@@ -10,24 +10,30 @@ class CardSkillsChips extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.max,
       children: [
-        Text(
-          title,
-          style: TextStyle(
-            color: CustomTheme().primaryColor,
-            fontWeight: FontWeight.bold,
+        Padding(
+          padding: const EdgeInsets.only(bottom: 10.0),
+          child: Text(
+            title,
+            style: textTheme.headline6.copyWith(
+              color: CustomTheme().primaryColor,
+              fontWeight: FontWeight.w700,
+            ),
           ),
         ),
         Wrap(
           direction: Axis.horizontal,
-          spacing: 10.0,
-          runSpacing: 10.0,
+          spacing: 8.0,
+          runSpacing: 8.0,
           children: skills.map((skill) {
             return Chip(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 7.0, vertical: 3.0),
               label: Text(skill.name),
             );
           }).toList(),
