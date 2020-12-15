@@ -140,7 +140,10 @@ class StudentCard extends StatelessWidget {
                 title,
                 textAlign: TextAlign.start,
                 style: themeData.textTheme.subtitle1.copyWith(
-                  fontWeight: FontWeight.w500,
+                  fontWeight: FontWeight.w800,
+                  color: Color(0xff2c2c2c),
+                  fontSize: 16.0,
+                  fontStyle: FontStyle.normal
                 ),
               ),
             ),
