@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/models/skill.dart';
+import 'package:frontend/utils/custom_theme.dart';
 
 class CardSkillsChips extends StatelessWidget {
   final String title;
@@ -17,6 +18,7 @@ class CardSkillsChips extends StatelessWidget {
         Text(
           title,
           style: TextStyle(
+            color: CustomTheme().primaryColor,
             fontWeight: FontWeight.bold,
           ),
         ),

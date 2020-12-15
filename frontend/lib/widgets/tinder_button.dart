@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_tindercard/flutter_tindercard.dart';
+import 'package:frontend/utils/custom_theme.dart';
 
 class TinderButton extends StatelessWidget {
   String _label;
@@ -19,7 +20,10 @@ class TinderButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RaisedButton(
-      textColor: Colors.white,
+      color: _discardButton
+          ? CustomTheme().accentColor
+          : CustomTheme().primaryColor,
+      textColor: _discardButton ? CustomTheme().accentTextColor : Colors.white,
       elevation: 5.0,
       child: Text(_label),
       onPressed: () {
