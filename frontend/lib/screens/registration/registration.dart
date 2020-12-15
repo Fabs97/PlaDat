@@ -4,6 +4,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:frontend/models/user.dart';
 import 'package:frontend/services/api_service.dart';
 import 'package:frontend/services/api_services/registration_api_service.dart';
+import 'package:frontend/utils/custom_theme.dart';
 import 'package:frontend/utils/routes_generator.dart';
 import 'package:frontend/widgets/appbar.dart';
 import 'package:frontend/widgets/drawer.dart';
@@ -96,10 +97,11 @@ class _RegistrationState extends State<Registration> {
             SizedBox(
               width: screenSize.width * .8,
               child: Container(
-                decoration:
-                    BoxDecoration(borderRadius: BorderRadius.circular(20.0)),
                 child: RaisedButton(
-                  child: Text("Register"),
+                  child: Text(
+                    "Register",
+                    style: TextStyle(color: Colors.white),
+                  ),
                   onPressed: _registerToPlaDat,
                 ),
               ),
@@ -138,8 +140,10 @@ class _RegistrationState extends State<Registration> {
       decoration: InputDecoration(
         labelText: "Password",
         suffixIcon: IconButton(
-          icon:
-              Icon(_obscurePassword ? Icons.visibility_off : Icons.visibility),
+          icon: Icon(
+            _obscurePassword ? Icons.visibility_off : Icons.visibility,
+            color: CustomTheme().primaryColor,
+          ),
           onPressed: () {
             setState(() {
               _obscurePassword = !_obscurePassword;
@@ -167,6 +171,7 @@ class _RegistrationState extends State<Registration> {
         suffixIcon: IconButton(
           icon: Icon(
               _obscureSecondPassword ? Icons.visibility_off : Icons.visibility),
+          color: CustomTheme().primaryColor,
           onPressed: () {
             setState(() {
               _obscureSecondPassword = !_obscureSecondPassword;
@@ -222,6 +227,7 @@ class _RegistrationState extends State<Registration> {
             mainAxisSize: MainAxisSize.max,
             children: [
               RadioListTile<AccountType>(
+                activeColor: CustomTheme().secondaryColor,
                 title: const Text("Employer"),
                 value: AccountType.Employer,
                 groupValue: _accountType,
@@ -229,6 +235,7 @@ class _RegistrationState extends State<Registration> {
                     setState(() => _accountType = accountType),
               ),
               RadioListTile<AccountType>(
+                activeColor: CustomTheme().secondaryColor,
                 title: const Text("Student"),
                 value: AccountType.Student,
                 groupValue: _accountType,
