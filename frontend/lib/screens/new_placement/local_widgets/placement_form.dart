@@ -9,6 +9,7 @@ import 'package:frontend/models/placement.dart';
 import 'package:frontend/screens/new_placement/local_widgets/dropdown.dart';
 import 'package:frontend/services/api_service.dart';
 import 'package:frontend/services/api_services/majors_api_service.dart';
+import 'package:frontend/utils/custom_theme.dart';
 import 'package:frontend/utils/routes_generator.dart';
 import 'package:frontend/widgets/address_search.dart';
 import 'package:intl/intl.dart';
@@ -34,7 +35,7 @@ class _PlacementFormState extends State<PlacementForm> {
     title: 'Preferred Institutions',
   );
 
-TextEditingController _controller= new TextEditingController();
+  TextEditingController _controller = new TextEditingController();
   @override
   void initState() {
     APIService.route(ENDPOINTS.Majors, "/majors").then((majors) {
@@ -61,7 +62,6 @@ TextEditingController _controller= new TextEditingController();
       );
     });
 
-
     super.initState();
   }
 
@@ -85,14 +85,7 @@ TextEditingController _controller= new TextEditingController();
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10.0),
                     color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black,
-                        blurRadius: 2.0,
-                        spreadRadius: 0.0,
-                        offset: Offset(2.0, 2.0),
-                      ),
-                    ],
+                    boxShadow: [CustomTheme().boxShadow],
                   ),
                   child: Padding(
                     padding: EdgeInsets.symmetric(
@@ -269,7 +262,7 @@ TextEditingController _controller= new TextEditingController();
     );
   }
 
- Widget _cretaeautocompleteField(Placement placement) {
+  Widget _cretaeautocompleteField(Placement placement) {
     return TextFormField(
       controller: _controller,
       readOnly: true,
@@ -290,7 +283,7 @@ TextEditingController _controller= new TextEditingController();
             List<String> splits = result.description.split(",");
             result.country = splits[splits.length - 1];
             result.city = splits[splits.length - 2];
-            placement.location=result;
+            placement.location = result;
           });
         }
       },
@@ -303,5 +296,4 @@ TextEditingController _controller= new TextEditingController();
       },
     );
   }
-
 }

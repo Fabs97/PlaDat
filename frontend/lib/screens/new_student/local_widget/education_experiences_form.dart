@@ -7,6 +7,7 @@ import 'package:frontend/models/student.dart';
 import 'package:frontend/screens/new_student/local_widget/experience_card.dart';
 import 'package:frontend/screens/new_student/new_student.dart';
 import 'package:frontend/services/api_service.dart';
+import 'package:frontend/utils/custom_theme.dart';
 import 'package:intl/intl.dart';
 import 'package:date_range_picker/date_range_picker.dart' as DateRagePicker;
 import 'package:provider/provider.dart';
@@ -155,14 +156,7 @@ class EducationExperiencesFormState extends State<EducationExperiencesForm> {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10.0),
           color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black,
-              blurRadius: 2.0,
-              spreadRadius: 0.0,
-              offset: Offset(2.0, 2.0),
-            ),
-          ],
+          boxShadow: [CustomTheme().boxShadow],
         ),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15.0),

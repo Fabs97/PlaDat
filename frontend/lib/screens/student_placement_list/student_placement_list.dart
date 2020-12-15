@@ -128,14 +128,7 @@ class _PlacementCardsListState extends State<PlacementCardsList>
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(5.0),
           color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black,
-              blurRadius: 2.0,
-              spreadRadius: 0.0,
-              offset: Offset(2.0, 2.0),
-            )
-          ],
+          boxShadow: [CustomTheme().boxShadow],
         ),
         child: SmartSelect<PlacementFilter>.multiple(
           value: _filtersChosen,

@@ -3,6 +3,7 @@ import 'package:frontend/models/student.dart';
 import 'package:frontend/models/work_experience.dart';
 import 'package:frontend/screens/new_student/local_widget/experience_card.dart';
 import 'package:frontend/screens/new_student/new_student.dart';
+import 'package:frontend/utils/custom_theme.dart';
 import 'package:intl/intl.dart';
 import 'package:date_range_picker/date_range_picker.dart' as DateRagePicker;
 import 'package:provider/provider.dart';
@@ -29,7 +30,10 @@ class WorkExperiencesFormState extends State<WorkExperiencesForm> {
     final size = MediaQuery.of(context).size;
     final student = Provider.of<Student>(context);
     final formStepper = Provider.of<FormStepper>(context);
-    final List<WorkExperience> works = [...student.works ?? [], ..._experiences].toSet().toList().cast<WorkExperience>();
+    final List<WorkExperience> works = [...student.works ?? [], ..._experiences]
+        .toSet()
+        .toList()
+        .cast<WorkExperience>();
     return SizedBox(
       width: size.width * .9,
       height: size.height * .85,
@@ -120,14 +124,7 @@ class WorkExperiencesFormState extends State<WorkExperiencesForm> {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10.0),
           color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black,
-              blurRadius: 2.0,
-              spreadRadius: 0.0,
-              offset: Offset(2.0, 2.0),
-            ),
-          ],
+          boxShadow: [CustomTheme().boxShadow],
         ),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15.0),

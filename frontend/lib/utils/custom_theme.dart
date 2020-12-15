@@ -8,6 +8,12 @@ class CustomTheme {
   final _textColor = Color(0xff4c4c4c);
   final _accentColor = Color(0xffffd9cf);
   final _accentTextColor = Color(0xffe23300);
+  final _boxShadow = BoxShadow(
+    color: Color.fromRGBO(23, 21, 21, .03),
+    blurRadius: 2.0,
+    spreadRadius: 2.0,
+    offset: Offset(0.0, 7.0),
+  );
 
   Color get backgroundColor => this._backgroundColor;
   Color get primaryColor => this._primaryColor;
@@ -15,6 +21,7 @@ class CustomTheme {
   Color get textColor => this._textColor;
   Color get accentColor => this._accentColor;
   Color get accentTextColor => this._accentTextColor;
+  BoxShadow get boxShadow => this._boxShadow;
 
   ThemeData get appThemeData => ThemeData(
         primaryColor: _backgroundColor,
