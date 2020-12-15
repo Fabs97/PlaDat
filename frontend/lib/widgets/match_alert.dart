@@ -118,7 +118,6 @@ class MatchAlert extends StatelessWidget {
             ),
             SizedBox(
               width: size.width * .8,
-              child: Expanded(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 16.0),
                   child: RaisedButton(
@@ -139,7 +138,6 @@ class MatchAlert extends StatelessWidget {
                   ),
                 ),
               ),
-            ),
           ],
         ),
       ),
