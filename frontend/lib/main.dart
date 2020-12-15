@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       navigatorKey: Nav.navigatorKey,
-      initialRoute: "/home",
+      initialRoute: "/login",
       onGenerateRoute: RoutesGenerator.generateRoute,
     );
   }

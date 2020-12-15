@@ -27,10 +27,10 @@ extension AccountTypeExtension on AccountType {
 }
 
 class User {
-  final int id;
-  final String email;
-  final String password;
-  final AccountType type;
+  int id;
+  String email;
+  String password;
+  AccountType type;
 
   User({this.id, this.email, this.password, this.type});
 
