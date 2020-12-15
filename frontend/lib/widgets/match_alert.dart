@@ -118,26 +118,24 @@ class MatchAlert extends StatelessWidget {
             ),
             SizedBox(
               width: size.width * .8,
-              child: Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 16.0),
-                  child: RaisedButton(
-                    color: Colors.grey[600],
-                    child: Text(
-                      "Start a conversation",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    onPressed: () {
-                      Nav.navigatorKey.currentState
-                          .popAndPushNamed("/chat-screen",
-                              arguments: ChatScreenArguments(
-                                isStudent
-                                    ? object.id
-                                    : AuthService().loggedAccountInfo.id,
-                                placement.employerId,
-                              ));
-                    },
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 16.0),
+                child: RaisedButton(
+                  color: Colors.grey[600],
+                  child: Text(
+                    "Start a conversation",
+                    style: TextStyle(color: Colors.white),
                   ),
+                  onPressed: () {
+                    Nav.navigatorKey.currentState
+                        .popAndPushNamed("/chat-screen",
+                            arguments: ChatScreenArguments(
+                              isStudent
+                                  ? object.id
+                                  : AuthService().loggedAccountInfo.id,
+                              placement.employerId,
+                            ));
+                  },
                 ),
               ),
             ),
