@@ -52,11 +52,15 @@ class CustomTheme {
         elevatedButtonTheme: ElevatedButtonThemeData(
             style: TextButton.styleFrom(primary: Colors.white)),
         buttonColor: _primaryColor,
-        cardTheme: CardTheme(
-          shadowColor: Color(0xffced5ff),
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10.0),
-              side: BorderSide(color: Color(0xffced5ff), width: 8.0)),
-        ),
+        // cardTheme: CardTheme(
+        //   shadowColor: Color(0xffced5ff),
+        //   shape: RoundedRectangleBorder(
+        //     borderRadius: BorderRadius.circular(10.0),
+        //     side: BorderSide(
+        //       color: Color(0xffced5ff),
+        //       width: 8.0,
+        //     ),
+        //   ),
+        // ),
       );
 }

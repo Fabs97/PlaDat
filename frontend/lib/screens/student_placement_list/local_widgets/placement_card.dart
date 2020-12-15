@@ -13,6 +13,14 @@ class PlacementCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Card(
+      shadowColor: Color(0xffced5ff),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10.0),
+        side: BorderSide(
+          color: Color(0xffced5ff),
+          width: 8.0,
+        ),
+      ),
       child: Padding(
         padding: const EdgeInsets.all(10.0),
         child: Column(
