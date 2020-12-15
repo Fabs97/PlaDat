@@ -32,7 +32,6 @@ class RecomendationsAPIService extends APIInfo {
       String subRoute, int id) async {
     var response =
         await http.get(APIInfo.apiEndpoint + "/recommendation/$id/seeStudents");
-    print(response.toString());
     if (response.statusCode == 200) {
       return jsonDecode(response.body)
           .map((studentJson) => Student.fromJson(studentJson))

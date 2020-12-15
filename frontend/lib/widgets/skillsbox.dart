@@ -39,7 +39,6 @@ class SkillBoxState extends State<SkillBox> {
     setState(() {
       //riempi suggested skills con le skill che hanno i name che combaciano
       suggestedSkills = skills.where((skill) {
-        widget._chosenSkills.map((e) => print(e.name));
         return skill.name.toLowerCase().contains(value.toLowerCase()) &&
             !widget._chosenSkills.contains(skill);
       }).toList();
