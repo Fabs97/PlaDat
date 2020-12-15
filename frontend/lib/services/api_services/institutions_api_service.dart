@@ -9,7 +9,7 @@ class InstitutionsAPIService extends APIInfo {
       case "/institutions":
         return _getInstitutions(subRoute);
       default:
-        throw institutionsAPIException();
+        throw InstitutionsAPIException();
     }
   }
 
@@ -25,4 +25,4 @@ class InstitutionsAPIService extends APIInfo {
   }
 }
 
-class institutionsAPIException extends APIException {}
+class InstitutionsAPIException extends APIException {}

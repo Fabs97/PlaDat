@@ -3,12 +3,12 @@ info:
   title: PlaDat APIs
   version: '1.0'
 servers:
+  - url: http://localhost:3000/
+    description: Local development environment
   - url: https://pladat.herokuapp.com/
     description: Production backend server
   - url: https://pladat-staging.herokuapp.com/
     description: Staging backend server
-  - url: http://localhost:3000/
-    description: Local development environment
   
 tags:
   - name: Skills
@@ -17,6 +17,8 @@ tags:
     description: All the APIs related to the "majors" table
   - name: Institutions
     description: All the APIs related to the "institutions" table
+  - name: Degree
+    description: All the APIs related to the "degree" table
   - name: Placement
     description: All the APIs related to the "placements" table
   - name: Student
@@ -25,6 +27,8 @@ tags:
     description: All the APIs related to the matching algorithm
   - name: Employer
     description: All the APIs related to the "employer" algorithm
+  - name: Google Maps
+    description: All the APIs related to the access to the google maps service
   - name: Registration
     description: All the APIs related to the "registration" table
   - name: Message
@@ -32,6 +36,13 @@ tags:
 
 components:
   schemas:
+    Degree:
+      type: object
+      properties:
+        id:
+          type: integer
+        name: 
+          type: string
     Student:
       type: object
       properties:
@@ -48,6 +59,33 @@ components:
           format: password
         description: 
           type: string 
+        location:
+          type: object
+          properties:
+            country:
+              type: string
+            city:
+              type: string
+        skills:
+          type: object
+          properties: 
+            technicalSkills: 
+              type: array
+              items:
+                $ref: "#/components/schemas/Skill"
+            softSkills: 
+              type: array
+              items:
+                $ref: "#/components/schemas/Skill"
+        work: 
+          type: array
+          items:
+            $ref: "#/components/schemas/Work"
+        education:
+          type: array
+          items: 
+            $ref: "#/components/schemas/Education"
+
     Employer:
       type: object
       properties:
@@ -111,7 +149,7 @@ components:
           type: integer
         name: 
           type: string
-    Skills:
+    Skill:
       type: object
       properties:
         id:
@@ -124,6 +162,15 @@ components:
             - TECH
             - SOFT
             - OTHER
+    Location:
+      type: object
+      properties:
+        id: 
+          type: integer
+        country: 
+          type: string
+        city:
+          type: string
     Message:
       type: object
       properties:          
@@ -155,9 +202,36 @@ components:
           enum: 
             - EMPLOYER
             - STUDENT
+    Work:
+      type: object
+      properties:
+        id:
+          type: integer
+        companyName:
+          type: string
+        position:
+          type: string
+        description:
+          type: string
+        workPeriod: 
+          type: string
+    Education: 
+      type: object
+      properties:
+        id:
+          type: integer
+        majorId:
+          type: integer
+        degreeId:
+          type: integer
+        institutionId:
+          type: integer
+        description: 
+          type: string
+        period: 
+          type: string
         
         
-
 paths:
   /employer/{id}:
     get:
@@ -486,6 +560,10 @@ paths:
                     {id: 1, name: "Politecnico di Milano"},
                     {id: 1, name: "Politecnico di Torino"},
                   ],
+                  location: {
+                    country: "Italy",
+                    city: "Milan"
+                  },
                   skills: {
                     technicalSkills: [
                       {id: 1},
@@ -530,6 +608,10 @@ paths:
                       {id: 1, name: "Politecnico di Milano"},
                       {id: 1, name: "Politecnico di Torino"},
                     ],
+                    location: {
+                      country: "Italy",
+                      city: "Milan"
+                    },
                     skills: {
                       technicalSkills: [
                         {id: 1},
@@ -573,6 +655,31 @@ paths:
                       name: "Management Engineering"
                     }
                   ]
+  /degrees:
+    get:
+      description: Returns all the degrees in the database
+      tags: 
+        - "Degree"
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Degree'
+                type: array
+                example:
+                  [
+                    {
+                      id: 1,
+                      name: "Bachelor"
+                    },
+                    {
+                      id: 2,
+                      name: "Master"
+                    }
+                  ]
 
   /institutions:
     get:
@@ -604,42 +711,61 @@ paths:
                     }
                   ]
   
-  /student/{id}/profile:
+  /student:
     post:
-      description: Allows users to save additional information to the specified student profile
+      description: Allows students to fill in the details of their profile
       tags: 
         - "Student"
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: string
-          example: 1
       requestBody:
         required: true
         content:
           application/json:
             schema:
               oneOf:
-                - $ref: '#/components/schemas/Skills'
+                - $ref: '#/components/schemas/Student'
               type: object
               example:
-                {
-                  technicalSkills: [
-                    {
-                      id: 1
-                    },
-                    {
-                      id: 2
-                    },
-                  ],
-                  softSkills: [
-                    {
-                      id: 4,
-                    }
-                  ]
-                }
+                name: John
+                surname: Dow
+                email: aa@aaa.com
+                description: I am a happy student
+                phone: '5478929202'
+                location:
+                  country: "Italy"
+                  city: "Milan"
+                education:
+                - majorId: 3
+                  degreeId: 1
+                  institutionId: 3
+                  description: Difficult job
+                  period: September 2020 - October 2021
+                - majorId: 1
+                  degreeId: 2
+                  institutionId: 1
+                  description: Difficult job
+                  period: September 2020 - October 2021
+                - majorId: 1
+                  degreeId: 1
+                  institutionId: 4
+                  description: Difficult job
+                  period: September 2020 - October 2021
+                skills:
+                  technicalSkills:
+                  - id: 1
+                  - id: 2
+                  softSkills:
+                  - id: 17
+                  - id: 18
+                work:
+                - companyName: Google
+                  position: Difficult Job
+                  description: Difficult job
+                  workPeriod: September 2020 - October 2021
+                - companyName: Facebook
+                  position: Very Difficult Job
+                  description: Very Difficult job
+                  workPeriod: September 2019 - December 2020
+
       responses:
         '200':
           description: OK
@@ -647,21 +773,27 @@ paths:
             application/json:
               schema:
                 description: Returns a json from the table matching the student id with the skills ids
-                example: [
-                  {
-                    student: 5,
+                example: 
+                  id: 129
+                  name: John
+                  surname: " Edu"
+                  email: aa@aaa.com
+                  description: desgn
+                  phone: '5478929202'
+                  location:
+                    country: "Italy"
+                    city: "Milan"
+                  skills:
+                  - student: 129
                     skill: 1
-                  },
-                  {
-                    student: 5,
-                    skill: 1
-                  },
-                  {
-                    student: 5,
-                    skill: 1
-                  },
-                ]
-  
+                  - student: 129
+                    skill: 2
+                  - student: 129
+                    skill: 17
+                  - student: 129
+                    skill: 18
+        '500':
+          description: INTERNAL SERVER ERROR - Offers an explanation about what caused the error
   /skills:
     get: 
       description: Provides all the skills in the database 
@@ -681,13 +813,13 @@ paths:
                     type: array
                     items:
                       allOf:
-                        - $ref: '#/components/schemas/Skills'
+                        - $ref: '#/components/schemas/Skill'
                   softSkills: 
                     description: All the soft skills in the database
                     type: array
                     items:
                       allOf:
-                        - $ref: '#/components/schemas/Skills'
+                        - $ref: '#/components/schemas/Skill'
                 example: {
                   technicalSkills: [
                     {
@@ -751,7 +883,7 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: "#/components/schemas/Skills"
+                  - $ref: "#/components/schemas/Skill"
                 type: array
                 example: 
                   [
@@ -781,7 +913,7 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: "#/components/schemas/Skills"
+                  - $ref: "#/components/schemas/Skill"
                 type: array
                 example: 
                   [
@@ -796,6 +928,133 @@ paths:
                       type: "TECH"
                     }
                   ]
+  /googleMaps/{input}:
+    get:
+      description: Provides the required informations retrieved from the Google Maps API
+      tags:
+        - "Google Maps"
+      parameters:
+        - in: query
+          name: input
+          required: true
+          schema: 
+            example:  "Piazza Leonardo Da Vinci, Milano"
+      responses:
+        '200':
+          description: OK
+          content:
+            text/html:
+              schema:
+                example: 
+                  {
+                    predictions : [
+                      {
+                        description : "Piazza Leonardo da Vinci, Milano, Metropolitan City of Milan, Italy",
+                        matched_substrings : [
+                          {
+                            length : 24,
+                            offset : 0
+                          },
+                          {
+                            length : 6,
+                            offset : 26
+                          }
+                        ],
+                        place_id :
+                          "EkNQaWF6emEgTGVvbmFyZG8gZGEgVmluY2ksIE1pbGFubywgTWV0cm9wb2xpdGFuIENpdHkgb2YgTWlsYW4sIEl0YWx5Ii4qLAoUChIJJW9DMvLGhkcRzXotUCwiNgYSFAoSCed1Ej9JwYZHEY0OdMYTzf88",
+                        reference :
+                          "EkNQaWF6emEgTGVvbmFyZG8gZGEgVmluY2ksIE1pbGFubywgTWV0cm9wb2xpdGFuIENpdHkgb2YgTWlsYW4sIEl0YWx5Ii4qLAoUChIJJW9DMvLGhkcRzXotUCwiNgYSFAoSCed1Ej9JwYZHEY0OdMYTzf88",
+                        structured_formatting : {
+                          main_text : "Piazza Leonardo da Vinci",
+                          main_text_matched_substrings : [
+                            {
+                              length : 24,
+                              offset : 0
+                            }
+                          ],
+                          secondary_text : "Milano, Metropolitan City of Milan, Italy",
+                          secondary_text_matched_substrings : [
+                            {
+                              length : 6,
+                              offset : 0
+                            }
+                          ]
+                        },
+                        terms : [
+                          {
+                            offset : 0,
+                            value : "Piazza Leonardo da Vinci"
+                          },
+                          {
+                            offset : 26,
+                            value : "Milano"
+                          },
+                          {
+                            offset : 34,
+                            value : "Metropolitan City of Milan"
+                          },
+                          {
+                            offset : 62,
+                            value : "Italy"
+                          }
+                        ],
+                        types : [ "route", "geocode" ]
+                      },
+                      {
+                        description : "Piazza Leonardo da Vinci, Basiglio, Metropolitan City of Milan, Italy",
+                        matched_substrings : [
+                          {
+                            length : 24,
+                            offset : 0
+                          },
+                          {
+                            length : 26,
+                            offset : 36
+                          }
+                        ],
+                        place_id :
+                          "EkVQaWF6emEgTGVvbmFyZG8gZGEgVmluY2ksIEJhc2lnbGlvLCBNZXRyb3BvbGl0YW4gQ2l0eSBvZiBNaWxhbiwgSXRhbHkiLiosChQKEglzoKNnZtuGRxEsA7AmwRWvJRIUChIJn7s-7WTbhkcR3pgYQNsPFks",
+                        reference :
+                          "EkVQaWF6emEgTGVvbmFyZG8gZGEgVmluY2ksIEJhc2lnbGlvLCBNZXRyb3BvbGl0YW4gQ2l0eSBvZiBNaWxhbiwgSXRhbHkiLiosChQKEglzoKNnZtuGRxEsA7AmwRWvJRIUChIJn7s-7WTbhkcR3pgYQNsPFks",
+                        structured_formatting : {
+                          main_text : "Piazza Leonardo da Vinci",
+                          main_text_matched_substrings : [
+                            {
+                              length : 24,
+                              offset : 0
+                            }
+                          ],
+                          secondary_text : "Basiglio, Metropolitan City of Milan, Italy",
+                          secondary_text_matched_substrings : [
+                            {
+                              length : 26,
+                              offset : 10
+                            }
+                          ]
+                        },  
+                        terms : [
+                          {
+                            offset : 0,
+                            value : "Piazza Leonardo da Vinci"
+                          },
+                          {
+                            offset : 26,
+                            value : "Basiglio"
+                          },
+                          {
+                            offset : 36,
+                            value : "Metropolitan City of Milan"
+                          },
+                          {  
+                            offset : 64,
+                            value : "Italy"
+                          }
+                        ],
+                        types : [ "route", "geocode" ]
+                      }
+                    ],
+                    status : "OK"
+                  }
   /registration:
     post:
       description: Allows users to register to the application
@@ -813,15 +1072,13 @@ paths:
                   email: "paolo@gmail.com",
                   password: "Iloveyou_3000",
                   type: "STUDENT"
-
                 }
       responses:
         '200':
-          description: OK
+          description: Returns a json with the newly inserted user, without the hashed password
           content:
             application/json:
               schema:
-                description: Returns a json with the newly inserted user, without the hashed password
                 type: object
                 example:
                   {
@@ -1002,5 +1259,3 @@ paths:
                 type: string
                 example:
                   "There has been a problem saving your message. Please try again"
-
-              

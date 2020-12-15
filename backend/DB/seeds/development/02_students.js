@@ -14,7 +14,6 @@ exports.seed = function(knex) {
         {name: "Jhonny #TEST", surname: "Depp", email: "abcd@gmail.com", password: "1234", description: "Engineer student" },
         {name: "Maryl #TEST", surname: "Streep", email: "abcd@gmail.com", password: "1234", description: "Engineer student" },
         {name: "Freddy #TEST", surname: "Mercury", email: "abcd@gmail.com", password: "1234", description: "Engineer student" },
-       
       ]);
     });
 };

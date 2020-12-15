@@ -2,6 +2,8 @@ const router = require('express').Router();
 
 const studentService = require('../services/studentService');
 
+const ERR_BAD_REQUEST = require('../errors').ERR_BAD_REQUEST;
+
 router.get("/student/:id", async (req, res, next) => {
 
     // This is where the requests of type "http://localhost:3000/student/1" will arrive. 
@@ -14,7 +16,10 @@ router.get("/student/:id", async (req, res, next) => {
 });
 
 router.post("/student", async (req, res, next) => {
-    const studentAccount = await studentService.createStudentAccount(req.body);
+    const studentAccount = await studentService.createStudentAccount(req.body)
+        .catch(error => {
+            res.status(error.code).send(error.message);
+        });
     res.json(studentAccount);
 })
 
@@ -33,7 +38,9 @@ router.get("/students/last", async (req, res, next) => {
 router.delete("/student/:id", async (req, res, next) => {
     let result = await studentService.deleteStudentById(req.params.id);
     res.json(result);
-})
+});
+
+
 
 
 // Here you can define further routes and their functionality

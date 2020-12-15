@@ -1,5 +1,6 @@
 //You need to import the DB instance in order to use it and make requests
 const database = require('../DB/connection');
+const { setStudentLocation } = require('./studentDAO');
 const SuperError = require('../errors').SuperError;
 const ERR_INTERNAL_SERVER_ERROR = require('../errors').ERR_INTERNAL_SERVER_ERROR;
 
@@ -17,8 +18,9 @@ module.exports = {
                 start_period: details.startPeriod,
                 end_period: details.endPeriod, 
                 salary: salary,
-                description_role: details.descriptionRole
-            }, ['id', 'position', 'employment_type', 'start_period', 'end_period', 'salary', 'description_role'])
+                description_role: details.descriptionRole,
+                employer_id: details.employerId
+            }, ['id', 'position', 'employment_type', 'start_period', 'end_period', 'salary', 'description_role', 'employer_id'])
             .catch(error => {
                 if(error) {
                     throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There has been a problem saving your placement. Please try again')
@@ -234,6 +236,19 @@ module.exports = {
         return database('placements')
             .where('id', id)
             .del();
-    }
+    },
+
+    setPlacementLocation: async (placementId, locationId) => {
+        let result = await database('placements')
+            .returning()
+            .where('id', placementId)
+            .update('location_id', locationId)
+            .catch(error => {
+                if(error) {
+                    throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There has been a problem setting your student profile location. Please try again')
+                }
+            });
+        return result;
+    },
 
 }; 
