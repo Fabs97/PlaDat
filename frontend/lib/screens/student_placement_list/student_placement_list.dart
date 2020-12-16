@@ -182,11 +182,14 @@ class _PlacementCardsListState extends State<PlacementCardsList>
                       Icons.filter_alt_outlined,
                       size: 18,
                     ),
-                    Text(
-                      "Filter",
-                      style: TextStyle(
-                        color: CustomTheme().primaryColor,
-                        fontSize: 20.0,
+                    Padding(
+                      padding: const EdgeInsets.only(left: 4.0),
+                      child: Text(
+                        "Filter",
+                        style: TextStyle(
+                          color: CustomTheme().primaryColor,
+                          fontSize: 20.0,
+                        ),
                       ),
                     ),
                     Spacer(),

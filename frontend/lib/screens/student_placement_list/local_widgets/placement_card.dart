@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend/models/placement.dart';
 import 'package:frontend/utils/custom_theme.dart';
 import 'package:frontend/widgets/card_skills_info.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
 class PlacementCard extends StatelessWidget {
@@ -78,6 +79,7 @@ class PlacementCard extends StatelessWidget {
                   overflow: TextOverflow.fade,
                   maxLines: 2,
                   style: textTheme.headline5.copyWith(
+                    fontFamily: GoogleFonts.roboto().fontFamily,
                     color: CustomTheme().textColor,
                     fontWeight: FontWeight.w700,
                     fontSize: 20,
