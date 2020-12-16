@@ -61,4 +61,17 @@ module.exports = {
             .andWhere('placement_id', placementId)
             .del();
     },
+
+    getMatchesByPlacementId: (placementId) => {
+        return database('student_has_placement as shp')
+            .select('shp.student_id as studentId')
+            .leftJoin('student as s', 's.id', 'shp.student_id')
+            .where('shp.status','ACCEPTED')
+            .andWhere('shp.placement_id', placementId)
+            .catch(error => {
+                if(error){
+                    throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There has been a problem retrieving your matches. Please try again')
+                }
+            })
+    }
 };

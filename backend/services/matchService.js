@@ -1,4 +1,5 @@
 const matchDAO = require('../DAO/matchDAO');
+const studentService = require('./studentService');
 
 module.exports = {
     saveChoice: async (choice) => { 
@@ -19,4 +20,13 @@ module.exports = {
     deleteMatch: async (studentId, placementId) => {
         return await matchDAO.deleteMatch(studentId, placementId);
     },
+
+    getMatchesByPlacementId: async (placementId) => {        
+        let students = await matchDAO.getMatchesByPlacementId(placementId);
+        let studentProfiles = [];
+        for (let i = 0; i<students.length; i++) {
+            studentProfiles.push(await studentService.getStudentProfile(students[i].studentId));
+        }  
+        return studentProfiles;
+    } 
 };
