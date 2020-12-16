@@ -46,6 +46,7 @@ class _PlacementCardsListState extends State<PlacementCardsList>
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final themeData = Theme.of(context);
     return Scaffold(
       appBar: CustomAppBar.createAppBar(context, "PlaDat"),
       drawer: CustomDrawer.createDrawer(context),
@@ -54,7 +55,7 @@ class _PlacementCardsListState extends State<PlacementCardsList>
         mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          _createFilterButton(size),
+          _createFilterButton(size, themeData),
           Container(
             height: size.height * .8,
             child: _filteredPlacements == null
@@ -121,14 +122,15 @@ class _PlacementCardsListState extends State<PlacementCardsList>
     );
   }
 
-  _createFilterButton(Size screenSize) {
+  _createFilterButton(Size screenSize, ThemeData themeData) {
+    final customTheme = CustomTheme();
     return SizedBox(
       width: screenSize.width * .85,
       child: Container(
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(5.0),
+          borderRadius: BorderRadius.circular(14.0),
           color: Colors.white,
-          boxShadow: [CustomTheme().boxShadow],
+          boxShadow: [customTheme.boxShadow],
         ),
         child: SmartSelect<PlacementFilter>.multiple(
           value: _filtersChosen,
@@ -156,6 +158,12 @@ class _PlacementCardsListState extends State<PlacementCardsList>
           title: "Filter",
           placeholder: "",
           modalType: S2ModalType.popupDialog,
+          modalStyle: S2ModalStyle(
+            backgroundColor: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(14.0),
+            ),
+          ),
           modalFilter: false,
           modalHeader: true,
           modalHeaderBuilder: (context, _) {
@@ -170,7 +178,10 @@ class _PlacementCardsListState extends State<PlacementCardsList>
                   mainAxisSize: MainAxisSize.max,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Icon(Icons.filter_alt_outlined),
+                    Icon(
+                      Icons.filter_alt_outlined,
+                      size: 18,
+                    ),
                     Text(
                       "Filter",
                       style: TextStyle(
@@ -186,10 +197,54 @@ class _PlacementCardsListState extends State<PlacementCardsList>
               ),
             );
           },
-          modalHeaderStyle: S2ModalHeaderStyle(
-            centerTitle: true,
+          modalConfig: S2ModalConfig(
+            barrierColor: Colors.transparent,
+            headerStyle: S2ModalHeaderStyle(
+              centerTitle: true,
+              elevation: 0.0,
+              textStyle: themeData.textTheme.bodyText1.copyWith(
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+          ),
+          choiceConfig: S2ChoiceConfig(
+            overscrollColor: customTheme.backgroundColor,
           ),
           choiceGrouped: true,
+          choiceHeaderStyle: S2ChoiceHeaderStyle(
+            backgroundColor: Colors.white,
+            textStyle: themeData.textTheme.bodyText1.copyWith(
+              fontWeight: FontWeight.w700,
+              color: customTheme.primaryColor,
+            ),
+            padding: const EdgeInsets.symmetric(horizontal: 28.0),
+            height: 20,
+          ),
+          choiceHeaderBuilder: (_, group, __) {
+            final style = group.style;
+            return Padding(
+              padding: style.padding,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text(
+                    group.name,
+                    style: style.textStyle,
+                  ),
+                ],
+              ),
+            );
+          },
+          choiceStyle: S2ChoiceStyle(
+            showCheckmark: false,
+            activeColor: customTheme.secondaryColor,
+            padding: const EdgeInsets.symmetric(horizontal: 21.0),
+            control: S2ChoiceControl.leading,
+            spacing: 21.0,
+            titleStyle: themeData.textTheme.bodyText1.copyWith(
+              fontWeight: FontWeight.w400,
+            ),
+          ),
           choiceItems: S2Choice.listFrom(
             source: _filters,
             value: (_, filter) => filter,

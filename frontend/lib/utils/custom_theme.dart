@@ -77,7 +77,7 @@ class CustomTheme {
         primaryIconTheme: IconThemeData(color: _primaryColor),
         scaffoldBackgroundColor: _backgroundColor,
         errorColor: _secondaryColor,
-        // toggleableActiveColor: _secondaryColor,
+        toggleableActiveColor: _secondaryColor,
         toggleButtonsTheme: ToggleButtonsThemeData(
           selectedColor: _secondaryColor,
           disabledColor: Color(0xff7e7e7e),
@@ -86,15 +86,8 @@ class CustomTheme {
           style: TextButton.styleFrom(primary: Colors.white),
         ),
         buttonColor: _primaryColor,
-        // cardTheme: CardTheme(
-        //   shadowColor: Color(0xffced5ff),
-        //   shape: RoundedRectangleBorder(
-        //     borderRadius: BorderRadius.circular(10.0),
-        //     side: BorderSide(
-        //       color: Color(0xffced5ff),
-        //       width: 8.0,
-        //     ),
-        //   ),
-        // ),
+        iconTheme: IconThemeData(
+          color: _primaryColor
+        ),
       );
 }

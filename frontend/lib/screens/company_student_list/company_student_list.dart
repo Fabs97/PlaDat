@@ -73,6 +73,7 @@ class _StudentCardsListState extends State<StudentCardsList> {
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(14.0),
+              boxShadow: [CustomTheme().boxShadow],
             ),
             child: _placements == null
                 ? Center(
