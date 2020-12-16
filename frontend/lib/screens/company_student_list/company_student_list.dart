@@ -69,26 +69,41 @@ class _StudentCardsListState extends State<StudentCardsList> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Container(
+            width: size.width * .85,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(14.0),
+            ),
             child: _placements == null
                 ? Center(
                     child: CircularProgressIndicator(),
                   )
-                : DropdownButton<Placement>(
-                    icon: Icon(Icons.arrow_drop_down,
-                        color: CustomTheme().primaryColor),
-                    value: _placement,
-                    items: _placements?.map((placement) {
-                          return DropdownMenuItem<Placement>(
-                            value: placement,
-                            child: Text(
-                              'Placement #${placement.id}',
-                              style:
-                                  TextStyle(color: CustomTheme().primaryColor),
-                            ),
-                          );
-                        })?.toList() ??
-                        [],
-                    onChanged: onChangeDropdownItem,
+                : DropdownButtonHideUnderline(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                      child: DropdownButton<Placement>(
+                        disabledHint: Text("No placements found!"),
+                        icon: Icon(
+                          Icons.arrow_drop_down,
+                          color: CustomTheme().primaryColor,
+                        ),
+                        iconEnabledColor: CustomTheme().primaryColor,
+                        iconDisabledColor: CustomTheme().secondaryColor,
+                        value: _placement,
+                        items: _placements?.map((placement) {
+                              return DropdownMenuItem<Placement>(
+                                value: placement,
+                                child: Text(
+                                  'Placement #${placement.id}',
+                                  style: TextStyle(
+                                      color: CustomTheme().primaryColor),
+                                ),
+                              );
+                            })?.toList() ??
+                            [],
+                        onChanged: onChangeDropdownItem,
+                      ),
+                    ),
                   ),
           ),
           Container(
