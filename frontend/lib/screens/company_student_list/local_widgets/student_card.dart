@@ -1,6 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/models/student.dart';
+import 'package:frontend/utils/routes_generator.dart';
 import 'package:frontend/widgets/card_skills_info.dart';
 
 class StudentCard extends StatelessWidget {
@@ -78,10 +79,17 @@ class StudentCard extends StatelessWidget {
                   ),
                 ),
               ),
-              Text(
-                "Find out more",
-                style: TextStyle(
-                  decoration: TextDecoration.underline,
+              FlatButton(
+                color: Colors.transparent,
+                child: Text(
+                  "Find out more",
+                  style: TextStyle(
+                    decoration: TextDecoration.underline,
+                  ),
+                ),
+                onPressed: () => Nav.navigatorKey.currentState.pushNamed(
+                  "/profile",
+                  arguments: student,
                 ),
               ),
             ],

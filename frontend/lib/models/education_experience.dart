@@ -40,23 +40,23 @@ class EducationExperience {
   }
 
   static EducationExperience fromJson(Map<String, dynamic> json) {
+    final startPeriod = json["startPeriod"] ?? json["start_period"];
+    final endPeriod = json["endPeriod"] ?? json["end_period"];
     return EducationExperience(
       id: json["id"] as int,
-      major: Major.fromJson(json["major"]),
-      institution: Institution.fromJson(json["institution"]),
-      degree: Degree.fromJson(json["degree"]),
+      major: Major(name: json["major"]),
+      institution: Institution(name: json["institution"]),
+      degree: Degree(name: json["degree"]),
       description: json["description"] as String,
-      startPeriod: json["startPeriod"] != null
-          ? DateTime.parse(json["startPeriod"])
-          : null,
-      endPeriod:
-          json["endPeriod"] != null ? DateTime.parse(json["endPeriod"]) : null,
+      startPeriod: (startPeriod) != null ? DateTime.parse(startPeriod) : null,
+      endPeriod: (endPeriod) != null ? DateTime.parse(endPeriod) : null,
     );
   }
 
-  static List<EducationExperience> listFromJson(String json) {
-    final parsed = jsonDecode(json).cast<Map<String, dynamic>>();
-    return parsed
+  static List<EducationExperience> listFromJson(List<dynamic> json) {
+    if (json == null) return null;
+    // final parsed = jsonDecode(json).cast<Map<String, dynamic>>();
+    return json
         .map((experiencesJson) => EducationExperience.fromJson(experiencesJson))
         .toList()
         .cast<EducationExperience>();
