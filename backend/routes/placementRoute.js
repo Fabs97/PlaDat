@@ -45,4 +45,9 @@ router.delete('/placement/:id', async (req, res, next) => {
     res.json(result);
 })
 
+router.get('/placements/last', async (req, res, next) => {
+    let result = await placementService.getLastPlacement();
+    res.json(result);
+})
+
 module.exports = router;
