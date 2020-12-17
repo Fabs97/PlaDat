@@ -167,6 +167,28 @@ module.exports = {
         let result = [];
         let prev = 0;
 
+        let locations = await database('location AS l')
+            .select('l.id AS id', 'l.country AS country', 'l.city AS city', 'p.id AS placement_id')
+            .leftJoin('placements as p', 'l.id', 'p.location_id')
+            .whereIn('p.id', placementIDs)
+            .orderBy('p.id');
+        
+        let majors = await database('majors as m')
+            .select('m.name AS name', 'phm.placement_id AS placement_id')
+            .leftJoin('placement_has_major AS phm', 'm.id', 'phm.major_id')
+            .whereIn('phm.placement_id', placementIDs)
+            .orderBy('phm.placement_id');
+        
+        let institutions =  await database('institutions AS i')
+            .select('i.name AS name', 'phi.placement_id AS placement_id')
+            .leftJoin('placement_has_institution AS phi', 'i.id', 'phi.institution_id')
+            .whereIn('phi.placement_id', placementIDs)
+            .orderBy('phi.placement_id');
+    
+        
+        let j = 0;
+        let k = 0;
+        let h = 0;
         for (let p=0; p<placementData.length; p++) {
 
             for(let i=0; i<resultTemp.length; i++){
@@ -192,12 +214,39 @@ module.exports = {
                             salary: placementData[p].salary,
                             description_role: placementData[p].description_role,
                             employer_id: placementData[p].employer_id,
+                            majors: [],
+                            institutions: [],
                             skills: [{
                                 id: resultTemp[i].skill_id,
                                 name: resultTemp[i].name,
                                 type: resultTemp[i].type
                             }]
                         })
+
+                        let curr = prev + 1;
+
+                        while(j < locations.length && locations[j].placement_id == result[curr].id){
+                            result[curr].location = {
+                                id: locations[j].id,
+                                country: locations[j].country,
+                                city: locations[j].city
+                            };
+                            j++;
+                        }
+
+                        while(k < majors.length && majors[k].placement_id == result[curr].id){
+                            result[curr].majors.push({
+                                name: majors[k].name
+                            }),
+                            k++;
+                        }
+
+                        while(h < institutions.length && institutions[h].placement_id == result[curr].id){
+                            result[curr].institutions.push({
+                                name: institutions[h].name
+                            })
+                            h++;
+                        }
                                 
                         
                     
