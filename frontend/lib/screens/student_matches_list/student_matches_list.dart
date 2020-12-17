@@ -33,6 +33,7 @@ class _StudentMatchesState extends State<StudentMatches> {
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
+    final themeData = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -81,18 +82,24 @@ class _StudentMatchesState extends State<StudentMatches> {
                                   ),
                                 ],
                               ),
-                              title: Text(_placement.position + " No.$index"),
+                              title: Text(_placement.position + " No.$index",
+                                  style: themeData.textTheme.bodyText1.copyWith(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                  )),
                               subtitle: Text(
                                 _placement.employerName +
                                     '\n${_placement.description}',
                                 maxLines: 3,
                                 overflow: TextOverflow.ellipsis,
+                                style: themeData.textTheme.bodyText2.copyWith(
+                                    fontSize: 12, fontWeight: FontWeight.w400),
                               ),
                               trailing: PopupMenuButton<String>(
                                 icon: Icon(
                                   Icons.more_vert,
                                   color: CustomTheme().primaryColor,
-                                  size: 40,
+                                  size: 36,
                                 ),
                                 padding: EdgeInsets.zero,
                                 itemBuilder: (context) =>
