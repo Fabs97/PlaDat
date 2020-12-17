@@ -5,6 +5,7 @@ import 'package:frontend/models/placement.dart';
 import 'package:frontend/models/student.dart';
 import 'package:frontend/screens/chat_screen/chat_screen.dart';
 import 'package:frontend/services/auth_service.dart';
+import 'package:frontend/utils/custom_theme.dart';
 import 'package:frontend/utils/routes_generator.dart';
 
 class MatchAlert extends StatelessWidget {
@@ -18,8 +19,10 @@ class MatchAlert extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final bool isStudent = object is Student;
+    final themeData = Theme.of(context);
+    final customTheme = CustomTheme();
     return Scaffold(
-      backgroundColor: Colors.grey[850],
+      backgroundColor: customTheme.backgroundColor,
       appBar: AppBar(
         centerTitle: true,
         backgroundColor: Colors.transparent,
@@ -35,90 +38,68 @@ class MatchAlert extends StatelessWidget {
       ),
       body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             Container(
               child: Column(
                 children: [
                   Text(
                     'Congratulations!',
-                    maxLines: 20,
-                    style: TextStyle(
-                        fontSize: 40.0,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white),
+                    style: themeData.textTheme.headline4.copyWith(
+                      color: customTheme.primaryColor,
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                   Text(
                     'You have a match.',
-                    maxLines: 20,
-                    style: TextStyle(
-                        fontSize: 25.0,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white),
+                    style: themeData.textTheme.headline6.copyWith(
+                      color: customTheme.secondaryColor,
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                 ],
               ),
             ),
-            isStudent
-                ? Container(
-                    child: Column(
-                      children: [
-                        Text(
-                          object.name + ' ' + object.surname,
-                          maxLines: 22,
-                          style: TextStyle(
-                            fontSize: 30,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
-                        Text(
-                          'School of Life',
-                          style: TextStyle(
-                            fontSize: 20.0,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        )
-                      ],
-                    ),
-                  )
-                : Column(
-                    children: [
-                      Text(
-                        'Google, Zurich',
-                        maxLines: 20,
-                        style: TextStyle(
-                            fontSize: 30,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white),
-                      ),
-                    ],
-                  ),
             Container(
               child: Column(
                 children: [
                   Text(
-                    'for',
-                    style: TextStyle(
-                      fontSize: 18.0,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                    isStudent
+                        ? "${object.name} ${object.surname}"
+                        : "${placement.employerName}",
+                    style: themeData.textTheme.headline5.copyWith(
+                      fontWeight: FontWeight.w700,
+                      color: customTheme.primaryColor,
                     ),
                   ),
                   Text(
-                    placement.position,
-                    style: TextStyle(
-                      fontSize: 40.0,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                    isStudent ? 'School of Life' : "Zurich",
+                    style: themeData.textTheme.headline6.copyWith(
+                      color: customTheme.secondaryColor,
+                      fontWeight: FontWeight.w700,
                     ),
-                  ),
+                  )
                 ],
+              ),
+            ),
+            Text(
+              'for',
+              style: themeData.textTheme.headline6.copyWith(
+                fontStyle: FontStyle.italic,
+                color: customTheme.secondaryColor,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+            Text(
+              placement.position,
+              style: themeData.textTheme.headline5.copyWith(
+                fontWeight: FontWeight.w700,
+                color: customTheme.primaryColor,
               ),
             ),
             SizedBox(
               width: size.width * .8,
+              height: size.height * .12,
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 16.0),
                 child: RaisedButton(
