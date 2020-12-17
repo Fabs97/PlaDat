@@ -73,6 +73,7 @@ class MatchAlert extends StatelessWidget {
                     ),
                   ),
                   Text(
+                    // TODO: this needs to be dynamic
                     isStudent ? 'School of Life' : "Zurich",
                     style: themeData.textTheme.headline6.copyWith(
                       color: customTheme.secondaryColor,
