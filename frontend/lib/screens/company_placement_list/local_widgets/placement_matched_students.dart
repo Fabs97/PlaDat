@@ -147,7 +147,7 @@ class _PlacementMatchedStudentsState extends State<PlacementMatchedStudents> {
                                                 leading: Icon(Icons.delete,
                                                     color: Color(0xff4c60d2)),
                                                 title: Text(
-                                                  "Are you sure you want to remove the match?",
+                                                  "Remove the match",
                                                 ),
                                                 onTap: () {
                                                   showDialog(
@@ -156,7 +156,7 @@ class _PlacementMatchedStudentsState extends State<PlacementMatchedStudents> {
                                                           context) {
                                                         return AlertDialog(
                                                           title: Text(
-                                                              'Are you sure?'),
+                                                              'Are you sure you want to remove the match?'),
                                                           actions: [
                                                             FlatButton(
                                                               child: Text('No'),
