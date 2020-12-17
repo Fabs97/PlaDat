@@ -36,4 +36,36 @@ describe('matching API', () => {
         }).timeout(10000)
     })
 
+    describe('GET /placement/:placementId/students', () => {
+        let placementId;
+
+        beforeEach(async () =>{
+            placementId = (await chai.request(server).get('/placements/last')).body.id;
+        })
+
+        it('should get all the students that the placement has matched with', (done) => {
+            chai.request(server)
+            .get('/placement/' + placementId + '/students')
+            .end((err, response) => {
+                response.should.have.status(200);
+                response.body.should.be.a('array');
+                let students = response.body;
+                for(let i=0; i<students.length; i++) {
+                    students[i].should.be.a('object');
+                    students[i].should.have.property('id');
+                    students[i].should.have.property('name');
+                    students[i].should.have.property('surname');
+                    students[i].should.have.property('email');
+                    students[i].should.have.property('description');
+                    students[i].should.have.property('phone');
+
+                }                            
+
+                done();
+            });
+
+        }).timeout(10000)
+        
+    })
+
 })
