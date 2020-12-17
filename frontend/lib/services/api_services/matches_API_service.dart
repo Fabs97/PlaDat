@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:frontend/models/match.dart';
 import 'package:http/http.dart' as http;
 import 'package:frontend/services/api_service.dart';
-import 'package:frontend/screens/student_matches_list/student_matches_list.dart';
 
 class MatchesAPIService extends APIInfo {
   static Future<dynamic> route(String subRoute,
@@ -28,9 +27,9 @@ class MatchesAPIService extends APIInfo {
     }
   }
 
-  static Future<dynamic> _deleteMatch(String subRoute, MatchArgs args) async {
+  static Future<dynamic> _deleteMatch(String subRoute, Match args) async {
     var response = await http.delete(
-        APIInfo.apiEndpoint + "/match/${args.studentId}/${args.placementId}");
+        APIInfo.apiEndpoint + "/match/${args.studentID}/${args.placementID}");
     switch (response.statusCode) {
       case 200:
         {
