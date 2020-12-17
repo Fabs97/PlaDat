@@ -11,21 +11,25 @@ class PlacementProfile extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
     final themeData = Theme.of(context);
+    final techSkills = placement.skills["TECH"];
+    final softSkills = placement.skills["SOFT"];
+    final otherSkills = placement.skills["OTHER"];
     return Column(
       mainAxisSize: MainAxisSize.max,
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      crossAxisAlignment: CrossAxisAlignment.center, 
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         _createTitle(themeData),
         _createDescription(),
         _createAddress(screenSize, themeData),
         _createDetails(screenSize, themeData),
-        _createSkillsBox(screenSize, themeData, placement.skills["TECH"] ?? [],
-            "Technical Skills"),
-        _createSkillsBox(
-            screenSize, themeData, placement.skills["SOFT"] ?? [], "Soft Skills"),
-        _createSkillsBox(
-            screenSize, themeData, placement.skills["OTHER"] ?? [], "Other Skills"),
+        if (techSkills != null && techSkills.isNotEmpty)
+          _createSkillsBox(
+              screenSize, themeData, techSkills, "Technical Skills"),
+        if (softSkills != null && softSkills.isNotEmpty)
+          _createSkillsBox(screenSize, themeData, softSkills, "Soft Skills"),
+        if (otherSkills != null && otherSkills.isNotEmpty)
+          _createSkillsBox(screenSize, themeData, otherSkills, "Other Skills"),
       ],
     );
   }
@@ -86,8 +90,10 @@ class PlacementProfile extends StatelessWidget {
           ),
           child: Padding(
             padding: const EdgeInsets.all(15.0),
-            child: Text(
-                "${placement.location.city}, ${placement.location.country}"),
+            child: Text(placement.location?.city != null &&
+                    placement.location?.country != null
+                ? "${placement.location.city}, ${placement.location.country}"
+                : "No location has been specified"),
           ),
         )
       ],

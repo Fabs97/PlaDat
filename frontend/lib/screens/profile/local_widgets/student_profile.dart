@@ -20,10 +20,14 @@ class StudentProfile extends StatelessWidget {
         _createStudentName(themeData),
         _createDescription(),
         _createAddress(screenSize, themeData),
-        _createEducationsList(screenSize, themeData),
-        _createWorksList(screenSize, themeData),
-        _createSkillsBox(screenSize, themeData, student.skills["TECH"], "Technical Skills"),
-        _createSkillsBox(screenSize, themeData, student.skills["SOFT"], "Soft Skills"),
+        if (student.educations != null && student.educations.isNotEmpty)
+          _createEducationsList(screenSize, themeData),
+        if (student.works != null && student.works.isNotEmpty)
+          _createWorksList(screenSize, themeData),
+        _createSkillsBox(
+            screenSize, themeData, student.skills["TECH"], "Technical Skills"),
+        _createSkillsBox(
+            screenSize, themeData, student.skills["SOFT"], "Soft Skills"),
       ],
     );
   }
@@ -76,8 +80,10 @@ class StudentProfile extends StatelessWidget {
           ),
           child: Padding(
             padding: const EdgeInsets.all(15.0),
-            child:
-                Text("${student.location.city}, ${student.location.country}"),
+            child: Text(student.location?.city != null &&
+                    student.location?.country != null
+                ? "${student.location.city}, ${student.location.country}"
+                : "No location has been specified"),
           ),
         )
       ],
@@ -140,7 +146,8 @@ class StudentProfile extends StatelessWidget {
     );
   }
 
-  _createSkillsBox(Size screenSize, ThemeData themeData, List<Skill> skills, String title) {
+  _createSkillsBox(
+      Size screenSize, ThemeData themeData, List<Skill> skills, String title) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
