@@ -14,6 +14,7 @@ class CustomTheme {
     spreadRadius: 2.0,
     offset: Offset(0.0, 7.0),
   );
+  final _inputBorderColor = Color(0xffb8b8b8);
 
   Color get backgroundColor => this._backgroundColor;
   Color get primaryColor => this._primaryColor;
@@ -43,11 +44,10 @@ class CustomTheme {
             color: _textColor,
           ),
           button: GoogleFonts.roboto(
-            color: _textColor,
-            fontSize: 16.0,
-            fontStyle: FontStyle.normal,
-            fontWeight: FontWeight.w400
-          ),
+              color: _textColor,
+              fontSize: 16.0,
+              fontStyle: FontStyle.normal,
+              fontWeight: FontWeight.w400),
           caption: GoogleFonts.roboto(
             color: _textColor,
           ),
@@ -86,8 +86,23 @@ class CustomTheme {
           style: TextButton.styleFrom(primary: Colors.white),
         ),
         buttonColor: _primaryColor,
-        iconTheme: IconThemeData(
-          color: _primaryColor
+        iconTheme: IconThemeData(color: _primaryColor),
+        inputDecorationTheme: InputDecorationTheme(
+          errorMaxLines: 1,
+          errorStyle: TextStyle(
+            color: _accentTextColor,
+          ),
+          hintStyle: TextStyle(color: Colors.grey[800]),
+          fillColor: Colors.transparent,
+          errorBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: _accentTextColor),
+          ),
+          focusedBorder: UnderlineInputBorder(
+            borderSide: BorderSide(
+              color: _primaryColor,
+            ),
+          ),
+          contentPadding: const EdgeInsets.fromLTRB(12.0, 5.0, 12.0, 9.0),
         ),
       );
 }

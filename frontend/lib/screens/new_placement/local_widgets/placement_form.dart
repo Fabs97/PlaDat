@@ -2,19 +2,14 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:frontend/models/institution.dart';
-import 'package:frontend/models/major.dart';
 import 'package:frontend/models/place.dart';
 import 'package:frontend/models/placement.dart';
 import 'package:frontend/screens/new_placement/local_widgets/dropdown.dart';
 import 'package:frontend/services/api_service.dart';
-import 'package:frontend/services/api_services/majors_api_service.dart';
 import 'package:frontend/utils/custom_theme.dart';
-import 'package:frontend/utils/routes_generator.dart';
 import 'package:frontend/widgets/address_search.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:date_range_picker/date_range_picker.dart' as DateRagePicker;
 
 class PlacementForm extends StatefulWidget {
   final Function(bool) changeStep;
@@ -92,18 +87,21 @@ class _PlacementFormState extends State<PlacementForm> {
                       horizontal: 20.0,
                       vertical: 5.0,
                     ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        _createPlacementField(placement),
-                        _createTypeOfEmploymentField(placement),
-                        _createWorkingPeriodField(placement),
-                        _createSalaryField(placement),
-                        _createDescriptionField(placement),
-                        majorsWidget ?? Container(),
-                        institutionsWidget ?? Container(),
-                        _cretaeautocompleteField(placement),
-                      ],
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 30.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          _createPlacementField(placement),
+                          _createTypeOfEmploymentField(placement),
+                          _createWorkingPeriodField(placement, context),
+                          _createSalaryField(placement),
+                          _createDescriptionField(placement),
+                          majorsWidget ?? Container(),
+                          institutionsWidget ?? Container(),
+                          _cretaeautocompleteField(placement),
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -183,33 +181,41 @@ class _PlacementFormState extends State<PlacementForm> {
   }
 
   void _openDatePicker(Placement placement) async {
-    final List<DateTime> picked = await DateRagePicker.showDatePicker(
+    final DateTimeRange range = await showDateRangePicker(
       context: context,
-      initialFirstDate: placement.startPeriod ?? DateTime.now(),
-      initialLastDate: placement.endPeriod ??
-          (new DateTime.now()).add(new Duration(days: 7)),
+      initialDateRange: DateTimeRange(
+        start: placement.startPeriod ?? DateTime.now(),
+        end: placement.endPeriod ??
+            (new DateTime.now()).add(new Duration(days: 7)),
+      ),
       firstDate: DateTime.now(),
       lastDate: (DateTime.now()).add(Duration(days: 365 * 100)),
     );
-    if (picked != null && picked.length == 2) {
+    if (range != null) {
       setState(() {
         // picked is always ordered with the smaller one coming at index 0
-        placement.startPeriod = picked[0];
-        placement.endPeriod = picked[1];
+        placement.startPeriod = range.start;
+        placement.endPeriod = range.end;
       });
     }
   }
 
-  Widget _createWorkingPeriodField(Placement placement) {
+  Widget _createWorkingPeriodField(Placement placement, BuildContext context) {
     final formatter = DateFormat('dd/MMM/yyyy');
-    return TextFormField(
-      onTap: () => _openDatePicker(placement),
-      decoration: InputDecoration(
-        hintText: placement.startPeriod != null && placement.endPeriod != null
-            ? "${formatter.format(placement.startPeriod)} - ${formatter.format(placement.endPeriod)} "
-            : "Working period",
+    return Theme(
+      data: Theme.of(context).copyWith(
+        accentColor: Colors.cyan[600],
+        primaryColor: Colors.lightBlue[800] 
       ),
-      readOnly: true,
+      child: TextFormField(
+        onTap: () => _openDatePicker(placement),
+        decoration: InputDecoration(
+          hintText: placement.startPeriod != null && placement.endPeriod != null
+              ? "${formatter.format(placement.startPeriod)} - ${formatter.format(placement.endPeriod)} "
+              : "Working period",
+        ),
+        readOnly: true,
+      ),
     );
   }
 
@@ -243,9 +249,23 @@ class _PlacementFormState extends State<PlacementForm> {
     return TextFormField(
       decoration: const InputDecoration(
         hintText: "Try to be as descriptive as possible",
-        labelText: "Describe the role's activity",
+        // labelText: "Describe the role's activity",
         filled: true,
+        fillColor: Colors.white,
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+            width: 1.0,
+            color: Color(0xffb8b8b8),
+          ),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+            color: Color(0xffb8b8b8),
+            width: 1.0,
+          ),
+        ),
       ),
+      textAlignVertical: TextAlignVertical.bottom,
       initialValue: placement.description ?? '',
       onChanged: (value) {
         setState(() {
