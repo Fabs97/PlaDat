@@ -4,17 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:frontend/models/placement.dart';
+import 'package:frontend/models/match.dart';
 import 'package:frontend/services/api_service.dart';
 import 'package:frontend/services/auth_service.dart';
+import 'package:frontend/utils/custom_theme.dart';
 import 'package:frontend/widgets/appbar.dart';
 import 'package:frontend/widgets/drawer.dart';
-
-class MatchArgs {
-  int studentId;
-  int placementId;
-
-  MatchArgs(this.studentId, this.placementId);
-}
 
 class StudentMatches extends StatefulWidget {
   @override
@@ -37,54 +32,147 @@ class _StudentMatchesState extends State<StudentMatches> {
 
   @override
   Widget build(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: CustomAppBar.createAppBar(context, "Matched Placements"),
+      appBar: AppBar(
+        title: Text(
+          "Matched Placements",
+          textAlign: TextAlign.center,
+        ),
+        leading: IconButton(
+          onPressed: () => Navigator.pop(context),
+          icon: Icon(Icons.arrow_back),
+        ),
+      ),
       drawer: CustomDrawer.createDrawer(context),
       body: _placements == null
           ? Center(
               child: CircularProgressIndicator(),
             )
-          : ListView.builder(
-              itemCount: _placements.length,
-              itemBuilder: (context, index) {
-                _placement = _placements[index];
-                return Card(
-                  child: ListTile(
-                      leading: Icon(Icons.work, color: Color(0xff4c60d2)),
-                      title: Text(_placement.position + " No.$index"),
-                      subtitle: Text(_placement.employerName +
-                          '\n${_placement.description}'),
-                      trailing: PopupMenuButton<String>(
-                        padding: EdgeInsets.zero,
-                        itemBuilder: (context) => <PopupMenuEntry<String>>[
-                          PopupMenuItem<String>(
-                            child: ListTile(
-                              leading:
-                                  Icon(Icons.delete, color: Color(0xff4c60d2)),
-                              title: Text(
-                                "Remove the match",
+          : Center(
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  boxShadow: [CustomTheme().boxShadow],
+                  borderRadius: BorderRadius.circular(14.0),
+                ),
+                width: screenSize.width * .855,
+                height: screenSize.height * .845,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 20.0),
+                  child: ListView.builder(
+                    itemCount: _placements.length,
+                    itemBuilder: (context, index) {
+                      _placement = _placements[index];
+                      return Column(
+                        children: [
+                          ListTile(
+                              leading: Column(
+                                children: [
+                                  Container(
+                                    width: 46,
+                                    height: 46,
+                                    child:
+                                        Icon(Icons.work, color: Colors.white),
+                                    decoration: BoxDecoration(
+                                      color: CustomTheme().primaryColor,
+                                      borderRadius: BorderRadius.circular(4.0),
+                                    ),
+                                  ),
+                                ],
                               ),
-                              onTap: () {
-                                APIService.route(ENDPOINTS.Matches,
-                                        "/match/:studentId/:placementId",
-                                        urlArgs: MatchArgs(
-                                            _placement.id, _studentId))
-                                    .then((value) => setState(() {
-                                          print(value);
-                                          if (value is bool && value) {
-                                            _placements.remove(_placement);
-                                            Navigator.pop(context);
-                                          } else {
-                                            Fluttertoast.showToast(msg: value);
-                                          }
-                                        }));
-                              },
+                              title: Text(_placement.position + " No.$index"),
+                              subtitle: Text(
+                                _placement.employerName +
+                                    '\n${_placement.description}',
+                                maxLines: 3,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              trailing: PopupMenuButton<String>(
+                                icon: Icon(
+                                  Icons.more_vert,
+                                  color: CustomTheme().primaryColor,
+                                  size: 40,
+                                ),
+                                padding: EdgeInsets.zero,
+                                itemBuilder: (context) =>
+                                    <PopupMenuEntry<String>>[
+                                  PopupMenuItem<String>(
+                                    child: ListTile(
+                                      leading: Icon(Icons.delete,
+                                          color: CustomTheme().primaryColor),
+                                      title: Text(
+                                        "Remove the match",
+                                      ),
+                                      onTap: () {
+                                        showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return AlertDialog(
+                                                title: Text(
+                                                    'Are you sure you want to remove the match?'),
+                                                actions: [
+                                                  FlatButton(
+                                                    child: Text('No'),
+                                                    onPressed: () {
+                                                      Navigator.pop(context);
+                                                    },
+                                                  ),
+                                                  FlatButton(
+                                                    child: Text('Yes'),
+                                                    onPressed: () {
+                                                      APIService.route(
+                                                              ENDPOINTS.Matches,
+                                                              "/match/:studentId/:placementId",
+                                                              urlArgs: Match(
+                                                                  placementID:
+                                                                      _placement
+                                                                          .id,
+                                                                  studentID:
+                                                                      _studentId))
+                                                          .then((value) =>
+                                                              setState(() {
+                                                                print(value);
+                                                                if (value
+                                                                        is bool &&
+                                                                    value) {
+                                                                  _placements
+                                                                      .remove(
+                                                                          _placement);
+                                                                  Navigator.pop(
+                                                                      context);
+                                                                } else {
+                                                                  Fluttertoast
+                                                                      .showToast(
+                                                                          msg:
+                                                                              value);
+                                                                }
+                                                              }));
+                                                      Navigator.pop(context);
+                                                    },
+                                                  )
+                                                ],
+                                              );
+                                            });
+                                      },
+                                    ),
+                                  )
+                                ],
+                              )),
+                          Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 8.0),
+                            child: Divider(
+                              thickness: 1.0,
+                              color: Color(0xffcecece),
                             ),
                           )
                         ],
-                      )),
-                );
-              },
+                      );
+                    },
+                  ),
+                ),
+              ),
             ),
     );
   }
