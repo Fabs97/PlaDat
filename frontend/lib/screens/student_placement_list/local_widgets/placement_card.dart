@@ -85,21 +85,17 @@ class PlacementCard extends StatelessWidget {
                 "Company name",
                 style: textTheme.headline6,
               ),
-              GestureDetector(
-                onTap: () {
-                  Nav.navigatorKey.currentState.pushNamed(
-                    "/profile",
-                    arguments: placement,
-                  );
-                },
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 0.0),
-                  child: Text(
-                    "Find out more",
-                    style: TextStyle(
-                      decoration: TextDecoration.underline,
-                    ),
+              FlatButton(
+                color: Colors.transparent,
+                child: Text(
+                  "Find out more",
+                  style: TextStyle(
+                    decoration: TextDecoration.underline,
                   ),
+                ),
+                onPressed: () => Nav.navigatorKey.currentState.pushNamed(
+                  "/profile",
+                  arguments: placement,
                 ),
               ),
             ],

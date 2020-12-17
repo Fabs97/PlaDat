@@ -1,19 +1,39 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/models/employer.dart';
 import 'package:frontend/models/placement.dart';
 import 'package:frontend/models/skill.dart';
+import 'package:frontend/services/api_service.dart';
 import 'package:intl/intl.dart';
 
-class PlacementProfile extends StatelessWidget {
+class PlacementProfile extends StatefulWidget {
   final Placement placement;
   const PlacementProfile({Key key, this.placement}) : super(key: key);
+
+  @override
+  _PlacementProfileState createState() => _PlacementProfileState();
+}
+
+class _PlacementProfileState extends State<PlacementProfile> {
+  Employer _employer = Employer();
+  @override
+  void initState() {
+    APIService.route(
+      ENDPOINTS.Employers,
+      "/employer/:id",
+      urlArgs: widget.placement.employerId,
+    ).then((employer) => setState(() {
+          _employer = employer;
+        }));
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
     final themeData = Theme.of(context);
-    final techSkills = placement.skills["TECH"];
-    final softSkills = placement.skills["SOFT"];
-    final otherSkills = placement.skills["OTHER"];
+    final techSkills = widget.placement.skills["TECH"];
+    final softSkills = widget.placement.skills["SOFT"];
+    final otherSkills = widget.placement.skills["OTHER"];
     return Column(
       mainAxisSize: MainAxisSize.max,
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -39,13 +59,13 @@ class PlacementProfile extends StatelessWidget {
       child: Column(
         children: [
           Text(
-            placement.position,
+            widget.placement?.position ?? "Unknown",
             style: themeData.textTheme.headline5.copyWith(
               fontWeight: FontWeight.bold,
             ),
           ),
           Text(
-            placement.employerName,
+            _employer.name ?? "Unknown",
             style: themeData.textTheme.headline6,
           ),
         ],
@@ -57,7 +77,7 @@ class PlacementProfile extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 15.0),
       child: Text(
-        placement.description,
+        widget.placement.description,
         textAlign: TextAlign.justify,
       ),
     );
@@ -90,9 +110,8 @@ class PlacementProfile extends StatelessWidget {
           ),
           child: Padding(
             padding: const EdgeInsets.all(15.0),
-            child: Text(placement.location?.city != null &&
-                    placement.location?.country != null
-                ? "${placement.location.city}, ${placement.location.country}"
+            child: Text(_employer.location != null 
+                ? "${_employer.location}"
                 : "No location has been specified"),
           ),
         )
@@ -112,7 +131,7 @@ class PlacementProfile extends StatelessWidget {
           child: SizedBox(
             width: screenSize.width * .5,
             child: Text(
-              "Address",
+              "Details",
               style: themeData.textTheme.bodyText1.copyWith(
                 fontWeight: FontWeight.bold,
                 color: Colors.blue[700],
@@ -120,21 +139,25 @@ class PlacementProfile extends StatelessWidget {
             ),
           ),
         ),
-        Row(
-          children: [
-            _createPlacementWorkingInfoBox(
-              "Working period",
-              "from ${formatter.format(placement.startPeriod)} to ${formatter.format(placement.endPeriod)}",
-            ),
-            _createPlacementWorkingInfoBox(
-              "Contract type",
-              placement.employmentType.niceString,
-            ),
-            _createPlacementWorkingInfoBox(
-              "Salary",
-              "${placement.salary} £",
-            ),
-          ],
+        SizedBox(
+          height: screenSize.height * .1,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              _createPlacementWorkingInfoBox(
+                "Working period",
+                "from ${formatter.format(widget.placement.startPeriod)} to ${formatter.format(widget.placement.endPeriod)}",
+              ),
+              _createPlacementWorkingInfoBox(
+                "Contract type",
+                widget.placement.employmentType.niceString,
+              ),
+              _createPlacementWorkingInfoBox(
+                "Salary",
+                "${widget.placement.salary} £",
+              ),
+            ],
+          ),
         )
       ],
     );
