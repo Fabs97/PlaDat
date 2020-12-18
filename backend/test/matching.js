@@ -55,9 +55,15 @@ describe('matching API', () => {
                     students[i].should.have.property('id');
                     students[i].should.have.property('name');
                     students[i].should.have.property('surname');
-                    students[i].should.have.property('email');
                     students[i].should.have.property('description');
-                    students[i].should.have.property('phone');
+
+                    let skills = students[i].skills;
+                    skills.should.be.a('array');
+                    for(let i=0; i<skills.length; i++){
+                        skills[i].should.have.property('id');
+                        skills[i].should.have.property('name');                        
+                        skills[i].should.have.property('type');
+                    }
 
                 }                            
 
