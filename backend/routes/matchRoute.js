@@ -33,11 +33,16 @@ router.delete('/match/:studentId/:placementId', async (req, res, next) => {
 });
 
 router.get('/placement/:placementId/students', async (req, res, next) => {
-    const students = await matchService.getMatchesByPlacementId(req.params.placementId)
+    if(!isNaN(req.params.placementId)){
+        let students = await matchService.getMatchesByPlacementId(req.params.placementId)
         .catch(error => {
             res.status(error.code).send(error.message);
         });
-    res.json(students);
+        res.json(students);
+    } else {
+        res.status(ERR_BAD_REQUEST).send('Your request did not provided a valid value for id. Please try again.');
+    }
+       
 });
 
 

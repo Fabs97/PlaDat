@@ -22,11 +22,29 @@ module.exports = {
     },
 
     getMatchesByPlacementId: async (placementId) => {        
-        let students = await matchDAO.getMatchesByPlacementId(placementId);
-        let studentProfiles = [];
-        for (let i = 0; i<students.length; i++) {
-            studentProfiles.push(await studentService.getStudentProfile(students[i].studentId));
-        }  
-        return studentProfiles;
+        let matches = await matchDAO.getMatchesByPlacementId(placementId);
+        
+        let niceMatches = [];
+        matches.forEach((match) => {
+            let matchIndex = niceMatches.findIndex((niceMatch) => match.studentId === niceMatch.id);
+            let newSkill = {id: match.id, name: match.skillName, type: match.type};
+
+            if (matchIndex === -1) { 
+                // Not an entry here
+                niceMatches.push({
+                    id: match.studentId,
+                    name: match.studentName,
+                    surname: match.surname,
+                    description: match.description,
+                    skills: [newSkill],
+                });
+            } else if(matchIndex >= 0 && matchIndex < niceMatches.length){
+                // just add skills
+                let matchType = match.type === "TECH" ? "technicalSkills" : "softSkills";
+                niceMatches[matchIndex].skills =
+                    [...niceMatches[matchIndex].skills, newSkill];
+            }
+        });
+        return niceMatches;
     } 
 };
