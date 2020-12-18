@@ -148,7 +148,7 @@ module.exports = {
     getPlacementsForSkills: async (skills) => {
 
         let placementData = await database('placements AS p')
-            .select(['p.id', 'p.position', 'p.employment_type', 'start_period', 'end_period', 'salary', 'description_role', 'employer_id'])
+            .select(['p.id', 'p.position', 'p.employment_type', 'start_period', 'end_period', 'salary', 'description_role'])
             .leftJoin('placement_has_skills AS phs', 'phs.placement_id', 'p.id')
             .leftJoin(database.raw('(select p.id, count(phs.skill_id) as count_total from placements p join placement_has_skills phs on p.id = phs.placement_id group by p.id) as p2'), 'p.id','p2.id') //here we count the total number of skills for each placement
             .whereIn('phs.skill_id', skills)
@@ -184,11 +184,18 @@ module.exports = {
             .leftJoin('placement_has_institution AS phi', 'i.id', 'phi.institution_id')
             .whereIn('phi.placement_id', placementIDs)
             .orderBy('phi.placement_id');
+
+        let employers = await database('employer AS e')
+            .select('e.name AS employer_name', 'p.id AS placement_id')
+            .leftJoin('placements AS p', 'e.id', 'p.employer_id')
+            .whereIn('p.id', placementIDs)
+            .orderBy('p.id');
     
         
         let j = 0;
         let k = 0;
         let h = 0;
+        let l = 0;
         for (let p=0; p<placementData.length; p++) {
 
             for(let i=0; i<resultTemp.length; i++){
@@ -213,7 +220,6 @@ module.exports = {
                             end_period: placementData[p].end_period,
                             salary: placementData[p].salary,
                             description_role: placementData[p].description_role,
-                            employer_id: placementData[p].employer_id,
                             majors: [],
                             institutions: [],
                             skills: [{
@@ -232,6 +238,11 @@ module.exports = {
                                 city: locations[j].city
                             };
                             j++;
+                        }
+
+                        while(l < employers.length && employers[l].placement_id == result[curr].id){
+                            result[curr].employer_name = employers[l].employer_name;
+                            l++;
                         }
 
                         while(k < majors.length && majors[k].placement_id == result[curr].id){

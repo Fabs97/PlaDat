@@ -323,17 +323,49 @@ paths:
                       name: "Julian",
                       surname: "Bass",
                       description: "Researching software development for large-scale systems focusing on multi-national teams and using modern lean and agile methods",
-                      skills: {
-                        technicalSkills: [
-                          {id: 1, name: "Flutter", type: "TECH"},
-                        ],
-                        softSkills: [
-                          {id: 4, name: "Team Management", type: "SOFT"},
-                        ],
-                        otherSkills: [
-                          {id: 7, name: "Skiing", type: "OTHER"},
-                        ]
-                      }
+                      location: {
+                        id: 1,
+                        country: United Kingdom,
+                        city: Manchester
+                      },
+                      skills: [
+                         {
+                           id: 1,
+                           name: Flutter,
+                           type: TECH
+                         },
+                         {
+                           id: 2,
+                           name: Leadership,
+                           type: SOFT
+                         }
+                      ],
+                      education: [
+                        {
+                          major: Computer Science,
+                          institution: Hardvard,
+                          degree: Master,
+                          description: My grade was 100/1000,
+                          start_period: 2017-10-11,
+                          end_period: 2019-10-11
+                        }
+                      ],
+                      work: [
+                        {
+                          position: Project manager,
+                          company_name: Google,
+                          description: a really hard job,
+                          start_period: 2019-11-11,
+                          end_period: 2020-05-11
+                        },
+                        {
+                          posititon: Developer,
+                          company_name: Facebook,
+                          description: a really hard job,
+                          start_period: 2020-05-12,
+                          end_period: 2020-10-12,
+                        }
+                      ]
                     }
                   ]
   /recommendation/{id}/seePlacements:
@@ -367,24 +399,30 @@ paths:
                       end_period: "2020-11-11",
                       salary: 600,
                       description_role: "An internship for you to learn how to be a full stack developer",
-                      employer_id: 1,
+                      employer_name: Google,
+                      location: {
+                        id: 1,
+                        country: United Kingdom,
+                        city: Manchester
+                      },
                       majors: [
-                        {id: 1, name: "Computer Science and Engineering"},
+                        {name: "Computer Science and Engineering"},
                       ],
                       institutions: [
-                        {id: 1, name: "Politecnico di Milano"},
+                        {name: "Politecnico di Milano"},
                       ],
-                      skills: {
-                        technicalSkills: [
-                          {id: 1, name: "Flutter", type: "TECH"},
-                        ],
-                        softSkills: [
-                          {id: 4, name: "Team Management", type: "SOFT"},
-                        ],
-                        otherSkills: [
-                          {id: 7, name: "Skiing", type: "OTHER"},
-                        ]
-                      }
+                      skills: [
+                         {
+                           id: 1,
+                           name: Flutter,
+                           type: TECH
+                         },
+                         {
+                           id: 2,
+                           name: Leadership,
+                           type: SOFT
+                         }
+                      ]
                     }
                   ]
   /matching:
