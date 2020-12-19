@@ -33,6 +33,8 @@ tags:
     description: All the APIs related to the "registration" table
   - name: Message
     description: All the APIs related to the "message" table
+  - name: Domain of Activity
+    description: All the APIs related to the "domain_of_activity" table
 
 components:
   schemas:
@@ -230,6 +232,14 @@ components:
           type: string
         period: 
           type: string
+    Domain Of Activity: 
+      type: object
+      properties:
+        id: 
+          type: integer
+        name: 
+          type: string
+
         
         
 paths:
@@ -642,6 +652,41 @@ paths:
                       name: "Master"
                     }
                   ]
+  
+  /domainOfActivity:
+    get:
+      description: Returns all the domains of activity in the database
+      tags:
+        - "Domain of Activity"
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Domain of Activity'
+                type: array
+                example:
+                  [
+                    {
+                      id: 1,
+                      name: "Agriculture, forestry and fishing"
+                    },
+                    {
+                      id: 2,
+                      name: "Mining and quarrying"
+                    }
+                  ]
+        '500':
+          description: Internal Server Error
+          content: 
+            text/html:
+              schema:
+                type: string
+                example:
+                  "There has been a problem looking up domains of activity. Please try again"
+
 
   /institutions:
     get:
