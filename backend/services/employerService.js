@@ -10,6 +10,6 @@ module.exports = {
     },
 
     getEmployerByUserId: (userId) => {
-        return employerDAO.getEmployerByUserId();
+        return employerDAO.getEmployerByUserId(userId);
     }
 };
