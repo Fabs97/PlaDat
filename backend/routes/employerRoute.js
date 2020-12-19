@@ -13,5 +13,13 @@ router.get('/employers/last', async (req, res, next) => {
     res.json(employerId)
 })
 
+router.post('/employer', async (req, res, next) => {
+    const newEmployer = await employerService.createNewEmployer(req.body)
+        .catch(error => {
+            res.status(error.code).send(error.message);
+        })
+    res.json(newEmployer);
+})
+
 
 module.exports = router;

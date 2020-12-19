@@ -13,6 +13,21 @@ module.exports = {
                     throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There has been a problem looking up domains of activity. Please try again.')
                 }
             })
+    },
+
+    existsDomainOfActivity: async (id) => {
+        let result = await database('domain_of_activity')
+            .where('id', id)
+            .catch(error => {
+                if (error) {
+                    throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There has been a problem looking up the domain of activity. Please try again.')
+                }
+            });
+        if(result.length == 0){
+            return false;
+        } else {
+            return true;
+        }
     }
 
 }
