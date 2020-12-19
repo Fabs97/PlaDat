@@ -251,4 +251,12 @@ module.exports = {
         return result;
     },
 
+    getLastPlacement: async () => {
+        let result = await database("placements")
+            .select("id")
+            .orderBy("id", "desc")
+            .limit(1);
+        return result[0];
+    }
+
 }; 

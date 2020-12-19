@@ -4,7 +4,8 @@ import 'package:frontend/models/major.dart';
 import 'package:frontend/services/api_service.dart';
 
 class MajorsAPIService extends APIInfo {
-  static Future<dynamic> route(String subRoute) {
+  static Future<dynamic> route(String subRoute,
+      {dynamic body, dynamic urlArgs}) {
     switch (subRoute) {
       case "/majors":
         return _getMajors(subRoute);

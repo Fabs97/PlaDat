@@ -49,9 +49,10 @@ class APIService {
           return StudentsAPIService.route(subRoute,
               body: body, urlArgs: urlArgs);
         case ENDPOINTS.Majors:
-          return MajorsAPIService.route(subRoute);
+          return MajorsAPIService.route(subRoute, urlArgs: urlArgs, body: body);
         case ENDPOINTS.Institutions:
-          return InstitutionsAPIService.route(subRoute);
+          return InstitutionsAPIService.route(subRoute,
+              urlArgs: urlArgs, body: body);
         case ENDPOINTS.Skills:
           return SkillsAPIService.route(subRoute, urlArgs: urlArgs, body: body);
         case ENDPOINTS.Placement:
@@ -61,13 +62,14 @@ class APIService {
           return RecomendationsAPIService.route(subRoute,
               body: body, urlArgs: urlArgs);
         case ENDPOINTS.Matches:
-          return MatchesAPIService.route(subRoute, body: body);
+          return MatchesAPIService.route(subRoute,
+              body: body, urlArgs: urlArgs);
         case ENDPOINTS.Employers:
           return EmployersAPIService.route(subRoute,
               urlArgs: urlArgs, body: body);
         case ENDPOINTS.Locations:
           return LocationsAPIService.route(subRoute,
-              urlArgs: urlArgs, body: body);      
+              urlArgs: urlArgs, body: body);
         case ENDPOINTS.Registration:
           return RegistrationAPIService.route(subRoute,
               urlArgs: urlArgs, body: body);

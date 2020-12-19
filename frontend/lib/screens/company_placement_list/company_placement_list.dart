@@ -3,7 +3,9 @@ import 'dart:html';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/models/placement.dart';
+import 'package:frontend/screens/company_placement_list/local_widgets/placement_matched_students.dart';
 import 'package:frontend/services/api_service.dart';
+import 'package:frontend/utils/routes_generator.dart';
 import 'package:frontend/services/auth_service.dart';
 import 'package:frontend/widgets/appbar.dart';
 import 'package:frontend/widgets/drawer.dart';
@@ -25,7 +27,6 @@ class _MyPlacementsState extends State<MyPlacements> {
             urlArgs: _employer.id)
         .then((placementsList) => setState(() {
               _placements = placementsList;
-              //_placement = _placements[0] ?? null;
             }));
     super.initState();
   }
@@ -42,13 +43,19 @@ class _MyPlacementsState extends State<MyPlacements> {
           : ListView.builder(
               itemCount: _placements.length,
               itemBuilder: (context, index) {
-                _placement = _placements[index];
                 return Card(
                   child: ListTile(
-                    title: Text(_placement.position + " No.$index"),
-                    subtitle: Text(_placement.countMatches != null
-                        ? "${_placement.countMatches}" + " matches"
-                        : "0 matches"),
+                    title: Text(_placements[index].position + " No.$index"),
+                    subtitle:
+                        Text("${_placements[index].countMatches ?? 0} matches"),
+                    onTap: () {
+                      if (int.parse(_placements[index].countMatches) > 0) {
+                        Nav.navigatorKey.currentState.push(MaterialPageRoute(
+                          builder: (builder) => PlacementMatchedStudents(
+                              placement: _placements[index]),
+                        ));
+                      }
+                    },
                   ),
                 );
               },
