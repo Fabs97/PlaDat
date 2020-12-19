@@ -95,10 +95,10 @@ components:
           type: integer
         name: 
           type: string
-        location: 
-          type: string
-        urllogo: 
-          type: string 
+        location_id: 
+          type: integer
+        domain_of_activity_id: 
+          type: integer
     Match:
       type: object
       properties:
@@ -232,7 +232,7 @@ components:
           type: string
         period: 
           type: string
-    Domain Of Activity: 
+    Domain of Activity: 
       type: object
       properties:
         id: 
@@ -305,6 +305,70 @@ paths:
                       count_matches: 3
                     }
                   ]
+
+  /employer:
+    post:
+      description: Allows the user to save their employer profile on the database
+      tags:
+        - "Employer"
+      requestBody:
+        description: a json with all the needed informations about the employer
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                {
+                  name: "Samsung",
+                  location: {
+                    country: "South Korea",
+                    city: "Seul"
+                  },
+                  description: "A big tech company",
+                  domainOfActivityId: 3
+                }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                description: returns a json with the newly inserted employer information
+                type: object
+                example:
+                  {
+                    id: 1,
+                    name: "Samsung",
+                  location: {
+                    id: 1,
+                    country: "South Korea",
+                    city: "Seul"
+                    },
+                  description: "A big tech company",
+                  domain_of_activity: {
+                      id: 3,
+                      name: "Manufacturing"
+                    }
+                  }
+        '400': 
+          description: Bad Request
+          content:
+            text/html:
+              schema:
+                type: string
+                example:
+                  "The domain of activity does not exists. Please try again."
+        '500':
+          description: Internal Server Error
+          content: 
+            text/html:
+              schema:
+                type: string
+                example:
+                  "There has been a problem saving your profile. Please try again"
+
+
   /recommendation/{id}/seeStudents:
     get:
       description: Provides all the students recommendation for the provided placement id, based on the algorithm
