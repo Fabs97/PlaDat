@@ -46,7 +46,7 @@ module.exports = {
         }
 
         if(!userResult.studentID && !userResult.employerID) {
-            userResult.newStudent = ( userAccount.type === 'STUDENT' ? true : false )
+            userResult.student = ( userAccount.type === 'STUDENT' ? true : false )
         }
         
         userResult.token = jwt.sign({ id: userAccount.id }, process.env.ACCESS_TOKEN_SECRET, {
