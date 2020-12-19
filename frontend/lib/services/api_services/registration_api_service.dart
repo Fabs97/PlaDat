@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:frontend/models/user.dart';
-import 'package:http/http.dart' as http;
+import 'package:frontend/services/custom_http_service.dart' as http;
 import 'package:frontend/services/api_service.dart';
 
 class RegistrationAPIService extends APIInfo {
@@ -19,7 +19,8 @@ class RegistrationAPIService extends APIInfo {
     var response = await http.post(
       APIInfo.apiEndpoint + "/registration",
       headers: {"Content-Type": "application/json"},
-      body: user.toJson()
+      body: user.toJson(),
+      needsAuth: false,
     );
     int statusCode = response.statusCode;
     switch (statusCode) {

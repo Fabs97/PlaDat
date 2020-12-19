@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:frontend/models/match.dart';
-import 'package:http/http.dart' as http;
+import 'package:frontend/services/custom_http_service.dart' as http;
 import 'package:frontend/services/api_service.dart';
 
 class MatchesAPIService extends APIInfo {

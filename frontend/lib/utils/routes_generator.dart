@@ -55,7 +55,11 @@ class RoutesGenerator {
         }
       case "/login":
         {
-          return _createRoute(Login(), settings);
+          return _createRoute(
+              Login(
+                isAfterAuthError: settings.arguments ?? false,
+              ),
+              settings);
         }
       default:
         {

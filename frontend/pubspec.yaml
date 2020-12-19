@@ -28,6 +28,8 @@ dependencies:
   intl: ^0.16.1
   smart_select: ^4.3.2
   fluttertoast: ^7.1.5
+  shared_preferences: ^0.5.4+8
+  shared_preferences_web: ^0.1.2+7
   http: ^0.12.2
   flutter_tindercard: ^0.2.0
   email_validator: '^1.0.5'

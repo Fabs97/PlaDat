@@ -1,11 +1,16 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:frontend/models/student.dart';
 import 'package:frontend/models/user.dart';
+import 'package:frontend/services/api_services/login_api_service.dart';
+import 'package:frontend/services/auth_service.dart';
 import 'package:frontend/utils/routes_generator.dart';
 import 'package:frontend/widgets/appbar.dart';
 
 class Login extends StatefulWidget {
-  const Login({Key key}) : super(key: key);
+  bool isAfterAuthError;
+  Login({Key key, this.isAfterAuthError}) : super(key: key);
 
   @override
   _LoginState createState() => _LoginState();
@@ -16,6 +21,14 @@ class _LoginState extends State<Login> {
   User _user = User();
   bool _obscurePassword = true;
   bool _hasLoginErrors = false;
+
+  @override
+  void initState() {
+    if (widget.isAfterAuthError) {
+      Fluttertoast.showToast(msg: "There was authenticating you, please login again");
+    }
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -148,7 +161,8 @@ class _LoginState extends State<Login> {
               "Create one here",
               // TODO: style with text color when rebranded app
             ),
-            onTap: () => Nav.navigatorKey.currentState.pushNamed("/registration"),
+            onTap: () =>
+                Nav.navigatorKey.currentState.pushNamed("/registration"),
           ),
         ),
       ],
@@ -170,10 +184,20 @@ class _LoginState extends State<Login> {
 
   _loginToPlaDat() {
     if (_formKey.currentState.validate()) {
-      //TODO connect with database
-      print("Logging in...");
-      print("User email: ${_user.email}");
-      print("User password: ${_user.password}");
+      try {
+        AuthService().login(_user).then((response) {
+          if (response is bool) {
+            // new user, redirect him to the creation of the profile/placement
+            Nav.navigatorKey.currentState
+                .pushNamed(response ? "/new-student" : "/new-placement");
+          } else {
+            Nav.navigatorKey.currentState.pushNamed(
+                response is Student ? "/placement-list" : "/student-list");
+          }
+        });
+      } on LoginAPIException catch (e) {
+        Fluttertoast.showToast(msg: e.message);
+      }
     }
   }
 }
