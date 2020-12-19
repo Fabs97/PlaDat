@@ -6,9 +6,11 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:frontend/models/match.dart';
 import 'package:frontend/models/placement.dart';
 import 'package:frontend/models/student.dart';
+import 'package:frontend/screens/chat_screen/chat_screen.dart';
 import 'package:frontend/screens/company_placement_list/local_widgets/chips_list.dart';
 import 'package:frontend/services/api_service.dart';
 import 'package:frontend/services/auth_service.dart';
+import 'package:frontend/utils/routes_generator.dart';
 import 'package:frontend/widgets/appbar.dart';
 import 'package:frontend/widgets/card_skills_info.dart';
 import 'package:frontend/widgets/drawer.dart';
@@ -142,6 +144,21 @@ class _PlacementMatchedStudentsState extends State<PlacementMatchedStudents> {
                                           padding: EdgeInsets.zero,
                                           itemBuilder: (context) =>
                                               <PopupMenuEntry<String>>[
+                                            PopupMenuItem<String>(
+                                              child: ListTile(
+                                                leading: Icon(Icons.email),
+                                                //TODO: rebranding
+                                                title: Text("Send message"),
+                                                onTap: () => Nav
+                                                    .navigatorKey.currentState
+                                                    .pushNamed("/chat-screen",
+                                                        arguments:
+                                                            ChatScreenArguments(
+                                                                _student.id,
+                                                                widget.placement
+                                                                    .employerId)),
+                                              ),
+                                            ),
                                             PopupMenuItem<String>(
                                               child: ListTile(
                                                 leading: Icon(Icons.delete,
