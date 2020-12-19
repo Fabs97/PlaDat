@@ -56,35 +56,38 @@ class _MyPlacementsState extends State<MyPlacements> {
                   child: ListView.builder(
                     itemCount: _placements.length,
                     itemBuilder: (context, index) {
-                      _placement = _placements[index];
                       return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 0.0,),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 15.0,
+                          vertical: 0.0,
+                        ),
                         child: Column(
                           children: [
                             ListTile(
                               title: Text(
-                                _placement.position + " No.$index",
+                                _placements[index].position + " No.$index",
                                 style: themeData.textTheme.bodyText1.copyWith(
                                   fontWeight: FontWeight.w700,
                                 ),
                               ),
                               subtitle: Text(
-                                _placement.countMatches != null
-                                    : "0 matches",
-                                    ? "${_placement.countMatches}" + " matches"
+                                "${_placements[index].countMatches ?? 0} matches",
                                 style: themeData.textTheme.caption.copyWith(
                                   color: CustomTheme().secondaryColor,
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
-                    onTap: () {
-                      if (int.parse(_placements[index].countMatches) > 0) {
-                        Nav.navigatorKey.currentState.push(MaterialPageRoute(
-                          builder: (builder) => PlacementMatchedStudents(
-                              placement: _placements[index]),
-                        ));
-                      }
-                    },
+                              onTap: () {
+                                if (int.parse(_placements[index].countMatches) >
+                                    0) {
+                                  Nav.navigatorKey.currentState
+                                      .push(MaterialPageRoute(
+                                    builder: (builder) =>
+                                        PlacementMatchedStudents(
+                                            placement: _placements[index]),
+                                  ));
+                                }
+                              },
                             ),
                             Padding(
                               padding:
