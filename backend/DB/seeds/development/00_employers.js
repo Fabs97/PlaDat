@@ -5,13 +5,13 @@ exports.seed = function(knex) {
     .then(function () {
       // Inserts seed entries
       return knex('employer').insert([
-        {name: "Google", location: 'Zurich', urllogo: 'https://source.unsplash.com/random'},
-        {name: "Amazon", location: 'Luxembourg', urllogo: 'https://source.unsplash.com/random'},
-        {name: "Instagram", location: 'Dublin', urllogo: 'https://source.unsplash.com/random'},
-        {name: "Pinterest", location: 'Zurich', urllogo: 'https://source.unsplash.com/random'},
-        {name: "Facebook", location: 'Dublin', urllogo: 'https://source.unsplash.com/random'},
-        {name: "Reply", location: 'Milano', urllogo: 'https://source.unsplash.com/random'},
-        {name: "Oracle", location: 'Silicon Valley', urllogo: 'https://source.unsplash.com/random'},
+        {name: "Google", description: 'Friendly work place'},
+        {name: "Amazon", description: 'Friendly work place'},
+        {name: "Instagram", description: 'Friendly work place'},
+        {name: "Pinterest", description: 'Friendly work place'},
+        {name: "Facebook", description: 'Friendly work place'},
+        {name: "Reply", description: 'Friendly work place'},
+        {name: "Oracle", description: 'Friendly work place'}
       ])
     });
 };
