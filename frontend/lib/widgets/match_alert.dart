@@ -30,7 +30,7 @@ class MatchAlert extends StatelessWidget {
         elevation: 0,
         actions: [
           IconButton(
-            icon: Icon(Icons.close),
+            icon: Icon(Icons.close, color: CustomTheme().primaryColor),
             onPressed: () => Navigator.pop(context),
             color: Colors.white,
           )
