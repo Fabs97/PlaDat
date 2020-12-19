@@ -14,7 +14,7 @@ class PlacementProfile extends StatefulWidget {
 }
 
 class _PlacementProfileState extends State<PlacementProfile> {
-  Employer _employer = Employer();
+  Employer _employer;
   @override
   void initState() {
     APIService.route(
@@ -38,19 +38,27 @@ class _PlacementProfileState extends State<PlacementProfile> {
       mainAxisSize: MainAxisSize.max,
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        _createTitle(themeData),
-        _createDescription(),
-        _createAddress(screenSize, themeData),
-        _createDetails(screenSize, themeData),
-        if (techSkills != null && techSkills.isNotEmpty)
-          _createSkillsBox(
-              screenSize, themeData, techSkills, "Technical Skills"),
-        if (softSkills != null && softSkills.isNotEmpty)
-          _createSkillsBox(screenSize, themeData, softSkills, "Soft Skills"),
-        if (otherSkills != null && otherSkills.isNotEmpty)
-          _createSkillsBox(screenSize, themeData, otherSkills, "Other Skills"),
-      ],
+      children: _employer != null
+          ? [
+              _createTitle(themeData),
+              _createDescription(),
+              _createAddress(screenSize, themeData),
+              _createDetails(screenSize, themeData),
+              if (techSkills != null && techSkills.isNotEmpty)
+                _createSkillsBox(
+                    screenSize, themeData, techSkills, "Technical Skills"),
+              if (softSkills != null && softSkills.isNotEmpty)
+                _createSkillsBox(
+                    screenSize, themeData, softSkills, "Soft Skills"),
+              if (otherSkills != null && otherSkills.isNotEmpty)
+                _createSkillsBox(
+                    screenSize, themeData, otherSkills, "Other Skills"),
+            ]
+          : [
+              Center(
+                child: CircularProgressIndicator(),
+              )
+            ],
     );
   }
 
@@ -110,7 +118,7 @@ class _PlacementProfileState extends State<PlacementProfile> {
           ),
           child: Padding(
             padding: const EdgeInsets.all(15.0),
-            child: Text(_employer.location != null 
+            child: Text(_employer.location != null
                 ? "${_employer.location}"
                 : "No location has been specified"),
           ),
