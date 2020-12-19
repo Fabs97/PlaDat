@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:frontend/models/placement.dart';
 import 'package:frontend/services/api_service.dart';
+import 'package:frontend/services/auth_service.dart';
 import 'package:frontend/widgets/appbar.dart';
 import 'package:frontend/widgets/drawer.dart';
 
@@ -13,11 +14,11 @@ class StudentMatches extends StatefulWidget {
 class _StudentMatchesState extends State<StudentMatches> {
   List<Placement> _placements;
   Placement _placement;
-  int _studentId = 1;
+  final _student = AuthService().loggedAccountInfo;
   @override
   void initState() {
     APIService.route(ENDPOINTS.Student, "/student/{studentId}/placements",
-            urlArgs: _studentId)
+            urlArgs: _student.id)
         .then((placementList) => setState(() {
               _placements = placementList;
             }));

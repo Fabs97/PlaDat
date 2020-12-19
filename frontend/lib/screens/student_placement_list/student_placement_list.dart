@@ -85,7 +85,7 @@ class _PlacementCardsListState extends State<PlacementCardsList>
                                     : true,
                           )).then((match) async {
                         if (match.status == 'ACCEPTED') {
-                          await Nav.navigatorKey.currentState
+                          await Nav.currentState
                               .push(MaterialPageRoute(
                             builder: (builder) => MatchAlert(
                               placement: _filteredPlacements[index],

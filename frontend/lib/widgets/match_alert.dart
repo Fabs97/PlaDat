@@ -127,14 +127,13 @@ class MatchAlert extends StatelessWidget {
                     style: TextStyle(color: Colors.white),
                   ),
                   onPressed: () {
-                    Nav.navigatorKey.currentState
-                        .popAndPushNamed("/chat-screen",
-                            arguments: ChatScreenArguments(
-                              isStudent
-                                  ? object.id
-                                  : AuthService().loggedAccountInfo.id,
-                              placement.employerId,
-                            ));
+                    Nav.currentState.pushNamed("/chat-screen",
+                        arguments: ChatScreenArguments(
+                          isStudent
+                              ? object.id
+                              : AuthService().loggedAccountInfo.id,
+                          placement.employerId,
+                        ));
                   },
                 ),
               ),

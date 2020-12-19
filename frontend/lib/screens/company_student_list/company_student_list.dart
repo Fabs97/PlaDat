@@ -4,6 +4,7 @@ import 'package:frontend/models/placement.dart';
 import 'package:frontend/models/student.dart';
 import 'package:frontend/screens/company_student_list/local_widgets/student_card.dart';
 import 'package:frontend/services/api_service.dart';
+import 'package:frontend/services/auth_service.dart';
 import 'package:frontend/utils/routes_generator.dart';
 import 'package:frontend/widgets/appbar.dart';
 import 'package:frontend/models/match.dart';
@@ -23,13 +24,12 @@ class _StudentCardsListState extends State<StudentCardsList> {
   CardController _cardController;
   Placement _placement;
   Map<int, List<Student>> recommendationMap = {};
-  int _employerId = 1;
+  final _employer = AuthService().loggedAccountInfo;
 
-  final int placementId = 1;
   @override
   void initState() {
     APIService.route(ENDPOINTS.Employers, "/employer/:employerId/placements",
-            urlArgs: _employerId)
+            urlArgs: _employer.id)
         .then((placementsList) => setState(() {
               _placements = placementsList;
               _placement = _placements[0] ?? null;
@@ -115,7 +115,7 @@ class _StudentCardsListState extends State<StudentCardsList> {
                                       : true,
                             )).then((match) async {
                           if (match.status == 'ACCEPTED') {
-                            await Nav.navigatorKey.currentState
+                            await Nav.currentState
                                 .push(MaterialPageRoute(
                               builder: (builder) => MatchAlert(
                                 placement: _placement,

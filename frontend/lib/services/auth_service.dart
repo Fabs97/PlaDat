@@ -12,8 +12,8 @@ class AuthService {
 
   User _loggedUser;
   dynamic _loggedAccountInfo;
-
   String _jwtToken;
+
 
   String get jwtToken {
     if (this._jwtToken == null) {
@@ -38,30 +38,32 @@ class AuthService {
       if (response is Map<String, dynamic>) {
         final studentId = response["studentID"];
         final employerId = response["employerID"];
-        // final isStudent = response["student"];
-        final isStudent = studentId != null
-            ? true
-            : employerId != null
-                ? true
-                : false;
-        user.type = isStudent ? AccountType.Student : AccountType.Employer;
+        
+        if (studentId != null)
+          user.type = AccountType.Student;
+        else if (employerId != null)
+          user.type = AccountType.Employer;
+        else
+          user.type = response["student"] ? AccountType.Student : AccountType.Employer;
+        
         this._loggedUser = user;
         window.localStorage["jwtToken"] = response["token"];
-        if (studentId != null || employerId != null) {
-          this._loggedAccountInfo = await studentId != null
-              ? APIService.route(
-                  ENDPOINTS.Student,
-                  "/student/:id",
-                  urlArgs: studentId,
-                )
-              : APIService.route(
-                  ENDPOINTS.Employers,
-                  "/employer/:id",
-                  urlArgs: employerId,
-                );
-          return this._loggedAccountInfo;
-        } else
-          return isStudent;
+        if (studentId != null) {
+          this._loggedAccountInfo = await APIService.route(
+            ENDPOINTS.Student,
+            "/student/:id",
+            urlArgs: studentId,
+          );
+        } else if (employerId != null) {
+          this._loggedAccountInfo = await APIService.route(
+            ENDPOINTS.Employers,
+            "/employer/:id",
+            urlArgs: employerId,
+          );
+        } else if (employerId == null && studentId == null) {
+          return response["student"];
+        }
+        return this._loggedAccountInfo;
       }
     } on LoginAPIException catch (e) {
       print(e.message);

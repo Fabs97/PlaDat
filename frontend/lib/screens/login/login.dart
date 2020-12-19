@@ -7,7 +7,6 @@ import 'package:frontend/models/user.dart';
 import 'package:frontend/services/api_services/login_api_service.dart';
 import 'package:frontend/services/auth_service.dart';
 import 'package:frontend/utils/routes_generator.dart';
-import 'package:frontend/widgets/appbar.dart';
 
 class Login extends StatefulWidget {
   bool isAfterAuthError;
@@ -39,7 +38,7 @@ class _LoginState extends State<Login> {
       appBar: AppBar(
         centerTitle: true,
         title: Text("Login to PlaDat"),
-        leading: null,
+        leading: Container(),
       ),
       body: Form(
         key: _formKey,
@@ -102,6 +101,7 @@ class _LoginState extends State<Login> {
       initialValue: _user.email ?? '',
       onChanged: (value) {
         setState(() {
+          if (_hasLoginErrors) _hasLoginErrors = false;
           _user.email = value;
         });
       },
@@ -139,7 +139,10 @@ class _LoginState extends State<Login> {
         }
         return null;
       },
-      onChanged: (password) => setState(() => _user.password = password),
+      onChanged: (password) => setState(() {
+        if (_hasLoginErrors) _hasLoginErrors = false;
+        _user.password = password;
+      }),
     );
   }
 
@@ -167,8 +170,7 @@ class _LoginState extends State<Login> {
               "Create one here",
               // TODO: style with text color when rebranded app
             ),
-            onTap: () =>
-                Nav.navigatorKey.currentState.pushNamed("/registration"),
+            onTap: () => Nav.currentState.pushNamed("/registration"),
           ),
         ),
       ],
@@ -194,12 +196,12 @@ class _LoginState extends State<Login> {
         final response = await AuthService().login(_user);
         if (response is bool) {
           // new user, redirect him to the creation of the profile/placement
-          Nav.navigatorKey.currentState
-              .pushNamed(response ? "/new-student" : "/new-placement");
+          Nav.currentState
+              .popAndPushNamed(response ? "/new-student" : "/new-placement");
         } else if (response is Student) {
-          Nav.navigatorKey.currentState.pushNamed("/placement-list");
+          Nav.currentState.popAndPushNamed("/placement-list");
         } else if (response is Employer) {
-          Nav.navigatorKey.currentState.pushNamed("/student-list");
+          Nav.currentState.popAndPushNamed("/student-list");
         }
       } on LoginAPIException catch (e) {
         setState(() {
@@ -208,7 +210,6 @@ class _LoginState extends State<Login> {
         print(e);
       } catch (e) {
         Fluttertoast.showToast(msg: e.message ?? "Error while trying to login");
-        print("DIOPORCO");
       }
     }
   }

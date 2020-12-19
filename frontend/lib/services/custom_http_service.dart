@@ -1,10 +1,9 @@
-import 'dart:async';
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:frontend/services/auth_service.dart';
 import 'package:frontend/utils/routes_generator.dart';
 import 'package:http/http.dart' as http;
-import 'package:http/http.dart';
 
 dynamic get(String route,
     {Map<String, String> headers, bool needsAuth = true}) async {
@@ -20,7 +19,11 @@ dynamic get(String route,
       headers: headers,
     );
   } on AuthException catch (e) {
-    Nav.navigatorKey.currentState.pushNamed("/login", arguments: true);
+    Nav.currentState.pushNamedAndRemoveUntil(
+      "/login",
+      ModalRoute.withName("/"),
+      arguments: true,
+    );
     return null;
   }
 }
@@ -28,7 +31,6 @@ dynamic get(String route,
 dynamic post(String route,
     {Map<String, String> headers,
     body,
-    Encoding encoding,
     bool needsAuth = true}) async {
   try {
     if (needsAuth) headers["authorization"] = AuthService().jwtToken;
@@ -36,10 +38,13 @@ dynamic post(String route,
       route,
       headers: headers,
       body: body,
-      encoding: encoding,
     );
   } on AuthException catch (e) {
-    Nav.navigatorKey.currentState.pushNamed("/login", arguments: true);
+    Nav.currentState.pushNamedAndRemoveUntil(
+      "/login",
+      ModalRoute.withName("/"),
+      arguments: true,
+    );
     return null;
   }
 }
@@ -57,7 +62,11 @@ dynamic put(String route,
       encoding: encoding,
     );
   } on AuthException catch (e) {
-    Nav.navigatorKey.currentState.pushNamed("/login", arguments: true);
+    Nav.currentState.pushNamedAndRemoveUntil(
+      "/login",
+      ModalRoute.withName("/"),
+      arguments: true,
+    );
     return null;
   }
 }
@@ -71,7 +80,11 @@ dynamic delete(String route,
       headers: headers,
     );
   } on AuthException catch (e) {
-    Nav.navigatorKey.currentState.pushNamed("/login", arguments: true);
+    Nav.currentState.pushNamedAndRemoveUntil(
+      "/login",
+      ModalRoute.withName("/"),
+      arguments: true,
+    );
     return null;
   }
 }

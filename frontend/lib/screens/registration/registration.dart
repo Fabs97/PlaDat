@@ -27,8 +27,11 @@ class _RegistrationState extends State<Registration> {
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: CustomAppBar.createAppBar(context, "Register to PlaDat"),
-      drawer: CustomDrawer.createDrawer(context),
+      appBar: AppBar(
+        title: Text("Register to PlaDat"),
+        centerTitle: true,
+        leading: Container(),
+      ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -256,7 +259,7 @@ class _RegistrationState extends State<Registration> {
         if (response is User) {
           message = "User correctly registered";
           toastColor = Colors.blue[700];
-          Nav.navigatorKey.currentState.pop();
+          Nav.currentState.pop();
         } else {
           message = response;
           toastColor = Colors.redAccent;

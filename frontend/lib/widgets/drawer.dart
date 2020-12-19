@@ -32,34 +32,22 @@ class CustomDrawer {
             ),
           ),
           ..._createDrawer(isStudent),
-          // ListTile( 
-          //   title: Text("Create placement"),
-          //   onTap: () =>
-          //       Nav.navigatorKey.currentState.pushNamed("/new-placement"),
-          // ),
-          // ListTile(
-          //   title: Text("Create student"),
-          //   onTap: () =>
-          //       Nav.navigatorKey.currentState.pushNamed("/new-student"),
-          // ),
-          // ListTile(
-          //   title: Text("Register to PlaDat"),
-          //   onTap: () =>
-          //       Nav.navigatorKey.currentState.pushNamed("/registration"),
-          // ),
         ],
       ),
     );
   }
 
   static _createDrawer(bool isStudent) {
-    return (isStudent ? _studentDrawerPages : _employerDrawerPages).map(_createListTile).cast<ListTile>().toList();
+    return (isStudent ? _studentDrawerPages : _employerDrawerPages)
+        .map(_createListTile)
+        .cast<ListTile>()
+        .toList();
   }
 
   static _createListTile(_CustomDrawerPage page) {
     return ListTile(
       title: Text(page.title),
-      onTap: () => Nav.navigatorKey.currentState.pushNamed(page.route),
+      onTap: () => Nav.currentState.pushNamed(page.route),
     );
   }
 }

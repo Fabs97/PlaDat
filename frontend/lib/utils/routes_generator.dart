@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/main.dart';
 import 'package:frontend/screens/company_placement_list/company_placement_list.dart';
 import 'package:frontend/screens/chat_screen/chat_screen.dart';
 import 'package:frontend/screens/company_student_list/company_student_list.dart';
@@ -13,10 +12,6 @@ import 'package:frontend/screens/student_placement_list/student_placement_list.d
 class RoutesGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
-      case '/home':
-        {
-          return _createRoute(FirstPage(), settings);
-        }
       case '/student-list':
         {
           return _createRoute(StudentCardsList(), settings);
@@ -88,4 +83,5 @@ class RoutesGenerator {
 
 class Nav {
   static final navigatorKey = GlobalKey<NavigatorState>();
+  static final currentState = navigatorKey.currentState;
 }
