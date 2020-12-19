@@ -18,7 +18,6 @@ class StudentMatches extends StatefulWidget {
 
 class _StudentMatchesState extends State<StudentMatches> {
   List<Placement> _placements;
-  Placement _placement;
   int _studentId = AuthService().loggedAccountInfo.id;
   @override
   void initState() {
@@ -64,7 +63,6 @@ class _StudentMatchesState extends State<StudentMatches> {
                   child: ListView.builder(
                     itemCount: _placements.length,
                     itemBuilder: (context, index) {
-                      _placement = _placements[index];
                       return Column(
                         children: [
                           ListTile(
@@ -82,14 +80,15 @@ class _StudentMatchesState extends State<StudentMatches> {
                                   ),
                                 ],
                               ),
-                              title: Text(_placement.position + " No.$index",
+                              title: Text(
+                                  _placements[index].position + " No.$index",
                                   style: themeData.textTheme.bodyText1.copyWith(
                                     fontSize: 16,
                                     fontWeight: FontWeight.w500,
                                   )),
                               subtitle: Text(
-                                _placement.employerName +
-                                    '\n${_placement.description}',
+                                _placements[index].employerName +
+                                    '\n${_placements[index].description}',
                                 maxLines: 3,
                                 overflow: TextOverflow.ellipsis,
                                 style: themeData.textTheme.bodyText2.copyWith(
@@ -132,29 +131,31 @@ class _StudentMatchesState extends State<StudentMatches> {
                                                               ENDPOINTS.Matches,
                                                               "/match/:studentId/:placementId",
                                                               urlArgs: Match(
-                                                                  placementID:
-                                                                      _placement
-                                                                          .id,
                                                                   studentID:
-                                                                      _studentId))
-                                                          .then((value) =>
-                                                              setState(() {
-                                                                print(value);
-                                                                if (value
-                                                                        is bool &&
-                                                                    value) {
-                                                                  _placements
-                                                                      .remove(
-                                                                          _placement);
-                                                                  Navigator.pop(
-                                                                      context);
-                                                                } else {
-                                                                  Fluttertoast
-                                                                      .showToast(
-                                                                          msg:
-                                                                              value);
-                                                                }
-                                                              }));
+                                                                      _studentId,
+                                                                  placementID:
+                                                                      _placements[
+                                                                              index]
+                                                                          .id))
+                                                          .then(
+                                                              (value) =>
+                                                                  setState(() {
+                                                                    print(
+                                                                        value);
+                                                                    if (value
+                                                                            is bool &&
+                                                                        value) {
+                                                                      _placements
+                                                                          .remove(
+                                                                              _placements[index]);
+                                                                      Navigator.pop(
+                                                                          context);
+                                                                    } else {
+                                                                      Fluttertoast
+                                                                          .showToast(
+                                                                              msg: value);
+                                                                    }
+                                                                  }));
                                                       Navigator.pop(context);
                                                     },
                                                   )
