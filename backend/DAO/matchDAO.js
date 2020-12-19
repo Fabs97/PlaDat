@@ -53,5 +53,32 @@ module.exports = {
                     throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There has been a problem retrieving your matches. Please try again')
                 }
             })
+    },
+
+    deleteMatch: (studentId, placementId) => {
+        return database('student_has_placement as shp')
+            .where('student_id', studentId)
+            .andWhere('placement_id', placementId)
+            .del()
+            .catch(error => {
+                if(error){
+                    throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There has been a problem retrieving your matches. Please try again')
+                }
+            })
+    },
+
+    getMatchesByPlacementId: (placementId) => {
+        return database('student_has_placement as shp')
+            .select('shp.student_id as studentId', 's.name as studentName', 's.surname', 's.description', 'skill.id', 'skill.name as skillName', 'skill.type')
+            .leftJoin('student as s', 's.id', 'shp.student_id')
+            .leftJoin('student_has_skills as shs', 's.id', 'shs.student_id')
+            .leftJoin('skill as skill', 'shs.skill_id', 'skill.id')
+            .where('shp.status','ACCEPTED')
+            .andWhere('shp.placement_id', placementId)
+            .catch(error => {
+                if(error){
+                    throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There has been a problem retrieving your matches. Please try again')
+                }
+            })
     }
 };
