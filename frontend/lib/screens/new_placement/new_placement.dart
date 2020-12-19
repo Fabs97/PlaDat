@@ -36,7 +36,7 @@ class _NewPlacementState extends State<NewPlacement> {
             textAlign: TextAlign.center,
           ),
           leading: _firstStep
-              ? null
+              ? Container()
               : IconButton(
                   onPressed: () => changeStep(true),
                   icon: Icon(Icons.arrow_back),

@@ -25,7 +25,7 @@ class _StudentFormState extends State<StudentForm> {
   @override
   void initState() {
     _controller.addListener(() {
-      final text = _controller.text.toLowerCase();
+      final text = _controller.text;
       _controller.value = _controller.value.copyWith(
         text: text,
         selection:
@@ -227,7 +227,7 @@ class _StudentFormState extends State<StudentForm> {
       decoration: const InputDecoration(
         hintText: 'Address',
       ),
-      initialValue: student.location?.description ?? '',
+      // initialValue: student.location?.description ?? '',
       onTap: () async {
         final Place result = await showSearch(
           context: context,
@@ -242,9 +242,7 @@ class _StudentFormState extends State<StudentForm> {
             result.country = splits[splits.length - 1];
             result.city = splits[splits.length - 2];
             student.location = result;
-          
           });
-          
         }
       },
 

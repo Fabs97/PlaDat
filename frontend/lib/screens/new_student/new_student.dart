@@ -53,7 +53,7 @@ class _NewStudentState extends State<NewStudent> {
               textAlign: TextAlign.center,
             ),
             leading: stepper.step == 0
-                ? null
+                ? Container()
                 : IconButton(
                     onPressed: () => stepper.goToPreviousFormStep(),
                     icon: Icon(Icons.arrow_back),

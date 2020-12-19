@@ -228,7 +228,7 @@ TextEditingController _controller= new TextEditingController();
       inputFormatters: [
         FilteringTextInputFormatter.digitsOnly,
       ],
-      initialValue: placement.salary?.toString(),
+      initialValue: placement.salary?.toString() ?? '',
       onChanged: (value) {
         setState(() {
           placement.salary = value != null ? int.parse(value) : "";
