@@ -48,16 +48,21 @@ describe('employer API', () => {
                     response.body.should.have.property('id');
                     employerId = response.body.id;
                     response.body.should.have.property('name');
+                    response.body.name.should.equal('test company');
                     response.body.should.have.property('description');
+                    response.body.description.should.equal('test description');
                     response.body.should.have.property('location');
                     response.body.location.should.be.a('object');
                     response.body.location.should.have.property('id');
                     locationId = response.body.location.id;
                     response.body.location.should.have.property('city');
+                    response.body.location.city.should.equal('test employer city');
                     response.body.location.should.have.property('country');
+                    response.body.location.country.should.equal('test employer country');
                     response.body.should.have.property('domain_of_activity');
                     response.body.domain_of_activity.should.be.a('object');
                     response.body.domain_of_activity.should.have.property('id');
+                    response.body.domain_of_activity.id.should.equal(domId);
                     response.body.domain_of_activity.should.have.property('name');
                     done();
                 })
