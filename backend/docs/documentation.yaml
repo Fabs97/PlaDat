@@ -1140,7 +1140,101 @@ paths:
         '500': 
           description: 'There has been a problem retrieving your matches. Please try again'
                 
-
+  /placement/:placementId/students:
+    get:
+      description: Returns all the students that a placement has been matched with
+      tags: 
+        - "Matching"
+      parameters:
+        - in: path
+          name: placementId
+          required: true
+          schema:
+            type: string
+          example: 1
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  properties:
+                    id: 
+                      type: integer
+                    name:
+                      type: string
+                    surname:
+                      type: string
+                    email:
+                      type: integer
+                    description:
+                      type: string
+                    phone:
+                      type: string
+                    skills:
+                      type: array
+                example:
+                  [
+                    {
+                        "id": 1,
+                        "name": "Alice",
+                        "surname": "Casali",
+                        "email": "abcd@gmail.com",
+                        "description": "Engineer student",
+                        "phone": 3333333,
+                        "skills": [
+                            {
+                                "id": 1,
+                                "name": "JavaScript",
+                                "type": "TECH"
+                            },
+                            {
+                                "id": 2,
+                                "name": "Java",
+                                "type": "TECH"
+                            },
+                            {
+                                "id": 17,
+                                "name": "Time Management",
+                                "type": "SOFT"
+                            },
+                            {
+                                "id": 18,
+                                "name": "Team Management",
+                                "type": "SOFT"
+                            }
+                        ]
+                    },
+                    {
+                        "id": 2,
+                        "name": "Fabrizio",
+                        "surname": "Siciliano",
+                        "email": "abcd@gmail.com",
+                        "description": "Engineer student",
+                        "phone": 33333333,
+                        "skills": [
+                            {
+                                "id": 2,
+                                "name": "Java",
+                                "type": "TECH"
+                            },
+                            {
+                                "id": 3,
+                                "name": "C++",
+                                "type": "TECH"
+                            },
+                            {
+                                "id": 18,
+                                "name": "Team Management",
+                                "type": "SOFT"
+                            }
+                        ]
+                    }
+                ]
+        '500': 
+          description: 'There has been a problem retrieving your matches. Please try again'
 
   /message/{studentId}/{employerId}:
     get:

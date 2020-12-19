@@ -4,7 +4,8 @@ import 'package:frontend/models/institution.dart';
 import 'package:frontend/services/api_service.dart';
 
 class InstitutionsAPIService extends APIInfo {
-  static Future<dynamic> route(String subRoute) {
+  static Future<dynamic> route(String subRoute,
+      {dynamic body, dynamic urlArgs}) {
     switch (subRoute) {
       case "/institutions":
         return _getInstitutions(subRoute);

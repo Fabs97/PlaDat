@@ -3,8 +3,10 @@ import 'dart:html';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/models/placement.dart';
+import 'package:frontend/screens/company_placement_list/local_widgets/placement_matched_students.dart';
 import 'package:frontend/services/api_service.dart';
 import 'package:frontend/utils/custom_theme.dart';
+import 'package:frontend/utils/routes_generator.dart';
 import 'package:frontend/widgets/appbar.dart';
 import 'package:frontend/widgets/drawer.dart';
 
@@ -17,7 +19,6 @@ class MyPlacements extends StatefulWidget {
 
 class _MyPlacementsState extends State<MyPlacements> {
   List<Placement> _placements;
-  Placement _placement;
   int _employerId = 1;
 
   @override
@@ -26,7 +27,6 @@ class _MyPlacementsState extends State<MyPlacements> {
             urlArgs: _employerId)
         .then((placementsList) => setState(() {
               _placements = placementsList;
-              //_placement = _placements[0] ?? null;
             }));
     super.initState();
   }
@@ -70,13 +70,21 @@ class _MyPlacementsState extends State<MyPlacements> {
                               ),
                               subtitle: Text(
                                 _placement.countMatches != null
-                                    ? "${_placement.countMatches}" + " matches"
                                     : "0 matches",
+                                    ? "${_placement.countMatches}" + " matches"
                                 style: themeData.textTheme.caption.copyWith(
                                   color: CustomTheme().secondaryColor,
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
+                    onTap: () {
+                      if (int.parse(_placements[index].countMatches) > 0) {
+                        Nav.navigatorKey.currentState.push(MaterialPageRoute(
+                          builder: (builder) => PlacementMatchedStudents(
+                              placement: _placements[index]),
+                        ));
+                      }
+                    },
                             ),
                             Padding(
                               padding:
