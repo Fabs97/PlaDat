@@ -67,7 +67,8 @@ class Student extends ChangeNotifier {
       password: json["password"],
       description: json["description"],
       phone: json["phone"],
-      location: json["location"] != null ? Place.fromJson(json['location']) : null,
+      location:
+          json["location"] != null ? Place.fromJson(json['location']) : null,
       skills: Skill.listFromJson(json["skills"]),
       educations: EducationExperience.listFromJson(json["education"]),
           // ?.map((education) => EducationExperience.fromJson(jsonDecode(education)))
@@ -78,5 +79,13 @@ class Student extends ChangeNotifier {
           // ?.toList()
           // ?.cast<WorkExperience>(),
     );
+  }
+
+  static List<Student> listFromJson(String json) {
+    final parsed = jsonDecode(json).cast<Map<String, dynamic>>();
+    return parsed
+        .map((studentsJson) => Student.fromJson(studentsJson))
+        .toList()
+        .cast<Student>();
   }
 }
