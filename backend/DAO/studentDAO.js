@@ -100,9 +100,11 @@ module.exports = {
                  
             .havingRaw('count(*) >= ?', parseInt(skillsNumber/2))
             .as('student_ids')
-            .catch((error) => {
-                console.log(error);
-            });
+            .catch(error => {
+                if(error){
+                    throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There has been a problem finding the recommended students. Please try again.')
+                }
+            })
         
         studentIDs = studentIDs.map(student => student.student_id);
 
@@ -112,7 +114,12 @@ module.exports = {
             .leftJoin('skill AS sk', 'shs.skill_id', 'sk.id')
             .leftJoin('location AS l', 's.location_id', 'l.id')
             .whereIn('s.id', studentIDs)
-            .orderBy('s.id');
+            .orderBy('s.id')
+            .catch(error => {
+                if(error){
+                    throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There has been a problem looking up informations about the recommended students. Please try again.')
+                }
+            })
         let result = []
 
         let educations = await database('education AS e')
@@ -122,13 +129,23 @@ module.exports = {
             .leftJoin('institutions As i', 'e.institution_id', 'i.id')
             .leftJoin('degree AS d', 'e.degree_id', 'd.id')
             .whereIn('she.student_id', studentIDs)
-            .orderBy('she.student_id');
+            .orderBy('she.student_id')
+            .catch(error => {
+                if(error){
+                    throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There has been a problem looking up informations about the recommended students. Please try again.')
+                }
+            })
 
         let works = await database('work AS w')
             .select('w.company_name AS company', 'w.position AS position', 'w.start_period AS start_period', 'w.end_period AS end_period', 'w.description AS description', 'shw.student_id AS student_id')
             .leftJoin('student_has_work AS shw', 'w.id', 'shw.work_id')
             .whereIn('shw.student_id', studentIDs)
-            .orderBy('shw.student_id');
+            .orderBy('shw.student_id')
+            .catch(error => {
+                if(error){
+                    throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There has been a problem looking up informations about the recommended students. Please try again.')
+                }
+            })
         
         let j = 0;
         let k = 0;

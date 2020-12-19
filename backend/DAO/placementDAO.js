@@ -154,16 +154,23 @@ module.exports = {
             .whereIn('phs.skill_id', skills)
             .groupBy('p.id')
             .having(database.raw('count(phs.skill_id) > max(p2.count_total)/2'))
-            .catch((error) => {
-                console.log(error)
-            });
+            .catch(error => {
+                if(error){
+                    throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There has been a problem finding the recommended placements. Please try again.')
+                }
+            })
 
         let placementIDs =  placementData.map(placement => placement.id);
 
         let resultTemp = await database('placement_has_skills AS phs')
             .leftJoin('skill AS s', 's.id', 'phs.skill_id')
             .whereIn('phs.placement_id', placementIDs)
-            .orderBy('phs.placement_id');
+            .orderBy('phs.placement_id')
+            .catch(error => {
+                if(error){
+                    throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There has been a problem looking up informations about the recommended placements. Please try again.')
+                }
+            })
         let result = [];
         let prev = 0;
 
@@ -171,25 +178,45 @@ module.exports = {
             .select('l.id AS id', 'l.country AS country', 'l.city AS city', 'p.id AS placement_id')
             .leftJoin('placements as p', 'l.id', 'p.location_id')
             .whereIn('p.id', placementIDs)
-            .orderBy('p.id');
+            .orderBy('p.id')
+            .catch(error => {
+                if(error){
+                    throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There has been a problem looking up informations about the recommended placements. Please try again.')
+                }
+            })
         
         let majors = await database('majors as m')
             .select('m.name AS name', 'phm.placement_id AS placement_id')
             .leftJoin('placement_has_major AS phm', 'm.id', 'phm.major_id')
             .whereIn('phm.placement_id', placementIDs)
-            .orderBy('phm.placement_id');
+            .orderBy('phm.placement_id')
+            .catch(error => {
+                if(error){
+                    throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There has been a problem looking up informations about the recommended placements. Please try again.')
+                }
+            })
         
         let institutions =  await database('institutions AS i')
             .select('i.name AS name', 'phi.placement_id AS placement_id')
             .leftJoin('placement_has_institution AS phi', 'i.id', 'phi.institution_id')
             .whereIn('phi.placement_id', placementIDs)
-            .orderBy('phi.placement_id');
+            .orderBy('phi.placement_id')
+            .catch(error => {
+                if(error){
+                    throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There has been a problem looking up informations about the recommended placements. Please try again.')
+                }
+            })
 
         let employers = await database('employer AS e')
             .select('e.name AS employer_name', 'p.id AS placement_id')
             .leftJoin('placements AS p', 'e.id', 'p.employer_id')
             .whereIn('p.id', placementIDs)
-            .orderBy('p.id');
+            .orderBy('p.id')
+            .catch(error => {
+                if(error){
+                    throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There has been a problem looking up informations about the recommended placements. Please try again.')
+                }
+            })
     
         
         let j = 0;
