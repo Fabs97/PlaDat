@@ -1,5 +1,3 @@
-import 'package:frontend/models/employer.dart';
-import 'package:frontend/models/student.dart';
 import 'package:frontend/models/user.dart';
 import 'dart:html' show window;
 import 'package:frontend/services/api_service.dart';
@@ -30,8 +28,7 @@ class AuthService {
 
   dynamic get loggedAccountInfo => this._loggedAccountInfo;
 
-  login(User user) async {
-    //TODO: test with backend
+  dynamic login(User user) async {
     try {
       final response = await APIService.route(
         ENDPOINTS.Login,
@@ -39,13 +36,17 @@ class AuthService {
         body: user,
       );
       if (response is Map<String, dynamic>) {
-        // TODO: check if the variables are the same passed down from the backend
         final studentId = response["studentID"];
         final employerId = response["employerID"];
-        final isStudent = response["isStudent"];
+        // final isStudent = response["student"];
+        final isStudent = studentId != null
+            ? true
+            : employerId != null
+                ? true
+                : false;
         user.type = isStudent ? AccountType.Student : AccountType.Employer;
         this._loggedUser = user;
-        window.localStorage["jwtToken"] = response["jwtToken"];
+        window.localStorage["jwtToken"] = response["token"];
         if (studentId != null || employerId != null) {
           this._loggedAccountInfo = await studentId != null
               ? APIService.route(
