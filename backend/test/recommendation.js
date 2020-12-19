@@ -40,7 +40,7 @@ describe('recommendation API', () => {
                         placements[i].should.have.property('end_period');                                
                         placements[i].should.have.property('salary');
                         placements[i].should.have.property('description_role');
-                        placements[i].should.have.property('employer_id');
+                        placements[i].should.have.property('employer_name');
                         placements[i].should.have.property('skills');
                         let skills = placements[i].skills;
                         skills.should.be.a('array');
@@ -76,6 +76,16 @@ describe('recommendation API', () => {
             
             
         })
+
+        it('should get a 400 Bad Request error if the request does not contains a valid student id', (done) => {
+            chai.request(server)
+                .get('/recommendation/foo/seePlacements')
+                .end((err, response) => {
+                    response.should.have.status(400);
+                    done();
+                })
+        })
+
     })
 
     describe('GET /recommendation/:id/seeStudents', () => {
@@ -143,5 +153,15 @@ describe('recommendation API', () => {
                 })
             
         })
+
+        it('should get a 400 Bad Request error if the request does not contains a valid placement id', (done) => {
+            chai.request(server)
+                .get('/recommendation/foo/seeStudents')
+                .end((err, response) => {
+                    response.should.have.status(400);
+                    done();
+                })
+        })
+
     })
 })

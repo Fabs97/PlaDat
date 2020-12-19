@@ -368,6 +368,25 @@ paths:
                       ]
                     }
                   ]
+        '400': 
+          description: Bad Request
+          content:
+            text/html:
+              schema:
+                type: string
+                example:
+                  "Your request does not contains a valid placment id. Please try again"
+        '500':
+          description: Internal Server Error
+          content: 
+            text/html:
+              schema:
+                type: string
+                example:
+                  "There has been a problem looking up the recommended students. Please try again"
+
+
+
   /recommendation/{id}/seePlacements:
     get:
       description: Provides all placements recommendation for the provided student id, based on the algorithm
@@ -425,6 +444,22 @@ paths:
                       ]
                     }
                   ]
+        '400': 
+          description: Bad Request
+          content:
+            text/html:
+              schema:
+                type: string
+                example:
+                  "Your request does not contains a valid student id. Please try again"
+        '500':
+          description: Internal Server Error
+          content: 
+            text/html:
+              schema:
+                type: string
+                example:
+                  "There has been a problem looking up the recommended placements. Please try again"
   /matching:
     post:
       description: Allows users to upsert the provided match to the matches table
