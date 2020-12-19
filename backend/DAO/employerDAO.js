@@ -34,7 +34,7 @@ module.exports = {
             });
         result = result[0];
 
-        result.domain_of_activity = await database('domain_of_activity AS d')
+        let domain_of_activity = await database('domain_of_activity AS d')
             .select('d.id AS id', 'd.name AS name')
             .leftJoin('employer AS e', 'd.id', 'e.domain_of_activity_id')
             .where('e.id', result.id)
@@ -43,6 +43,7 @@ module.exports = {
                     throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There was an error saving your profile');
                 }
             });
+        result.domain_of_activity = domain_of_activity[0];
         return result;
     },
 
@@ -58,5 +59,11 @@ module.exports = {
             });
         return result;
     },
+
+    deleteEmployerById: async (id) => {
+        await database('employer')
+            .where('id', id)
+            .del();
+    }
 
 };

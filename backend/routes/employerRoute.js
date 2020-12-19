@@ -21,5 +21,10 @@ router.post('/employer', async (req, res, next) => {
     res.json(newEmployer);
 })
 
+router.delete('/employer/:id', async (req, res, next) => {
+    await employerService.deleteEmployerById(req.params.id);
+    res.status(200).send("employer deleted correctly");
+})
+
 
 module.exports = router;

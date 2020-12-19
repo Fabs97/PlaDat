@@ -43,4 +43,8 @@ module.exports = self = {
         }
         return location;
     },
+
+    deleteEmployerById: async (id) => {
+        await employerDAO.deleteEmployerById(id);
+    }
 };
