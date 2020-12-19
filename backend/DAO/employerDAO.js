@@ -16,4 +16,12 @@ module.exports = {
         return result[0];
     },
 
+    getEmployerByUserId:  async (userId) => {
+        let result = await database('employer')
+            .select('id', 'name')
+            .where('user_id', userId)
+        
+        return result.length ? result[0] : null;
+    },
+
 };

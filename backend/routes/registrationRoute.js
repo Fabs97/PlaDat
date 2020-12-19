@@ -10,4 +10,13 @@ router.post("/registration", async ( req, res, next ) => {
     res.json(userRegistration);
 });
 
+router.post("/login", async ( req, res, next ) => {
+    let userProfile = await registrationService.getUserProfile(req.body)
+        .catch(error => {
+            res.status(error.code).send(error.message);
+        });
+    res.json(userProfile);
+});
+
+
 module.exports = router;

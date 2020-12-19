@@ -3,10 +3,10 @@ const app = express();
 const swaggerUI = require('swagger-ui-express');
 const APIDocumentation = require('./docs/openapi');
 const cors = require('cors');
+const jwt = require("jsonwebtoken");
+const {authenticateToken} = require('./services/middlewareService')
+
 const port = process.env.PORT || 3000;
-
-
-
 
 const originWhitelist = [
     'http://127.0.0.1:8200/#/',

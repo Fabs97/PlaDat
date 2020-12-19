@@ -170,6 +170,13 @@ module.exports = {
             });
         return result;
     },
+    getStudentByUserId: async (userId) => {
+        let result = await database('student')
+            .select('id', 'name', 'email')
+            .where('user_id', userId)
+        
+        return result.length ? result[0] : null;
+    }
 
 
 };

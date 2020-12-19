@@ -21,4 +21,11 @@ module.exports = {
 
         return result[0];
     },
+
+    getAccountByEmail: async (email) => {
+        let result = await database('registration')
+            .select()
+            .where('email', email)
+        return result.length ? result[0] : null
+    }
 }

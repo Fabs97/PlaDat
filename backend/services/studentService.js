@@ -86,4 +86,7 @@ self = module.exports = {
         }
         return location;
     },
+    getStudentByUserId: (userId) => {
+        return studentDAO.getStudentByUserId(userId);
+    }
 };

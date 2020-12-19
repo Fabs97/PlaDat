@@ -7,5 +7,9 @@ module.exports = {
 
     getLastEmployer: async () => {
         return await employerDAO.getLastEmployer();
+    },
+
+    getEmployerByUserId: (userId) => {
+        return employerDAO.getEmployerByUserId();
     }
 };
