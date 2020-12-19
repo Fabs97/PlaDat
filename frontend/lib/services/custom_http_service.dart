@@ -6,10 +6,15 @@ import 'package:frontend/utils/routes_generator.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 
-Future<Response> get(String route,
+dynamic get(String route,
     {Map<String, String> headers, bool needsAuth = true}) async {
   try {
-    if (needsAuth) headers["Bearer-Token"] = AuthService().jwtToken;
+    if (needsAuth) {
+      if (headers == null) {
+        headers = Map();
+      }
+      headers["authorization"] = AuthService().jwtToken;
+    }
     return await http.get(
       route,
       headers: headers,
@@ -20,13 +25,13 @@ Future<Response> get(String route,
   }
 }
 
-Future<Response> post(String route,
+dynamic post(String route,
     {Map<String, String> headers,
     body,
     Encoding encoding,
     bool needsAuth = true}) async {
   try {
-    if (needsAuth) headers["Bearer-Token"] = AuthService().jwtToken;
+    if (needsAuth) headers["authorization"] = AuthService().jwtToken;
     return await http.post(
       route,
       headers: headers,
@@ -39,13 +44,13 @@ Future<Response> post(String route,
   }
 }
 
-Future<Response> put(String route,
+dynamic put(String route,
     {Map<String, String> headers,
     body,
     Encoding encoding,
     bool needsAuth = true}) async {
   try {
-    if (needsAuth) headers["Bearer-Token"] = AuthService().jwtToken;
+    if (needsAuth) headers["authorization"] = AuthService().jwtToken;
     return await http.put(
       route,
       headers: headers,
@@ -57,10 +62,10 @@ Future<Response> put(String route,
   }
 }
 
-Future<Response> delete(String route,
+dynamic delete(String route,
     {Map<String, String> headers, bool needsAuth = true}) async {
   try {
-    if (needsAuth) headers["Bearer-Token"] = AuthService().jwtToken;
+    if (needsAuth) headers["authorization"] = AuthService().jwtToken;
     return await http.delete(
       route,
       headers: headers,

@@ -31,7 +31,7 @@ class CustomDrawer {
               color: Colors.blue,
             ),
           ),
-          _createDrawer(isStudent),
+          ..._createDrawer(isStudent),
           // ListTile( 
           //   title: Text("Create placement"),
           //   onTap: () =>

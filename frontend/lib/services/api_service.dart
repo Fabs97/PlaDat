@@ -84,7 +84,7 @@ class APIService {
           throw APIException();
       }
     } catch (e) {
-      print("[Error]::APIService - $e");
+      print("[Error]::APIService - ${e.toString}");
       return null;
     }
   }
