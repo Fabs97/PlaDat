@@ -12,7 +12,7 @@ class EmployersAPIService extends APIInfo {
       case "/employer/:employerId/placements":
         return _getPlacementByEmployerId(subRoute, urlArgs);
       case "/employer/:id":
-        return _getEmployerById(urlArgs);
+        return _getEmployerById(urlArgs.toString());
       default:
         throw StudentAPIException();
     }

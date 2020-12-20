@@ -1,20 +1,33 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/models/placement.dart';
+import 'package:frontend/utils/routes_generator.dart';
+import 'package:frontend/utils/custom_theme.dart';
 import 'package:frontend/widgets/card_skills_info.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 
 class PlacementCard extends StatelessWidget {
   final Placement placement;
 
-  const PlacementCard({Key key, this.placement}) : super(key: key);
+  PlacementCard({Key key, this.placement}) : super(key: key);
+  final _longDateFormatter = DateFormat("MMM yyyy");
+  final _compactDateFormatter = DateFormat("MMM");
+  final _salaryFormatter =
+      NumberFormat.compactCurrency(locale: "en_US", symbol: "£ ");
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final screenSize = MediaQuery.of(context).size;
+    final themeData = Theme.of(context);
     return Card(
-      shadowColor: Colors.black,
+      shadowColor: Color(0xffced5ff),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10.0),
+        side: BorderSide(
+          color: Color(0xffced5ff),
+          width: 8.0,
+        ),
       ),
       child: Padding(
         padding: const EdgeInsets.all(10.0),
@@ -23,28 +36,19 @@ class PlacementCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.max,
           children: [
-            Expanded(
-              child: _createPlacementTitle(size, Theme.of(context).textTheme),
-              flex: 2,
-            ),
-            Expanded(
-              child: _createPlacementDescription(placement.description, size),
-              flex: 1,
-            ),
-            Expanded(
-              child: _createPlacementWorkingInfo(),
-              flex: 1,
-            ),
-            Expanded(
+            _createPlacementTitle(screenSize, Theme.of(context).textTheme),
+            _createPlacementDescription(placement.description, screenSize),
+            _createPlacementWorkingInfo(screenSize, themeData),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
               child: CardSkillsChips(
                   title: "Technical skills",
                   skills: placement.skills["TECH"] ?? []),
-              flex: 1,
             ),
-            Expanded(
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
               child: CardSkillsChips(
                   title: "Soft skills", skills: placement.skills["SOFT"] ?? []),
-              flex: 1,
             ),
           ],
         ),
@@ -75,22 +79,32 @@ class PlacementCard extends StatelessWidget {
                   placement.position,
                   overflow: TextOverflow.fade,
                   maxLines: 2,
-                  style: textTheme.headline4.copyWith(
-                    fontWeight: FontWeight.bold,
+                  style: textTheme.headline5.copyWith(
+                    fontFamily: GoogleFonts.roboto().fontFamily,
+                    color: CustomTheme().textColor,
+                    fontWeight: FontWeight.w700,
+                    fontSize: 20,
                   ),
                 ),
               ),
               Text(
                 "Company name",
-                style: textTheme.headline6,
+                style: textTheme.subtitle2.copyWith(
+                  fontWeight: FontWeight.w300,
+                ),
               ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 0.0),
+              FlatButton(
+                color: Colors.transparent,
                 child: Text(
                   "Find out more",
-                  style: TextStyle(
-                    decoration: TextDecoration.underline,
+                  style: textTheme.subtitle1.copyWith(
+                    color: CustomTheme().secondaryColor,
+                    fontWeight: FontWeight.w700,
                   ),
+                ),
+                onPressed: () => Nav.navigatorKey.currentState.pushNamed(
+                  "/profile",
+                  arguments: placement,
                 ),
               ),
             ],
@@ -101,39 +115,48 @@ class PlacementCard extends StatelessWidget {
   }
 
   Widget _createPlacementDescription(String description, Size screenSize) {
-    return ConstrainedBox(
-      constraints: BoxConstraints.loose(
-        Size(
-          screenSize.width * .8,
-          screenSize.height * .3,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+      child: ConstrainedBox(
+        constraints: BoxConstraints.loose(
+          Size(
+            screenSize.width * .8,
+            screenSize.height * .3,
+          ),
+        ),
+        child: AutoSizeText(
+          description,
+          maxLines: 5,
         ),
       ),
-      child: AutoSizeText(
-        description,
-        maxLines: 5,
+    );
+  }
+
+  Widget _createPlacementWorkingInfo(Size screenSize, ThemeData themeData) {
+    return Container(
+      height: screenSize.height * .1,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          _createPlacementWorkingInfoBox(
+              "Working period",
+              placement.startPeriod.year != placement.endPeriod.year
+                  ? "from ${_longDateFormatter.format(placement.startPeriod)} to ${_longDateFormatter.format(placement.endPeriod)}"
+                  : "from ${_compactDateFormatter.format(placement.startPeriod)} to ${_longDateFormatter.format(placement.endPeriod)}",
+              themeData),
+          _createPlacementWorkingInfoBox(
+              "Type", "${placement.employmentType.niceString}", themeData),
+          _createPlacementWorkingInfoBox("Salary",
+              "${_salaryFormatter.format(placement.salary)}", themeData),
+        ],
       ),
     );
   }
 
-  Widget _createPlacementWorkingInfo() {
-    final startMonth = placement.startPeriod.month;
-    final endMonth = placement.endPeriod.month;
-    final endYear = placement.endPeriod.year;
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisSize: MainAxisSize.max,
-      children: [
-        _createPlacementWorkingInfoBox(
-            "Working period", "from $startMonth to $endMonth $endYear"),
-        _createPlacementWorkingInfoBox(
-            "Type", "${placement.employmentType.niceString}"),
-        _createPlacementWorkingInfoBox("Salary", "${placement.salary} €"),
-      ],
-    );
-  }
-
-  Widget _createPlacementWorkingInfoBox(String title, String subTitle) {
+  Widget _createPlacementWorkingInfoBox(
+      String title, String subTitle, ThemeData themeData) {
     return Expanded(
       child: Padding(
         padding: const EdgeInsets.symmetric(
@@ -141,7 +164,7 @@ class PlacementCard extends StatelessWidget {
         ),
         child: Container(
           decoration: BoxDecoration(
-            color: Colors.grey,
+            color: CustomTheme().backgroundColor,
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -162,6 +185,10 @@ class PlacementCard extends StatelessWidget {
                 child: Text(
                   subTitle,
                   textAlign: TextAlign.center,
+                  style: themeData.textTheme.caption.copyWith(
+                    fontStyle: FontStyle.italic,
+                    fontWeight: FontWeight.w400,
+                  ),
                 ),
               ),
             ],

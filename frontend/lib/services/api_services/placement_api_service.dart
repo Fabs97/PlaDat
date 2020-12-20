@@ -12,6 +12,8 @@ class PlacementAPIService extends APIInfo {
         return _postPlacement(subRoute, body);
       case "placements":
         return _getPlacements(subRoute);
+      case "/placement/:id":
+        return _getPlacement(subRoute, urlArgs);
       case "/placement/:placementId/students":
         return _getMatchedStudentsByPlacementId(subRoute, urlArgs);
       default:
@@ -30,6 +32,15 @@ class PlacementAPIService extends APIInfo {
     if (response.statusCode == 200) {
       final placement = Placement.fromJson(jsonDecode(response.body));
       return placement;
+    }
+  }
+
+  static Future<dynamic> _getPlacement(String subRoute, int placementId) async {
+    var response =
+        await http.get(APIInfo.apiEndpoint + "/placement/${placementId}");
+
+    if (response.statusCode == 200) {
+      return Placement.fromJson(jsonDecode(response.body));
     }
   }
 

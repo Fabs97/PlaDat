@@ -3,8 +3,8 @@ import 'package:frontend/models/student.dart';
 import 'package:frontend/models/work_experience.dart';
 import 'package:frontend/screens/new_student/local_widget/experience_card.dart';
 import 'package:frontend/screens/new_student/new_student.dart';
+import 'package:frontend/utils/custom_theme.dart';
 import 'package:intl/intl.dart';
-import 'package:date_range_picker/date_range_picker.dart' as DateRagePicker;
 import 'package:provider/provider.dart';
 
 class WorkExperiencesForm extends StatefulWidget {
@@ -29,7 +29,10 @@ class WorkExperiencesFormState extends State<WorkExperiencesForm> {
     final size = MediaQuery.of(context).size;
     final student = Provider.of<Student>(context);
     final formStepper = Provider.of<FormStepper>(context);
-    final List<WorkExperience> works = [...student.works ?? [], ..._experiences].toSet().toList().cast<WorkExperience>();
+    final List<WorkExperience> works = [...student.works ?? [], ..._experiences]
+        .toSet()
+        .toList()
+        .cast<WorkExperience>();
     return SizedBox(
       width: size.width * .9,
       height: size.height * .85,
@@ -120,14 +123,7 @@ class WorkExperiencesFormState extends State<WorkExperiencesForm> {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10.0),
           color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black,
-              blurRadius: 2.0,
-              spreadRadius: 0.0,
-              offset: Offset(2.0, 2.0),
-            ),
-          ],
+          boxShadow: [CustomTheme().boxShadow],
         ),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15.0),
@@ -239,19 +235,21 @@ class WorkExperiencesFormState extends State<WorkExperiencesForm> {
   }
 
   void _openDatePicker() async {
-    final List<DateTime> picked = await DateRagePicker.showDatePicker(
+    final DateTimeRange range = await showDateRangePicker(
       context: context,
-      initialFirstDate: _newExperience.startPeriod ?? DateTime.now(),
-      initialLastDate: _newExperience.endPeriod ??
+      initialDateRange: DateTimeRange(
+        start: _newExperience.startPeriod ?? DateTime.now(),
+        end: _newExperience.endPeriod ??
           (new DateTime.now()).add(new Duration(days: 7)),
+      ),
       firstDate: DateTime.now().subtract(Duration(days: 365 * 100)),
       lastDate: (DateTime.now()).add(Duration(days: 365 * 100)),
     );
-    if (picked != null && picked.length == 2) {
+    if (range != null) {
       setState(() {
         // picked is always ordered with the smaller one coming at index 0
-        _newExperience.startPeriod = picked[0];
-        _newExperience.endPeriod = picked[1];
+        _newExperience.startPeriod = range.start;
+        _newExperience.endPeriod = range.end;
       });
     }
   }

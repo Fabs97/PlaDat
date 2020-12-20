@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:frontend/models/student.dart';
 import 'package:frontend/services/api_service.dart';
+import 'package:frontend/utils/custom_theme.dart';
 import 'package:frontend/utils/routes_generator.dart';
 import 'package:frontend/widgets/address_search.dart';
 import 'package:frontend/models/place.dart';
@@ -12,7 +13,6 @@ import 'package:frontend/screens/new_student/new_student.dart';
 import 'package:provider/provider.dart';
 
 class StudentForm extends StatefulWidget {
-
   const StudentForm({Key key}) : super(key: key);
   @override
   _StudentFormState createState() => _StudentFormState();
@@ -57,14 +57,7 @@ class _StudentFormState extends State<StudentForm> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10.0),
                     color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black,
-                        blurRadius: 2.0,
-                        spreadRadius: 0.0,
-                        offset: Offset(2.0, 2.0),
-                      ),
-                    ],
+                    boxShadow: [CustomTheme().boxShadow],
                   ),
                   child: Padding(
                     padding: EdgeInsets.symmetric(
@@ -87,7 +80,6 @@ class _StudentFormState extends State<StudentForm> {
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 16.0),
                   child: RaisedButton(
-                    color: Colors.grey[600],
                     onPressed: () {
                       // Validate will return true if the form is valid, or false if
                       // the form is invalid.
@@ -241,12 +233,9 @@ class _StudentFormState extends State<StudentForm> {
             result.country = splits[splits.length - 1];
             result.city = splits[splits.length - 2];
             student.location = result;
-          
           });
-          
         }
       },
-
       validator: (value) {
         if (value.isEmpty) {
           return 'Please enter your address';
