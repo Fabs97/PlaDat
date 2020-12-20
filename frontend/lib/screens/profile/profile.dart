@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend/models/student.dart';
 import 'package:frontend/screens/profile/local_widgets/placement_profile.dart';
 import 'package:frontend/screens/profile/local_widgets/student_profile.dart';
+import 'package:frontend/services/auth_service.dart';
 import 'package:frontend/widgets/appbar.dart';
 import 'package:frontend/widgets/drawer.dart';
 
@@ -12,7 +13,14 @@ class Profile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar.createAppBar(context, "My Profile"),
+      appBar: CustomAppBar.createAppBar(
+        context,
+        profile is Student
+            ? (profile.id != AuthService().loggedAccountInfo.id
+                ? "Student Profile"
+                : "My profile")
+            : "Placement Profile",
+      ),
       drawer: CustomDrawer.createDrawer(context),
       body: LayoutBuilder(
         builder: (context, constraints) {

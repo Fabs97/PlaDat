@@ -75,22 +75,29 @@ class _PlacementMatchedStudentsState extends State<PlacementMatchedStudents> {
                     Spacer(),
                     FlatButton(
                       onPressed: () {
-                        APIService.route(ENDPOINTS.Placement, "/placement/:id",
-                                urlArgs: widget.placement.id)
-                            .then((response) {
+                        APIService.route(
+                          ENDPOINTS.Placement,
+                          "/placement/:id",
+                          urlArgs: widget.placement.id,
+                        ).then((response) {
                           if (response is Placement) {
                             Nav.navigatorKey.currentState
                                 .pushNamed("/profile", arguments: response);
                           } else {
                             Fluttertoast.showToast(msg: response);
                           }
-                        }).catchError((error) => Fluttertoast.showToast(msg: error.toString()));
+                        }).catchError((error) =>
+                            Fluttertoast.showToast(msg: error.toString()));
                       },
                       color: Colors.transparent,
-                      child: Text('See more', style: themeData.textTheme.bodyText1.copyWith(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w700,
-                            color: CustomTheme().secondaryColor,),),
+                      child: Text(
+                        'See more',
+                        style: themeData.textTheme.bodyText1.copyWith(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w700,
+                          color: CustomTheme().secondaryColor,
+                        ),
+                      ),
                     ),
                   ],
                 ),
@@ -114,10 +121,8 @@ class _PlacementMatchedStudentsState extends State<PlacementMatchedStudents> {
                             itemCount: _students.length,
                             itemBuilder: (context, index) {
                               final _student = _students[index];
-                              final _techSkills =
-                                  _student.skills["TECH"];
-                              final _softSkills =
-                                  _student.skills["SOFT"];
+                              final _techSkills = _student.skills["TECH"];
+                              final _softSkills = _student.skills["SOFT"];
                               final _skills = _techSkills + _softSkills;
                               return Padding(
                                 padding: const EdgeInsets.symmetric(
