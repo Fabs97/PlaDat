@@ -2,6 +2,7 @@ import 'dart:html';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:frontend/models/placement.dart';
 import 'package:frontend/screens/company_placement_list/local_widgets/placement_matched_students.dart';
 import 'package:frontend/services/api_service.dart';
@@ -56,6 +57,7 @@ class _MyPlacementsState extends State<MyPlacements> {
                   child: ListView.builder(
                     itemCount: _placements.length,
                     itemBuilder: (context, index) {
+                      final _placement = _placements[index];
                       return Padding(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 15.0,
@@ -65,26 +67,38 @@ class _MyPlacementsState extends State<MyPlacements> {
                           children: [
                             ListTile(
                               title: Text(
-                                _placements[index].position + " No.$index",
+                                _placement.position + " No.$index",
                                 style: themeData.textTheme.bodyText1.copyWith(
                                   fontWeight: FontWeight.w700,
                                 ),
                               ),
                               subtitle: Text(
-                                "${_placements[index].countMatches ?? 0} matches",
+                                "${_placement.countMatches ?? 0} matches",
                                 style: themeData.textTheme.caption.copyWith(
                                   color: CustomTheme().secondaryColor,
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
                               onTap: () {
-                                if (int.parse(_placements[index].countMatches) >
-                                    0) {
+                                if (_placement.countMatches == null) {
+                                  APIService.route(
+                                          ENDPOINTS.Placement, "/placement/:id",
+                                          urlArgs: _placement.id)
+                                      .then((placement) {
+                                    Nav.navigatorKey.currentState.pushNamed(
+                                      "/profile",
+                                      arguments: placement,
+                                    );
+                                  }).catchError((error) {
+                                    Fluttertoast.showToast(
+                                        msg: error.message ?? error.toString());
+                                  });
+                                } else {
                                   Nav.navigatorKey.currentState
                                       .push(MaterialPageRoute(
                                     builder: (builder) =>
                                         PlacementMatchedStudents(
-                                            placement: _placements[index]),
+                                            placement: _placement),
                                   ));
                                 }
                               },
