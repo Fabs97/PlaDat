@@ -19,8 +19,9 @@ module.exports = {
                 end_period: details.endPeriod, 
                 salary: salary,
                 description_role: details.descriptionRole,
-                employer_id: details.employerId
-            }, ['id', 'position', 'employment_type', 'start_period', 'end_period', 'salary', 'description_role', 'employer_id'])
+                employer_id: details.employerId,
+                status: 'OPEN'
+            }, ['id', 'position', 'employment_type', 'start_period', 'end_period', 'salary', 'description_role', 'employer_id', 'status'])
             .catch(error => {
                 if(error) {
                     throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There has been a problem saving your placement. Please try again')

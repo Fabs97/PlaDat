@@ -121,8 +121,8 @@ components:
           type: integer
         position: 
           type: string
-        working_hours:
-          type: integer
+        employment_type:
+          type: string
         start_period: 
           type: string
           format: date-time
@@ -135,6 +135,8 @@ components:
           type: string
         employer_id:
           type: integer
+        status:
+          type: string
     Institution:
       type: object
       properties:
@@ -508,7 +510,7 @@ paths:
               example:
                 {
                   position: "Full stack developer",
-                  workingHours: 20,
+                  emplymentType: 'PART_TIME',
                   startPeriod: "2020-11-11",
                   endPeriod: "2020-11-11",
                   salary: 600,
@@ -556,12 +558,13 @@ paths:
                   {
                     id: 3,
                     position: "Full stack developer",
-                    working_hours: 20,
+                    employment_type: 'PART_TIME',
                     start_period: "2020-11-11",
                     end_period: "2020-11-11",
                     salary: 600,
                     description_role: "An internship for you to learn how to be a full stack developer",
                     employer_id: 1,
+                    status: 'OPEN',
                     majors: [
                       {id: 1, name: "Computer Science and Engineering"},
                       {id: 2, name: "Management Engineering"},

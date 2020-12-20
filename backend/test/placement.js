@@ -57,6 +57,8 @@ describe('placement API', () => {
                     response.body.should.have.property('institutions');
                     response.body.should.have.property('employment_type');
                     response.body.should.have.property('location');
+                    response.body.should.have.property('status');
+                    response.body.status.should.equal('OPEN');
                     response.body.location.should.have.property('id');
                     locationId = response.body.location.id;
                     response.body.location.should.have.property('country');
