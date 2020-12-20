@@ -3,6 +3,7 @@ import 'package:frontend/models/skill.dart';
 import 'package:frontend/models/student.dart';
 import 'package:frontend/screens/profile/local_widgets/education_container.dart';
 import 'package:frontend/screens/profile/local_widgets/work_container.dart';
+import 'package:frontend/utils/custom_theme.dart';
 
 class StudentProfile extends StatelessWidget {
   final Student student;
@@ -75,8 +76,7 @@ class StudentProfile extends StatelessWidget {
         Container(
           width: screenSize.width * .9,
           decoration: BoxDecoration(
-            // TODO: refactor with background color rebranding
-            color: Color(0xfff2f6ff),
+            color: CustomTheme().backgroundColor,
           ),
           child: Padding(
             padding: const EdgeInsets.all(15.0),

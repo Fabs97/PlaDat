@@ -3,6 +3,7 @@ import 'package:frontend/models/employer.dart';
 import 'package:frontend/models/placement.dart';
 import 'package:frontend/models/skill.dart';
 import 'package:frontend/services/api_service.dart';
+import 'package:frontend/utils/custom_theme.dart';
 import 'package:intl/intl.dart';
 
 class PlacementProfile extends StatefulWidget {
@@ -113,8 +114,7 @@ class _PlacementProfileState extends State<PlacementProfile> {
         Container(
           width: screenSize.width * .9,
           decoration: BoxDecoration(
-            // TODO: refactor with background color rebranding
-            color: Color(0xfff2f6ff),
+            color: CustomTheme().backgroundColor,
           ),
           child: Padding(
             padding: const EdgeInsets.all(15.0),
@@ -179,8 +179,7 @@ class _PlacementProfileState extends State<PlacementProfile> {
         ),
         child: Container(
           decoration: BoxDecoration(
-            // TODO: refactor after rebranding
-            color: Color(0xfff2f6ff),
+            color: CustomTheme().backgroundColor
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,

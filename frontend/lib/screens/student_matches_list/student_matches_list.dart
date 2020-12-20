@@ -5,10 +5,11 @@ import 'package:flutter/widgets.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:frontend/models/placement.dart';
 import 'package:frontend/models/match.dart';
+import 'package:frontend/screens/chat_screen/chat_screen.dart';
 import 'package:frontend/services/api_service.dart';
 import 'package:frontend/services/auth_service.dart';
 import 'package:frontend/utils/custom_theme.dart';
-import 'package:frontend/widgets/appbar.dart';
+import 'package:frontend/utils/routes_generator.dart';
 import 'package:frontend/widgets/drawer.dart';
 
 class StudentMatches extends StatefulWidget {
@@ -63,6 +64,7 @@ class _StudentMatchesState extends State<StudentMatches> {
                   child: ListView.builder(
                     itemCount: _placements.length,
                     itemBuilder: (context, index) {
+                      final _placement = _placements[index];
                       return Column(
                         children: [
                           ListTile(
@@ -81,14 +83,14 @@ class _StudentMatchesState extends State<StudentMatches> {
                                 ],
                               ),
                               title: Text(
-                                  _placements[index].position + " No.$index",
+                                  _placement.position + " No.$index",
                                   style: themeData.textTheme.bodyText1.copyWith(
                                     fontSize: 16,
                                     fontWeight: FontWeight.w500,
                                   )),
                               subtitle: Text(
-                                _placements[index].employerName +
-                                    '\n${_placements[index].description}',
+                                _placement.employerName +
+                                    '\n${_placement.description}',
                                 maxLines: 3,
                                 overflow: TextOverflow.ellipsis,
                                 style: themeData.textTheme.bodyText2.copyWith(
@@ -103,6 +105,26 @@ class _StudentMatchesState extends State<StudentMatches> {
                                 padding: EdgeInsets.zero,
                                 itemBuilder: (context) =>
                                     <PopupMenuEntry<String>>[
+                                  PopupMenuItem<String>(
+                                    child: ListTile(
+                                      leading: Icon(
+                                        Icons.email,
+                                        color: CustomTheme().secondaryColor,
+                                      ),
+                                      title: Text(
+                                        "Send message",
+                                        style: themeData.textTheme.subtitle1
+                                            .copyWith(
+                                          color: CustomTheme().secondaryColor,
+                                        ),
+                                      ),
+                                      onTap: () => Nav.navigatorKey.currentState
+                                          .pushNamed("/chat-screen",
+                                              arguments: ChatScreenArguments(
+                                                  _studentId,
+                                                  _placement.employerId)),
+                                    ),
+                                  ),
                                   PopupMenuItem<String>(
                                     child: ListTile(
                                       leading: Icon(Icons.delete,
@@ -147,7 +169,7 @@ class _StudentMatchesState extends State<StudentMatches> {
                                                                         value) {
                                                                       _placements
                                                                           .remove(
-                                                                              _placements[index]);
+                                                                              _placement);
                                                                       Navigator.pop(
                                                                           context);
                                                                     } else {
