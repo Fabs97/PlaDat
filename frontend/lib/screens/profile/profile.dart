@@ -22,7 +22,6 @@ class Profile extends StatelessWidget {
                 : "My profile")
             : "Placement Profile",
       ),
-      drawer: CustomDrawer.createDrawer(context),
       body: LayoutBuilder(
         builder: (context, constraints) {
           return Center(
