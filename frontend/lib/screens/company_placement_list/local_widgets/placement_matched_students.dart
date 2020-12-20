@@ -7,15 +7,8 @@ import 'package:frontend/models/student.dart';
 import 'package:frontend/screens/chat_screen/chat_screen.dart';
 import 'package:frontend/screens/company_placement_list/local_widgets/chips_list.dart';
 import 'package:frontend/services/api_service.dart';
-<<<<<<< HEAD
-import 'package:frontend/services/auth_service.dart';
-import 'package:frontend/utils/routes_generator.dart';
-import 'package:frontend/widgets/appbar.dart';
-import 'package:frontend/widgets/card_skills_info.dart';
-=======
 import 'package:frontend/utils/routes_generator.dart';
 import 'package:frontend/utils/custom_theme.dart';
->>>>>>> dev
 import 'package:frontend/widgets/drawer.dart';
 
 class PlacementMatchedStudents extends StatefulWidget {
