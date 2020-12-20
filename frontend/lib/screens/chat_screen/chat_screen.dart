@@ -29,8 +29,6 @@ class _ChatScreenState extends State<ChatScreen> {
   bool _sendingMessage = false;
   final _formKey = GlobalKey<FormState>();
   String _newMessage = "";
-  ScrollController _scrollController =
-      ScrollController(initialScrollOffset: 0.0);
 
   @override
   void initState() {

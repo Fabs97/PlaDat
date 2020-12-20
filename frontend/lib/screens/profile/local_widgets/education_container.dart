@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/models/education_experience.dart';
+import 'package:frontend/utils/custom_theme.dart';
 import 'package:intl/intl.dart';
 
 class ProfileEducationCard extends StatelessWidget {
   final EducationExperience education;
-  ProfileEducationCard({Key key, @required this.education})
-      : super(key: key);
+  ProfileEducationCard({Key key, @required this.education}) : super(key: key);
 
   final _formatter = DateFormat('MMM yyyy');
 
@@ -13,13 +13,13 @@ class ProfileEducationCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
     final ThemeData themeData = Theme.of(context);
+    final customTheme = CustomTheme();
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4.0),
       child: Container(
         width: screenSize.width * .9,
         decoration: BoxDecoration(
-          // TODO: refactor with background color rebranding
-          color: Color(0xfff2f6ff),
+          color: customTheme.backgroundColor,
         ),
         child: Padding(
           padding: const EdgeInsets.all(15.0),
@@ -36,8 +36,7 @@ class ProfileEducationCard extends StatelessWidget {
                 "${education.institution.name}",
                 style: themeData.textTheme.bodyText1.copyWith(
                     fontWeight: FontWeight.bold,
-                    // TODO: refactor with background color rebranding
-                    color: Color(0xff4c60d2)),
+                    color: customTheme.primaryColor),
               ),
               Text(
                 "${_formatter.format(education.startPeriod)} - ${_formatter.format(education.endPeriod)}",
