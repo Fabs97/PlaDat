@@ -417,7 +417,6 @@ paths:
                       id: 1,
                       position: "Full stack developer",
                       employement_type: 'PART_TIME',
-                      employer_id: 2,
                       start_period: "2020-11-11",
                       end_period: "2020-11-11",
                       salary: 600,
