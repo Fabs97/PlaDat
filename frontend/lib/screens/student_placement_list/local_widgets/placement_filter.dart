@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:frontend/models/placement.dart';
 
 enum PlacementFilterCompareFunctionType { TYPE_OF_CONTRACT, YEARLY_SALARY }
@@ -14,7 +15,7 @@ class PlacementFilter {
     this.name,
     this.value,
     this.compareType, {
-    this.category = "Type of Contract",
+    this.category = "Type of contract",
   });
 
   PlacementFilter.yearlySalary(this.name, this.value, this.compareType,

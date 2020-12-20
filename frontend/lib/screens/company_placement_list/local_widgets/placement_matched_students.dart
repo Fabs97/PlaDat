@@ -7,6 +7,7 @@ import 'package:frontend/models/student.dart';
 import 'package:frontend/screens/company_placement_list/local_widgets/chips_list.dart';
 import 'package:frontend/services/api_service.dart';
 import 'package:frontend/utils/routes_generator.dart';
+import 'package:frontend/utils/custom_theme.dart';
 import 'package:frontend/widgets/drawer.dart';
 
 class PlacementMatchedStudents extends StatefulWidget {
@@ -67,9 +68,9 @@ class _PlacementMatchedStudentsState extends State<PlacementMatchedStudents> {
                     Text(
                       '${widget.placement.position}',
                       style: themeData.textTheme.headline6.copyWith(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w700,
-                      ),
+                          fontSize: 18,
+                          fontWeight: FontWeight.w700,
+                          color: CustomTheme().primaryColor),
                     ),
                     Spacer(),
                     FlatButton(
@@ -86,8 +87,10 @@ class _PlacementMatchedStudentsState extends State<PlacementMatchedStudents> {
                         }).catchError((error) => Fluttertoast.showToast(msg: error.toString()));
                       },
                       color: Colors.transparent,
-                      // TODO: rebranding
-                      child: Text('See more'),
+                      child: Text('See more', style: themeData.textTheme.bodyText1.copyWith(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w700,
+                            color: CustomTheme().secondaryColor,),),
                     ),
                   ],
                 ),
@@ -100,8 +103,7 @@ class _PlacementMatchedStudentsState extends State<PlacementMatchedStudents> {
                       child: Container(
                         decoration: BoxDecoration(
                           color: Colors.white,
-                          // TODO: rebranding
-                          //boxShadow: [CustomTheme().boxShadow],
+                          boxShadow: [CustomTheme().boxShadow],
                           borderRadius: BorderRadius.circular(14.0),
                         ),
                         width: screenSize.width * .855,
@@ -112,8 +114,10 @@ class _PlacementMatchedStudentsState extends State<PlacementMatchedStudents> {
                             itemCount: _students.length,
                             itemBuilder: (context, index) {
                               final _student = _students[index];
-                              final _techSkills = _student.skills["TECH"];
-                              final _softSkills = _student.skills["SOFT"];
+                              final _techSkills =
+                                  _student.skills["TECH"];
+                              final _softSkills =
+                                  _student.skills["SOFT"];
                               final _skills = _techSkills + _softSkills;
                               return Padding(
                                 padding: const EdgeInsets.symmetric(
@@ -131,15 +135,15 @@ class _PlacementMatchedStudentsState extends State<PlacementMatchedStudents> {
                                             children: [
                                               Row(children: [
                                                 Flexible(
-                                                  child: Container(
-                                                    padding: EdgeInsets.only(
-                                                        right: 15.0),
-                                                    child: Text(
-                                                        "${_student.description}",
-                                                        overflow: TextOverflow
-                                                            .ellipsis),
-                                                  ),
-                                                )
+                                                    child: Container(
+                                                        padding:
+                                                            EdgeInsets.only(
+                                                                right: 15.0),
+                                                        child: Text(
+                                                            "${_student.description}",
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis)))
                                               ]),
                                               Wrap(children: [
                                                 ListChips(
@@ -158,7 +162,8 @@ class _PlacementMatchedStudentsState extends State<PlacementMatchedStudents> {
                                             PopupMenuItem<String>(
                                               child: ListTile(
                                                 leading: Icon(Icons.delete,
-                                                    color: Color(0xff4c60d2)),
+                                                    color: CustomTheme()
+                                                        .primaryColor),
                                                 title: Text(
                                                   "Remove the match",
                                                 ),

@@ -7,7 +7,7 @@ import 'package:frontend/screens/new_placement/new_placement.dart';
 import 'package:frontend/screens/new_student/new_student.dart';
 import 'package:frontend/screens/profile/profile.dart';
 import 'package:frontend/screens/registration/registration.dart';
-import 'package:frontend/screens/student_matches_list/student_matches_file.dart';
+import 'package:frontend/screens/student_matches_list/student_matches_list.dart';
 import 'package:frontend/screens/student_placement_list/student_placement_list.dart';
 import 'package:frontend/services/auth_service.dart';
 
@@ -74,7 +74,9 @@ class RoutesGenerator {
     return MaterialPageRoute(builder: (_) {
       return Scaffold(
         appBar: AppBar(
+          centerTitle: true,
           title: Text("Error"),
+          elevation: 0,
         ),
         body: Center(
           child: Text("ERROR IN ROUTING"),
