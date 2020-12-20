@@ -36,6 +36,7 @@ describe('recommendation API', () => {
                         placements[i].should.have.property('id');
                         placements[i].should.have.property('position');
                         placements[i].should.have.property('employment_type');
+                        placements[i].should.have.property('employer_id');
                         placements[i].should.have.property('start_period');
                         placements[i].should.have.property('end_period');                                
                         placements[i].should.have.property('salary');
