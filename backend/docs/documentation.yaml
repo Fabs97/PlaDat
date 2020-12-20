@@ -121,8 +121,8 @@ components:
           type: integer
         position: 
           type: string
-        working_hours:
-          type: integer
+        employement_type:
+          type: string
         start_period: 
           type: string
           format: date-time
@@ -413,7 +413,8 @@ paths:
                     {
                       id: 1,
                       position: "Full stack developer",
-                      working_hours: 20,
+                      employement_type: 'PART_TIME',
+                      employer_id: 2,
                       start_period: "2020-11-11",
                       end_period: "2020-11-11",
                       salary: 600,
