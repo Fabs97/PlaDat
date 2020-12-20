@@ -202,6 +202,7 @@ describe('placement API', () => {
                                 placements[i].should.have.property('salary');
                                 placements[i].should.have.property('description_role');
                                 placements[i].should.have.property('employer_id');
+                                placements[i].should.have.property('status');
                                 placements[i].should.have.property('count_matches');
                             }
                             done();

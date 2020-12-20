@@ -288,12 +288,13 @@ paths:
                     {
                       id: 1,
                       position: "Full stack developer",
-                      working_hours: 20,
+                      employment_type: 'PART_TIME',
                       start_period: "2020-11-11",
                       end_period: "2020-11-11",
                       salary: 600,
                       description_role: "An internship for you to learn how to be a full stack developer",
                       employer_id: 1,
+                      status: 'CLOSED',
                       count_matches: 3
                     }
                   ]
