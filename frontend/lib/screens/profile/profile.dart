@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/models/employer.dart';
+import 'package:frontend/models/placement.dart';
 import 'package:frontend/models/student.dart';
 import 'package:frontend/screens/profile/local_widgets/placement_profile.dart';
 import 'package:frontend/screens/profile/local_widgets/student_profile.dart';
 import 'package:frontend/services/auth_service.dart';
+import 'package:frontend/utils/custom_theme.dart';
 import 'package:frontend/widgets/appbar.dart';
 import 'package:frontend/widgets/drawer.dart';
 
@@ -14,13 +16,22 @@ class Profile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar.createAppBar(
-        context,
-        profile is Student
-            ? (profile.id != AuthService().loggedAccountInfo.id && AuthService().loggedAccountInfo is Employer
-                ? "Student Profile"
-                : "My profile")
-            : "Placement Profile",
+      appBar: AppBar(
+        title: Text(
+          profile is Student
+              ? (profile.id != AuthService().loggedAccountInfo.id &&
+                      AuthService().loggedAccountInfo is Employer
+                  ? "Student Profile"
+                  : "My profile")
+              : "Placement Profile",
+        ),
+        actions: [
+          profile is Placement &&
+                  profile.employerId == AuthService().loggedAccountInfo.id &&
+                  AuthService().loggedAccountInfo is Employer
+              ? _popupMenuButton()
+              : Container(),
+        ],
       ),
       body: LayoutBuilder(
         builder: (context, constraints) {
@@ -54,4 +65,31 @@ class Profile extends StatelessWidget {
       ),
     );
   }
+}
+
+_popupMenuButton() {
+  return PopupMenuButton<String>(
+    icon: Icon(
+      Icons.settings,
+      color: CustomTheme().primaryColor,
+    ),
+    itemBuilder: (context) => <PopupMenuEntry<String>>[
+      PopupMenuItem<String>(
+          child: ListTile(
+        leading: Icon(
+          Icons.stop_circle_outlined,
+          color: CustomTheme().secondaryColor,
+        ),
+        title: Text(
+          "Close the application",
+          style: Theme.of(context).textTheme.subtitle1.copyWith(
+                color: CustomTheme().secondaryColor,
+              ),
+        ),
+        onTap: () {
+          // TODO: change status of the placement with closed
+        },
+      ))
+    ],
+  );
 }
