@@ -12,11 +12,11 @@ class _CustomDrawerPage {
 
 class CustomDrawer {
   static List<_CustomDrawerPage> _employerDrawerPages = [
-    _CustomDrawerPage("My recommendations", "/student-list"),
+    _CustomDrawerPage("My recommendations", "/employer-home"),
     _CustomDrawerPage("My placements", "/company-placements"),
   ];
   static List<_CustomDrawerPage> _studentDrawerPages = [
-    _CustomDrawerPage("My recommendations", "/placement-list"),
+    _CustomDrawerPage("My recommendations", "/student-home"),
     _CustomDrawerPage("My matches", "/student-matches"),
   ];
 

@@ -73,6 +73,6 @@ class SkillsForm extends StatelessWidget {
         body: placement);
     print(newPlacement);
 
-    Nav.currentState.popAndPushNamed("/home");
+    Nav.currentState.popAndPushNamed("/employer-home");
   }
 }

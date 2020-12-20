@@ -75,7 +75,7 @@ class SkillsForm extends StatelessWidget {
     String message;
     if (response is Student) {
       message = "Profile saved successfully";
-      Nav.currentState.popAndPushNamed("/home");
+      Nav.currentState.popAndPushNamed("/student-home");
     } else if (response is String) {
       message = response;
     } else {

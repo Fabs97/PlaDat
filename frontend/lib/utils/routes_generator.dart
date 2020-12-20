@@ -12,14 +12,6 @@ import 'package:frontend/screens/student_placement_list/student_placement_list.d
 class RoutesGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
-      case '/student-list':
-        {
-          return _createRoute(StudentCardsList(), settings);
-        }
-      case '/placement-list':
-        {
-          return _createRoute(PlacementCardsList(), settings);
-        }
       case '/new-placement':
         {
           return _createRoute(NewPlacement(), settings);
@@ -55,6 +47,14 @@ class RoutesGenerator {
                 isAfterAuthError: settings.arguments ?? false,
               ),
               settings);
+        }
+      case "/employer-home":
+        {
+          return _createRoute(StudentCardsList(), settings);
+        }
+      case "/student-home":
+        {
+          return _createRoute(PlacementCardsList(), settings);
         }
       default:
         {

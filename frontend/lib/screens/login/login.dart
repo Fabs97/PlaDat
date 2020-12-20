@@ -199,9 +199,9 @@ class _LoginState extends State<Login> {
           Nav.currentState
               .popAndPushNamed(response ? "/new-student" : "/new-placement");
         } else if (response is Student) {
-          Nav.currentState.popAndPushNamed("/placement-list");
+          Nav.currentState.popAndPushNamed("/student-home");
         } else if (response is Employer) {
-          Nav.currentState.popAndPushNamed("/student-list");
+          Nav.currentState.popAndPushNamed("/employer-home");
         }
       } on LoginAPIException catch (e) {
         setState(() {
