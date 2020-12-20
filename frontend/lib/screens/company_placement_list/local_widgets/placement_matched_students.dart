@@ -167,9 +167,20 @@ class _PlacementMatchedStudentsState extends State<PlacementMatchedStudents> {
                                               <PopupMenuEntry<String>>[
                                             PopupMenuItem<String>(
                                               child: ListTile(
-                                                leading: Icon(Icons.email),
-                                                //TODO: rebranding
-                                                title: Text("Send message"),
+                                                leading: Icon(
+                                                  Icons.email,
+                                                  color: CustomTheme()
+                                                      .secondaryColor ,
+                                                ),
+                                                title: Text(
+                                                  "Send message",
+                                                  style: themeData
+                                                      .textTheme.subtitle1
+                                                      .copyWith(
+                                                    color: CustomTheme()
+                                                        .secondaryColor,
+                                                  ),
+                                                ),
                                                 onTap: () => Nav
                                                     .navigatorKey.currentState
                                                     .pushNamed("/chat-screen",
