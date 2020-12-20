@@ -3,12 +3,9 @@ import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:frontend/models/student.dart';
-import 'package:frontend/services/api_service.dart';
 import 'package:frontend/utils/custom_theme.dart';
-import 'package:frontend/utils/routes_generator.dart';
 import 'package:frontend/widgets/address_search.dart';
 import 'package:frontend/models/place.dart';
-import 'package:intl/intl.dart';
 import 'package:frontend/screens/new_student/new_student.dart';
 import 'package:provider/provider.dart';
 
@@ -69,7 +66,6 @@ class _StudentFormState extends State<StudentForm> {
                       children: [
                         _createnameField(student),
                         _createsurnameField(student),
-                        _createemailField(student),
                         _createphoneField(student),
                         _createDescriptionField(student),
                         _cretaeautocompleteField(student),
@@ -137,28 +133,6 @@ class _StudentFormState extends State<StudentForm> {
       validator: (value) {
         if (value.isEmpty) {
           return 'Please enter a student surname';
-        }
-        return null;
-      },
-    );
-  }
-
-  Widget _createemailField(Student student) {
-    return TextFormField(
-      decoration: const InputDecoration(
-        hintText: 'student@school.com',
-      ),
-      initialValue: student.email ?? '',
-      onChanged: (value) {
-        setState(() {
-          student.email = value;
-        });
-      },
-      validator: (value) {
-        if (value.isEmpty) {
-          return 'Please enter a student email';
-        } else if (!EmailValidator.validate(value)) {
-          return 'Please enter a valid email';
         }
         return null;
       },

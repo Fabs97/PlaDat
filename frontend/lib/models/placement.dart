@@ -73,6 +73,7 @@ class Placement extends ChangeNotifier {
   EmploymentType employmentType;
   DateTime startPeriod;
   DateTime endPeriod;
+  int userId;
   int salary;
   String description;
   List<dynamic> institutions;
@@ -89,6 +90,7 @@ class Placement extends ChangeNotifier {
       this.employmentType,
       this.startPeriod,
       this.endPeriod,
+      this.userId,
       this.salary,
       this.description,
       this.institutions,
@@ -106,6 +108,7 @@ class Placement extends ChangeNotifier {
       "employmentType": this.employmentType.string,
       "startPeriod": this.startPeriod.toString(),
       "endPeriod": this.endPeriod.toString(),
+      "userId": this.userId,
       "salary": this.salary,
       "descriptionRole": this.description,
       "institutions": this
@@ -136,6 +139,7 @@ class Placement extends ChangeNotifier {
       endPeriod: json["end_period"] != null
           ? DateTime.parse(json["end_period"])
           : null,
+      userId: json["userId"] ?? json["user_id"] ?? json["userID"],
       salary: json["salary"],
       description: json["description_role"],
       institutions: json["institutions"]

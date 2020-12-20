@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/models/placement.dart';
+import 'package:frontend/services/auth_service.dart';
 import 'package:frontend/utils/routes_generator.dart';
 import 'package:frontend/widgets/otherskills.dart';
 import 'package:frontend/widgets/skillsbox.dart';
@@ -66,6 +67,8 @@ class SkillsForm extends StatelessWidget {
       "softSkills": skillsBoxes[1].chosenSkills,
       "otherSkills": skillsBoxes[2].otherSkills,
     };
+
+    placement.userId = AuthService().loggedUser.id;
 
     Placement newPlacement = await APIService.route(
         ENDPOINTS.Placement, "/placement/new-placement",
