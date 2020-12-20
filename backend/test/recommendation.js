@@ -34,6 +34,8 @@ describe('recommendation API', () => {
                                 placements[i].should.have.property('description_role');
                                 placements[i].should.have.property('employer_id');
                                 placements[i].should.have.property('skills');
+                                placements[i].should.have.property('status');
+                                placements[i].status.should.equal('OPEN');
                                 let skills = placements[i].skills;
                                 for(j = 0; j < skills.length; j++){
                                     skills[i].should.have.property('id');

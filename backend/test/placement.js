@@ -123,6 +123,7 @@ describe('placement API', () => {
                     response.body.should.have.property('salary');
                     response.body.should.have.property('description_role');
                     response.body.should.have.property('employer');
+                    response.body.should.have.property('status');
                     let employer = response.body.employer;
                     if(employer != null){
                         employer.should.be.a('object');

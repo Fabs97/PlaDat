@@ -43,7 +43,8 @@ module.exports = {
                 'end_period',
                 'salary',
                 'description_role',
-                'employer_id'
+                'employer_id',
+                'status'
                 )
             .where('id', id);
         return result[0];
@@ -149,10 +150,11 @@ module.exports = {
     getPlacementsForSkills: async (skills) => {
 
         let placementData = await database('placements AS p')
-            .select(['p.id', 'p.position', 'p.employment_type', 'start_period', 'end_period', 'salary', 'description_role', 'employer_id'])
+            .select(['p.id', 'p.position', 'p.employment_type', 'start_period', 'end_period', 'salary', 'description_role', 'employer_id', 'status'])
             .leftJoin('placement_has_skills AS phs', 'phs.placement_id', 'p.id')
             .leftJoin(database.raw('(select p.id, count(phs.skill_id) as count_total from placements p join placement_has_skills phs on p.id = phs.placement_id group by p.id) as p2'), 'p.id','p2.id') //here we count the total number of skills for each placement
             .whereIn('phs.skill_id', skills)
+            .andWhere('p.status', 'OPEN')
             .groupBy('p.id')
             .having(database.raw('count(phs.skill_id) > max(p2.count_total)/2'))
             .catch((error) => {
@@ -193,6 +195,7 @@ module.exports = {
                             salary: placementData[p].salary,
                             description_role: placementData[p].description_role,
                             employer_id: placementData[p].employer_id,
+                            status: placementData[p].status,
                             skills: [{
                                 id: resultTemp[i].skill_id,
                                 name: resultTemp[i].name,

@@ -370,6 +370,7 @@ paths:
                       salary: 600,
                       description_role: "An internship for you to learn how to be a full stack developer",
                       employer_id: 1,
+                      status: 'OPEN',
                       majors: [
                         {id: 1, name: "Computer Science and Engineering"},
                       ],
@@ -468,6 +469,7 @@ paths:
                     salary: 600,
                     description_role: "An internship for you to learn how to be a full stack developer",
                     employer_id: 1,
+                    status: 'OPEN',
                     majors: [
                       {id: 1, name: "Computer Science and Engineering"},
                       {id: 2, name: "Management Engineering"},
