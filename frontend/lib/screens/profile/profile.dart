@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/models/employer.dart';
 import 'package:frontend/models/student.dart';
 import 'package:frontend/screens/profile/local_widgets/placement_profile.dart';
 import 'package:frontend/screens/profile/local_widgets/student_profile.dart';
@@ -16,7 +17,7 @@ class Profile extends StatelessWidget {
       appBar: CustomAppBar.createAppBar(
         context,
         profile is Student
-            ? (profile.id != AuthService().loggedAccountInfo.id
+            ? (AuthService().loggedAccountInfo is Employer
                 ? "Student Profile"
                 : "My profile")
             : "Placement Profile",
