@@ -419,6 +419,44 @@ paths:
                     placementAccept: true,
                     status: "ACCEPTED"
                   }
+
+  /match/:studentId/:placementId:
+    delete:
+      description: Delete the match based on the given ids
+      tags:
+        - "Matching"
+      parameters:
+        - in: path
+          required: true
+          name: studentId
+          schema:
+            type: integer
+            example: 1
+        - in: path
+          required: true
+          name: placementId
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: OK
+          content: 
+            application/json:
+              schema:
+                type: integer
+                example: 1
+        '400':
+          description: Bad Request
+          content:
+            text/html:
+              schema:
+                type: string
+                example:
+                  "Your request did not provided valid values for ids. Please try again."
+
+
+
   /placement:
     get:
       description: Returns all placement ids in the database 

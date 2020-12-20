@@ -9,7 +9,7 @@ class CustomDrawer {
           DrawerHeader(
             child: Text("Welcome to PlaDat"),
             decoration: BoxDecoration(
-              color: Colors.blue,
+              color: Color(0xff4c60d2),
             ),
           ),
           ListTile(
