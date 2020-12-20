@@ -1,6 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/models/student.dart';
+import 'package:frontend/utils/routes_generator.dart';
 import 'package:frontend/utils/custom_theme.dart';
 import 'package:frontend/widgets/card_skills_info.dart';
 
@@ -77,14 +78,21 @@ class StudentCard extends StatelessWidget {
                   ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(top: 8.0),
-                child: Text(
-                  "Find out more",
-                  style: textTheme.subtitle1.copyWith(
-                    color: CustomTheme().secondaryColor,
-                    fontWeight: FontWeight.w700,
+              FlatButton(
+                color: Colors.transparent,
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: Text(
+                    "Find out more",
+                    style: textTheme.subtitle1.copyWith(
+                      color: CustomTheme().secondaryColor,
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
+                ),
+                onPressed: () => Nav.navigatorKey.currentState.pushNamed(
+                  "/profile",
+                  arguments: student,
                 ),
               ),
             ],
@@ -140,11 +148,10 @@ class StudentCard extends StatelessWidget {
                 title,
                 textAlign: TextAlign.start,
                 style: themeData.textTheme.subtitle1.copyWith(
-                  fontWeight: FontWeight.w800,
-                  color: Color(0xff2c2c2c),
-                  fontSize: 16.0,
-                  fontStyle: FontStyle.normal
-                ),
+                    fontWeight: FontWeight.w800,
+                    color: Color(0xff2c2c2c),
+                    fontSize: 16.0,
+                    fontStyle: FontStyle.normal),
               ),
             ),
             Padding(

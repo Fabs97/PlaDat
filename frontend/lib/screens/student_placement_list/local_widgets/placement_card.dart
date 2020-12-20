@@ -1,6 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/models/placement.dart';
+import 'package:frontend/utils/routes_generator.dart';
 import 'package:frontend/utils/custom_theme.dart';
 import 'package:frontend/widgets/card_skills_info.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -92,14 +93,18 @@ class PlacementCard extends StatelessWidget {
                   fontWeight: FontWeight.w300,
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 0.0),
+              FlatButton(
+                color: Colors.transparent,
                 child: Text(
                   "Find out more",
                   style: textTheme.subtitle1.copyWith(
                     color: CustomTheme().secondaryColor,
                     fontWeight: FontWeight.w700,
                   ),
+                ),
+                onPressed: () => Nav.navigatorKey.currentState.pushNamed(
+                  "/profile",
+                  arguments: placement,
                 ),
               ),
             ],

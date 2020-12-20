@@ -146,7 +146,8 @@ class Placement extends ChangeNotifier {
       employerId: json["employer_id"],
       employerName: json["employer_name"],
       countMatches: json["count_matches"],
-      location: json["location"] != null ? Place.fromJson(json['location']) : null,
+      location:
+          json["location"] != null ? Place.fromJson(json['location']) : null,
     );
   }
 
