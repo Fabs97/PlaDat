@@ -70,14 +70,14 @@ class Student extends ChangeNotifier {
       location:
           json["location"] != null ? Place.fromJson(json['location']) : null,
       skills: Skill.listFromJson(json["skills"]),
-      educations: json["education"]
-          ?.map((education) => EducationExperience.fromJson(education))
-          ?.toList()
-          ?.cast<EducationExperience>(),
-      works: json["work"]
-          ?.map((work) => WorkExperience.fromJson(work))
-          ?.toList()
-          ?.cast<WorkExperience>(),
+      educations: EducationExperience.listFromJson(json["education"]),
+          // ?.map((education) => EducationExperience.fromJson(jsonDecode(education)))
+          // ?.toList()
+          // ?.cast<EducationExperience>(),
+      works: WorkExperience.listFromJson(json["work"]),
+          // ?.map((work) => WorkExperience.fromJson(jsonDecode(work)))
+          // ?.toList()
+          // ?.cast<WorkExperience>(),
     );
   }
 

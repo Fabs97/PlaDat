@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/services/auth_service.dart';
 import 'package:frontend/utils/routes_generator.dart';
 
 class CustomDrawer {
@@ -9,7 +10,7 @@ class CustomDrawer {
           DrawerHeader(
             child: Text("Welcome to PlaDat"),
             decoration: BoxDecoration(
-              color: Colors.blue,
+              color: Color(0xff4c60d2),
             ),
           ),
           ListTile(
@@ -46,6 +47,10 @@ class CustomDrawer {
             title: Text("My matches"),
             onTap: () =>
                 Nav.navigatorKey.currentState.pushNamed("/student-matches"),
+          ),
+          ListTile(
+            title: Text("My profile"),
+            onTap: () => Nav.navigatorKey.currentState.pushNamed("/profile", arguments: AuthService().loggedAccountInfo),
           ),
         ],
       ),

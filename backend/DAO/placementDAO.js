@@ -157,19 +157,75 @@ module.exports = {
             .andWhere('p.status', 'OPEN')
             .groupBy('p.id')
             .having(database.raw('count(phs.skill_id) > max(p2.count_total)/2'))
-            .catch((error) => {
-                console.log(error)
-            });
+            .catch(error => {
+                if(error){
+                    throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There has been a problem finding the recommended placements. Please try again.')
+                }
+            })
 
         let placementIDs =  placementData.map(placement => placement.id);
 
         let resultTemp = await database('placement_has_skills AS phs')
             .leftJoin('skill AS s', 's.id', 'phs.skill_id')
             .whereIn('phs.placement_id', placementIDs)
-            .orderBy('phs.placement_id');
+            .orderBy('phs.placement_id')
+            .catch(error => {
+                if(error){
+                    throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There has been a problem looking up informations about the recommended placements. Please try again.')
+                }
+            })
         let result = [];
         let prev = 0;
 
+        let locations = await database('location AS l')
+            .select('l.id AS id', 'l.country AS country', 'l.city AS city', 'p.id AS placement_id')
+            .leftJoin('placements as p', 'l.id', 'p.location_id')
+            .whereIn('p.id', placementIDs)
+            .orderBy('p.id')
+            .catch(error => {
+                if(error){
+                    throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There has been a problem looking up informations about the recommended placements. Please try again.')
+                }
+            })
+        
+        let majors = await database('majors as m')
+            .select('m.name AS name', 'phm.placement_id AS placement_id')
+            .leftJoin('placement_has_major AS phm', 'm.id', 'phm.major_id')
+            .whereIn('phm.placement_id', placementIDs)
+            .orderBy('phm.placement_id')
+            .catch(error => {
+                if(error){
+                    throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There has been a problem looking up informations about the recommended placements. Please try again.')
+                }
+            })
+        
+        let institutions =  await database('institutions AS i')
+            .select('i.name AS name', 'phi.placement_id AS placement_id')
+            .leftJoin('placement_has_institution AS phi', 'i.id', 'phi.institution_id')
+            .whereIn('phi.placement_id', placementIDs)
+            .orderBy('phi.placement_id')
+            .catch(error => {
+                if(error){
+                    throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There has been a problem looking up informations about the recommended placements. Please try again.')
+                }
+            })
+
+        let employers = await database('employer AS e')
+            .select('e.name AS employer_name', 'p.id AS placement_id')
+            .leftJoin('placements AS p', 'e.id', 'p.employer_id')
+            .whereIn('p.id', placementIDs)
+            .orderBy('p.id')
+            .catch(error => {
+                if(error){
+                    throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There has been a problem looking up informations about the recommended placements. Please try again.')
+                }
+            })
+    
+        
+        let j = 0;
+        let k = 0;
+        let h = 0;
+        let l = 0;
         for (let p=0; p<placementData.length; p++) {
 
             for(let i=0; i<resultTemp.length; i++){
@@ -189,11 +245,14 @@ module.exports = {
                             id: placementData[p].id,
                             position: placementData[p].position,
                             employment_type: placementData[p].employment_type,
+                            employer_id: placementData[p].employer_id,
                             start_period: placementData[p].start_period,
                             end_period: placementData[p].end_period,
                             end_period: placementData[p].end_period,
                             salary: placementData[p].salary,
                             description_role: placementData[p].description_role,
+                            majors: [],
+                            institutions: [],
                             employer_id: placementData[p].employer_id,
                             status: placementData[p].status,
                             skills: [{
@@ -202,6 +261,36 @@ module.exports = {
                                 type: resultTemp[i].type
                             }]
                         })
+
+                        let curr = prev + 1;
+
+                        while(j < locations.length && locations[j].placement_id == result[curr].id){
+                            result[curr].location = {
+                                id: locations[j].id,
+                                country: locations[j].country,
+                                city: locations[j].city
+                            };
+                            j++;
+                        }
+
+                        while(l < employers.length && employers[l].placement_id == result[curr].id){
+                            result[curr].employer_name = employers[l].employer_name;
+                            l++;
+                        }
+
+                        while(k < majors.length && majors[k].placement_id == result[curr].id){
+                            result[curr].majors.push({
+                                name: majors[k].name
+                            }),
+                            k++;
+                        }
+
+                        while(h < institutions.length && institutions[h].placement_id == result[curr].id){
+                            result[curr].institutions.push({
+                                name: institutions[h].name
+                            })
+                            h++;
+                        }
                                 
                         
                     
