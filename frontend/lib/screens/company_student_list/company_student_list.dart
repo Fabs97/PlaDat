@@ -4,6 +4,7 @@ import 'package:frontend/models/placement.dart';
 import 'package:frontend/models/student.dart';
 import 'package:frontend/screens/company_student_list/local_widgets/student_card.dart';
 import 'package:frontend/services/api_service.dart';
+import 'package:frontend/utils/custom_theme.dart';
 import 'package:frontend/utils/routes_generator.dart';
 import 'package:frontend/widgets/appbar.dart';
 import 'package:frontend/models/match.dart';
@@ -68,20 +69,42 @@ class _StudentCardsListState extends State<StudentCardsList> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Container(
+            width: size.width * .85,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(14.0),
+              boxShadow: [CustomTheme().boxShadow],
+            ),
             child: _placements == null
                 ? Center(
                     child: CircularProgressIndicator(),
                   )
-                : DropdownButton<Placement>(
-                    value: _placement,
-                    items: _placements?.map((placement) {
-                          return DropdownMenuItem<Placement>(
-                            value: placement,
-                            child: Text('Placement #${placement.id}'),
-                          );
-                        })?.toList() ??
-                        [],
-                    onChanged: onChangeDropdownItem,
+                : DropdownButtonHideUnderline(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                      child: DropdownButton<Placement>(
+                        disabledHint: Text("No placements found!"),
+                        icon: Icon(
+                          Icons.arrow_drop_down,
+                          color: CustomTheme().primaryColor,
+                        ),
+                        iconEnabledColor: CustomTheme().primaryColor,
+                        iconDisabledColor: CustomTheme().secondaryColor,
+                        value: _placement,
+                        items: _placements?.map((placement) {
+                              return DropdownMenuItem<Placement>(
+                                value: placement,
+                                child: Text(
+                                  'Placement #${placement.id}',
+                                  style: TextStyle(
+                                      color: CustomTheme().primaryColor),
+                                ),
+                              );
+                            })?.toList() ??
+                            [],
+                        onChanged: onChangeDropdownItem,
+                      ),
+                    ),
                   ),
           ),
           Container(
@@ -137,11 +160,11 @@ class _StudentCardsListState extends State<StudentCardsList> {
                   ),
           ),
           Container(
-            width: size.width * .9,
+            width: size.width * .855,
             height: size.height * .05,
             child: Row(
               mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 TinderButton(

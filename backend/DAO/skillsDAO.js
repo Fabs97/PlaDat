@@ -1,4 +1,6 @@
 const database = require('../DB/connection');
+const SuperError = require('../errors').SuperError;
+const ERR_INTERNAL_SERVER_ERROR = require('../errors').ERR_INTERNAL_SERVER_ERROR;
 
 module.exports = {
 
@@ -60,7 +62,12 @@ module.exports = {
         return database('skill AS s')
             .select('s.id', 's.name', 's.type')
             .leftJoin('student_has_skills AS shs', 's.id', 'shs.skill_id')
-            .where('shs.student_id', id);
+            .where('shs.student_id', id)
+            .catch(error => {
+                if(error){
+                    throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There has been a problem looking up the skills of your profile. Please try again.')
+                }
+            })
     },
     
     getPlacementSkills: async (placementID) => {
@@ -68,6 +75,11 @@ module.exports = {
            .select('s.id', 's.name', 's.type')
            .leftJoin('placement_has_skills AS phs', 's.id', 'phs.skill_id')
             .where('phs.placement_id',placementID)
+            .catch(error => {
+                if(error){
+                    throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There has been a problem looking up the skills of your placement. Please try again.')
+                }
+            })
    },
 
 };
