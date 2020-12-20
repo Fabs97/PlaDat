@@ -31,10 +31,12 @@ class _NewPlacementState extends State<NewPlacement> {
       ],
       child: Scaffold(
         appBar: AppBar(
+          centerTitle: true,
           title: Text(
             "Create Placement",
             textAlign: TextAlign.center,
           ),
+          elevation: 0,
           leading: _firstStep
               ? Container()
               : IconButton(

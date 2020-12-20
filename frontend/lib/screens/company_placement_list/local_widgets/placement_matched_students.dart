@@ -1,5 +1,3 @@
-import 'dart:html';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -8,9 +6,8 @@ import 'package:frontend/models/placement.dart';
 import 'package:frontend/models/student.dart';
 import 'package:frontend/screens/company_placement_list/local_widgets/chips_list.dart';
 import 'package:frontend/services/api_service.dart';
-import 'package:frontend/services/auth_service.dart';
-import 'package:frontend/widgets/appbar.dart';
-import 'package:frontend/widgets/card_skills_info.dart';
+import 'package:frontend/utils/routes_generator.dart';
+import 'package:frontend/utils/custom_theme.dart';
 import 'package:frontend/widgets/drawer.dart';
 
 class PlacementMatchedStudents extends StatefulWidget {
@@ -71,12 +68,37 @@ class _PlacementMatchedStudentsState extends State<PlacementMatchedStudents> {
                     Text(
                       '${widget.placement.position}',
                       style: themeData.textTheme.headline6.copyWith(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w700,
-                      ),
+                          fontSize: 18,
+                          fontWeight: FontWeight.w700,
+                          color: CustomTheme().primaryColor),
                     ),
                     Spacer(),
-                    Text('See more'),
+                    FlatButton(
+                      onPressed: () {
+                        APIService.route(
+                          ENDPOINTS.Placement,
+                          "/placement/:id",
+                          urlArgs: widget.placement.id,
+                        ).then((response) {
+                          if (response is Placement) {
+                            Nav.navigatorKey.currentState
+                                .pushNamed("/profile", arguments: response);
+                          } else {
+                            Fluttertoast.showToast(msg: response);
+                          }
+                        }).catchError((error) =>
+                            Fluttertoast.showToast(msg: error.toString()));
+                      },
+                      color: Colors.transparent,
+                      child: Text(
+                        'See more',
+                        style: themeData.textTheme.bodyText1.copyWith(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w700,
+                          color: CustomTheme().secondaryColor,
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -88,7 +110,7 @@ class _PlacementMatchedStudentsState extends State<PlacementMatchedStudents> {
                       child: Container(
                         decoration: BoxDecoration(
                           color: Colors.white,
-                          //boxShadow: [CustomTheme().boxShadow],
+                          boxShadow: [CustomTheme().boxShadow],
                           borderRadius: BorderRadius.circular(14.0),
                         ),
                         width: screenSize.width * .855,
@@ -145,62 +167,15 @@ class _PlacementMatchedStudentsState extends State<PlacementMatchedStudents> {
                                             PopupMenuItem<String>(
                                               child: ListTile(
                                                 leading: Icon(Icons.delete,
-                                                    color: Color(0xff4c60d2)),
+                                                    color: CustomTheme()
+                                                        .primaryColor),
                                                 title: Text(
                                                   "Remove the match",
                                                 ),
-                                                onTap: () {
-                                                  showDialog(
-                                                      context: context,
-                                                      builder: (BuildContext
-                                                          context) {
-                                                        return AlertDialog(
-                                                          title: Text(
-                                                              'Are you sure you want to remove the match?'),
-                                                          actions: [
-                                                            FlatButton(
-                                                              child: Text('No'),
-                                                              onPressed: () {
-                                                                Navigator.pop(
-                                                                    context);
-                                                              },
-                                                            ),
-                                                            FlatButton(
-                                                              child:
-                                                                  Text('Yes'),
-                                                              onPressed: () {
-                                                                APIService.route(
-                                                                        ENDPOINTS
-                                                                            .Matches,
-                                                                        "/match/:studentId/:placementId",
-                                                                        urlArgs: Match(
-                                                                            placementID: widget
-                                                                                .placement.id,
-                                                                            studentID: _student
-                                                                                .id))
-                                                                    .then((value) =>
-                                                                        setState(
-                                                                            () {
-                                                                          print(
-                                                                              value);
-                                                                          if (value is bool &&
-                                                                              value) {
-                                                                            _students.remove(_student);
-                                                                            Navigator.pop(context);
-                                                                          } else {
-                                                                            Fluttertoast.showToast(msg: value);
-                                                                          }
-                                                                        }));
-                                                                Navigator.pop(
-                                                                    context);
-                                                              },
-                                                            ),
-                                                          ],
-                                                        );
-                                                      });
-                                                },
+                                                onTap: () => _showConfirmDialog(
+                                                    _student),
                                               ),
-                                            )
+                                            ),
                                           ],
                                         )),
                                     Padding(
@@ -224,5 +199,43 @@ class _PlacementMatchedStudentsState extends State<PlacementMatchedStudents> {
         ),
       ),
     );
+  }
+
+  _showConfirmDialog(Student student) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Are you sure you want to remove the match?'),
+            actions: [
+              FlatButton(
+                child: Text('No'),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+              FlatButton(
+                child: Text('Yes'),
+                onPressed: () {
+                  APIService.route(
+                          ENDPOINTS.Matches, "/match/:studentId/:placementId",
+                          urlArgs: Match(
+                              placementID: widget.placement.id,
+                              studentID: student.id))
+                      .then((value) => setState(() {
+                            print(value);
+                            if (value is bool && value) {
+                              _students.remove(student);
+                              Navigator.pop(context);
+                            } else {
+                              Fluttertoast.showToast(msg: value);
+                            }
+                          }));
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          );
+        });
   }
 }

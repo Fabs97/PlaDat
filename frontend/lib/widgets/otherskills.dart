@@ -16,7 +16,7 @@ class OtherSkillsState extends State<OtherSkills> {
   TextEditingController _textController = TextEditingController();
 
   onItemPressed(String skillName) {
-    if(!widget._otherSkills.map((e) => e.name).contains(skillName)){
+    if (!widget._otherSkills.map((e) => e.name).contains(skillName)) {
       setState(() {
         widget._otherSkills.add(Skill(
           name: skillName,
@@ -68,10 +68,10 @@ class OtherSkillsState extends State<OtherSkills> {
                     runSpacing: 5.0,
                     children: widget._otherSkills.map((skill) {
                       return Chip(
-                        backgroundColor: Colors.grey[600],
+                        //backgroundColor: Colors.grey[600],
                         label: Text(
                           skill.name,
-                          style: TextStyle(color: Colors.white),
+                          //style: TextStyle(color: Colors.white),
                         ),
                       );
                     }).toList(),

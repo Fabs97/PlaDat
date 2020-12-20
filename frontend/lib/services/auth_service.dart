@@ -5,6 +5,7 @@ import 'package:frontend/services/api_services/login_api_service.dart';
 
 class AuthException implements Exception {}
 
+
 class AuthService {
   static final AuthService _instance = AuthService._internal();
   factory AuthService() => _instance;

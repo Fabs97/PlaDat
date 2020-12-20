@@ -6,8 +6,9 @@ import 'package:frontend/utils/routes_generator.dart';
 class _CustomDrawerPage {
   final String title;
   final String route;
+  final Object arguments;
 
-  _CustomDrawerPage(this.title, this.route);
+  _CustomDrawerPage(this.title, this.route, {this.arguments});
 }
 
 class CustomDrawer {
@@ -18,6 +19,7 @@ class CustomDrawer {
   static List<_CustomDrawerPage> _studentDrawerPages = [
     _CustomDrawerPage("My recommendations", "/student-home"),
     _CustomDrawerPage("My matches", "/student-matches"),
+    _CustomDrawerPage("My profile", "/profile", arguments: AuthService().loggedAccountInfo),
   ];
 
   static Drawer createDrawer(BuildContext context) {
@@ -28,7 +30,7 @@ class CustomDrawer {
           DrawerHeader(
             child: Text("Welcome to PlaDat"),
             decoration: BoxDecoration(
-              color: Colors.blue,
+              color: Color(0xff4c60d2),
             ),
           ),
           ..._createDrawer(isStudent),
