@@ -17,7 +17,7 @@ class Profile extends StatelessWidget {
       appBar: CustomAppBar.createAppBar(
         context,
         profile is Student
-            ? (AuthService().loggedAccountInfo is Employer
+            ? (profile.id != AuthService().loggedAccountInfo.id && AuthService().loggedAccountInfo is Employer
                 ? "Student Profile"
                 : "My profile")
             : "Placement Profile",
