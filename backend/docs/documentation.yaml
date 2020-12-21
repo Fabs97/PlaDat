@@ -422,6 +422,7 @@ paths:
                       salary: 600,
                       description_role: "An internship for you to learn how to be a full stack developer",
                       employer_id: 1,
+                      status: 'OPEN',
                       majors: [
                         {name: "Computer Science and Engineering"},
                       ],
@@ -703,6 +704,44 @@ paths:
                       ]
                     }
                   }
+
+  /placement/{id}/close:
+    put:
+      description: changes a placement's status to 'CLOSED'
+      tags:
+        - "Placement"
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: OK
+          content: 
+            text/html:
+              schema:
+                example:
+                  Your placement has been closed correctly.
+        '400': 
+          description: Bad Request
+          content:
+            text/html:
+              schema:
+                example:
+                  The request does not contains a valid placement id. Please try again.
+        '500':
+          description: Internal Server Error
+          content: 
+            text/html:
+              schema:
+                example:
+                  There has been a problem closing your placement. Please try again.
+
+
+
   /majors:
     get:
       description: Returns all the majors in the database
