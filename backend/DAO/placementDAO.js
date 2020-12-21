@@ -350,6 +350,19 @@ module.exports = {
             .orderBy("id", "desc")
             .limit(1);
         return result[0];
+    },
+
+    closePlacementById: async (id) => {
+        let result = await database('placements')
+            .returning()
+            .where('id', id)
+            .update('status', 'CLOSED')
+            .catch(error => {
+                if(error) {
+                    throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There has been a problem closing your placement. Please try again')
+                }
+            });
+        return result;
     }
 
 }; 
