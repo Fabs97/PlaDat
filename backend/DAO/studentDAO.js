@@ -100,20 +100,55 @@ module.exports = {
                  
             .havingRaw('count(*) >= ?', parseInt(skillsNumber/2))
             .as('student_ids')
-            .catch((error) => {
-                console.log(error);
-            });
+            .catch(error => {
+                if(error){
+                    throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There has been a problem finding the recommended students. Please try again.')
+                }
+            })
         
         studentIDs = studentIDs.map(student => student.student_id);
 
         let resultTemp = await database('student AS s')
-            .select('s.id', 's.name', 's.surname', 's.email', 's.description', 'sk.id AS skill_id', 'sk.name AS skill_name', 'sk.type AS skill_type')
+            .select('s.id', 's.name', 's.surname', 's.email', 's.description', 'sk.id AS skill_id', 'sk.name AS skill_name', 'sk.type AS skill_type', 'l.id AS location_id', 'l.country AS location_country', 'l.city AS location_city')
             .leftJoin('student_has_skills AS shs', 's.id', 'shs.student_id')
             .leftJoin('skill AS sk', 'shs.skill_id', 'sk.id')
+            .leftJoin('location AS l', 's.location_id', 'l.id')
             .whereIn('s.id', studentIDs)
-            .orderBy('s.id');
+            .orderBy('s.id')
+            .catch(error => {
+                if(error){
+                    throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There has been a problem looking up informations about the recommended students. Please try again.')
+                }
+            })
         let result = []
 
+        let educations = await database('education AS e')
+            .select('m.name AS major', 'i.name AS institution', 'd.name AS degree', 'she.student_id AS student_id', 'she.description AS description', 'she.start_period AS start_period', 'she.end_period AS end_period')
+            .leftJoin('student_has_education AS she', 'e.id', 'she.education_id')
+            .leftJoin('majors AS m', 'e.major_id', 'm.id')
+            .leftJoin('institutions As i', 'e.institution_id', 'i.id')
+            .leftJoin('degree AS d', 'e.degree_id', 'd.id')
+            .whereIn('she.student_id', studentIDs)
+            .orderBy('she.student_id')
+            .catch(error => {
+                if(error){
+                    throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There has been a problem looking up informations about the recommended students. Please try again.')
+                }
+            })
+
+        let works = await database('work AS w')
+            .select('w.company_name AS company', 'w.position AS position', 'w.start_period AS start_period', 'w.end_period AS end_period', 'w.description AS description', 'shw.student_id AS student_id')
+            .leftJoin('student_has_work AS shw', 'w.id', 'shw.work_id')
+            .whereIn('shw.student_id', studentIDs)
+            .orderBy('shw.student_id')
+            .catch(error => {
+                if(error){
+                    throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There has been a problem looking up informations about the recommended students. Please try again.')
+                }
+            })
+        
+        let j = 0;
+        let k = 0;
         for(let i = 0; i < resultTemp.length; i++){
             let prev = result.length-1;
 
@@ -124,12 +159,44 @@ module.exports = {
                     surname: resultTemp[i].surname,
                     email: resultTemp[i].email,
                     description: resultTemp[i].description,
+                    location: {
+                        id: resultTemp[i].location_id,
+                        country: resultTemp[i].location_country,
+                        city: resultTemp[i].location_city
+                    },
                     skills: [{
                         id: resultTemp[i].skill_id,
                         name: resultTemp[i].skill_name,
                         type: resultTemp[i].skill_type
-                    }]
+                    }],
+                    education: [],
+                    work: []
                 })
+
+                let curr = prev + 1;
+
+                while(j < educations.length && educations[j].student_id == result[curr].id){
+                    result[curr].education.push({
+                        major: educations[j].major,
+                        institution: educations[j].institution,
+                        degree: educations[j].degree,
+                        description: educations[j].description,
+                        start_period: educations[j].start_period,
+                        end_period: educations[j].end_period
+                    });
+                    j++;
+                }
+
+                while(k < works.length && works[k].student_id == result[curr].id){
+                    result[curr].work.push({
+                        company_name: works[k].company,
+                        position: works[k].position,
+                        start_period: works[k].start_period,
+                        end_period: works[k].end_period,
+                        description: works[k].description
+                    })
+                    k++;
+                }
             } else if(result[prev] && result[prev].id === resultTemp[i].id ){
                 result[prev].skills.push({
                     id: resultTemp[i].skill_id,
@@ -137,6 +204,8 @@ module.exports = {
                     type: resultTemp[i].skill_type
                 })
             }
+
+
         }
 
 

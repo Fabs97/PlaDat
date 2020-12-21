@@ -47,7 +47,6 @@ class SkillsForm extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 16.0),
               child: RaisedButton(
-                color: Colors.grey[600],
                 child: Text(
                   "Save",
                   style: TextStyle(color: Colors.white),

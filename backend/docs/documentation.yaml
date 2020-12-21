@@ -123,8 +123,8 @@ components:
           type: integer
         position: 
           type: string
-        working_hours:
-          type: integer
+        employement_type:
+          type: string
         start_period: 
           type: string
           format: date-time
@@ -397,19 +397,70 @@ paths:
                       name: "Julian",
                       surname: "Bass",
                       description: "Researching software development for large-scale systems focusing on multi-national teams and using modern lean and agile methods",
-                      skills: {
-                        technicalSkills: [
-                          {id: 1, name: "Flutter", type: "TECH"},
-                        ],
-                        softSkills: [
-                          {id: 4, name: "Team Management", type: "SOFT"},
-                        ],
-                        otherSkills: [
-                          {id: 7, name: "Skiing", type: "OTHER"},
-                        ]
-                      }
+                      location: {
+                        id: 1,
+                        country: United Kingdom,
+                        city: Manchester
+                      },
+                      skills: [
+                         {
+                           id: 1,
+                           name: Flutter,
+                           type: TECH
+                         },
+                         {
+                           id: 2,
+                           name: Leadership,
+                           type: SOFT
+                         }
+                      ],
+                      education: [
+                        {
+                          major: Computer Science,
+                          institution: Hardvard,
+                          degree: Master,
+                          description: My grade was 100/1000,
+                          start_period: 2017-10-11,
+                          end_period: 2019-10-11
+                        }
+                      ],
+                      work: [
+                        {
+                          position: Project manager,
+                          company_name: Google,
+                          description: a really hard job,
+                          start_period: 2019-11-11,
+                          end_period: 2020-05-11
+                        },
+                        {
+                          posititon: Developer,
+                          company_name: Facebook,
+                          description: a really hard job,
+                          start_period: 2020-05-12,
+                          end_period: 2020-10-12,
+                        }
+                      ]
                     }
                   ]
+        '400': 
+          description: Bad Request
+          content:
+            text/html:
+              schema:
+                type: string
+                example:
+                  "Your request does not contains a valid placment id. Please try again"
+        '500':
+          description: Internal Server Error
+          content: 
+            text/html:
+              schema:
+                type: string
+                example:
+                  "There has been a problem looking up the recommended students. Please try again"
+
+
+
   /recommendation/{id}/seePlacements:
     get:
       description: Provides all placements recommendation for the provided student id, based on the algorithm
@@ -436,31 +487,54 @@ paths:
                     {
                       id: 1,
                       position: "Full stack developer",
-                      working_hours: 20,
+                      employement_type: 'PART_TIME',
+                      employer_id: 2,
                       start_period: "2020-11-11",
                       end_period: "2020-11-11",
                       salary: 600,
                       description_role: "An internship for you to learn how to be a full stack developer",
-                      employer_id: 1,
+                      employer_name: Google,
+                      location: {
+                        id: 1,
+                        country: United Kingdom,
+                        city: Manchester
+                      },
                       majors: [
-                        {id: 1, name: "Computer Science and Engineering"},
+                        {name: "Computer Science and Engineering"},
                       ],
                       institutions: [
-                        {id: 1, name: "Politecnico di Milano"},
+                        {name: "Politecnico di Milano"},
                       ],
-                      skills: {
-                        technicalSkills: [
-                          {id: 1, name: "Flutter", type: "TECH"},
-                        ],
-                        softSkills: [
-                          {id: 4, name: "Team Management", type: "SOFT"},
-                        ],
-                        otherSkills: [
-                          {id: 7, name: "Skiing", type: "OTHER"},
-                        ]
-                      }
+                      skills: [
+                         {
+                           id: 1,
+                           name: Flutter,
+                           type: TECH
+                         },
+                         {
+                           id: 2,
+                           name: Leadership,
+                           type: SOFT
+                         }
+                      ]
                     }
                   ]
+        '400': 
+          description: Bad Request
+          content:
+            text/html:
+              schema:
+                type: string
+                example:
+                  "Your request does not contains a valid student id. Please try again"
+        '500':
+          description: Internal Server Error
+          content: 
+            text/html:
+              schema:
+                type: string
+                example:
+                  "There has been a problem looking up the recommended placements. Please try again"
   /matching:
     post:
       description: Allows users to upsert the provided match to the matches table
@@ -493,6 +567,44 @@ paths:
                     placementAccept: true,
                     status: "ACCEPTED"
                   }
+
+  /match/:studentId/:placementId:
+    delete:
+      description: Delete the match based on the given ids
+      tags:
+        - "Matching"
+      parameters:
+        - in: path
+          required: true
+          name: studentId
+          schema:
+            type: integer
+            example: 1
+        - in: path
+          required: true
+          name: placementId
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: OK
+          content: 
+            application/json:
+              schema:
+                type: integer
+                example: 1
+        '400':
+          description: Bad Request
+          content:
+            text/html:
+              schema:
+                type: string
+                example:
+                  "Your request did not provided valid values for ids. Please try again."
+
+
+
   /placement:
     get:
       description: Returns all placement ids in the database 
