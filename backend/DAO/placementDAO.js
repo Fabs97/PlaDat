@@ -359,7 +359,7 @@ module.exports = {
             .update('status', 'CLOSED')
             .catch(error => {
                 if(error) {
-                    throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There has been a problem closing your placement. Please try again')
+                    throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There has been a problem closing your placement. Please try again.')
                 }
             });
         return result;
