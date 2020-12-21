@@ -86,12 +86,44 @@ class _MyPlacementsState extends State<MyPlacements> {
                                   fontWeight: FontWeight.w700,
                                 ),
                               ),
-                              subtitle: Text(
-                                "${_placement.countMatches ?? 0} matches",
-                                style: themeData.textTheme.caption.copyWith(
-                                  color: CustomTheme().secondaryColor,
-                                  fontWeight: FontWeight.w500,
-                                ),
+                              subtitle: Row(
+                                children: [
+                                  Text(
+                                    "${_placement.countMatches ?? 0} matches",
+                                    style: themeData.textTheme.caption.copyWith(
+                                      color: CustomTheme().secondaryColor,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  _placement.status == "CLOSED"
+                                      ? Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 15.0,
+                                            vertical: 4.0,
+                                          ),
+                                          child: Transform(
+                                            transform: Matrix4.identity()
+                                              ..scale(0.8),
+                                            child: Chip(
+                                                backgroundColor: Colors.white,
+                                                label: Text("CLOSED"),
+                                                shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                            Radius.circular(
+                                                                10)),
+                                                    side: BorderSide(
+                                                        color: CustomTheme()
+                                                            .primaryColor)),
+                                                labelStyle: TextStyle(
+                                                    color: CustomTheme()
+                                                        .primaryColor,
+                                                    backgroundColor:
+                                                        Colors.white)),
+                                          ),
+                                        )
+                                      : Container()
+                                ],
                               ),
                               onTap: () {
                                 if (_placement.countMatches == null) {
@@ -116,6 +148,34 @@ class _MyPlacementsState extends State<MyPlacements> {
                                   ));
                                 }
                               },
+                              trailing: PopupMenuButton<String>(
+                                itemBuilder: (context) =>
+                                    <PopupMenuEntry<String>>[
+                                  PopupMenuItem<String>(
+                                      child: ListTile(
+                                    leading: Icon(
+                                      Icons.stop_circle_outlined,
+                                      color: CustomTheme().secondaryColor,
+                                    ),
+                                    title: Text(
+                                      "Close the application",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .subtitle1
+                                          .copyWith(
+                                            color: CustomTheme().secondaryColor,
+                                          ),
+                                    ),
+                                    onTap: () {
+                                      setState(() {
+                                        // TODO: change status of the placement with closed
+                                        _placement.status = "CLOSED";
+                                        Navigator.pop(context);
+                                      });
+                                    },
+                                  ))
+                                ],
+                              ),
                             ),
                             Padding(
                               padding:
