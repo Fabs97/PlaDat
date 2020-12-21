@@ -6,30 +6,61 @@ import 'package:frontend/screens/profile/local_widgets/placement_profile.dart';
 import 'package:frontend/screens/profile/local_widgets/student_profile.dart';
 import 'package:frontend/services/auth_service.dart';
 import 'package:frontend/utils/custom_theme.dart';
-import 'package:frontend/widgets/appbar.dart';
-import 'package:frontend/widgets/drawer.dart';
 
-class Profile extends StatelessWidget {
+class Profile extends StatefulWidget {
   final dynamic profile;
   Profile({Key key, @required this.profile}) : super(key: key);
 
+  @override
+  _ProfileState createState() => _ProfileState();
+}
+
+class _ProfileState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          profile is Student
-              ? (profile.id != AuthService().loggedAccountInfo.id &&
+          widget.profile is Student
+              ? (widget.profile.id != AuthService().loggedAccountInfo.id &&
                       AuthService().loggedAccountInfo is Employer
                   ? "Student Profile"
                   : "My profile")
               : "Placement Profile",
         ),
         actions: [
-          profile is Placement &&
-                  profile.employerId == AuthService().loggedAccountInfo.id &&
+          widget.profile is Placement &&
+                  widget.profile.employerId ==
+                      AuthService().loggedAccountInfo.id &&
                   AuthService().loggedAccountInfo is Employer
-              ? _popupMenuButton()
+              ? PopupMenuButton<String>(
+                  icon: Icon(
+                    Icons.settings,
+                    color: CustomTheme().primaryColor,
+                  ),
+                  itemBuilder: (context) => <PopupMenuEntry<String>>[
+                    PopupMenuItem<String>(
+                        child: ListTile(
+                      leading: Icon(
+                        Icons.stop_circle_outlined,
+                        color: CustomTheme().secondaryColor,
+                      ),
+                      title: Text(
+                        "Close the application",
+                        style: Theme.of(context).textTheme.subtitle1.copyWith(
+                              color: CustomTheme().secondaryColor,
+                            ),
+                      ),
+                      onTap: () {
+                        setState(() {
+                          // TODO: change status of the placement with closed
+                          widget.profile.status = "CLOSED";
+                          Navigator.pop(context);
+                        });
+                      },
+                    ))
+                  ],
+                )
               : Container(),
         ],
       ),
@@ -54,9 +85,9 @@ class Profile extends StatelessWidget {
               child: SingleChildScrollView(
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: profile is Student
-                      ? StudentProfile(student: profile)
-                      : PlacementProfile(placement: profile),
+                  child: widget.profile is Student
+                      ? StudentProfile(student: widget.profile)
+                      : PlacementProfile(placement: widget.profile),
                 ),
               ),
             ),
@@ -65,31 +96,10 @@ class Profile extends StatelessWidget {
       ),
     );
   }
-}
 
-_popupMenuButton() {
-  return PopupMenuButton<String>(
-    icon: Icon(
-      Icons.settings,
-      color: CustomTheme().primaryColor,
-    ),
-    itemBuilder: (context) => <PopupMenuEntry<String>>[
-      PopupMenuItem<String>(
-          child: ListTile(
-        leading: Icon(
-          Icons.stop_circle_outlined,
-          color: CustomTheme().secondaryColor,
-        ),
-        title: Text(
-          "Close the application",
-          style: Theme.of(context).textTheme.subtitle1.copyWith(
-                color: CustomTheme().secondaryColor,
-              ),
-        ),
-        onTap: () {
-          // TODO: change status of the placement with closed
-        },
-      ))
-    ],
-  );
+  @override
+  State<StatefulWidget> createState() {
+    // TODO: implement createState
+    throw UnimplementedError();
+  }
 }
