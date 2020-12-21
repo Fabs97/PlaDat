@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:frontend/models/employer.dart';
 import 'package:frontend/models/placement.dart';
 import 'package:frontend/models/student.dart';
 import 'package:frontend/screens/profile/local_widgets/placement_profile.dart';
 import 'package:frontend/screens/profile/local_widgets/student_profile.dart';
+import 'package:frontend/services/api_service.dart';
 import 'package:frontend/services/auth_service.dart';
 import 'package:frontend/utils/custom_theme.dart';
 
@@ -52,11 +54,38 @@ class _ProfileState extends State<Profile> {
                             ),
                       ),
                       onTap: () {
-                        setState(() {
-                          // TODO: change status of the placement with closed
-                          widget.profile.status = "CLOSED";
-                          Navigator.pop(context);
-                        });
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Text(
+                                    'Are you sure you want to close the application? \nThe students won’t see the placement anymore in their recommendations'),
+                                actions: [
+                                  FlatButton(
+                                    child: Text('No'),
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                  ),
+                                  FlatButton(
+                                      child: Text('Yes'),
+                                      onPressed: () {
+                                        APIService.route(ENDPOINTS.Placement,
+                                                "/placement/:id/close",
+                                                urlArgs: widget.profile.id)
+                                            .then((value) => setState(() {
+                                                  value is String
+                                                      ? widget.profile.status =
+                                                          "CLOSED"
+                                                      : Fluttertoast.showToast(
+                                                          msg: value);
+                                                  Navigator.pop(context);
+                                                }));
+                                        Navigator.pop(context);
+                                      }),
+                                ],
+                              );
+                            });
                       },
                     ))
                   ],

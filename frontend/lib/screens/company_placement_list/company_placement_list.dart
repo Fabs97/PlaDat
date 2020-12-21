@@ -8,7 +8,6 @@ import 'package:frontend/screens/company_placement_list/local_widgets/placement_
 import 'package:frontend/services/api_service.dart';
 import 'package:frontend/utils/custom_theme.dart';
 import 'package:frontend/utils/routes_generator.dart';
-import 'package:frontend/widgets/appbar.dart';
 import 'package:frontend/widgets/drawer.dart';
 
 class MyPlacements extends StatefulWidget {
@@ -167,11 +166,41 @@ class _MyPlacementsState extends State<MyPlacements> {
                                           ),
                                     ),
                                     onTap: () {
-                                      setState(() {
-                                        // TODO: change status of the placement with closed
-                                        _placement.status = "CLOSED";
-                                        Navigator.pop(context);
-                                      });
+                                      showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return AlertDialog(
+                                              title: Text(
+                                                  'Are you sure you want to close the application? \nThe students won’t see the placement anymore in their recommendations'),
+                                              actions: [
+                                                FlatButton(
+                                                  child: Text('No'),
+                                                  onPressed: () {
+                                                    Navigator.pop(context);
+                                                  },
+                                                ),
+                                                FlatButton(
+                                                    child: Text('Yes'),
+                                                    onPressed: () {
+                                                      APIService.route(
+                                                              ENDPOINTS
+                                                                  .Placement,
+                                                              "/placement/:id/close",
+                                                              urlArgs:
+                                                                  _placement.id)
+                                                          .then((value) =>
+                                                              setState(() {
+                                                                _placement
+                                                                        .status =
+                                                                    'CLOSED';
+                                                                Navigator.pop(
+                                                                    context);
+                                                              }));
+                                                      Navigator.pop(context);
+                                                    }),
+                                              ],
+                                            );
+                                          });
                                     },
                                   ))
                                 ],
@@ -196,3 +225,5 @@ class _MyPlacementsState extends State<MyPlacements> {
     );
   }
 }
+
+_showConfirmDialog(Placement placement) {}
