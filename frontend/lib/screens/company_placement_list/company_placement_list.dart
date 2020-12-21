@@ -37,7 +37,21 @@ class _MyPlacementsState extends State<MyPlacements> {
     final screenSize = MediaQuery.of(context).size;
     final themeData = Theme.of(context);
     return Scaffold(
-      appBar: CustomAppBar.createAppBar(context, "My Placements"),
+      appBar: AppBar(
+        title: Text("My Placement"),
+        actions: [
+          IconButton(
+              padding: EdgeInsets.all(10.0),
+              iconSize: 40,
+              icon: Icon(
+                Icons.fiber_new_rounded,
+                color: CustomTheme().primaryColor,
+              ),
+              onPressed: () {
+                Nav.navigatorKey.currentState.pushNamed("/new-placement");
+              }),
+        ],
+      ),
       drawer: CustomDrawer.createDrawer(context),
       body: _placements == null
           ? Center(
