@@ -212,4 +212,59 @@ describe('placement API', () => {
         })
     })
 
+    describe('PUT /placement/:id/close', () => {
+
+        let placementId;
+
+        beforeEach(async () => {
+
+            let employerId = (await chai.request(server)
+                .get('/employers/last')).body.id;
+
+            let testPlacement = await chai.request(server)
+                .post('/placement/new-placement')
+                .set('content-type', 'application/json')
+                .send({
+                    position: "test position",
+                    startDate: "2020-12-14",
+                    employmentType: "PART_TIME",
+                    endDate: "2020-12-14",
+                    salary: 0,
+                    descriptionRole: "test description role", 
+                    employerId: employerId
+                })
+            
+            placementId = testPlacement.body.id;
+            
+        })
+
+        it('should correctly close the placement given a correct id', (done) => {
+
+            chai.request(server)
+                .put('/placement/' + placementId + '/close')
+                .end((err, response) => {
+                    response.should.have.status(200);
+                    done();
+                })
+
+        })
+
+        afterEach(async () =>{
+            await chai.request(server)
+                .delete('/placement/' + placementId);
+        })
+
+        it('should get a 400 Bad Request error when the request is not valid', (done) => {
+
+            chai.request(server)
+                .put('/placement/jkdfk/close')
+                .end((err, response) => {
+                    response.should.have.status(400);
+                    done();
+                })
+
+        })
+
+    })
+
 })
