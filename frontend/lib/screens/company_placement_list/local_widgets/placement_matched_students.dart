@@ -30,7 +30,11 @@ class _PlacementMatchedStudentsState extends State<PlacementMatchedStudents> {
     APIService.route(ENDPOINTS.Placement, '/placement/:placementId/students',
             urlArgs: widget.placement.id)
         .then((studentList) => setState(() {
-              _students = studentList;
+              if (studentList is String) {
+                print(studentList);
+              } else {
+                _students = studentList;
+              }
             }));
     super.initState();
   }
