@@ -651,7 +651,11 @@ paths:
                     end_period: "2020-11-11",
                     salary: 600,
                     description_role: "An internship for you to learn how to be a full stack developer",
-                    employer_id: 1,
+                    employer: {
+                      id: 1,
+                      name: 'Goolgle',
+                      description: 'A really big company'
+                    },
                     majors: [
                       {id: 1, name: "Computer Science and Engineering"},
                       {id: 2, name: "Management Engineering"},

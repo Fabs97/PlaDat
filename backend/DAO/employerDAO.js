@@ -5,8 +5,8 @@ const ERR_INTERNAL_SERVER_ERROR = require('../errors').ERR_INTERNAL_SERVER_ERROR
 
 module.exports = {
     getEmployer: async (employer_id) => {
-        let result = await database('employer')
-            .select('name', 'location', 'urllogo')
+        let result = await database('employer AS e')
+            .select('e.id AS id', 'e.name AS name', 'e.description AS description')
             .where('id', employer_id);
         return result[0];
     },
