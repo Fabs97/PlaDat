@@ -4,7 +4,7 @@ const swaggerUI = require('swagger-ui-express');
 const APIDocumentation = require('./docs/openapi');
 const cors = require('cors');
 const jwt = require("jsonwebtoken");
-const {authenticateToken} = require('./services/middlewareService')
+const {authMiddleware} = require('./services/middlewareService')
 
 const port = process.env.PORT || 3000;
 
@@ -32,17 +32,17 @@ const googleMapsRoute = require('./routes/googleMapsRoute');
 const registrationRoute = require('./routes/registrationRoute');
 const messageRoute = require('./routes/messageRoute');
 const educationRoute = require('./routes/educationRoute');
-app.use('/', studentRoute);
-app.use('/', placementRoute);
-app.use('/', skillsRoute);
-app.use('/', recommendationRoute);
-app.use('/', matchRoute);
-app.use('/', employerRoute);
-app.use('/', locationRoute);
-app.use('/', googleMapsRoute);
-app.use('/', registrationRoute);
-app.use('/', educationRoute);
-app.use('/', messageRoute);
+app.use('/', authMiddleware,studentRoute);
+app.use('/', authMiddleware, placementRoute);
+app.use('/', authMiddleware, skillsRoute);
+app.use('/', authMiddleware, recommendationRoute);
+app.use('/', authMiddleware, matchRoute);
+app.use('/', authMiddleware, employerRoute);
+app.use('/', authMiddleware, locationRoute);
+app.use('/', authMiddleware, googleMapsRoute);
+app.use('/', authMiddleware, registrationRoute);
+app.use('/', authMiddleware, educationRoute);
+app.use('/', authMiddleware, messageRoute);
 
 app.get('/', (req, res) => res.send('Hello World!'));
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));
