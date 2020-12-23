@@ -11,5 +11,8 @@ module.exports = {
 
     getEmployerByUserId: (userId) => {
         return employerDAO.getEmployerByUserId(userId);
+    },
+    getEmployerByPlacementId: (placementId) => {
+        return employerDAO.getEmployerByPlacementId(placementId);
     }
 };

@@ -15,6 +15,8 @@ module.exports = {
             jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
                 console.log(err)
                 if (err) return res.sendStatus(403)
+                console.log(user)
+
                 req.user = user
                 next() // pass the execution off to whatever request the client intended
             });

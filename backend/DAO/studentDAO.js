@@ -17,7 +17,7 @@ module.exports = {
         
         // This one is very similar to SQL
         let result = await database('student')
-            .select('id', 'name','surname','email', 'description', 'phone')
+            .select('id', 'name','surname','email', 'description', 'phone', 'user_id as userId')
             .where('id', id);
         return result[0];
     },

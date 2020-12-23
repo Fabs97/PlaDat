@@ -13,6 +13,15 @@ module.exports = {
     },
 
     getConversation: async (studentId, employerId) => {
+
+        let student = await studentService.getStudent(studentId);
+        let employer = await employerService.getEmployer(employerId);
+        if (  (auth.id !== student.userId && auth.id == employer.userId) 
+        || (  (auth.id == student.userId) && auth.id !== employer.userId)) {
+            throw new SuperError(ERR_FORBIDDEN, 'You are not authorized to delete this match');
+            return;
+        }
+
         return await messageDAO.getConversation(studentId,employerId);
     },
 
