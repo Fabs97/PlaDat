@@ -1,5 +1,3 @@
-import 'dart:html';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -165,8 +163,8 @@ class _MyPlacementsState extends State<MyPlacements> {
                                             color: CustomTheme().secondaryColor,
                                           ),
                                     ),
-                                    onTap: () {
-                                      showDialog(
+                                    onTap: () async {
+                                      final status = await showDialog(
                                           context: context,
                                           builder: (BuildContext context) {
                                             return AlertDialog(
@@ -176,7 +174,8 @@ class _MyPlacementsState extends State<MyPlacements> {
                                                 FlatButton(
                                                   child: Text('No'),
                                                   onPressed: () {
-                                                    Navigator.pop(context);
+                                                    Navigator.pop(
+                                                        context, null);
                                                   },
                                                 ),
                                                 FlatButton(
@@ -188,19 +187,21 @@ class _MyPlacementsState extends State<MyPlacements> {
                                                               "/placement/:id/close",
                                                               urlArgs:
                                                                   _placement.id)
-                                                          .then((value) =>
-                                                              setState(() {
-                                                                _placement
-                                                                        .status =
-                                                                    'CLOSED';
+                                                          .then((value) => {
                                                                 Navigator.pop(
-                                                                    context);
-                                                              }));
-                                                      Navigator.pop(context);
+                                                                    context,
+                                                                    value)
+                                                              });
                                                     }),
                                               ],
                                             );
                                           });
+                                      if (status ==
+                                          "Your placement has been closed correctly.") {
+                                        setState(() {
+                                          _placement.status = "CLOSED";
+                                        });
+                                      }
                                     },
                                   ))
                                 ],
@@ -225,5 +226,3 @@ class _MyPlacementsState extends State<MyPlacements> {
     );
   }
 }
-
-_showConfirmDialog(Placement placement) {}
