@@ -69,7 +69,7 @@ class PlacementAPIService extends APIInfo {
   }
 
   static Future<dynamic> _putClosed(String subRoute, int id) async {
-    var response = await http.get(APIInfo.apiEndpoint + "/placement/$id/close");
+    var response = await http.put(APIInfo.apiEndpoint + "/placement/$id/close");
     switch (response.statusCode) {
       case 200:
         {
