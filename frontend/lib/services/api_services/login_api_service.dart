@@ -15,7 +15,12 @@ class LoginAPIService {
   }
 
   static Future<dynamic> _login(String subRoute, dynamic user) async {
-    final response = await http.get(APIInfo.apiEndpoint + subRoute, needsAuth: false);
+    final response = await http.post(
+      APIInfo.apiEndpoint + subRoute,
+      needsAuth: false,
+      headers: {"Content-Type": "application/json"},
+      body: user.toJson(),
+    );
     switch (response.statusCode) {
       case 200:
         return jsonDecode(response.body) as Map<String, dynamic>;
@@ -30,5 +35,4 @@ class LoginAPIException extends APIException {
   final String message;
 
   LoginAPIException({this.message});
-
 }

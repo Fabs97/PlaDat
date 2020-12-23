@@ -3,16 +3,13 @@ import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:frontend/models/student.dart';
-import 'package:frontend/services/api_service.dart';
-import 'package:frontend/utils/routes_generator.dart';
+import 'package:frontend/utils/custom_theme.dart';
 import 'package:frontend/widgets/address_search.dart';
 import 'package:frontend/models/place.dart';
-import 'package:intl/intl.dart';
 import 'package:frontend/screens/new_student/new_student.dart';
 import 'package:provider/provider.dart';
 
 class StudentForm extends StatefulWidget {
-
   const StudentForm({Key key}) : super(key: key);
   @override
   _StudentFormState createState() => _StudentFormState();
@@ -25,7 +22,7 @@ class _StudentFormState extends State<StudentForm> {
   @override
   void initState() {
     _controller.addListener(() {
-      final text = _controller.text.toLowerCase();
+      final text = _controller.text;
       _controller.value = _controller.value.copyWith(
         text: text,
         selection:
@@ -57,14 +54,7 @@ class _StudentFormState extends State<StudentForm> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10.0),
                     color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black,
-                        blurRadius: 2.0,
-                        spreadRadius: 0.0,
-                        offset: Offset(2.0, 2.0),
-                      ),
-                    ],
+                    boxShadow: [CustomTheme().boxShadow],
                   ),
                   child: Padding(
                     padding: EdgeInsets.symmetric(
@@ -76,7 +66,6 @@ class _StudentFormState extends State<StudentForm> {
                       children: [
                         _createnameField(student),
                         _createsurnameField(student),
-                        _createemailField(student),
                         _createphoneField(student),
                         _createDescriptionField(student),
                         _cretaeautocompleteField(student),
@@ -87,7 +76,6 @@ class _StudentFormState extends State<StudentForm> {
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 16.0),
                   child: RaisedButton(
-                    color: Colors.grey[600],
                     onPressed: () {
                       // Validate will return true if the form is valid, or false if
                       // the form is invalid.
@@ -151,28 +139,6 @@ class _StudentFormState extends State<StudentForm> {
     );
   }
 
-  Widget _createemailField(Student student) {
-    return TextFormField(
-      decoration: const InputDecoration(
-        hintText: 'student@school.com',
-      ),
-      initialValue: student.email ?? '',
-      onChanged: (value) {
-        setState(() {
-          student.email = value;
-        });
-      },
-      validator: (value) {
-        if (value.isEmpty) {
-          return 'Please enter a student email';
-        } else if (!EmailValidator.validate(value)) {
-          return 'Please enter a valid email';
-        }
-        return null;
-      },
-    );
-  }
-
   Widget _createDescriptionField(Student student) {
     return TextFormField(
       decoration: const InputDecoration(
@@ -227,7 +193,7 @@ class _StudentFormState extends State<StudentForm> {
       decoration: const InputDecoration(
         hintText: 'Address',
       ),
-      initialValue: student.location?.description ?? '',
+      // initialValue: student.location?.description ?? '',
       onTap: () async {
         final Place result = await showSearch(
           context: context,
@@ -242,12 +208,9 @@ class _StudentFormState extends State<StudentForm> {
             result.country = splits[splits.length - 1];
             result.city = splits[splits.length - 2];
             student.location = result;
-          
           });
-          
         }
       },
-
       validator: (value) {
         if (value.isEmpty) {
           return 'Please enter your address';

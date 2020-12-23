@@ -51,7 +51,7 @@ class StudentsAPIService extends APIInfo {
     }
   }
 
-  static Future<dynamic> _getStudentById(String id) async {
+  static Future<dynamic> _getStudentById(int id) async {
     var response = await http.get(APIInfo.apiEndpoint + "/student/$id");
     if (response.statusCode == 200) {
       return Student.fromJson(jsonDecode(response.body));

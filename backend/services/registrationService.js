@@ -41,7 +41,7 @@ module.exports = {
         } else {
             let employerAccount = await employerService.getEmployerByUserId(userAccount.id);
             if(employerAccount && employerAccount.id){
-                userResult.employerID = studentAccount.id;
+                userResult.employerID = employerAccount.id;
             }
         }
 

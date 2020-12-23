@@ -95,5 +95,9 @@ module.exports = {
 
     deletePlacementById: (id) => {
         return placementDAO.deletePlacementById(id);
+    },
+
+    getLastPlacement: () => {
+        return placementDAO.getLastPlacement();
     }
 };

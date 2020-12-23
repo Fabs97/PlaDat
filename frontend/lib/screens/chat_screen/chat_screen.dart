@@ -29,8 +29,6 @@ class _ChatScreenState extends State<ChatScreen> {
   bool _sendingMessage = false;
   final _formKey = GlobalKey<FormState>();
   String _newMessage = "";
-  ScrollController _scrollController =
-      ScrollController(initialScrollOffset: 0.0);
 
   @override
   void initState() {
@@ -104,7 +102,6 @@ class _ChatScreenState extends State<ChatScreen> {
                                       padding: const EdgeInsets.symmetric(
                                           vertical: 16.0),
                                       child: RaisedButton(
-                                        color: Colors.grey[600],
                                         onPressed:
                                             _createNewMessageButtonPressed,
                                         child: Text(
@@ -205,7 +202,6 @@ class _ChatScreenState extends State<ChatScreen> {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 16.0),
               child: RaisedButton(
-                color: Colors.grey[600],
                 onPressed: _sendMessageButtonPressed,
                 child: Text(
                   'Send message',

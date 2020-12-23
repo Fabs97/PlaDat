@@ -1,12 +1,12 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:frontend/models/employer.dart';
 import 'package:frontend/models/student.dart';
 import 'package:frontend/models/user.dart';
 import 'package:frontend/services/api_services/login_api_service.dart';
 import 'package:frontend/services/auth_service.dart';
 import 'package:frontend/utils/routes_generator.dart';
-import 'package:frontend/widgets/appbar.dart';
 
 class Login extends StatefulWidget {
   bool isAfterAuthError;
@@ -25,7 +25,8 @@ class _LoginState extends State<Login> {
   @override
   void initState() {
     if (widget.isAfterAuthError) {
-      Fluttertoast.showToast(msg: "There was authenticating you, please login again");
+      Fluttertoast.showToast(
+          msg: "There was authenticating you, please login again");
     }
     super.initState();
   }
@@ -34,7 +35,11 @@ class _LoginState extends State<Login> {
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: CustomAppBar.createAppBar(context, "Login to PlaDat"),
+      appBar: AppBar(
+        centerTitle: true,
+        title: Text("Login to PlaDat"),
+        leading: Container(),
+      ),
       body: Form(
         key: _formKey,
         child: Column(
@@ -96,6 +101,7 @@ class _LoginState extends State<Login> {
       initialValue: _user.email ?? '',
       onChanged: (value) {
         setState(() {
+          if (_hasLoginErrors) _hasLoginErrors = false;
           _user.email = value;
         });
       },
@@ -133,14 +139,17 @@ class _LoginState extends State<Login> {
         }
         return null;
       },
-      onChanged: (password) => setState(() => _user.password = password),
+      onChanged: (password) => setState(() {
+        if (_hasLoginErrors) _hasLoginErrors = false;
+        _user.password = password;
+      }),
     );
   }
 
   _createErrorText() {
     return Text(
-      "The password or the email are not correct",
       // TODO: style with error text color when rebranded app.
+      "The password or the email are not correct",
     );
   }
 
@@ -161,8 +170,7 @@ class _LoginState extends State<Login> {
               "Create one here",
               // TODO: style with text color when rebranded app
             ),
-            onTap: () =>
-                Nav.navigatorKey.currentState.pushNamed("/registration"),
+            onTap: () => Nav.currentState.pushNamed("/registration"),
           ),
         ),
       ],
@@ -182,21 +190,26 @@ class _LoginState extends State<Login> {
     );
   }
 
-  _loginToPlaDat() {
+  _loginToPlaDat() async {
     if (_formKey.currentState.validate()) {
       try {
-        AuthService().login(_user).then((response) {
-          if (response is bool) {
-            // new user, redirect him to the creation of the profile/placement
-            Nav.navigatorKey.currentState
-                .pushNamed(response ? "/new-student" : "/new-placement");
-          } else {
-            Nav.navigatorKey.currentState.pushNamed(
-                response is Student ? "/placement-list" : "/student-list");
-          }
-        });
+        final response = await AuthService().login(_user);
+        if (response is bool) {
+          // new user, redirect him to the creation of the profile/placement
+          Nav.currentState
+              .popAndPushNamed(response ? "/new-student" : "/new-placement");
+        } else if (response is Student) {
+          Nav.currentState.popAndPushNamed("/student-home");
+        } else if (response is Employer) {
+          Nav.currentState.popAndPushNamed("/employer-home");
+        }
       } on LoginAPIException catch (e) {
-        Fluttertoast.showToast(msg: e.message);
+        setState(() {
+          _hasLoginErrors = true;
+        });
+        print(e);
+      } catch (e) {
+        Fluttertoast.showToast(msg: e.message ?? "Error while trying to login");
       }
     }
   }

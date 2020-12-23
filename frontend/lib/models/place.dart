@@ -25,4 +25,8 @@ class Place {
       "city": this.city,
     };
   }
+
+  String toString() {
+    return "${this.description ?? this.country + " " + this.city}";
+  }
 }
