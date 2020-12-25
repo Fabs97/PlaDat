@@ -31,12 +31,15 @@ router.get('/message/:studentId/:employerId', async (req, res, next) => {
 });
 
 router.delete('/message', async (req, res, next) => {
-    let result = await messageService.deleteMessage(req.body);
+    let result = await messageService.deleteMessage(req.body, req.user)
+        .catch(error => {
+            res.status(error.code).send(error.message);
+        });
     res.json(result);
 });
 
 router.get('/messages/last', async (req, res, next) => {
-    let lastMessage = await messageService.getLastMessage();
+    let lastMessage = await messageService.getLastMessage(req.user.id);
     res.json(lastMessage);
 });
 

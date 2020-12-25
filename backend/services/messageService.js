@@ -3,7 +3,7 @@ const {SuperError,ERR_BAD_REQUEST,ERR_NOT_FOUND, ERR_FORBIDDEN} = require('../er
 const studentService = require('./studentService');
 const employerService = require('./employerService');
 
-module.exports = {
+self = module.exports = {
 
     saveNewMessage: async (message, auth) => {
         if(isNaN(message.studentId) || isNaN(message.employerId)|| typeof(message.sendDate) != 'string' || (message.sender != 'STUDENT' && message.sender != 'EMPLOYER') || typeof(message.message) != 'string'){
@@ -11,16 +11,12 @@ module.exports = {
             return;
         }
 
-        let student = await studentService.getStudent(message.studentId)
-        let employer = await employerService.getEmployer(message.employerId)
-
-        if(!student || !employer) {
-            throw new SuperError(ERR_NOT_FOUND, 'The conversation cannot be found');
-            return;
-        };
-
-        if ( auth.id !== student.userId && auth.id !== employer.userId) {
-            throw new SuperError(ERR_FORBIDDEN, 'You are not authorized to initiate this conversation');
+        let authorized = await self.checkPermissions(message.studentId, message.employerId, auth)
+            .catch(error => {
+                throw error;
+                return;
+            });
+        if (!authorized) {
             return;
         }
 
@@ -29,6 +25,36 @@ module.exports = {
 
     getConversation: async (studentId, employerId, auth) => {
 
+        let authorized = await self.checkPermissions(studentId, employerId, auth)
+            .catch(error => {
+                throw error;
+                return;
+            });
+        if (!authorized) {
+            return;
+        }
+
+        return await messageDAO.getConversation(studentId,employerId);
+    },
+
+    deleteMessage: async (msgDetails, auth) => {
+        let authorized = await self.checkPermissions(msgDetails.studentId, msgDetails.employerId, auth)
+            .catch(error => {
+                throw error;
+                return;
+            });
+        if (!authorized) {
+            return;
+        }
+        return await messageDAO.deleteMessage(msgDetails);
+    },
+
+    getLastMessage: async (S) => {
+        //TODO: RETHINK THIS
+        return await messageDAO.getLastMessage();
+    },
+
+    checkPermissions: async (studentId, employerId, auth) => {
         let student = await studentService.getStudent(studentId)
         let employer = await employerService.getEmployer(employerId)
 
@@ -41,16 +67,7 @@ module.exports = {
             throw new SuperError(ERR_FORBIDDEN, 'You are not authorized to see this conversation');
             return;
         }
-
-        return await messageDAO.getConversation(studentId,employerId);
-    },
-
-    deleteMessage: async (msgDetails) => {
-        return await messageDAO.deleteMessage(msgDetails);
-    },
-
-    getLastMessage: async () => {
-        return await messageDAO.getLastMessage();
-    },
+        return true;
+    }
 
 }
