@@ -5,12 +5,26 @@ const employerService = require('./employerService');
 
 module.exports = {
 
-    saveNewMessage: async (message) => {
+    saveNewMessage: async (message, auth) => {
         if(isNaN(message.studentId) || isNaN(message.employerId)|| typeof(message.sendDate) != 'string' || (message.sender != 'STUDENT' && message.sender != 'EMPLOYER') || typeof(message.message) != 'string'){
             throw new SuperError(ERR_BAD_REQUEST, 'Your request structure contains some mistakes. Please try again.');
-        } else {
-            return await messageDAO.saveNewMessage(message);
+            return;
         }
+
+        let student = await studentService.getStudent(message.studentId)
+        let employer = await employerService.getEmployer(message.employerId)
+
+        if(!student || !employer) {
+            throw new SuperError(ERR_NOT_FOUND, 'The conversation cannot be found');
+            return;
+        };
+
+        if ( auth.id !== student.userId && auth.id !== employer.userId) {
+            throw new SuperError(ERR_FORBIDDEN, 'You are not authorized to initiate this conversation');
+            return;
+        }
+
+        return await messageDAO.saveNewMessage(message);
     },
 
     getConversation: async (studentId, employerId, auth) => {

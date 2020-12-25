@@ -8,7 +8,7 @@ const ERR_BAD_REQUEST = require('../errors').ERR_BAD_REQUEST;
 
 router.post('/message', async (req, res, next) => {
     
-    let message = await messageService.saveNewMessage(req.body)
+    let message = await messageService.saveNewMessage(req.body, req.user)
     .catch(error => {
         res.status(error.code).send(error.message);
     });
