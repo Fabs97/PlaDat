@@ -6,6 +6,13 @@ const studentService = require('./studentService');
 
 module.exports = {
     saveChoice: async (choice) => { 
+        let student = await studentService.getStudent(choice.studentID);
+        let employer = await employerService.getEmployerByPlacementId(choice.placementID);
+        if (auth.id !== student.userId && auth.id !== employer.userId) {
+            throw new SuperError(ERR_FORBIDDEN, 'You are not authorized to save this match');
+            return;
+        }
+
         let previousInteraction = await matchDAO.getPreviousInteraction(choice.studentID, choice.placementID);
         let result = {};
         if(!previousInteraction) {
