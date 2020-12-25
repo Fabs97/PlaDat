@@ -49,7 +49,7 @@ module.exports = {
             userResult.student = ( userAccount.type === 'STUDENT' ? true : false )
         }
         
-        userResult.token = jwt.sign({ id: userAccount.id }, process.env.ACCESS_TOKEN_SECRET, {
+        userResult.token = jwt.sign({ id: userAccount.id , studentId: userResult.studentID, employerId: userResult.employerID}, process.env.ACCESS_TOKEN_SECRET, {
             expiresIn: process.env.ACCESS_TOKEN_LIFE // 30 DAYS
         });
         

@@ -7,7 +7,7 @@ const placementService = require('../services/placementService');
  * The fields of the JSON are: position, workingHours, startPeriod, endPeriod, salary, descriptionRole, institution, major
  */
 router.post("/placement/new-placement", async (req, res, next) => {
-
+    //AUTH: ONLY EMPLOYERS ARE ALLOWED 
     let newPlacement = await placementService.savePlacementPage(req.body)
         .catch(error => {
             res.status(error.code).send(error.message);
@@ -29,18 +29,20 @@ router.get('/placement/:id', async (req, res, next) => {
 
 // this api return all the ids of all the placements
 router.get('/placement', async (req, res, next) => {
-
+    //AUTH: DANGEROUS, WE SHOULD REMOVE
     const placements = await placementService.getAllPlacementsIds();
     res.json(placements);
 
 });
 
 router.get('/employer/:employerId/placements', async (req, res, next) => {
+    //AUTH: EMPLOYER ID HAS TO BE THE ONE LOGGED IN 
     const placements = await placementService.getPlacementsByEmployerId(req.params.employerId);
     res.json(placements);
 });
 
 router.delete('/placement/:id', async (req, res, next) => {
+    //AUTH: THE EMPLOYER THAT DELETES THIS IS ALSO THE ONE WHICH 
     let result = await placementService.deletePlacementById(req.params.id);
     res.json(result);
 })
