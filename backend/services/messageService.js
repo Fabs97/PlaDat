@@ -1,6 +1,7 @@
 const messageDAO = require('../DAO/messageDAO');
-const SuperError = require('../errors').SuperError;
-const ERR_BAD_REQUEST = require('../errors').ERR_BAD_REQUEST;
+const {SuperError,ERR_BAD_REQUEST,ERR_NOT_FOUND, ERR_FORBIDDEN} = require('../errors');
+const studentService = require('./studentService');
+const employerService = require('./employerService');
 
 module.exports = {
 
@@ -12,13 +13,18 @@ module.exports = {
         }
     },
 
-    getConversation: async (studentId, employerId) => {
+    getConversation: async (studentId, employerId, auth) => {
 
-        let student = await studentService.getStudent(studentId);
-        let employer = await employerService.getEmployer(employerId);
-        if (  (auth.id !== student.userId && auth.id == employer.userId) 
-        || (  (auth.id == student.userId) && auth.id !== employer.userId)) {
-            throw new SuperError(ERR_FORBIDDEN, 'You are not authorized to delete this match');
+        let student = await studentService.getStudent(studentId)
+        let employer = await employerService.getEmployer(employerId)
+
+        if(!student || !employer) {
+            throw new SuperError(ERR_NOT_FOUND, 'The conversation cannot be found');
+            return;
+        };
+
+        if ( auth.id !== student.userId && auth.id !== employer.userId) {
+            throw new SuperError(ERR_FORBIDDEN, 'You are not authorized to see this conversation');
             return;
         }
 

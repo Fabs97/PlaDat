@@ -19,7 +19,7 @@ router.post('/message', async (req, res, next) => {
 
 router.get('/message/:studentId/:employerId', async (req, res, next) => {
     if( !isNaN(req.params.studentId) && !isNaN(req.params.employerId)){
-        let conversation = await messageService.getConversation(req.params.studentId, req.params.employerId)
+        let conversation = await messageService.getConversation(req.params.studentId, req.params.employerId, req.user)
         .catch(error => {
             res.status(error.code).send(error.message);
         });

@@ -24,8 +24,7 @@ module.exports = {
         let student = await studentService.getStudent(studentId);
         let employer = await employerService.getEmployerByPlacementId(placementId);
         //( foo && !bar ) || ( !foo && bar )
-        if (  (auth.id !== student.userId && auth.id == employer.userId) 
-        || (  (auth.id == student.userId) && auth.id !== employer.userId)) {
+        if (auth.id !== student.userId && auth.id !== employer.userId) {
             throw new SuperError(ERR_FORBIDDEN, 'You are not authorized to delete this match');
             return;
         }
