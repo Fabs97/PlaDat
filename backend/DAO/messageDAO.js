@@ -41,9 +41,11 @@ module.exports = {
             .del();
     },
 
-    getLastMessage: async () =>{
+    getLastMessage: async (auth) =>{
         let result = await database('message')
             .select('student_id', 'employer_id', 'send_date')
+            .where('student_id', auth.studentId)
+            .orWhere('employer_id', auth.employerId)
             .orderBy('send_date', 'desc')
             .limit(1);
         return result[0];

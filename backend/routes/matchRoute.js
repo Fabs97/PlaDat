@@ -7,17 +7,13 @@ const ERR_FORBIDDEN = require('../errors').ERR_FORBIDDEN;
 
 
 router.post("/matching", async (req, res, next) => {
-    const choice = await matchService.saveChoice(req.body);
+    const choice = await matchService.saveChoice(req.body, req.user);
     res.json(choice);
 
 });
 
 router.get('/student/:studentId/placements', async (req, res, next) => {
-    if(parseInt(req.params.studentId) !== req.user.id) {
-        res.status(ERR_FORBIDDEN).send('You are not authorized to retrieve this information');
-        return;
-    }
-    const placements = await matchService.getMatchesByStudentId(req.params.studentId)
+    const placements = await matchService.getMatchesByStudentId(req.params.studentId, req.user)
         .catch(error => {
             res.status(error.code).send(error.message);
         });

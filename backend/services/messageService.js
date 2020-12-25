@@ -49,21 +49,12 @@ self = module.exports = {
         return await messageDAO.deleteMessage(msgDetails);
     },
 
-    getLastMessage: async (S) => {
-        //TODO: RETHINK THIS
-        return await messageDAO.getLastMessage();
+    getLastMessage: async (auth) => {
+        return await messageDAO.getLastMessage(auth);
     },
 
     checkPermissions: async (studentId, employerId, auth) => {
-        let student = await studentService.getStudent(studentId)
-        let employer = await employerService.getEmployer(employerId)
-
-        if(!student || !employer) {
-            throw new SuperError(ERR_NOT_FOUND, 'The conversation cannot be found');
-            return;
-        };
-
-        if ( auth.id !== student.userId && auth.id !== employer.userId) {
+        if ( auth.studentId !== studentId && auth.employerId !== employerId) {
             throw new SuperError(ERR_FORBIDDEN, 'You are not authorized to see this conversation');
             return;
         }
