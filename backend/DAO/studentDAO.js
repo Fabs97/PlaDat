@@ -30,8 +30,9 @@ module.exports = {
                 surname: studentInfo.surname,
                 email: studentInfo.email,
                 description: studentInfo.description,
-                phone: studentInfo.phone
-            },['id','name','surname','email','description', 'phone'])
+                phone: studentInfo.phone, 
+                user_id: studentInfo.userId
+            },['id','name','surname','email','description', 'phone', 'user_id'])
             .catch(error => {
                 if(error) {
                     throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There was an error saving your profile');
@@ -224,7 +225,6 @@ module.exports = {
         return database('student')
             .where('id', id)
             .del();
-            
     },
 
     setStudentLocation: async (studentId, locationId) => {
