@@ -5,10 +5,10 @@ const ERR_BAD_REQUEST = require('../errors').ERR_BAD_REQUEST;
 router.get('/recommendation/:id/seePlacements', async (req, res, next) => {
 
     if(!isNaN(req.params.id)){
-        let recommendations = await recommendationService.getPlacementRecommendationsForStudent(req.params.id)
-        .catch(error => {
-            res.status(error.code).send(error.message);
-        });
+        let recommendations = await recommendationService.getPlacementRecommendationsForStudent(parseInt(req.params.id), req.user)
+            .catch(error => {
+                res.status(error.code).send(error.message);
+            });
 
         res.json(recommendations);
     } else {
@@ -22,10 +22,10 @@ router.get('/recommendation/:id/seeStudents', async (req, res, next) => {
 
     
     if(!isNaN(req.params.id)){
-        let recommendations = await recommendationService.getStudentRecommendationsForPlacement(req.params.id)
-        .catch(error => {
-            res.status(error.code).send(error.message);
-        });
+        let recommendations = await recommendationService.getStudentRecommendationsForPlacement(req.params.id, req.user)
+            .catch(error => {
+                res.status(error.code).send(error.message);
+            });
 
         res.json(recommendations);
     } else {

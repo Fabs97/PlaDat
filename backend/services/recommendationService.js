@@ -1,14 +1,20 @@
 const skillsService = require('./skillsService');
 const placementsService = require('./placementService');
 const studentService = require('./studentService');
-
+const employerService = require('./employerService');
 const SuperError = require('../errors').SuperError;
 const ERR_INTERNAL_SERVER_ERROR = require('../errors').ERR_INTERNAL_SERVER_ERROR;
+const ERR_FORBIDDEN = require('../errors').ERR_FORBIDDEN;
 
 module.exports = {
 
     //for employers
-    getStudentRecommendationsForPlacement: async (placementID) => {
+    getStudentRecommendationsForPlacement: async (placementID, auth) => {
+        let employer = await employerService.getEmployerByPlacementId(placementID);
+        if(auth.employerId !== employer.id) {
+            throw new SuperError(ERR_FORBIDDEN, 'You cannot see the recommendations for this placement.')
+        }
+
         try {
             let placementSkills = await skillsService.getPlacementSkills(placementID);
             let students = await studentService.getStudentsBySkills(placementSkills);
@@ -24,7 +30,11 @@ module.exports = {
     },
 
     //for students
-    getPlacementRecommendationsForStudent: async (studentID) => {
+    getPlacementRecommendationsForStudent: async (studentID, auth) => {
+
+        if(auth.studentId !== studentID) {
+            throw new SuperError(ERR_FORBIDDEN, 'You cannot see the recommendations for other students.')
+        }
         
         try {
             let studentSkills = await skillsService.getStudentSkills(studentID);
