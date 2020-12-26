@@ -7,20 +7,20 @@ const locationService = require('./locationService');
 const matchService = require('./matchService');
 const SuperError = require('../errors').SuperError;
 const ERR_INTERNAL_SERVER_ERROR = require('../errors').ERR_INTERNAL_SERVER_ERROR;
+const ERR_FORBIDDEN = require('../errors').ERR_FORBIDDEN;
 
 module.exports = {
-
-    
     getAllPlacementsIds: async () => {
-
         return await placementDAO.getAllPlacementsIds();
-
     },
 
-    savePlacementPage: async (placementDetails) => {
+    savePlacement: async (placementDetails, auth) => {
+
+        if(auth.employerId !== placementDetails.employerId) {
+            throw new SuperError(ERR_FORBIDDEN, 'You are not allowed to save a placement of a different employer')
+        }
 
         let newPlacement = {};
-
         try {
 
             newPlacement = await placementDAO.createNewPlacement(placementDetails);
@@ -57,11 +57,7 @@ module.exports = {
                     newSkills = [...newSkills, ...otherSkills];  
                 }
                 newPlacement.skills = await placementDAO.setPlacementSkills(newPlacement.id, newSkills);
-
             }
-
-            
-
         } catch(error) {
             if(!error.code) {
                 throw new SuperError(ERR_INTERNAL_SERVER_ERROR, error.message || "Server Error");
@@ -71,9 +67,6 @@ module.exports = {
         
         return newPlacement;
     },
-
-  
-
     getPlacementsForSkills: async (skills) => {
         let skillIDs = skills.map(skill => skill.id);
         return await placementDAO.getPlacementsForSkills(skillIDs);
@@ -93,15 +86,22 @@ module.exports = {
         return placementDAO.getEmployerByPlacementId(placementId);
     },
 
-    getPlacementsByEmployerId: (employerId) => {
-        return placementDAO.getPlacementsByEmployerId(employerId);
+    getPlacementsByEmployerId: async (employerId, auth) => {
+        if(auth.employerId !== employerId) {
+            throw new SuperError(ERR_FORBIDDEN, 'You are not allowed to view the list of placements from another employer')
+        }
+        return await placementDAO.getPlacementsByEmployerId(employerId);
     },
 
-    deletePlacementById: (id) => {
+    deletePlacementById: async (id, auth) => {
+        let placement = await placementDAO.getPlacementById(id);
+        if(auth.employerId !== placement.employer_id) {
+            throw new SuperError(ERR_FORBIDDEN, 'You are not allowed to delete this placement')
+        }
         return placementDAO.deletePlacementById(id);
     },
 
-    getLastPlacement: () => {
-        return placementDAO.getLastPlacement();
+    getLastPlacement: (auth) => {
+        return placementDAO.getLastPlacement(auth.employerId);
     }
 };

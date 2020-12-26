@@ -339,9 +339,10 @@ module.exports = {
         return result;
     },
 
-    getLastPlacement: async () => {
+    getLastPlacement: async (employerId) => {
         let result = await database("placements")
             .select("id")
+            .where('employer_id', employerId)
             .orderBy("id", "desc")
             .limit(1);
         return result[0];
