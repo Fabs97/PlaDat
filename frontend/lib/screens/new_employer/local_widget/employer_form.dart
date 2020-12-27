@@ -106,7 +106,7 @@ class _EmployerFormState extends State<EmployerForm> {
                                                 }
                                               },
                                               child: Text(
-                                                'Continue',
+                                                'Save company information',
                                                 style: TextStyle(color: Colors.white),
                                               ),
                                             ),
@@ -142,7 +142,7 @@ class _EmployerFormState extends State<EmployerForm> {
                             Widget _createDescriptionField(Employer employer) {
                               return TextFormField(
                                 decoration: const InputDecoration(
-                                  hintText: "Try to be as descriptive as possible",
+                                  hintText: "Describe the company",
                                   labelText: "Tell about company",
                                   filled: true,
                                 ),

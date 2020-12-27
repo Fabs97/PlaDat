@@ -49,9 +49,6 @@ class _DropdownState extends State<Dropdown> {
           if (value == null) return;
           setState(() {
         
-            /*widget._itemsChosen = widget._items
-                .where((element) => value.contains(element.name))
-                .toString();*/
                 widget._itemsChosen=value;
             
           });
