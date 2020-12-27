@@ -52,6 +52,11 @@ class CustomDrawer {
             title: Text("My profile"),
             onTap: () => Nav.navigatorKey.currentState.pushNamed("/profile", arguments: AuthService().loggedAccountInfo),
           ),
+          ListTile(
+            title: Text("Create employer"),
+            onTap: () =>
+                Nav.navigatorKey.currentState.pushNamed("/new-employer"),
+          ),
         ],
       ),
     );

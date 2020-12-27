@@ -3,6 +3,7 @@ import 'package:frontend/main.dart';
 import 'package:frontend/screens/company_placement_list/company_placement_list.dart';
 import 'package:frontend/screens/chat_screen/chat_screen.dart';
 import 'package:frontend/screens/company_student_list/company_student_list.dart';
+import 'package:frontend/screens/new_employer/new_employer.dart';
 import 'package:frontend/screens/new_placement/new_placement.dart';
 import 'package:frontend/screens/new_student/new_student.dart';
 import 'package:frontend/screens/profile/profile.dart';
@@ -58,6 +59,10 @@ class RoutesGenerator {
                 args: settings.arguments,
               ),
               settings);
+        }
+        case '/new-employer':
+        {
+          return _createRoute(NewEmployer(), settings);
         }
       default:
         {
