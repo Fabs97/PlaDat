@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -27,6 +29,10 @@ class _MyPlacementsState extends State<MyPlacements> {
               _placements = placementsList;
             }));
     super.initState();
+  }
+
+  FutureOr onGoBack(dynamic value) {
+    setState(() {});
   }
 
   @override
@@ -128,10 +134,19 @@ class _MyPlacementsState extends State<MyPlacements> {
                                           ENDPOINTS.Placement, "/placement/:id",
                                           urlArgs: _placement.id)
                                       .then((placement) {
-                                    Nav.navigatorKey.currentState.pushNamed(
-                                      "/profile",
-                                      arguments: placement,
-                                    );
+                                    Nav.navigatorKey.currentState
+                                        .pushNamed(
+                                          "/profile",
+                                          arguments: placement,
+                                        )
+                                        .then((value) => APIService.route(
+                                                ENDPOINTS.Employers,
+                                                "/employer/:employerId/placements",
+                                                urlArgs: _employerId)
+                                            .then((placementsList) =>
+                                                setState(() {
+                                                  _placements = placementsList;
+                                                })));
                                   }).catchError((error) {
                                     Fluttertoast.showToast(
                                         msg: error.message ?? error.toString());
@@ -139,10 +154,19 @@ class _MyPlacementsState extends State<MyPlacements> {
                                 } else {
                                   Nav.navigatorKey.currentState
                                       .push(MaterialPageRoute(
-                                    builder: (builder) =>
-                                        PlacementMatchedStudents(
-                                            placement: _placement),
-                                  ));
+                                        builder: (builder) =>
+                                            PlacementMatchedStudents(
+                                                placement: _placement),
+                                      ))
+                                      .then((value) => APIService.route(
+                                              ENDPOINTS.Employers,
+                                              "/employer/:employerId/placements",
+                                              urlArgs: _employerId)
+                                          .then(
+                                              (placementsList) => setState(() {
+                                                    _placements =
+                                                        placementsList;
+                                                  })));
                                 }
                               },
                               trailing: PopupMenuButton<String>(
