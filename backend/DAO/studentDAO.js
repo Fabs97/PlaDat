@@ -241,7 +241,7 @@ module.exports = {
     },
     getStudentByUserId: async (userId) => {
         let result = await database('student')
-            .select('id', 'name', 'email')
+            .select('id', 'name')
             .where('user_id', userId)
         
         return result.length ? result[0] : null;

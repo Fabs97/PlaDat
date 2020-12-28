@@ -117,8 +117,6 @@ describe('registration API', () => {
         })
 
         after(async () => {
-            console.log('running this now')
-            console.log(testUserIds)
             for(let i=0; i<testUserIds.length; i++ ) {
                 await chai.request(server).delete('/user/' + testUserIds[i]);
             }

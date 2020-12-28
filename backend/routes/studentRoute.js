@@ -29,10 +29,15 @@ router.post("/student", async (req, res, next) => {
 
 // });
 
-router.get("/students/last", async (req, res, next) => {
-    //AUTH: MAYBE WE HAVE TO RETHINK THIS
-    const lastStudent = await studentService.getLastStudent();
-    res.json(lastStudent);
+// router.get("/students/last", async (req, res, next) => {
+//     //AUTH: MAYBE WE HAVE TO RETHINK THIS
+//     const lastStudent = await studentService.getLastStudent();
+//     res.json(lastStudent);
+// });
+
+router.get("/student/account/:userID", async (req, res, next) => {
+    const account = await studentService.getStudentByUserId(req.params.userID);
+    res.json(account);
 });
 
 router.delete("/student/:id", async (req, res, next) => {
