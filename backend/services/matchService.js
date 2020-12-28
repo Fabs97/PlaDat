@@ -75,5 +75,9 @@ module.exports = {
             }
         });
         return niceMatches;
+    },
+    checkMatch: async function(studentId, employerId) {
+        let interaction = await matchDAO.getStudentMatchesWithEmployer(employerId,studentId);
+        return (interaction.length > 0);
     } 
 };

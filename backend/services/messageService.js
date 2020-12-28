@@ -2,6 +2,7 @@ const messageDAO = require('../DAO/messageDAO');
 const {SuperError,ERR_BAD_REQUEST,ERR_NOT_FOUND, ERR_FORBIDDEN} = require('../errors');
 const studentService = require('./studentService');
 const employerService = require('./employerService');
+const matchService = require('./matchService');
 
 self = module.exports = {
 
@@ -55,6 +56,11 @@ self = module.exports = {
 
     checkPermissions: async (studentId, employerId, auth) => {
         if ( auth.studentId !== studentId && auth.employerId !== employerId) {
+            throw new SuperError(ERR_FORBIDDEN, 'You are not authorized to see this conversation');
+            return;
+        }
+        let match = await matchService.checkMatch(studentId, employerId);
+        if(!match){
             throw new SuperError(ERR_FORBIDDEN, 'You are not authorized to see this conversation');
             return;
         }

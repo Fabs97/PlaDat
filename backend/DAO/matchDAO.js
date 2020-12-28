@@ -80,5 +80,14 @@ module.exports = {
                     throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There has been a problem retrieving your matches. Please try again')
                 }
             })
+    },
+    getStudentMatchesWithEmployer: async function (employerId, studentID) {
+        let result = await database('student_has_placement as shp')
+            .select('shp.student_id', 'shp.placement_id', 'shp.student_accept', 'shp.placement_accept', 'shp.status')
+            .leftJoin('placements as p', 'shp.placement_id', 'p.id')
+            .where('p.employer_id', employerId)
+            .andWhere('shp.student_id', studentID)
+            .andWhere('shp.status', 'ACCEPTED')
+        return result;
     }
 };

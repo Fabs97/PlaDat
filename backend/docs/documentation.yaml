@@ -1378,6 +1378,8 @@ paths:
 
   /message/{studentId}/{employerId}:
     get:
+      security:
+        - bearerAuth: []
       description: Returns all the messages in the database between a student and an employer in chronological order
       tags:
         - "Message"
@@ -1436,12 +1438,56 @@ paths:
                 type: string
                 example:
                   "There has been a problem looking for this conversation. Please try again"
-
+        '403':
+          description: Forbidden
+          content:
+            text/html:
+              schema:
+                type: string
+                example:
+                  'You are not authorized to see this conversation'
+    delete:
+      security:
+        - bearerAuth: []
+      description: Delete the message
+      tags:
+        - "Matching"
+      parameters:
+        - in: path
+          required: true
+          name: studentId
+          schema:
+            type: integer
+            example: 1
+        - in: path
+          required: true
+          name: placementId
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: OK
+          content: 
+            application/json:
+              schema:
+                type: integer
+                example: 1
+        '403':
+          description: Forbidden
+          content:
+            text/html:
+              schema:
+                type: string
+                example:
+                  "You are not authorized to delete this match."
 
 
   /message:
     post: 
-      description: Allows the user to save a message for another use on the database
+      security:
+        - bearerAuth: []
+      description: Allows the user to send a message to another user with whom he has a match
       tags: 
         - "Message"
       requestBody: 
@@ -1450,7 +1496,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object
+              $ref: "#/definitions/Message"
               example:
                 {
                   studentId: 1,
@@ -1493,3 +1539,11 @@ paths:
                 type: string
                 example:
                   "There has been a problem saving your message. Please try again"
+        '403':
+          description: Forbidden
+          content:
+            text/html:
+              schema:
+                type: string
+                example:
+                  'You are not authorized to send this message'
