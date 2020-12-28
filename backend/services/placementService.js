@@ -88,7 +88,7 @@ module.exports = {
 
     getPlacementsByEmployerId: async (employerId, auth) => {
         if(auth.employerId !== employerId) {
-            throw new SuperError(ERR_FORBIDDEN, 'You are not allowed to view the list of placements from another employer')
+            throw new SuperError(ERR_FORBIDDEN, 'You are not allowed to view the list of placements from another employer.')
         }
         return await placementDAO.getPlacementsByEmployerId(employerId);
     },

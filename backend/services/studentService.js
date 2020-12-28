@@ -20,7 +20,7 @@ studServ = module.exports = {
     createStudentAccount: async (studentInfo, auth) => {
         
         if(auth.userType !== 'STUDENT') {
-            throw new SuperError(ERR_FORBIDDEN, 'You cannot create a student profile from a non-student account');
+            throw new SuperError(ERR_FORBIDDEN, 'You cannot create a student profile from a non-student account.');
         }
 
         let studentProfile = {};

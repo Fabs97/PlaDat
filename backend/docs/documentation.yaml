@@ -12,27 +12,23 @@ servers:
   
 tags:
   - name: Skills
-    description: All the APIs related to the "skill" table
-  - name: Majors
-    description: All the APIs related to the "majors" table
-  - name: Institutions
-    description: All the APIs related to the "institutions" table
-  - name: Degree
-    description: All the APIs related to the "degree" table
+    description: Endpoints related to skills of students, or skills required by placements
+  - name: Education
+    description: Endpoints related to the education experience of a student
   - name: Placement
-    description: All the APIs related to the "placements" table
+    description: Endpoints related to placement management and information
   - name: Student
-    description: All the APIs related to the "student" table
+    description: Endpoints related to the student profile
   - name: Matching
-    description: All the APIs related to the matching algorithm
+    description: Endpoints related to the recommendations system (matching algorithm) and matching management
   - name: Employer
-    description: All the APIs related to the "employer" algorithm
-  - name: Google Maps
-    description: All the APIs related to the access to the google maps service
+    description: Endpoints related to the employer profile
+  - name: Location
+    description: Endpoints related to location management
   - name: Registration
-    description: All the APIs related to the "registration" table
+    description: Endpoints related to authentication and authorization
   - name: Message
-    description: All the APIs related to the "message" table
+    description: Endpoints related to conversations between matching parties
 
 components:
   securitySchemes:
@@ -305,6 +301,8 @@ paths:
           description: 'Unauthorized. The credentials are wrong, the login has failed.'
   /employer/{id}:
     get:
+      security:
+        - bearerAuth: []
       description: Provides the employer for the provided id 
       tags:
         - "Employer"
@@ -332,6 +330,8 @@ paths:
                   }
   /employer/{employerId}/placements:
     get:
+      security:
+        - bearerAuth: []
       description: Provides all the placements of the selected employer id,
       tags:
         - "Employer"
@@ -365,8 +365,19 @@ paths:
                       count_matches: 3
                     }
                   ]
+        '403':
+          description: Forbidden
+          content:
+            text/html:
+              schema:
+                type: string
+                example:
+                  "You are not allowed to view the list of placements from another employer."
+
   /recommendation/{id}/seeStudents:
     get:
+      security:
+        - bearerAuth: []
       description: Provides all the students recommendation for the provided placement id, based on the algorithm
       tags:
         - "Matching"
@@ -454,11 +465,21 @@ paths:
                 type: string
                 example:
                   "There has been a problem looking up the recommended students. Please try again"
+        '403':
+          description: Forbidden
+          content:
+            text/html:
+              schema:
+                type: string
+                example:
+                  "You cannot see the recommendations for other employer's placements."
 
 
 
   /recommendation/{id}/seePlacements:
     get:
+      security:
+        - bearerAuth: []
       description: Provides all placements recommendation for the provided student id, based on the algorithm
       tags:
         - "Matching"
@@ -531,9 +552,19 @@ paths:
                 type: string
                 example:
                   "There has been a problem looking up the recommended placements. Please try again"
+        '403':
+          description: Forbidden
+          content:
+            text/html:
+              schema:
+                type: string
+                example:
+                  "You cannot see the recommendations for other students."
   /matching:
     post:
-      description: Allows users to upsert the provided match to the matches table
+      security:
+        - bearerAuth: []
+      description: Saves an interaction (accept or reject) that can lead to a match
       tags:
         - "Matching"
       requestBody:
@@ -613,6 +644,8 @@ paths:
 
   /placement:
     get:
+      security:
+        - bearerAuth: []
       description: Returns all placement ids in the database 
       tags:
         - "Placement"
@@ -632,6 +665,8 @@ paths:
                   ]
   /placement/{id}:
     get:
+      security:
+        - bearerAuth: []
       description: Returns a placement with the provided id
       tags:
         - "Placement"
@@ -687,6 +722,8 @@ paths:
 
   /placement/new-placement:
     post:
+      security:
+        - bearerAuth: []
       description: Allows companies to insert a new placement into the database
       tags:
         - "Placement"
@@ -696,11 +733,12 @@ paths:
         content:
           application/json:
             schema:
+              $ref: '#/components/schemas/Placement'
               type: object
               example:
                 {
                   position: "Full stack developer",
-                  workingHours: 20,
+                  employmentType: 'INTERNSHIP',
                   startPeriod: "2020-11-11",
                   endPeriod: "2020-11-11",
                   salary: 600,
@@ -730,9 +768,9 @@ paths:
                       {id: 6},
                     ],
                     otherSkills: [
-                      "Cooking",
+                      "Artificial Intelligence",
                       "Organizing events",
-                      "Trekking"
+                      "SCRUM knowledge"
                     ]
                   }
                 }
@@ -748,7 +786,7 @@ paths:
                   {
                     id: 3,
                     position: "Full stack developer",
-                    working_hours: 20,
+                    employmentType: 'INTERNSHIP',
                     start_period: "2020-11-11",
                     end_period: "2020-11-11",
                     salary: 600,
@@ -786,9 +824,11 @@ paths:
                   }
   /majors:
     get:
+      security:
+        - bearerAuth: []
       description: Returns all the majors in the database
       tags: 
-        - "Majors"
+        - "Education"
       responses:
         '200':
           description: OK
@@ -811,9 +851,11 @@ paths:
                   ]
   /degrees:
     get:
+      security:
+        - bearerAuth: []
       description: Returns all the degrees in the database
       tags: 
-        - "Degree"
+        - "Education"
       responses:
         '200':
           description: OK
@@ -837,9 +879,11 @@ paths:
 
   /institutions:
     get:
+      security:
+        - bearerAuth: []
       description: Returns all the institutions in the database
       tags:
-        - "Institutions"
+        - "Education"
       responses:
         '200':
           description: OK
@@ -867,6 +911,8 @@ paths:
   
   /student:
     post:
+      security:
+        - bearerAuth: []
       description: Allows students to fill in the details of their profile
       tags: 
         - "Student"
@@ -948,8 +994,18 @@ paths:
                     skill: 18
         '500':
           description: INTERNAL SERVER ERROR - Offers an explanation about what caused the error
+        '403':
+          description: Forbidden
+          content:
+            text/html:
+              schema:
+                type: string
+                example:
+                  "You cannot create a student profile from a non-student account."
   /skills:
     get: 
+      security:
+        - bearerAuth: []
       description: Provides all the skills in the database 
       tags:
         - "Skills"
@@ -1013,6 +1069,8 @@ paths:
                 
   /skills/{type}/{name}:
     get:
+      security:
+        - bearerAuth: []
       description: Returns the skill in the database with the given name and type
       deprecated: true
       tags:
@@ -1050,6 +1108,8 @@ paths:
   
   /skills/{type}:
     get:
+      security:
+        - bearerAuth: []
       description: Returns all the skills in the database with the given type
       tags:
         - "Skills"
@@ -1084,9 +1144,11 @@ paths:
                   ]
   /googleMaps/{input}:
     get:
+      security:
+        - bearerAuth: []
       description: Provides the required informations retrieved from the Google Maps API
       tags:
-        - "Google Maps"
+        - "Location"
       parameters:
         - in: query
           name: input
@@ -1451,7 +1513,7 @@ paths:
         - bearerAuth: []
       description: Delete the message
       tags:
-        - "Matching"
+        - "Message"
       parameters:
         - in: path
           required: true
