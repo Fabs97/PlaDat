@@ -12,7 +12,7 @@ exports.seed = function(knex) {
         {email: "Facebook@Facebook.com", password:  '$2b$10$RMoFltIgzqy8QO8.nhcD0.Ovv.mhVuBAsoXZtLE3PA9x3v3XAda4a', type: 'EMPLOYER'},
         {email: "Reply@Reply.com", password:  '$2b$10$RMoFltIgzqy8QO8.nhcD0.Ovv.mhVuBAsoXZtLE3PA9x3v3XAda4a', type: 'EMPLOYER'},
         {email: "Oracle@Oracle.com", password:  '$2b$10$RMoFltIgzqy8QO8.nhcD0.Ovv.mhVuBAsoXZtLE3PA9x3v3XAda4a', type: 'EMPLOYER'},
-        {email: "Alice@text.com", password:  '$2b$10$RMoFltIgzqy8QO8.nhcD0.Ovv.mhVuBAsoXZtLE3PA9x3v3XAda4a', type: 'STUDENT'},
+        {email: "Alice@test.com", password:  '$2b$10$RMoFltIgzqy8QO8.nhcD0.Ovv.mhVuBAsoXZtLE3PA9x3v3XAda4a', type: 'STUDENT'},
         {email: "Fabrizio@test.com", password:  '$2b$10$RMoFltIgzqy8QO8.nhcD0.Ovv.mhVuBAsoXZtLE3PA9x3v3XAda4a', type: 'STUDENT'},
         {email: "Anna@test.com", password:  '$2b$10$RMoFltIgzqy8QO8.nhcD0.Ovv.mhVuBAsoXZtLE3PA9x3v3XAda4a', type: 'STUDENT'},
         {email: "Aida@test.com",  password:  '$2b$10$RMoFltIgzqy8QO8.nhcD0.Ovv.mhVuBAsoXZtLE3PA9x3v3XAda4a', type: 'STUDENT'},
