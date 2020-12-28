@@ -28,11 +28,10 @@ module.exports = {
             .insert({
                 name: studentInfo.name,
                 surname: studentInfo.surname,
-                email: studentInfo.email,
                 description: studentInfo.description,
                 phone: studentInfo.phone, 
                 user_id: studentInfo.userId
-            },['id','name','surname','email','description', 'phone', 'user_id'])
+            },['id','name','surname','description', 'phone', 'user_id'])
             .catch(error => {
                 if(error) {
                     throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There was an error saving your profile');
