@@ -54,5 +54,8 @@ module.exports = {
         });
         
         return userResult;
+    },
+    deleteUser: function(userId) {
+        return registrationDAO.deleteUserById(userId);
     }
 }

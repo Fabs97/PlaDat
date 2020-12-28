@@ -27,5 +27,11 @@ module.exports = {
             .select()
             .where('email', email)
         return result.length ? result[0] : null
+    },
+
+    deleteUserById: function(userId) {
+        return database('registration')
+            .where('id', userId)
+            .del();
     }
 }

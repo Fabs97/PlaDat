@@ -34,7 +34,7 @@ module.exports = {
     },
 
     deleteLocationById: async (id) => {
-        await database('location')
+        return await database('location')
             .where('id', id)
             .del();
     },

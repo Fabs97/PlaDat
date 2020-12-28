@@ -1,5 +1,5 @@
 const router = require('express').Router();
-
+const ERR_INTERNAL_SERVER_ERROR = require('../errors.js').ERR_INTERNAL_SERVER_ERROR
 const registrationService = require('../services/registrationService');
 
 router.post("/registration", async ( req, res, next ) => {
@@ -17,6 +17,14 @@ router.post("/login", async ( req, res, next ) => {
         });
     res.json(userProfile);
 });
+
+router.delete("/user/:id", async (req, res, next) => {
+    let result = await registrationService.deleteUser(req.params.id)
+        .catch(error => {
+            res.status(error.code ? error.code : ERR_INTERNAL_SERVER_ERROR ).send(error.message);
+        });
+    res.json(result)
+})
 
 
 module.exports = router;

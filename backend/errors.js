@@ -7,7 +7,7 @@ class SuperError extends Error {
 
 //ERROR CODES
 const ERR_INTERNAL_SERVER_ERROR = 500;
-const ERR_NOT_FOUND = 500;
+const ERR_NOT_FOUND = 404;
 const ERR_BAD_REQUEST = 400; 
 const ERR_UNAUTHORIZED = 401; 
 const ERR_FORBIDDEN = 403; 
