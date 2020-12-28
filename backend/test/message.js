@@ -15,36 +15,48 @@ chai.use(chaiJsonSchema);
 
 describe('message API', () => {
 
-    
-    
-
     describe('POST /message', () => {
-        
-        let msg = {
-            message: "nice to meet you",
-            sender: "STUDENT",
-            sendDate: "2020-11-10T12:50:00.000Z"
-        }
 
-        beforeEach(async () => {
-            msg.employerId = (await chai.request(server)
-                .get('/employers/last')).body.id
-
-        })
+        let studentId;
+        let employerId;
+        let userId;
+        let sessionToken;
 
         beforeEach(async () =>{
-            
-            msg.studentId = (await chai.request(server)
-                .get('/students/last')).body.id
+            let student = {
+                email: 'Alice@test.com',
+                password: '12345678',
+            }
+            let session = (await chai.request(server)
+                .post('/login')
+                .set('content-type', 'application/json')
+                .send(student)).body;
+            // console.log(session);
+            userId = session.userID;
+            sessionToken = session.token;
+            studentId = session.studentID;
+            // console.log(`token works!!! ${session.token}`)
+            let matches = (await chai.request(server)
+                .get('/student/' + studentId + '/placements')
+                .set('Authorization', `Bearer ${sessionToken}`)).body;
+            employerId = matches[0].employer_id
+            // console.log(matches)
         })
+        
+        let msg = {
+            message: "Hello, thank you for the internship opportunity",
+            sender: "STUDENT",
+            sendDate: new Date(),
+        }
 
-        it('should register a message in the db', (done) => {
+        it('should save a new message from a student to an employer', (done) => {
             chai.request(server)
                 .post('/message')
                 .set('content-type', 'application/json')
+                .set('Authorization', `Bearer ${sessionToken}`)
                 .send({
-                    studentId: msg.studentId,
-                    employerId: msg.employerId,
+                    studentId: studentId,
+                    employerId: employerId,
                     message: msg.message,
                     sendDate: msg.sendDate,
                     sender: msg.sender
@@ -57,56 +69,59 @@ describe('message API', () => {
                     response.body.should.have.property('message');
                     response.body.should.have.property('send_date');
                     response.body.should.have.property('sender');
-                    response.body.student_id.should.equal(msg.studentId);
-                    response.body.employer_id.should.equal(msg.employerId);
+                    response.body.student_id.should.equal(studentId);
+                    response.body.employer_id.should.equal(employerId);
                     response.body.message.should.equal(msg.message);
-                    response.body.send_date.should.equal(msg.sendDate);
+                    (new Date(response.body.send_date).getTime()).should.equal(msg.sendDate.getTime());
                     response.body.sender.should.equal(msg.sender);
                     done();
                 })
-        })
-
-        afterEach( async () => {
-            await chai.request(server)
-                .delete('/message')
-                .set('content-type', 'application/json')
-                .send({
-                    studentId: msg.studentId,
-                    employerId: msg.employerId,
-                    sendDate: msg.sendDate
-                })
-        })
+        }).timeout(10000);
 
         it('should get a 400: Bad Request answer if the body of the request has wrong structure', (done) => {
             chai.request(server)
                 .post('/message')
                 .set('content-type', 'application/json')
+                .set('Authorization', `Bearer ${sessionToken}`)
                 .send({
-                    studentId: msg.studentId,
-                    employerId: msg.employerId + 1,
-                    message: msg.message,
+                    studentId: studentId,
+                    // employerId: employerId,
+                    // message: msg.message,
                     sendDate: msg.sendDate,
-                    sender: msg.sender
+                    // sender: msg.sender
                 })
                 .end((err, response) => {
-                    response.should.have.status(500);
+                    response.should.have.status(400);
                     done();
                 })
-        })
+        }).timeout(10000);
 
         it('should get a 500: Internal Server Error answer if the server cannot save the message', (done) => {
             chai.request(server)
                 .post('/message')
                 .set('content-type', 'application/json')
+                .set('Authorization', `Bearer ${sessionToken}`)
                 .send({
-                    studentId: msg.studentId,
-                    employerId: msg.employerId,
+                    studentId: studentId,
+                    employerId: employerId,
                     sendDate: msg.sendDate,
                     sender: msg.sender
                 })
                 .end((err, response) => {
                     response.should.have.status(400);
                     done();
+                })
+        }).timeout(10000);
+
+        afterEach( async () => {
+            await chai.request(server)
+                .delete('/message')
+                .set('content-type', 'application/json')
+                .set('Authorization', `Bearer ${sessionToken}`)
+                .send({
+                    studentId: studentId,
+                    employerId: employerId,
+                    sendDate: msg.sendDate
                 })
         })
         
@@ -115,34 +130,46 @@ describe('message API', () => {
 
     describe('GET /message/:studentId/:employerId', () =>{
 
-        let msgDetails = {
-            studentId: 1,
-            employerId: 1
-        };
-        
-        beforeEach(async () => {
-            let result = await chai.request(server)
-                .get('/messages/last');
-            if(result.body.student_id != undefined && result.body.employer_id != undefined){
-                msgDetails.studentId = result.body.student_id;
-                msgDetails.employerId = result.body.employer_id;
+        let studentId;
+        let employerId;
+        let userId;
+        let sessionToken;
+
+        beforeEach(async () =>{
+            let student = {
+                email: 'Alice@test.com',
+                password: '12345678',
             }
+            let session = (await chai.request(server)
+                .post('/login')
+                .set('content-type', 'application/json')
+                .send(student)).body;
+            // console.log(session);
+            userId = session.userID;
+            sessionToken = session.token;
+            studentId = session.studentID;
+            // console.log(`token works!!! ${session.token}`)
+            let matches = (await chai.request(server)
+                .get('/student/' + studentId + '/placements')
+                .set('Authorization', `Bearer ${sessionToken}`)).body;
+            employerId = matches[0].employer_id
+            // console.log(matches)
         })
 
-        it('should return a list of messages between the two users, in chronological order', (done) => {
+        it('should return a list of messages between two users, in chronological order', (done) => {
             chai.request(server)
-                .get('/message/' + msgDetails.studentId + '/' + msgDetails.employerId)
+                .get('/message/' + studentId + '/' + employerId)
+                .set('Authorization', `Bearer ${sessionToken}`)
                 .end((err, response) => {
                     response.should.have.status(200);
                     response.body.should.be.a('array');
                     let messages = response.body;
                     let prevTime = 0;
                     for(let i=0; i<messages.length; i++){
-                        messages
                         messages[i].should.have.property('student_id');
-                        messages[i].student_id.should.equal(msgDetails.studentId);
+                        messages[i].student_id.should.equal(studentId);
                         messages[i].should.have.property('employer_id');
-                        messages[i].employer_id.should.equal(msgDetails.employerId);
+                        messages[i].employer_id.should.equal(employerId);
                         messages[i].should.have.property('message');
                         messages[i].should.have.property('send_date');
                         let currTime = Date.parse(messages[i].send_date);
@@ -157,7 +184,8 @@ describe('message API', () => {
 
         it('should get a 400: Bad Request answer if the parameter of the request are not numbers', (done) =>{
             chai.request(server)
-                .get('/message/' + msgDetails.studentId + '/lacipolla')
+                .get('/message/' + studentId + '/lacipolla')
+                .set('Authorization', `Bearer ${sessionToken}`)
                 .end((err, response) => {
                     response.should.have.status(400);
                     done();

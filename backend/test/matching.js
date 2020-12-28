@@ -30,7 +30,7 @@ describe('matching API', () => {
             sessionToken = session.token;
             studentId = (await chai.request(server)
                 .get('/student/account/' + userId)
-                .set( 'Authorization', `Bearer ${session.token}`)).body.id;
+                .set( 'Authorization', `Bearer ${sessionToken}`)).body.id;
             // console.log(`token works!!! ${session.token}`)
         })
 
@@ -39,7 +39,7 @@ describe('matching API', () => {
             .get('/student/' + studentId + '/placements')
             .set( 'Authorization', `Bearer ${sessionToken}`)
             .end((err, response) => {
-                console.log(response.body)
+                // console.log(response.body)
                 // console.log(err)
                 response.should.have.status(200);
                 response.body.should.be.a('array');
