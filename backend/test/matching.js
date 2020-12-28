@@ -63,14 +63,14 @@ describe('matching API', () => {
         let sessionToken;
 
         beforeEach(async () =>{
-            let student = {
+            let employer = {
                 email: 'google@google.com',
                 password: '12345678',
             }
             session = (await chai.request(server)
                 .post('/login')
                 .set('content-type', 'application/json')
-                .send(student)).body;
+                .send(employer)).body;
             // console.log(session);
             userId = session.userID;
             sessionToken = session.token;
