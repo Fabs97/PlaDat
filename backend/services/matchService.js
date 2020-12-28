@@ -47,7 +47,7 @@ module.exports = {
             return;
         }
         if (auth.id !== employer.userId && auth.employerId !== employer.id) {
-            throw new SuperError(ERR_FORBIDDEN, 'You are not authorized to delete this match');
+            throw new SuperError(ERR_FORBIDDEN, 'You are not authorized to get this information');
             return;
         }
 

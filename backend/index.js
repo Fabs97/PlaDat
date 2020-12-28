@@ -16,8 +16,12 @@ const originWhitelist = [
 // DO NOT DEFINE ROUTES ABOVE THIS LINE. THEY WON'T WORK. SIMPLE AS THAT
 app.use(cors()); 
 
-
-app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(APIDocumentation));
+var options = {
+    swaggerOptions: {
+      authAction :{ JWT: {name: "JWT", schema: {type: "apiKey", in: "header", name: "Authorization", description: ""}, value: "Bearer <JWT>"} }
+    }
+  };
+app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(APIDocumentation, options));
 
 app.use(express.json());
 

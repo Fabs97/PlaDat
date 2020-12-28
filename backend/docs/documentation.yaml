@@ -35,6 +35,11 @@ tags:
     description: All the APIs related to the "message" table
 
 components:
+  securitySchemes:
+      bearerAuth:            # arbitrary name for the security scheme
+        type: http
+        scheme: bearer
+        bearerFormat: JWT
   schemas:
     Degree:
       type: object
@@ -233,6 +238,71 @@ components:
         
         
 paths:
+  /registration:
+    post:
+      description: Allows users to register to the application
+      tags:
+        - "Registration"
+      requestBody:
+        description: A json containing all the information about the user. The type can be "STUDENT" or "EMPLOYER"
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                {
+                  email: "paolo@gmail.com",
+                  password: "S4f3PvvD1!2089",
+                  type: "STUDENT"
+                }
+      responses:
+        '200':
+          description: Returns a json with the newly inserted user, without the hashed password
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  {
+                    id: 2,
+                    email: "paolo@gmail.com",
+                    type: "STUDENT"
+                  }
+        '500':
+          description: 'There has been a problem saving your registration. Please try again'
+  /login:
+    post:
+      description: Allows users to login to the application
+      tags:
+        - "Registration"
+      requestBody:
+        description: A json containing the email and the password of the user
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                {
+                  email: "paolo@gmail.com",
+                  password: "S4f3PvvD1!2089"
+                }
+      responses:
+        '200':
+          description: Returns a JSON object with the information about the logged in accont and the JWT token used for authorization. The token must be sent with every call to the backend, in the headers, in the key "authorization" and it should have the form "Bearer eyJhbGciOiJIUzI1NiIsInR5c[...]"
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  {
+                    "userID": 60,
+                    "student": true,
+                    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NjAsInVzZXJUeXBlIjoiU1RVREVOVCIsImlhdCI6MTYwOTAwOTg5MSwiZXhwIjoxNjA5MDEyNDgzfQ.UcUheC-M-7GbzpoZ6dV_p3luQ_pcipzRDrgPUedIh4M"
+                  }
+        '401':
+          description: 'Unauthorized. The credentials are wrong, the login has failed.'
   /employer/{id}:
     get:
       description: Provides the employer for the provided id 
@@ -260,7 +330,7 @@ paths:
                     location: "Milan, Italy",
                     urllogo: "www.pladat.eu"
                   }
-  /employer/:employerId/placements:
+  /employer/{employerId}/placements:
     get:
       description: Provides all the placements of the selected employer id,
       tags:
@@ -494,8 +564,10 @@ paths:
                     status: "ACCEPTED"
                   }
 
-  /match/:studentId/:placementId:
+  /match/{studentId}/{placementId}:
     delete:
+      security:
+        - bearerAuth: []
       description: Delete the match based on the given ids
       tags:
         - "Matching"
@@ -528,6 +600,14 @@ paths:
                 type: string
                 example:
                   "Your request did not provided valid values for ids. Please try again."
+        '403':
+          description: Forbidden
+          content:
+            text/html:
+              schema:
+                type: string
+                example:
+                  "You are not authorized to delete this match."
 
 
 
@@ -1129,42 +1209,11 @@ paths:
                     ],
                     status : "OK"
                   }
-  /registration:
-    post:
-      description: Allows users to register to the application
-      tags:
-        - "Registration"
-      requestBody:
-        description: a json containing all the information about the user
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              example:
-                {
-                  email: "paolo@gmail.com",
-                  password: "Iloveyou_3000",
-                  type: "STUDENT"
-                }
-      responses:
-        '200':
-          description: Returns a json with the newly inserted user, without the hashed password
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  {
-                    id: 2,
-                    email: "paolo@gmail.com",
-                    type: "STUDENT"
-                  }
-        '500':
-          description: 'There has been a problem saving your registration. Please try again'
 
   /student/{studentId}/placements:
     get:
+      security:
+        - bearerAuth: []
       description: Returns all the placements that a student has been matched with
       tags: 
         - "Matching"
@@ -1213,9 +1262,18 @@ paths:
                 ]
         '500': 
           description: 'There has been a problem retrieving your matches. Please try again'
-                
-  /placement/:placementId/students:
+        '403':
+          description: Forbidden
+          content:
+            text/html:
+              schema:
+                type: string
+                example:
+                  'You are not authorized to retrieve this information'
+  /placement/{placementId}/students:
     get:
+      security:
+        - bearerAuth: []
       description: Returns all the students that a placement has been matched with
       tags: 
         - "Matching"
@@ -1309,6 +1367,14 @@ paths:
                 ]
         '500': 
           description: 'There has been a problem retrieving your matches. Please try again'
+        '403':
+          description: Forbidden
+          content:
+            text/html:
+              schema:
+                type: string
+                example:
+                  'You are not authorized to retrieve this information'
 
   /message/{studentId}/{employerId}:
     get:
