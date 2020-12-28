@@ -43,7 +43,6 @@ describe('recommendation API', () => {
                     response.should.have.status(200);
                     response.body.should.be.a('array');
                     let placements = response.body;
-                    console.log(placements)
                     for(let i = 0; i < placements.length; i++) {
                         placements[i].should.be.a('object');
                         placements[i].should.have.property('id');
