@@ -26,25 +26,13 @@ module.exports = {
                 name: details.name,
                 description: details.description,
                 domain_of_activity_id: details.domainOfActivityId
-            }, ['id','name', 'description'])
+            }, ['id','name', 'description', 'domain_of_activity_id'])
             .catch(error => {
                 if(error) {
                     throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There was an error saving your profile');
                 }
             });
-        result = result[0];
-
-        let domain_of_activity = await database('domain_of_activity AS d')
-            .select('d.id AS id', 'd.name AS name')
-            .leftJoin('employer AS e', 'd.id', 'e.domain_of_activity_id')
-            .where('e.id', result.id)
-            .catch(error => {
-                if(error) {
-                    throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There was an error saving your profile');
-                }
-            });
-        result.domain_of_activity = domain_of_activity[0];
-        return result;
+        return result[0];
     },
 
     setEmployerLocation: async (employerId, locationId) => {
@@ -60,8 +48,8 @@ module.exports = {
         return result;
     },
 
-    deleteEmployerById: async (id) => {
-        await database('employer')
+    deleteEmployerById: (id) => {
+        return database('employer')
             .where('id', id)
             .del();
     }

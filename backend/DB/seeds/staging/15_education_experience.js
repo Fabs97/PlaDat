@@ -13,13 +13,14 @@ exports.seed = function(knex) {
         .limit(3)
 
       let experiences = [];
+      let today = new Date();
       for (let i=0; i<students.length; i++) {
         experiences.push({
           student_id: students[i].id,
           education_id: education[i%3].id,
           description: "Difficult study",
-          start_period: "2020/01/30",
-          end_period: "2020/06/30"
+          start_period: today,
+          end_period: today,
         })
       }
 

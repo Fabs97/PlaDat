@@ -38,13 +38,12 @@ module.exports = self = {
         let location = await locationService.addNewLocationIfNeeded(details);
         let result = await employerDAO.setEmployerLocation(id, location.id)
         if (result != 1){
-            locationService.deleteLocationById(location.id);
             throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There has been a problem setting your student profile location. Please try again')
         }
         return location;
     },
 
-    deleteEmployerById: async (id) => {
-        await employerDAO.deleteEmployerById(id);
+    deleteEmployerById: (id) => {
+        return employerDAO.deleteEmployerById(id);
     }
 };

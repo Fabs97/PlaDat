@@ -59,11 +59,8 @@ describe('employer API', () => {
                     response.body.location.city.should.equal('test employer city');
                     response.body.location.should.have.property('country');
                     response.body.location.country.should.equal('test employer country');
-                    response.body.should.have.property('domain_of_activity');
-                    response.body.domain_of_activity.should.be.a('object');
-                    response.body.domain_of_activity.should.have.property('id');
-                    response.body.domain_of_activity.id.should.equal(domId);
-                    response.body.domain_of_activity.should.have.property('name');
+                    response.body.should.have.property('domain_of_activity_id');
+                    response.body.domain_of_activity_id.should.equal(domId);
                     done();
                 })
 

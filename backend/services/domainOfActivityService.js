@@ -2,12 +2,12 @@ const domainOfActivityDAO = require('../DAO/domainOfActivityDAO');
 
 module.exports = {
 
-    getAllDomainsOfActivity: async () => {
-        return await domainOfActivityDAO.getAllDomainsOfActivity();
+    getAllDomainsOfActivity: () => {
+        return domainOfActivityDAO.getAllDomainsOfActivity();
     },
 
-    existsDomainOfActivity: async (id) => {
-        return await domainOfActivityDAO.existsDomainOfActivity(id);
+    existsDomainOfActivity: (id) => {
+        return domainOfActivityDAO.existsDomainOfActivity(id);
     }
 
 }

@@ -33,8 +33,6 @@ tags:
     description: All the APIs related to the "registration" table
   - name: Message
     description: All the APIs related to the "message" table
-  - name: Domain of Activity
-    description: All the APIs related to the "domain_of_activity" table
 
 components:
   schemas:
@@ -346,10 +344,7 @@ paths:
                     city: "Seul"
                     },
                   description: "A big tech company",
-                  domain_of_activity: {
-                      id: 3,
-                      name: "Manufacturing"
-                    }
+                  domain_of_activity_id: 3
                   }
         '400': 
           description: Bad Request
@@ -837,7 +832,7 @@ paths:
     get:
       description: Returns all the domains of activity in the database
       tags:
-        - "Domain of Activity"
+        - "Employer"
       responses:
         '200':
           description: OK

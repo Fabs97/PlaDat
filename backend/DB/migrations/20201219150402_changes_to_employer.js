@@ -5,9 +5,9 @@ exports.up = async function(knex) {
     return knex.schema.table('employer', function(table) {
       if(check1) {table.dropColumn('urllogo') }  
       if(check2) {table.dropColumn('location') } 
-      table.integer('location_id').unsigned().references('id').inTable('location');
+      table.integer('location_id').unsigned().references('id').inTable('location').onDelete('SET NULL');
       table.string('description');
-      table.integer('domain_of_activity_id').unsigned().references('id').inTable('domain_of_activity');
+      table.integer('domain_of_activity_id').unsigned().references('id').inTable('domain_of_activity').onDelete('SET NULL');
       })
 };
 
