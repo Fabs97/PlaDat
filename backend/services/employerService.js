@@ -8,7 +8,7 @@ const domainOfActivityService = require('../services/domainOfActivityService');
 
 
 
-module.exports = self = {
+module.exports = employerService = {
     getEmployer: (id) => {
         return employerDAO.getEmployer(id);
     },
@@ -23,7 +23,7 @@ module.exports = self = {
             if(check){
                 let newEmployer = await employerDAO.addNewEmployer(details);
                 if(details.location){
-                    newEmployer.location = await self.saveEmployerLocation(newEmployer.id, details.location);
+                    newEmployer.location = await employerService.saveEmployerLocation(newEmployer.id, details.location);
                 }
                 return newEmployer;
             } else {
