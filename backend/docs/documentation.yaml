@@ -93,8 +93,9 @@ components:
           type: integer
         name: 
           type: string
-        location_id: 
-          type: integer
+        location:
+          type: object
+          $ref: '#/components/schemas/Location'
         domain_of_activity_id: 
           type: integer
     Match:
