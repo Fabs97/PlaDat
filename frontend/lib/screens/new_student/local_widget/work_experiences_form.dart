@@ -27,6 +27,7 @@ class WorkExperiencesFormState extends State<WorkExperiencesForm> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final themeData = Theme.of(context);
     final student = Provider.of<Student>(context);
     final formStepper = Provider.of<FormStepper>(context);
     final List<WorkExperience> works = [...student.works ?? [], ..._experiences]
@@ -67,7 +68,6 @@ class WorkExperiencesFormState extends State<WorkExperiencesForm> {
           Flexible(
             flex: 1,
             child: RaisedButton(
-              color: Colors.grey[600],
               onPressed: () {
                 if (!_creatingExperience ||
                     (_creatingExperience && _formKey.currentState.validate())) {
@@ -77,9 +77,17 @@ class WorkExperiencesFormState extends State<WorkExperiencesForm> {
                   });
                 }
               },
-              child: Text(
-                "Continue",
-                style: TextStyle(color: Colors.white),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10.0),
+                child: Text(
+                  "Continue",
+                  style: themeData.textTheme.subtitle1.copyWith(
+                    color: Colors.white,
+                    fontSize: 18.0,
+                    fontStyle: FontStyle.normal,
+                    fontWeight: FontWeight.normal,
+                  ),
+                ),
               ),
             ),
           ),
@@ -104,7 +112,10 @@ class WorkExperiencesFormState extends State<WorkExperiencesForm> {
         children: [
           Text(
             "Work Experience",
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22.0),
+            style: Theme.of(context).textTheme.subtitle1.copyWith(
+                fontWeight: FontWeight.bold,
+                fontSize: 18.0,
+                color: CustomTheme().primaryColor),
           ),
           Spacer(),
           IconButton(
@@ -143,8 +154,8 @@ class WorkExperiencesFormState extends State<WorkExperiencesForm> {
     return [
       TextFormField(
         decoration: const InputDecoration(
-          hintText: 'Position',
-        ),
+            hintText: 'Position',
+            hintStyle: TextStyle(fontSize: 16, color: Color(0xff4c4c4c))),
         initialValue: _newExperience.position ?? "",
         onChanged: (value) {
           setState(() {
@@ -160,8 +171,8 @@ class WorkExperiencesFormState extends State<WorkExperiencesForm> {
       ),
       TextFormField(
         decoration: const InputDecoration(
-          hintText: 'Company Name',
-        ),
+            hintText: 'Company Name',
+            hintStyle: TextStyle(fontSize: 16, color: Color(0xff4c4c4c))),
         initialValue: _newExperience.companyName ?? "",
         onChanged: (value) {
           setState(() {
@@ -178,11 +189,11 @@ class WorkExperiencesFormState extends State<WorkExperiencesForm> {
       TextFormField(
         onTap: () => _openDatePicker(),
         decoration: InputDecoration(
-          hintText: _newExperience.startPeriod != null &&
-                  _newExperience.endPeriod != null
-              ? "${formatter.format(_newExperience.startPeriod)} - ${formatter.format(_newExperience.endPeriod)} "
-              : "Period of work",
-        ),
+            hintText: _newExperience.startPeriod != null &&
+                    _newExperience.endPeriod != null
+                ? "${formatter.format(_newExperience.startPeriod)} - ${formatter.format(_newExperience.endPeriod)} "
+                : "Period of work (mm/yyyy - mm-yyyy)",
+            hintStyle: TextStyle(fontSize: 16, color: CustomTheme().textColor)),
         readOnly: true,
         validator: (_) {
           if (_newExperience.startPeriod.isAfter(DateTime.now()))
@@ -190,11 +201,24 @@ class WorkExperiencesFormState extends State<WorkExperiencesForm> {
           return null;
         },
       ),
+      Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: Row(
+          children: [
+            Text(
+              'Describe your work experience',
+              style: TextStyle(
+                fontSize: 16,
+                color: CustomTheme().textColor,
+              ),
+              textAlign: TextAlign.left,
+            ),
+          ],
+        ),
+      ),
       TextFormField(
         decoration: const InputDecoration(
-          hintText: "Try to be as descriptive as possible",
-          labelText: "Describe your work experience",
-          filled: true,
+          border: OutlineInputBorder(),
         ),
         initialValue: _newExperience.description ?? "",
         onChanged: (value) {
@@ -216,7 +240,10 @@ class WorkExperiencesFormState extends State<WorkExperiencesForm> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           FlatButton(
-            child: Text("Save"),
+            child: Text("Save",
+                style: Theme.of(context).textTheme.subtitle1.copyWith(
+                      color: CustomTheme().accentTextColor,
+                    )),
             onPressed: () {
               setState(() {
                 _experiences.add(_newExperience);
@@ -240,7 +267,7 @@ class WorkExperiencesFormState extends State<WorkExperiencesForm> {
       initialDateRange: DateTimeRange(
         start: _newExperience.startPeriod ?? DateTime.now(),
         end: _newExperience.endPeriod ??
-          (new DateTime.now()).add(new Duration(days: 7)),
+            (new DateTime.now()).add(new Duration(days: 7)),
       ),
       firstDate: DateTime.now().subtract(Duration(days: 365 * 100)),
       lastDate: (DateTime.now()).add(Duration(days: 365 * 100)),
