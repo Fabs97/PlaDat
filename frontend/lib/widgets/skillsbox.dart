@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/models/skill.dart';
 import 'package:frontend/services/api_service.dart';
+import 'package:frontend/utils/custom_theme.dart';
 
 class SkillBox extends StatefulWidget {
   final String title;
@@ -65,15 +66,22 @@ class SkillBoxState extends State<SkillBox> {
     return Container(
       child: Column(
         children: [
-          Row(
-            children: [
-              Text(widget.title,
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                  textAlign: TextAlign.left),
-              Padding(
-                padding: EdgeInsets.all(16.0),
-              ),
-            ],
+          Padding(
+            padding:
+                const EdgeInsets.symmetric(vertical: 8.0, horizontal: 20.0),
+            child: Row(
+              children: [
+                Text(widget.title,
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18.0,
+                        color: CustomTheme().primaryColor),
+                    textAlign: TextAlign.left),
+                Padding(
+                  padding: EdgeInsets.all(16.0),
+                ),
+              ],
+            ),
           ),
           Container(
             color: Colors.white,
@@ -89,6 +97,16 @@ class SkillBoxState extends State<SkillBox> {
                     suffixIcon: Icon(Icons.search),
                     hintText: 'Search Here...',
                     filled: true,
+                    fillColor: CustomTheme().backgroundColor,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                      borderSide:
+                          BorderSide(color: CustomTheme().backgroundColor),
+                    ),
+                    focusedBorder: InputBorder.none,
+                    enabledBorder: InputBorder.none,
+                    errorBorder: InputBorder.none,
+                    disabledBorder: InputBorder.none,
                   ),
                   onChanged: _onItemChanged,
                 ),
@@ -100,10 +118,8 @@ class SkillBoxState extends State<SkillBox> {
                     runSpacing: 5.0,
                     children: widget._chosenSkills.map((skill) {
                       return Chip(
-                        //backgroundColor: Colors.grey[600],
                         label: Text(
                           skill.name,
-                          //style: TextStyle(color: Colors.white),
                         ),
                         deleteIcon: Icon(Icons.close),
                         onDeleted: () => _onItemDeleted(skill),
