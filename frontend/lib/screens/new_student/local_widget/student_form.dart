@@ -54,16 +54,19 @@ class _StudentFormState extends State<StudentForm> {
               padding: const EdgeInsets.only(bottom: 20),
               child: Column(
                 children: [
-                  Row(
-                    children: [
-                      Text(
-                        "Basic information",
-                        style: themeData.textTheme.subtitle1.copyWith(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18.0,
-                            color: CustomTheme().primaryColor),
-                      ),
-                    ],
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                    child: Row(
+                      children: [
+                        Text(
+                          "Basic information",
+                          style: themeData.textTheme.subtitle1.copyWith(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18.0,
+                              color: CustomTheme().primaryColor),
+                        ),
+                      ],
+                    ),
                   ),
                   SizedBox(
                     height: size.height * .03,
