@@ -46,9 +46,12 @@ class SkillsForm extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 16.0),
               child: RaisedButton(
-                child: Text(
-                  "Save",
-                  style: TextStyle(color: Colors.white),
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Text(
+                    "Publish the placement",
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
                 onPressed: () => _savePlacementToDB(context, placement),
               ),

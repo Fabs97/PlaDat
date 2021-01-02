@@ -64,6 +64,7 @@ class _PlacementFormState extends State<PlacementForm> {
   Widget build(BuildContext context) {
     final placement = Provider.of<Placement>(context);
     final size = MediaQuery.of(context).size;
+    final themeData = Theme.of(context);
     return SizedBox(
       width: size.width * .9,
       height: size.height * .85,
@@ -96,6 +97,21 @@ class _PlacementFormState extends State<PlacementForm> {
                           _createTypeOfEmploymentField(placement),
                           _createWorkingPeriodField(placement, context),
                           _createSalaryField(placement),
+                          Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Row(
+                              children: [
+                                Text(
+                                  "Describe the role's activity",
+                                  style: themeData.textTheme.subtitle1.copyWith(
+                                    fontSize: 16,
+                                    color: CustomTheme().textColor,
+                                  ),
+                                  textAlign: TextAlign.left,
+                                ),
+                              ],
+                            ),
+                          ),
                           _createDescriptionField(placement),
                           majorsWidget ?? Container(),
                           institutionsWidget ?? Container(),
@@ -117,9 +133,17 @@ class _PlacementFormState extends State<PlacementForm> {
                         widget.changeStep(false);
                       }
                     },
-                    child: Text(
-                      'Continue',
-                      style: TextStyle(color: Colors.white),
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Text(
+                        'Continue',
+                        style: themeData.textTheme.subtitle1.copyWith(
+                          color: Colors.white,
+                          fontSize: 18.0,
+                          fontStyle: FontStyle.normal,
+                          fontWeight: FontWeight.normal,
+                        ),
+                      ),
                     ),
                   ),
                 ),
@@ -134,7 +158,8 @@ class _PlacementFormState extends State<PlacementForm> {
   Widget _createPlacementField(Placement placement) {
     return TextFormField(
       decoration: const InputDecoration(
-        hintText: 'Placement role',
+        hintText: 'Position',
+        hintStyle: TextStyle(fontSize: 16, color: Color(0xff4c4c4c)),
       ),
       initialValue: placement.position ?? '',
       onChanged: (value) {
@@ -153,10 +178,15 @@ class _PlacementFormState extends State<PlacementForm> {
 
   Widget _createTypeOfEmploymentField(Placement placement) {
     return DropdownButtonFormField<EmploymentType>(
-      icon: Icon(Icons.keyboard_arrow_down),
-      iconSize: 24,
-      elevation: 16,
-      hint: Text("Employment Type"),
+      decoration: const InputDecoration(
+        hintText: "Type of contract",
+        hintStyle: TextStyle(fontSize: 16, color: Color(0xff4c4c4c)),
+      ),
+      icon: Icon(
+        Icons.arrow_drop_down,
+        color: Colors.black87,
+        size: 25.0,
+      ),
       validator: (value) {
         if (value == null) return "Please choose an employment type";
         return null;
@@ -204,15 +234,14 @@ class _PlacementFormState extends State<PlacementForm> {
     final formatter = DateFormat('dd/MMM/yyyy');
     return Theme(
       data: Theme.of(context).copyWith(
-        accentColor: Colors.cyan[600],
-        primaryColor: Colors.lightBlue[800] 
-      ),
+          accentColor: Colors.cyan[600], primaryColor: Colors.lightBlue[800]),
       child: TextFormField(
         onTap: () => _openDatePicker(placement),
         decoration: InputDecoration(
           hintText: placement.startPeriod != null && placement.endPeriod != null
               ? "${formatter.format(placement.startPeriod)} - ${formatter.format(placement.endPeriod)} "
               : "Working period",
+          hintStyle: TextStyle(fontSize: 16, color: Color(0xff4c4c4c)),
         ),
         readOnly: true,
       ),
@@ -225,6 +254,8 @@ class _PlacementFormState extends State<PlacementForm> {
         labelText: 'Yearly salary',
         hintText: 'Insert only digits 0-9',
         prefixText: "£ ",
+        labelStyle: TextStyle(fontSize: 16, color: Color(0xff4c4c4c)),
+        hintStyle: TextStyle(fontSize: 16, color: Color(0xff4c4c4c)),
       ),
       keyboardType: TextInputType.number,
       inputFormatters: [
@@ -248,24 +279,8 @@ class _PlacementFormState extends State<PlacementForm> {
   Widget _createDescriptionField(Placement placement) {
     return TextFormField(
       decoration: const InputDecoration(
-        hintText: "Try to be as descriptive as possible",
-        // labelText: "Describe the role's activity",
-        filled: true,
-        fillColor: Colors.white,
-        enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            width: 1.0,
-            color: Color(0xffb8b8b8),
-          ),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: Color(0xffb8b8b8),
-            width: 1.0,
-          ),
-        ),
+        border: OutlineInputBorder(),
       ),
-      textAlignVertical: TextAlignVertical.bottom,
       initialValue: placement.description ?? '',
       onChanged: (value) {
         setState(() {

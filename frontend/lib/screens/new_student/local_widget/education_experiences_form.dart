@@ -192,7 +192,11 @@ class EducationExperiencesFormState extends State<EducationExperiencesForm> {
     final formatter = DateFormat('dd/MMM/yyyy');
     return [
       DropdownButtonFormField<Institution>(
-        iconEnabledColor: CustomTheme().primaryColor,
+        icon: Icon(
+          Icons.keyboard_arrow_down,
+          color: Color(0xffc4c4c4),
+          size: 35,
+        ),
         items: (_institutions ?? [])
             .map((institution) => DropdownMenuItem<Institution>(
                   value: institution,
@@ -218,7 +222,11 @@ class EducationExperiencesFormState extends State<EducationExperiencesForm> {
         value: _newExperience.institution,
       ),
       DropdownButtonFormField<Degree>(
-        iconEnabledColor: CustomTheme().primaryColor,
+        icon: Icon(
+          Icons.keyboard_arrow_down,
+          color: Color(0xffc4c4c4),
+          size: 35,
+        ),
         items: (_degrees ?? [])
             .map((degree) => DropdownMenuItem<Degree>(
                   value: degree,
@@ -244,7 +252,11 @@ class EducationExperiencesFormState extends State<EducationExperiencesForm> {
         value: _newExperience.degree,
       ),
       DropdownButtonFormField<Major>(
-        iconEnabledColor: CustomTheme().primaryColor,
+        icon: Icon(
+          Icons.keyboard_arrow_down,
+          color: Color(0xffc4c4c4),
+          size: 35,
+        ),
         items: (_majors ?? [])
             .map((major) => DropdownMenuItem<Major>(
                   value: major,
