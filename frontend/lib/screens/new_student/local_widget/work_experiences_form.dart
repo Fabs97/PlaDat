@@ -245,15 +245,17 @@ class WorkExperiencesFormState extends State<WorkExperiencesForm> {
                       color: CustomTheme().accentTextColor,
                     )),
             onPressed: () {
-              setState(() {
-                _experiences.add(_newExperience);
-                student.works = [
-                  ...student.works ?? [],
-                  ..._experiences,
-                ];
-                _newExperience = new WorkExperience();
-                _creatingExperience = false;
-              });
+              if (_formKey.currentState.validate()) {
+                setState(() {
+                  _experiences.add(_newExperience);
+                  student.works = [
+                    ...student.works ?? [],
+                    ..._experiences,
+                  ];
+                  _newExperience = new WorkExperience();
+                  _creatingExperience = false;
+                });
+              }
             },
           ),
         ],

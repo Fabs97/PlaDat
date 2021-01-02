@@ -103,6 +103,7 @@ class EducationExperiencesFormState extends State<EducationExperiencesForm> {
               width: size.width * .9,
               child: RaisedButton(
                 onPressed: () {
+                  //need to check the validation also here
                   if (!_creatingExperience ||
                       (_creatingExperience &&
                           _formKey.currentState.validate())) {
