@@ -27,7 +27,6 @@ class SkillsForm extends StatelessWidget {
       width: size.width * .9,
       height: size.height * .85,
       child: Container(
-        color: Colors.grey[200],
         padding: EdgeInsets.symmetric(
           horizontal: 20.0,
           vertical: 5.0,

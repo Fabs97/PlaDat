@@ -33,7 +33,6 @@ class SkillsForm extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //mainAxisSize: MainAxisSize.max,
           children: [
             SizedBox(
               height: size.height * .7,

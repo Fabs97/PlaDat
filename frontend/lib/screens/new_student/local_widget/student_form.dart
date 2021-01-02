@@ -144,10 +144,6 @@ class _StudentFormState extends State<StudentForm> {
                   onPressed: () {
                     // Validate will return true if the form is valid, or false if
                     // the form is invalid.
-                    // TODO: delete setState outside
-                    setState(() {
-                      formStepper.goToNextFormStep();
-                    });
                     if (_formKey.currentState.validate()) {
                       setState(() {
                         formStepper.goToNextFormStep();
