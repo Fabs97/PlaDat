@@ -327,15 +327,17 @@ class EducationExperiencesFormState extends State<EducationExperiencesForm> {
                       color: CustomTheme().accentTextColor,
                     )),
             onPressed: () {
-              setState(() {
-                _experiences.add(_newExperience);
-                student.educations = [
-                  ...student.educations ?? [],
-                  ..._experiences,
-                ];
-                _newExperience = new EducationExperience();
-                _creatingExperience = false;
-              });
+              if (_formKey.currentState.validate()) {
+                setState(() {
+                  _experiences.add(_newExperience);
+                  student.educations = [
+                    ...student.educations ?? [],
+                    ..._experiences,
+                  ];
+                  _newExperience = new EducationExperience();
+                  _creatingExperience = false;
+                });
+              }
             },
           ),
         ],
