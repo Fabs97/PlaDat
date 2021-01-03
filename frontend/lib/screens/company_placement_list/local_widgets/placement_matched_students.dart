@@ -30,7 +30,11 @@ class _PlacementMatchedStudentsState extends State<PlacementMatchedStudents> {
     APIService.route(ENDPOINTS.Placement, '/placement/:placementId/students',
             urlArgs: widget.placement.id)
         .then((studentList) => setState(() {
-              _students = studentList;
+              if (studentList is String) {
+                print(studentList);
+              } else {
+                _students = studentList;
+              }
             }));
     super.initState();
   }
@@ -161,50 +165,8 @@ class _PlacementMatchedStudentsState extends State<PlacementMatchedStudents> {
                                                 ),
                                               ]),
                                             ]),
-                                        trailing: PopupMenuButton<String>(
-                                          padding: EdgeInsets.zero,
-                                          itemBuilder: (context) =>
-                                              <PopupMenuEntry<String>>[
-                                            PopupMenuItem<String>(
-                                              child: ListTile(
-                                                leading: Icon(
-                                                  Icons.email,
-                                                  color: CustomTheme()
-                                                      .secondaryColor ,
-                                                ),
-                                                title: Text(
-                                                  "Send message",
-                                                  style: themeData
-                                                      .textTheme.subtitle1
-                                                      .copyWith(
-                                                    color: CustomTheme()
-                                                        .secondaryColor,
-                                                  ),
-                                                ),
-                                                onTap: () => Nav
-                                                    .navigatorKey.currentState
-                                                    .pushNamed("/chat-screen",
-                                                        arguments:
-                                                            ChatScreenArguments(
-                                                                _student.id,
-                                                                widget.placement
-                                                                    .employerId)),
-                                              ),
-                                            ),
-                                            PopupMenuItem<String>(
-                                              child: ListTile(
-                                                leading: Icon(Icons.delete,
-                                                    color: CustomTheme()
-                                                        .primaryColor),
-                                                title: Text(
-                                                  "Remove the match",
-                                                ),
-                                                onTap: () => _showConfirmDialog(
-                                                    _student),
-                                              ),
-                                            ),
-                                          ],
-                                        )),
+                                        trailing: _popupMenu(
+                                            _student, widget.placement)),
                                     Padding(
                                       padding: const EdgeInsets.symmetric(
                                           horizontal: 8.0),
@@ -225,6 +187,40 @@ class _PlacementMatchedStudentsState extends State<PlacementMatchedStudents> {
           ),
         ),
       ),
+    );
+  }
+
+  _popupMenu(Student student, Placement placement) {
+    return PopupMenuButton<String>(
+      padding: EdgeInsets.zero,
+      itemBuilder: (context) => <PopupMenuEntry<String>>[
+        PopupMenuItem<String>(
+          child: ListTile(
+            leading: Icon(
+              Icons.email,
+              color: CustomTheme().secondaryColor,
+            ),
+            title: Text(
+              "Send message",
+              style: Theme.of(context).textTheme.subtitle1.copyWith(
+                    color: CustomTheme().secondaryColor,
+                  ),
+            ),
+            onTap: () => Nav.navigatorKey.currentState.pushNamed("/chat-screen",
+                arguments:
+                    ChatScreenArguments(student.id, placement.employerId)),
+          ),
+        ),
+        PopupMenuItem<String>(
+          child: ListTile(
+            leading: Icon(Icons.delete, color: CustomTheme().primaryColor),
+            title: Text(
+              "Remove the match",
+            ),
+            onTap: () => _showConfirmDialog(student),
+          ),
+        ),
+      ],
     );
   }
 
