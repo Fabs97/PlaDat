@@ -16,6 +16,8 @@ class PlacementAPIService extends APIInfo {
         return _getPlacement(subRoute, urlArgs);
       case "/placement/:placementId/students":
         return _getMatchedStudentsByPlacementId(subRoute, urlArgs);
+      case "/placement/:id/close":
+        return _putClosed(subRoute, urlArgs);
       default:
         throw PlacementAPIException();
     }
@@ -60,6 +62,18 @@ class PlacementAPIService extends APIInfo {
       case 200:
         {
           return Student.listFromJson(response.body);
+        }
+      default:
+        return response.body;
+    }
+  }
+
+  static Future<dynamic> _putClosed(String subRoute, int id) async {
+    var response = await http.put(APIInfo.apiEndpoint + "/placement/$id/close");
+    switch (response.statusCode) {
+      case 200:
+        {
+          return response.body;
         }
       default:
         return response.body;

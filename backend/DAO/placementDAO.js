@@ -19,8 +19,9 @@ module.exports = {
                 end_period: details.endPeriod, 
                 salary: salary,
                 description_role: details.descriptionRole,
-                employer_id: details.employerId
-            }, ['id', 'position', 'employment_type', 'start_period', 'end_period', 'salary', 'description_role', 'employer_id'])
+                employer_id: details.employerId,
+                status: 'OPEN'
+            }, ['id', 'position', 'employment_type', 'start_period', 'end_period', 'salary', 'description_role', 'employer_id', 'status'])
             .catch(error => {
                 if(error) {
                     throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There has been a problem saving your placement. Please try again')
@@ -42,7 +43,8 @@ module.exports = {
                 'end_period',
                 'salary',
                 'description_role',
-                'employer_id'
+                'employer_id',
+                'status'
                 )
             .where('id', id);
         return result[0];
@@ -148,9 +150,10 @@ module.exports = {
     getPlacementsForRecommendations: async () => {
 
         let resultTemp  = await database('placements AS p')
-            .select('p.id AS id', 'p.position AS position', 'p.employment_type AS employment_type', 'p.employer_id AS employer_id', 'p.start_period AS start_period', 'p.end_period AS end_period', 'p.salary AS salary', 'p.description_role AS description_role', 's.id AS skill_id', 's.name AS skill_name', 's.type AS skill_type')
+            .select('p.id AS id', 'p.position AS position', 'p.employment_type AS employment_type', 'p.employer_id AS employer_id', 'p.start_period AS start_period', 'p.end_period AS end_period', 'p.salary AS salary', 'p.status AS status', 'p.description_role AS description_role', 's.id AS skill_id', 's.name AS skill_name', 's.type AS skill_type')
             .leftJoin('placement_has_skills AS phs', 'p.id', 'phs.placement_id')
             .leftJoin('skill AS s', 'phs.skill_id', 's.id')
+            .where('p.status','OPEN')
             .orderBy('p.id')
             .catch(error => {
                 if(error){
@@ -235,6 +238,7 @@ module.exports = {
                     end_period: resultTemp[i].end_period,
                     salary: resultTemp[i].salary,
                     description_role: resultTemp[i].description_role,
+                    status: resultTemp[i].status,
                     majors: [],
                     institutions: [],
                     skills: [{
@@ -302,7 +306,7 @@ module.exports = {
 
     getPlacementsByEmployerId: (employerId) => {
         return database('placements as p')
-            .select('p.id', 'p.position', 'p.start_period', 'p.end_period', 'p.salary', 'p.description_role', 'p.employer_id', 'p.employment_type', 't1.count_matches')
+            .select('p.id', 'p.position', 'p.start_period', 'p.end_period', 'p.salary', 'p.description_role', 'p.employer_id', 'p.employment_type', 'status', 't1.count_matches')
             .leftJoin(database.raw("(select shp.placement_id, count(shp.student_id) as count_matches from student_has_placement as shp where shp.status='ACCEPTED' group by shp.placement_id) as t1"), 'p.id','t1.placement_id') //here we count the total number of matches for each placement
             .where('p.employer_id', employerId);
     },
@@ -332,6 +336,19 @@ module.exports = {
             .orderBy("id", "desc")
             .limit(1);
         return result[0];
+    },
+
+    closePlacementById: async (id) => {
+        let result = await database('placements')
+            .returning()
+            .where('id', id)
+            .update('status', 'CLOSED')
+            .catch(error => {
+                if(error) {
+                    throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There has been a problem closing your placement. Please try again.')
+                }
+            });
+        return result;
     }
 
 }; 

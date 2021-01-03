@@ -135,6 +135,8 @@ components:
           type: string
         employer_id:
           type: integer
+        status:
+          type: string
     Institution:
       type: object
       properties:
@@ -286,12 +288,13 @@ paths:
                     {
                       id: 1,
                       position: "Full stack developer",
-                      working_hours: 20,
+                      employment_type: 'PART_TIME',
                       start_period: "2020-11-11",
                       end_period: "2020-11-11",
                       salary: 600,
                       description_role: "An internship for you to learn how to be a full stack developer",
                       employer_id: 1,
+                      status: 'CLOSED',
                       count_matches: 3
                     }
                   ]
@@ -414,17 +417,12 @@ paths:
                       id: 1,
                       position: "Full stack developer",
                       employement_type: 'PART_TIME',
-                      employer_id: 2,
                       start_period: "2020-11-11",
                       end_period: "2020-11-11",
                       salary: 600,
                       description_role: "An internship for you to learn how to be a full stack developer",
-                      employer_name: Google,
-                      location: {
-                        id: 1,
-                        country: United Kingdom,
-                        city: Manchester
-                      },
+                      employer_id: 1,
+                      status: 'OPEN',
                       majors: [
                         {name: "Computer Science and Engineering"},
                       ],
@@ -578,6 +576,7 @@ paths:
                     salary: 600,
                     description_role: "An internship for you to learn how to be a full stack developer",
                     employer_id: 1,
+                    status: 'OPEN',
                     majors: [
                       {id: 1, name: "Computer Science and Engineering"},
                       {id: 2, name: "Management Engineering"},
@@ -620,7 +619,7 @@ paths:
               example:
                 {
                   position: "Full stack developer",
-                  workingHours: 20,
+                  emplymentType: 'PART_TIME',
                   startPeriod: "2020-11-11",
                   endPeriod: "2020-11-11",
                   salary: 600,
@@ -668,12 +667,13 @@ paths:
                   {
                     id: 3,
                     position: "Full stack developer",
-                    working_hours: 20,
+                    employment_type: 'PART_TIME',
                     start_period: "2020-11-11",
                     end_period: "2020-11-11",
                     salary: 600,
                     description_role: "An internship for you to learn how to be a full stack developer",
                     employer_id: 1,
+                    status: 'OPEN',
                     majors: [
                       {id: 1, name: "Computer Science and Engineering"},
                       {id: 2, name: "Management Engineering"},
@@ -704,6 +704,44 @@ paths:
                       ]
                     }
                   }
+
+  /placement/{id}/close:
+    put:
+      description: changes a placement's status to 'CLOSED'
+      tags:
+        - "Placement"
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: OK
+          content: 
+            text/html:
+              schema:
+                example:
+                  Your placement has been closed correctly.
+        '400': 
+          description: Bad Request
+          content:
+            text/html:
+              schema:
+                example:
+                  The request does not contains a valid placement id. Please try again.
+        '500':
+          description: Internal Server Error
+          content: 
+            text/html:
+              schema:
+                example:
+                  There has been a problem closing your placement. Please try again.
+
+
+
   /majors:
     get:
       description: Returns all the majors in the database
