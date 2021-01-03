@@ -13,5 +13,18 @@ router.get('/employers/last', async (req, res, next) => {
     res.json(employerId)
 })
 
+router.post('/employer', async (req, res, next) => {
+    const newEmployer = await employerService.createNewEmployer(req.body)
+        .catch(error => {
+            res.status(error.code).send(error.message);
+        })
+    res.json(newEmployer);
+})
+
+router.delete('/employer/:id', async (req, res, next) => {
+    let response = await employerService.deleteEmployerById(req.params.id);
+    res.status(200).send("employer deleted correctly");
+})
+
 
 module.exports = router;

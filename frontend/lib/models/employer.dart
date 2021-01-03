@@ -1,20 +1,29 @@
 import 'dart:convert';
 
-class Employer {
-  final int id;
-  final String name;
-  final String urlLogo;
-  final String location;
+import 'package:flutter/cupertino.dart';
+import 'package:frontend/models/place.dart';
 
-  Employer({this.urlLogo, this.location, this.id, this.name});
+class Employer extends ChangeNotifier {
+  int id;
+  String name;
+  Place location;
+  String domainOfActivityId;
+  String description;
+  
+  
+  
+
+  Employer({this.id, this.name, this.location, this.domainOfActivityId,this.description});
 
   factory Employer.fromJson(Map<String, dynamic> json) {
     if (json == null) return null;
     return Employer(
       id: json["id"] as int,
       name: json["name"] as String,
-      urlLogo: json["urllogo"] as String,
-      location: json["location"] as String,
+      location: 
+          json["location"] != null ? Place.fromJson(json['location']) : null,
+      domainOfActivityId: json["domainOfActivityId"],    
+      description: json["description"] as String,
     );
   }
 
@@ -26,8 +35,9 @@ class Employer {
     return {
       "id": this.id,
       "name": this.name,
-      "urllogo": this.urlLogo,
-      "location": this.location,
+      "location": this.location?.toJsonMap() ?? null,
+      "domainOfActivityId": this.domainOfActivityId,
+      "description": this.description,
     };
   }
 }
