@@ -32,9 +32,15 @@ class _PlacementProfileState extends State<PlacementProfile> {
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
     final themeData = Theme.of(context);
-    final techSkills = widget.placement.skills["TECH"];
-    final softSkills = widget.placement.skills["SOFT"];
-    final otherSkills = widget.placement.skills["OTHER"];
+    final techSkills = widget.placement.skills != null
+        ? widget.placement.skills["TECH"]
+        : null;
+    final softSkills = widget.placement.skills != null
+        ? widget.placement.skills["SOFT"]
+        : null;
+    final otherSkills = widget.placement.skills != null
+        ? widget.placement.skills["OTHER"]
+        : null;
     return Column(
       mainAxisSize: MainAxisSize.max,
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -178,9 +184,7 @@ class _PlacementProfileState extends State<PlacementProfile> {
           horizontal: 5.0,
         ),
         child: Container(
-          decoration: BoxDecoration(
-            color: CustomTheme().backgroundColor
-          ),
+          decoration: BoxDecoration(color: CustomTheme().backgroundColor),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.center,

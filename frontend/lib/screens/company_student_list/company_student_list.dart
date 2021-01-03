@@ -34,6 +34,10 @@ class _StudentCardsListState extends State<StudentCardsList> {
         .then((placementsList) => setState(() {
               _placements = placementsList;
               _placement = _placements[0] ?? null;
+              for (int i = 0; i < _placements.length; i++) {
+                if (_placements[i].status == 'CLOSED')
+                  _placements.remove(_placements[i]);
+              }
               _requestRecomendations();
             }));
     super.initState();
