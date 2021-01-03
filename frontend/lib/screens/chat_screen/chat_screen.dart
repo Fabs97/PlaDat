@@ -104,9 +104,13 @@ class _ChatScreenState extends State<ChatScreen> {
                                       child: RaisedButton(
                                         onPressed:
                                             _createNewMessageButtonPressed,
-                                        child: Text(
-                                          'Create new message',
-                                          style: TextStyle(color: Colors.white),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(10.0),
+                                          child: Text(
+                                            'Create new message',
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          ),
                                         ),
                                       ),
                                     )
@@ -203,9 +207,12 @@ class _ChatScreenState extends State<ChatScreen> {
               padding: const EdgeInsets.symmetric(vertical: 16.0),
               child: RaisedButton(
                 onPressed: _sendMessageButtonPressed,
-                child: Text(
-                  'Send message',
-                  style: TextStyle(color: Colors.white),
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Text(
+                    'Send message',
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
               ),
             ),
