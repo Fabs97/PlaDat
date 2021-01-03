@@ -4,48 +4,49 @@ exports.seed = function(knex) {
   return knex('work').del()
     .then(async function () {
       // Inserts seed entries
+      let today = new Date();
       return knex('work').insert([
         {
           company_name: "Google",
           position: "Junior Developer",
           description: "Difficult job",
-          start_period: "2020/01/30",
-          end_period: "2020/06/30",
+          start_period: today,
+          end_period: today,
         },
         {
           company_name: "Facebook",
           position: "Junior Developer",
           description: "Difficult job",
-          start_period: "2020/01/30",
-          end_period: "2020/06/30",
+          start_period: today,
+          end_period: today,
         },
         {
           company_name: "Airbnb",
           position: "Junior Developer",
           description: "Difficult job",
-          start_period: "2020/01/30",
-          end_period: "2020/06/30",
+          start_period: today,
+          end_period: today,
         },
         {
           company_name: "Amazon",
           position: "Junior Developer",
           description: "Difficult job",
-          start_period: "2020/01/30",
-          end_period: "2020/06/30",
+          start_period: today,
+          end_period: today,
         },
         {
           company_name: "Netflix",
           position: "Junior Developer",
           description: "Difficult job",
-          start_period: "2020/01/30",
-          end_period: "2020/06/30",
+          start_period: today,
+          end_period: today,
         },
         {
           company_name: "Spotify",
           position: "Junior Developer",
           description: "Difficult job",
-          start_period: "2020/01/30",
-          end_period: "2020/06/30",
+          start_period: today,
+          end_period: today,
         }
       ]);
     })

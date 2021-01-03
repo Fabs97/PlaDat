@@ -32,6 +32,7 @@ const googleMapsRoute = require('./routes/googleMapsRoute');
 const registrationRoute = require('./routes/registrationRoute');
 const messageRoute = require('./routes/messageRoute');
 const educationRoute = require('./routes/educationRoute');
+const domainOfActivityRoute = require('./routes/domainOfActivityRoute');
 app.use('/', studentRoute);
 app.use('/', placementRoute);
 app.use('/', skillsRoute);
@@ -43,6 +44,7 @@ app.use('/', googleMapsRoute);
 app.use('/', registrationRoute);
 app.use('/', educationRoute);
 app.use('/', messageRoute);
+app.use('/', domainOfActivityRoute);
 
 app.get('/', (req, res) => res.send('Hello World!'));
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));

@@ -127,9 +127,9 @@ describe('placement API', () => {
                     let employer = response.body.employer;
                     if(employer != null){
                         employer.should.be.a('object');
+                        employer.should.have.property('id');
                         employer.should.have.property('name');
-                        employer.should.have.property('location');
-                        employer.should.have.property('urllogo');
+                        employer.should.have.property('description');
                     }
                     response.body.should.have.property('institutions');
                     let institutions = response.body.institutions;
