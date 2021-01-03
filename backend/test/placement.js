@@ -263,15 +263,29 @@ describe('placement API', () => {
     describe('PUT /placement/:id/close', () => {
 
         let placementId;
+        let userId;
+        let sessionToken;
+        let employerId;
 
         beforeEach(async () => {
 
-            let employerId = (await chai.request(server)
-                .get('/employers/last')).body.id;
+            let employer = {
+                email: 'google@google.com',
+                password: '12345678',
+            }
+            session = (await chai.request(server)
+                .post('/login')
+                .set('content-type', 'application/json')
+                .send(employer)).body;
+            // console.log(session);
+            userId = session.userID;
+            sessionToken = session.token;
+            employerId = session.employerID;
 
             let testPlacement = await chai.request(server)
                 .post('/placement/new-placement')
                 .set('content-type', 'application/json')
+                .set('Authorization', `Bearer ${sessionToken}`)
                 .send({
                     position: "test position",
                     startDate: "2020-12-14",
@@ -290,6 +304,7 @@ describe('placement API', () => {
 
             chai.request(server)
                 .put('/placement/' + placementId + '/close')
+                .set('Authorization', `Bearer ${sessionToken}`)
                 .end((err, response) => {
                     response.should.have.status(200);
                     done();
@@ -299,13 +314,15 @@ describe('placement API', () => {
 
         afterEach(async () =>{
             await chai.request(server)
-                .delete('/placement/' + placementId);
+                .delete('/placement/' + placementId)
+                .set('Authorization', `Bearer ${sessionToken}`);
         })
 
         it('should get a 400 Bad Request error when the request is not valid', (done) => {
 
             chai.request(server)
                 .put('/placement/jkdfk/close')
+                .set('Authorization', `Bearer ${sessionToken}`)
                 .end((err, response) => {
                     response.should.have.status(400);
                     done();

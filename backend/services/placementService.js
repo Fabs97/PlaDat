@@ -107,7 +107,11 @@ module.exports = {
         return placementDAO.getLastPlacement(auth.employerId);
     },
 
-    closePlacementById: async (id) => {
+    closePlacementById: async (id, auth) => {
+        let placement = await placementDAO.getPlacementById(id);
+        if(auth.employerId !== placement.employer_id) {
+            throw new SuperError(ERR_FORBIDDEN, 'You cannot close the applications for this placement');
+        }
         let result = await placementDAO.closePlacementById(id);
         if(result == 1){
             return "Your placement has been closed correctly."

@@ -57,7 +57,7 @@ router.get('/placements/last', async (req, res, next) => {
 
 router.put('/placement/:id/close', async (req, res, next) => {
     if(!isNaN(req.params.id)){
-        let result = await placementService.closePlacementById(req.params.id)
+        let result = await placementService.closePlacementById(req.params.id, req.user)
             .catch(error => {
                 res.status(error.code).send(error.message);
             })

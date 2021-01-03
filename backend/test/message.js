@@ -173,7 +173,7 @@ describe('message API', () => {
                         messages[i].should.have.property('message');
                         messages[i].should.have.property('send_date');
                         let currTime = Date.parse(messages[i].send_date);
-                        currTime.should.above(prevTime);
+                        currTime.should.be.at.least(prevTime);
                         prevTime = currTime;
                         messages[i].should.have.property('sender');
                     }
