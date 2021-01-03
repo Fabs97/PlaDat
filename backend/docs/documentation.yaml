@@ -94,10 +94,11 @@ components:
           type: integer
         name: 
           type: string
-        location: 
-          type: string
-        urllogo: 
-          type: string 
+        location:
+          type: object
+          $ref: '#/components/schemas/Location'
+        domain_of_activity_id: 
+          type: integer
     Match:
       type: object
       properties:
@@ -136,6 +137,8 @@ components:
           type: string
         employer_id:
           type: integer
+        status:
+          type: string
     Institution:
       type: object
       properties:
@@ -231,6 +234,14 @@ components:
           type: string
         period: 
           type: string
+    Domain of Activity: 
+      type: object
+      properties:
+        id: 
+          type: integer
+        name: 
+          type: string
+
         
         
 paths:
@@ -356,12 +367,13 @@ paths:
                     {
                       id: 1,
                       position: "Full stack developer",
-                      working_hours: 20,
+                      employment_type: 'PART_TIME',
                       start_period: "2020-11-11",
                       end_period: "2020-11-11",
                       salary: 600,
                       description_role: "An internship for you to learn how to be a full stack developer",
                       employer_id: 1,
+                      status: 'CLOSED',
                       count_matches: 3
                     }
                   ]
@@ -372,7 +384,67 @@ paths:
               schema:
                 type: string
                 example:
-                  "You are not allowed to view the list of placements from another employer."
+                  "You are not allowed to see these placements."
+
+  /employer:
+    post:
+      description: Allows the user to save their employer profile on the database
+      tags:
+        - "Employer"
+      requestBody:
+        description: a json with all the needed informations about the employer
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                {
+                  name: "Samsung",
+                  location: {
+                    country: "South Korea",
+                    city: "Seul"
+                  },
+                  description: "A big tech company",
+                  domainOfActivityId: 3
+                }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                description: returns a json with the newly inserted employer information
+                type: object
+                example:
+                  {
+                    id: 1,
+                    name: "Samsung",
+                  location: {
+                    id: 1,
+                    country: "South Korea",
+                    city: "Seul"
+                    },
+                  description: "A big tech company",
+                  domain_of_activity_id: 3
+                  }
+        '400': 
+          description: Bad Request
+          content:
+            text/html:
+              schema:
+                type: string
+                example:
+                  "The domain of activity does not exists. Please try again."
+        '500':
+          description: Internal Server Error
+          content: 
+            text/html:
+              schema:
+                type: string
+                example:
+                  "There has been a problem saving your profile. Please try again"
+
 
   /recommendation/{id}/seeStudents:
     get:
@@ -505,17 +577,12 @@ paths:
                       id: 1,
                       position: "Full stack developer",
                       employement_type: 'PART_TIME',
-                      employer_id: 2,
                       start_period: "2020-11-11",
                       end_period: "2020-11-11",
                       salary: 600,
                       description_role: "An internship for you to learn how to be a full stack developer",
-                      employer_name: Google,
-                      location: {
-                        id: 1,
-                        country: United Kingdom,
-                        city: Manchester
-                      },
+                      employer_id: 1,
+                      status: 'OPEN',
                       majors: [
                         {name: "Computer Science and Engineering"},
                       ],
@@ -693,6 +760,7 @@ paths:
                     salary: 600,
                     description_role: "An internship for you to learn how to be a full stack developer",
                     employer_id: 1,
+                    status: 'OPEN',
                     majors: [
                       {id: 1, name: "Computer Science and Engineering"},
                       {id: 2, name: "Management Engineering"},
@@ -738,7 +806,7 @@ paths:
               example:
                 {
                   position: "Full stack developer",
-                  employmentType: 'INTERNSHIP',
+                  emplymentType: 'PART_TIME',
                   startPeriod: "2020-11-11",
                   endPeriod: "2020-11-11",
                   salary: 600,
@@ -786,12 +854,13 @@ paths:
                   {
                     id: 3,
                     position: "Full stack developer",
-                    employmentType: 'INTERNSHIP',
+                    employment_type: 'PART_TIME',
                     start_period: "2020-11-11",
                     end_period: "2020-11-11",
                     salary: 600,
                     description_role: "An internship for you to learn how to be a full stack developer",
                     employer_id: 1,
+                    status: 'OPEN',
                     majors: [
                       {id: 1, name: "Computer Science and Engineering"},
                       {id: 2, name: "Management Engineering"},
@@ -822,6 +891,44 @@ paths:
                       ]
                     }
                   }
+
+  /placement/{id}/close:
+    put:
+      description: changes a placement's status to 'CLOSED'
+      tags:
+        - "Placement"
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: OK
+          content: 
+            text/html:
+              schema:
+                example:
+                  Your placement has been closed correctly.
+        '400': 
+          description: Bad Request
+          content:
+            text/html:
+              schema:
+                example:
+                  The request does not contains a valid placement id. Please try again.
+        '500':
+          description: Internal Server Error
+          content: 
+            text/html:
+              schema:
+                example:
+                  There has been a problem closing your placement. Please try again.
+
+
+
   /majors:
     get:
       security:
@@ -876,6 +983,41 @@ paths:
                       name: "Master"
                     }
                   ]
+  
+  /domainOfActivity:
+    get:
+      description: Returns all the domains of activity in the database
+      tags:
+        - "Employer"
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Domain of Activity'
+                type: array
+                example:
+                  [
+                    {
+                      id: 1,
+                      name: "Agriculture, forestry and fishing"
+                    },
+                    {
+                      id: 2,
+                      name: "Mining and quarrying"
+                    }
+                  ]
+        '500':
+          description: Internal Server Error
+          content: 
+            text/html:
+              schema:
+                type: string
+                example:
+                  "There has been a problem looking up domains of activity. Please try again"
+
 
   /institutions:
     get:

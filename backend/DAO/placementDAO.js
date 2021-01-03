@@ -19,8 +19,9 @@ module.exports = {
                 end_period: details.endPeriod, 
                 salary: salary,
                 description_role: details.descriptionRole,
-                employer_id: details.employerId
-            }, ['id', 'position', 'employment_type', 'start_period', 'end_period', 'salary', 'description_role', 'employer_id'])
+                employer_id: details.employerId,
+                status: 'OPEN'
+            }, ['id', 'position', 'employment_type', 'start_period', 'end_period', 'salary', 'description_role', 'employer_id', 'status'])
             .catch(error => {
                 if(error) {
                     throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There has been a problem saving your placement. Please try again')
@@ -42,7 +43,8 @@ module.exports = {
                 'end_period',
                 'salary',
                 'description_role',
-                'employer_id'
+                'employer_id',
+                'status'
                 )
             .where('id', id);
         return result[0];
@@ -148,10 +150,11 @@ module.exports = {
     getPlacementsForSkills: async (skills) => {
 
         let placementData = await database('placements AS p')
-            .select(['p.id', 'p.position', 'p.employment_type', 'start_period', 'end_period', 'salary', 'description_role', 'employer_id'])
+            .select(['p.id', 'p.position', 'p.employment_type', 'start_period', 'end_period', 'salary', 'description_role', 'employer_id', 'status'])
             .leftJoin('placement_has_skills AS phs', 'phs.placement_id', 'p.id')
             .leftJoin(database.raw('(select p.id, count(phs.skill_id) as count_total from placements p join placement_has_skills phs on p.id = phs.placement_id group by p.id) as p2'), 'p.id','p2.id') //here we count the total number of skills for each placement
             .whereIn('phs.skill_id', skills)
+            .andWhere('p.status', 'OPEN')
             .groupBy('p.id')
             .having(database.raw('count(phs.skill_id) > max(p2.count_total)/2'))
             .catch(error => {
@@ -250,6 +253,8 @@ module.exports = {
                             description_role: placementData[p].description_role,
                             majors: [],
                             institutions: [],
+                            employer_id: placementData[p].employer_id,
+                            status: placementData[p].status,
                             skills: [{
                                 id: resultTemp[i].skill_id,
                                 name: resultTemp[i].name,
@@ -315,7 +320,7 @@ module.exports = {
 
     getPlacementsByEmployerId: (employerId) => {
         return database('placements as p')
-            .select('p.id', 'p.position', 'p.start_period', 'p.end_period', 'p.salary', 'p.description_role', 'p.employer_id', 'p.employment_type', 't1.count_matches')
+            .select('p.id', 'p.position', 'p.start_period', 'p.end_period', 'p.salary', 'p.description_role', 'p.employer_id', 'p.employment_type', 'status', 't1.count_matches')
             .leftJoin(database.raw("(select shp.placement_id, count(shp.student_id) as count_matches from student_has_placement as shp where shp.status='ACCEPTED' group by shp.placement_id) as t1"), 'p.id','t1.placement_id') //here we count the total number of matches for each placement
             .where('p.employer_id', employerId);
     },
@@ -346,6 +351,19 @@ module.exports = {
             .orderBy("id", "desc")
             .limit(1);
         return result[0];
+    },
+
+    closePlacementById: async (id) => {
+        let result = await database('placements')
+            .returning()
+            .where('id', id)
+            .update('status', 'CLOSED')
+            .catch(error => {
+                if(error) {
+                    throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There has been a problem closing your placement. Please try again.')
+                }
+            });
+        return result;
     }
 
 }; 

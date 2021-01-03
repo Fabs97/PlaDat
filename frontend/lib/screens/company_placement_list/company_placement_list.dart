@@ -1,7 +1,8 @@
-import 'dart:html';
+import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:frontend/models/placement.dart';
 import 'package:frontend/screens/company_placement_list/local_widgets/placement_matched_students.dart';
 import 'package:frontend/services/api_service.dart';
@@ -32,12 +33,30 @@ class _MyPlacementsState extends State<MyPlacements> {
     super.initState();
   }
 
+  FutureOr onGoBack(dynamic value) {
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
     final themeData = Theme.of(context);
     return Scaffold(
-      appBar: CustomAppBar.createAppBar(context, "My Placements"),
+      appBar: AppBar(
+        title: Text("My Placement"),
+        actions: [
+          IconButton(
+              padding: EdgeInsets.all(10.0),
+              iconSize: 40,
+              icon: Icon(
+                Icons.fiber_new_rounded,
+                color: CustomTheme().primaryColor,
+              ),
+              onPressed: () {
+                Nav.navigatorKey.currentState.pushNamed("/new-placement");
+              }),
+        ],
+      ),
       drawer: CustomDrawer.createDrawer(context),
       body: _placements == null
           ? Center(
@@ -57,6 +76,7 @@ class _MyPlacementsState extends State<MyPlacements> {
                   child: ListView.builder(
                     itemCount: _placements.length,
                     itemBuilder: (context, index) {
+                      final _placement = _placements[index];
                       return Padding(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 15.0,
@@ -66,29 +86,152 @@ class _MyPlacementsState extends State<MyPlacements> {
                           children: [
                             ListTile(
                               title: Text(
-                                _placements[index].position + " No.$index",
+                                _placement.position + " No.$index",
                                 style: themeData.textTheme.bodyText1.copyWith(
                                   fontWeight: FontWeight.w700,
                                 ),
                               ),
-                              subtitle: Text(
-                                "${_placements[index].countMatches ?? 0} matches",
-                                style: themeData.textTheme.caption.copyWith(
-                                  color: CustomTheme().secondaryColor,
-                                  fontWeight: FontWeight.w500,
-                                ),
+                              subtitle: Row(
+                                children: [
+                                  Text(
+                                    "${_placement.countMatches ?? 0} matches",
+                                    style: themeData.textTheme.caption.copyWith(
+                                      color: CustomTheme().secondaryColor,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  _placement.status == "CLOSED"
+                                      ? Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 15.0,
+                                            vertical: 4.0,
+                                          ),
+                                          child: Transform(
+                                            transform: Matrix4.identity()
+                                              ..scale(0.8),
+                                            child: Chip(
+                                                backgroundColor: Colors.white,
+                                                label: Text("CLOSED"),
+                                                shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                            Radius.circular(
+                                                                10)),
+                                                    side: BorderSide(
+                                                        color: CustomTheme()
+                                                            .primaryColor)),
+                                                labelStyle: TextStyle(
+                                                    color: CustomTheme()
+                                                        .primaryColor,
+                                                    backgroundColor:
+                                                        Colors.white)),
+                                          ),
+                                        )
+                                      : Container()
+                                ],
                               ),
                               onTap: () {
-                                if (int.parse(_placements[index].countMatches) >
-                                    0) {
+                                if (_placement.countMatches == null) {
+                                  APIService.route(
+                                          ENDPOINTS.Placement, "/placement/:id",
+                                          urlArgs: _placement.id)
+                                      .then((placement) {
+                                    Nav.navigatorKey.currentState
+                                        .pushNamed(
+                                          "/profile",
+                                          arguments: placement,
+                                        )
+                                        .then((value) => APIService.route(
+                                                ENDPOINTS.Employers,
+                                                "/employer/:employerId/placements",
+                                                urlArgs: _employerId)
+                                            .then((placementsList) =>
+                                                setState(() {
+                                                  _placements = placementsList;
+                                                })));
+                                  }).catchError((error) {
+                                    Fluttertoast.showToast(
+                                        msg: error.message ?? error.toString());
+                                  });
+                                } else {
                                   Nav.navigatorKey.currentState
                                       .push(MaterialPageRoute(
-                                    builder: (builder) =>
-                                        PlacementMatchedStudents(
-                                            placement: _placements[index]),
-                                  ));
+                                        builder: (builder) =>
+                                            PlacementMatchedStudents(
+                                                placement: _placement),
+                                      ))
+                                      .then((value) => APIService.route(
+                                              ENDPOINTS.Employers,
+                                              "/employer/:employerId/placements",
+                                              urlArgs: _employerId)
+                                          .then(
+                                              (placementsList) => setState(() {
+                                                    _placements =
+                                                        placementsList;
+                                                  })));
                                 }
                               },
+                              trailing: PopupMenuButton<String>(
+                                itemBuilder: (context) =>
+                                    <PopupMenuEntry<String>>[
+                                  PopupMenuItem<String>(
+                                      child: ListTile(
+                                    leading: Icon(
+                                      Icons.stop_circle_outlined,
+                                      color: CustomTheme().secondaryColor,
+                                    ),
+                                    title: Text(
+                                      "Close the application",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .subtitle1
+                                          .copyWith(
+                                            color: CustomTheme().secondaryColor,
+                                          ),
+                                    ),
+                                    onTap: () async {
+                                      final status = await showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return AlertDialog(
+                                              title: Text(
+                                                  'Are you sure you want to close the application? \nThe students won’t see the placement anymore in their recommendations'),
+                                              actions: [
+                                                FlatButton(
+                                                  child: Text('No'),
+                                                  onPressed: () {
+                                                    Navigator.pop(
+                                                        context, null);
+                                                  },
+                                                ),
+                                                FlatButton(
+                                                    child: Text('Yes'),
+                                                    onPressed: () {
+                                                      APIService.route(
+                                                              ENDPOINTS
+                                                                  .Placement,
+                                                              "/placement/:id/close",
+                                                              urlArgs:
+                                                                  _placement.id)
+                                                          .then((value) => {
+                                                                Navigator.pop(
+                                                                    context,
+                                                                    value)
+                                                              });
+                                                    }),
+                                              ],
+                                            );
+                                          });
+                                      if (status ==
+                                          "Your placement has been closed correctly.") {
+                                        setState(() {
+                                          _placement.status = "CLOSED";
+                                        });
+                                      }
+                                    },
+                                  ))
+                                ],
+                              ),
                             ),
                             Padding(
                               padding:

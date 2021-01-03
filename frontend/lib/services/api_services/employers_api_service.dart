@@ -9,12 +9,14 @@ class EmployersAPIService extends APIInfo {
   static Future<dynamic> route(String subRoute,
       {dynamic body, dynamic urlArgs}) {
     switch (subRoute) {
+       case "/employer":
+        return _postEmployer(subRoute, body);
       case "/employer/:employerId/placements":
         return _getPlacementByEmployerId(subRoute, urlArgs);
       case "/employer/:id":
         return _getEmployerById(urlArgs.toString());
       default:
-        throw StudentAPIException();
+        throw EmployerAPIException();
     }
   }
 
@@ -33,6 +35,23 @@ class EmployersAPIService extends APIInfo {
       return Employer.fromJson(jsonDecode(response.body));
     }
   }
+static  Future<dynamic> _postEmployer(String subRoute, Employer employer) async {
+    var response = await http.post(
+      APIInfo.apiEndpoint + subRoute,
+      headers: {"Content-Type": "application/json"},
+      body: employer.toJson(),
+    );
+    switch (response.statusCode) {
+      case 200:
+        {
+          return Employer.fromJson(jsonDecode(response.body));
+        }
+      default:
+        return response.body;
+    }
+  }
 }
 
-class StudentAPIException extends APIException {}
+
+
+class EmployerAPIException extends APIException {}

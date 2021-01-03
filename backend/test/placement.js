@@ -70,6 +70,8 @@ describe('placement API', () => {
                     response.body.should.have.property('institutions');
                     response.body.should.have.property('employment_type');
                     response.body.should.have.property('location');
+                    response.body.should.have.property('status');
+                    response.body.status.should.equal('OPEN');
                     response.body.location.should.have.property('id');
                     locationId = response.body.location.id;
                     response.body.location.should.have.property('country');
@@ -141,6 +143,7 @@ describe('placement API', () => {
             .get('/placement/' + placementId)
             .set('Authorization', `Bearer ${sessionToken}`)
             .end((err, response) => {
+                
                 response.should.have.status(200);
                 response.body.should.be.a('object');
                 response.body.should.have.property('id');
@@ -152,12 +155,13 @@ describe('placement API', () => {
                 response.body.should.have.property('salary');
                 response.body.should.have.property('description_role');
                 response.body.should.have.property('employer');
+                response.body.should.have.property('status');
                 let employer = response.body.employer;
                 if(employer != null){
                     employer.should.be.a('object');
+                    employer.should.have.property('id');
                     employer.should.have.property('name');
-                    employer.should.have.property('location');
-                    employer.should.have.property('urllogo');
+                    employer.should.have.property('description');
                 }
                 response.body.should.have.property('institutions');
                 let institutions = response.body.institutions;
@@ -247,12 +251,68 @@ describe('placement API', () => {
                         placements[i].should.have.property('salary');
                         placements[i].should.have.property('description_role');
                         placements[i].should.have.property('employer_id');
+                        placements[i].should.have.property('status');
                         placements[i].should.have.property('count_matches');
                     }
                     done();
                 })
                 
         })
+    })
+
+    describe('PUT /placement/:id/close', () => {
+
+        let placementId;
+
+        beforeEach(async () => {
+
+            let employerId = (await chai.request(server)
+                .get('/employers/last')).body.id;
+
+            let testPlacement = await chai.request(server)
+                .post('/placement/new-placement')
+                .set('content-type', 'application/json')
+                .send({
+                    position: "test position",
+                    startDate: "2020-12-14",
+                    employmentType: "PART_TIME",
+                    endDate: "2020-12-14",
+                    salary: 0,
+                    descriptionRole: "test description role", 
+                    employerId: employerId
+                })
+            
+            placementId = testPlacement.body.id;
+            
+        })
+
+        it('should correctly close the placement given a correct id', (done) => {
+
+            chai.request(server)
+                .put('/placement/' + placementId + '/close')
+                .end((err, response) => {
+                    response.should.have.status(200);
+                    done();
+                })
+
+        })
+
+        afterEach(async () =>{
+            await chai.request(server)
+                .delete('/placement/' + placementId);
+        })
+
+        it('should get a 400 Bad Request error when the request is not valid', (done) => {
+
+            chai.request(server)
+                .put('/placement/jkdfk/close')
+                .end((err, response) => {
+                    response.should.have.status(400);
+                    done();
+                })
+
+        })
+
     })
 
 })

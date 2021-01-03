@@ -3,6 +3,7 @@ import 'package:frontend/screens/company_placement_list/company_placement_list.d
 import 'package:frontend/screens/chat_screen/chat_screen.dart';
 import 'package:frontend/screens/company_student_list/company_student_list.dart';
 import 'package:frontend/screens/login/login.dart';
+import 'package:frontend/screens/new_employer/new_employer.dart';
 import 'package:frontend/screens/new_placement/new_placement.dart';
 import 'package:frontend/screens/new_student/new_student.dart';
 import 'package:frontend/screens/profile/profile.dart';
@@ -36,8 +37,7 @@ class RoutesGenerator {
         }
       case '/profile':
         {
-          return _createRoute(
-              Profile(profile: settings.arguments), settings);
+          return _createRoute(Profile(profile: settings.arguments), settings);
         }
       case '/chat-screen':
         {
@@ -62,6 +62,10 @@ class RoutesGenerator {
       case "/student-home":
         {
           return _createRoute(PlacementCardsList(), settings);
+        }
+      case '/new-employer':
+        {
+          return _createRoute(NewEmployer(), settings);
         }
       default:
         {

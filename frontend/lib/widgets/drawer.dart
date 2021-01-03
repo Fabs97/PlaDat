@@ -19,7 +19,8 @@ class CustomDrawer {
   static List<_CustomDrawerPage> _studentDrawerPages = [
     _CustomDrawerPage("My recommendations", "/student-home"),
     _CustomDrawerPage("My matches", "/student-matches"),
-    _CustomDrawerPage("My profile", "/profile", arguments: AuthService().loggedAccountInfo),
+    _CustomDrawerPage("My profile", "/profile",
+        arguments: AuthService().loggedAccountInfo),
   ];
 
   static Drawer createDrawer(BuildContext context) {

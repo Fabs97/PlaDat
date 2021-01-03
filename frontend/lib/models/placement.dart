@@ -83,6 +83,7 @@ class Placement extends ChangeNotifier {
   int employerId;
   String employerName;
   String countMatches;
+  String status;
 
   Placement(
       {this.id,
@@ -99,7 +100,8 @@ class Placement extends ChangeNotifier {
       this.location,
       this.employerId,
       this.employerName,
-      this.countMatches});
+      this.countMatches,
+      this.status});
 
   String toJson() {
     return jsonEncode({
@@ -122,6 +124,7 @@ class Placement extends ChangeNotifier {
       "employerId": this.employerId ?? AuthService().loggedAccountInfo.id,
       "employerName": this.employerName ?? AuthService().loggedAccountInfo.name,
       "countMatches": this.countMatches,
+      "status": this.status
     });
   }
 
@@ -152,6 +155,7 @@ class Placement extends ChangeNotifier {
       countMatches: json["count_matches"],
       location:
           json["location"] != null ? Place.fromJson(json['location']) : null,
+      status: json["status"],
     );
   }
 

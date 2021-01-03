@@ -1,5 +1,7 @@
 const router = require('express').Router();
 
+const ERR_BAD_REQUEST = require('../errors').ERR_BAD_REQUEST;
+
 const placementService = require('../services/placementService');
 
 /* This API gets a JSON in the body of the request that contain the information about the new placemen
@@ -51,6 +53,19 @@ router.delete('/placement/:id', async (req, res, next) => {
 router.get('/placements/last', async (req, res, next) => {
     let result = await placementService.getLastPlacement(req.user);
     res.json(result);
+})
+
+router.put('/placement/:id/close', async (req, res, next) => {
+    if(!isNaN(req.params.id)){
+        let result = await placementService.closePlacementById(req.params.id)
+            .catch(error => {
+                res.status(error.code).send(error.message);
+            })
+        res.send(result);
+    } else {
+        res.status(ERR_BAD_REQUEST).send('The request does not contains a valid placement id. Please try again.')
+    }
+
 })
 
 module.exports = router;

@@ -1,9 +1,12 @@
 const database = require('../DB/connection');
 
+const SuperError = require('../errors').SuperError;
+const ERR_INTERNAL_SERVER_ERROR = require('../errors').ERR_INTERNAL_SERVER_ERROR;
+
 module.exports = {
     getEmployer: async (employer_id) => {
         let result = await database('employer')
-            .select('name', 'location', 'urllogo', 'user_id as userId')
+            .select('id', 'name', 'description', 'user_id as userId')
             .where('id', employer_id);
         return result[0];
     },
@@ -30,6 +33,42 @@ module.exports = {
             .leftJoin('placements as p', 'e.id', 'p.employer_id')
             .where('p.id', id);
         return result.length ? result[0] : null;
+    },
+
+    addNewEmployer: async (details, userId) => {
+        let result = await database('employer')
+            .returning()
+            .insert({
+                name: details.name,
+                description: details.description,
+                domain_of_activity_id: details.domainOfActivityId,
+                user_id: userId
+            }, ['id','name', 'description', 'domain_of_activity_id'])
+            .catch(error => {
+                if(error) {
+                    throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There was an error saving your profile');
+                }
+            });
+        return result[0];
+    },
+
+    setEmployerLocation: async (employerId, locationId) => {
+        let result = await database('employer')
+            .returning()
+            .where('id', employerId)
+            .update('location_id', locationId)
+            .catch(error => {
+                if(error) {
+                    throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There has been a problem setting your employer profile location. Please try again')
+                }
+            });
+        return result;
+    },
+
+    deleteEmployerById: (id) => {
+        return database('employer')
+            .where('id', id)
+            .del();
     }
 
 };

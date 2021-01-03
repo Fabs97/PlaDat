@@ -8,6 +8,8 @@ const matchService = require('./matchService');
 const SuperError = require('../errors').SuperError;
 const ERR_INTERNAL_SERVER_ERROR = require('../errors').ERR_INTERNAL_SERVER_ERROR;
 const ERR_FORBIDDEN = require('../errors').ERR_FORBIDDEN;
+const ERR_NOT_FOUND = require('../errors').ERR_NOT_FOUND;
+
 
 module.exports = {
     getAllPlacementsIds: async () => {
@@ -103,5 +105,14 @@ module.exports = {
 
     getLastPlacement: (auth) => {
         return placementDAO.getLastPlacement(auth.employerId);
+    },
+
+    closePlacementById: async (id) => {
+        let result = await placementDAO.closePlacementById(id);
+        if(result == 1){
+            return "Your placement has been closed correctly."
+        } else {
+            throw new SuperError(ERR_NOT_FOUND,'The placement does not exists. Please try again'); 
+        }
     }
 };

@@ -35,6 +35,7 @@ const locationRoute = require('./routes/locationRoute');
 const registrationRoute = require('./routes/registrationRoute');
 const messageRoute = require('./routes/messageRoute');
 const educationRoute = require('./routes/educationRoute');
+const domainOfActivityRoute = require('./routes/domainOfActivityRoute');
 app.use('/', authMiddleware,studentRoute);
 app.use('/', authMiddleware, placementRoute);
 app.use('/', authMiddleware, skillsRoute);
@@ -45,6 +46,8 @@ app.use('/', authMiddleware, locationRoute);
 app.use('/', authMiddleware, registrationRoute);
 app.use('/', authMiddleware, educationRoute);
 app.use('/', authMiddleware, messageRoute);
+app.use('/', authMiddleware, domainOfActivityRoute);
+
 
 app.get('/', (req, res) => res.send('Hello World!'));
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));
