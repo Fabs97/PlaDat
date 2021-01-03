@@ -10,17 +10,21 @@ exports.seed = function(knex) {
       let locations = await knex('location')
         .select('id')
         .limit(7)
-        
-      
-      let employers = [
-        {name: "Google", description: 'Friendly work place'},
-        {name: "Amazon", description: 'Friendly work place'},
-        {name: "Instagram", description: 'Friendly work place'},
-        {name: "Pinterest", description: 'Friendly work place'},
-        {name: "Facebook", description: 'Friendly work place'},
-        {name: "Reply", description: 'Friendly work place'},
-        {name: "Oracle", description: 'Friendly work place'}
-      ]
+
+      let users = await knex('registration')
+        .select('id')
+        .where('type', 'EMPLOYER');
+    
+      // Inserts seed entries
+      let employers = knex('employer').insert([
+        {name: "Google", location: 'Zurich', urllogo: 'https://source.unsplash.com/random', user_id: users[0].id},
+        {name: "Amazon", location: 'Luxembourg', urllogo: 'https://source.unsplash.com/random', user_id: users[1].id},
+        {name: "Instagram", location: 'Dublin', urllogo: 'https://source.unsplash.com/random', user_id: users[2].id},
+        {name: "Pinterest", location: 'Zurich', urllogo: 'https://source.unsplash.com/random', user_id: users[3].id},
+        {name: "Facebook", location: 'Dublin', urllogo: 'https://source.unsplash.com/random', user_id: users[4].id},
+        {name: "Reply", location: 'Milano', urllogo: 'https://source.unsplash.com/random', user_id: users[5].id},
+        {name: "Oracle", location: 'Silicon Valley', urllogo: 'https://source.unsplash.com/random', user_id: users[6].id},
+      ]);
 
       for(let i=0; i<employers.length; i++){
         employers[i].domain_of_activity_id = domains[9].id;
