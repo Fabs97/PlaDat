@@ -124,6 +124,11 @@ describe('placement API', () => {
                     response.body.should.have.property('description_role');
                     response.body.should.have.property('employer');
                     response.body.should.have.property('status');
+                    response.body.should.have.property('location');
+                    response.body.location.should.be.a('object');
+                    response.body.location.should.have.property('id');
+                    response.body.location.should.have.property('country');
+                    response.body.location.should.have.property('city');
                     let employer = response.body.employer;
                     if(employer != null){
                         employer.should.be.a('object');

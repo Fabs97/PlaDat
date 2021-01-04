@@ -46,7 +46,12 @@ module.exports = {
                 'employer_id',
                 'status'
                 )
-            .where('id', id);
+            .where('id', id)
+            .catch(error => {
+                if(error) {
+                    throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There has been a problem getting your placement profile. Please try again')
+                }
+            });
         return result[0];
 
     },
@@ -308,14 +313,24 @@ module.exports = {
         return database('majors AS m')
             .select('m.id', 'm.name')
             .leftJoin('placement_has_major AS phm', 'm.id', 'phm.major_id')
-            .where('phm.placement_id', id);
+            .where('phm.placement_id', id)
+            .catch(error => {
+                if(error) {
+                    throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There has been a problem getting your placement majors. Please try again')
+                }
+            });
     },
 
     getPlacementInstitutions: async (id) => {
         return database('institutions AS i')
             .select('i.id', 'i.name')
             .leftJoin('placement_has_institution AS phi', 'i.id', 'phi.institution_id')
-            .where('phi.placement_id', id);
+            .where('phi.placement_id', id)
+            .catch(error => {
+                if(error) {
+                    throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There has been a problem getting your placement institutions. Please try again')
+                }
+            });
     },
 
     getPlacementsByEmployerId: (employerId) => {
@@ -363,6 +378,21 @@ module.exports = {
                 }
             });
         return result;
+    }, 
+
+    getPlacementLocation: async (id) => {
+        let result = await database('placements AS p')
+            .select('l.id', 'l.country', 'l.city')
+            .leftJoin('location AS l', 'p.location_id', 'l.id')
+            .where('p.id', id)
+            .catch(error => {
+                if(error) {
+                    throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There has been a problem getting your placement location. Please try again')
+                }
+            });
+        return result[0]; 
     }
+
+
 
 }; 
