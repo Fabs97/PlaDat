@@ -10,8 +10,18 @@ router.get("/student/:id", async (req, res, next) => {
     // Here we need to tell the StudentService what it needs to do, so we invoke the method 
     // "getStudent" and send the id from the URL as parameter. We await for the response, 
     // and we put the result in an object "student", which we send back to the caller (frontend)
-    const student = await studentService.getStudent(req.params.id);
-    res.json(student);
+    
+
+    if(!isNaN(req.params.id)){
+        let student = await studentService.getStudentProfile(req.params.id)
+        .catch(error => {
+            res.status(error.code).send(error.message);
+        });
+
+        res.json(student);
+    } else {
+        res.status(ERR_BAD_REQUEST).send('Your request does not contains a valid student id. Please try again')
+    }
 
 });
 
