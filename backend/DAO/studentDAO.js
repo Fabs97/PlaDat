@@ -17,8 +17,13 @@ module.exports = {
         
         // This one is very similar to SQL
         let result = await database('student')
-            .select('id', 'name','surname','email', 'description', 'phone')
-            .where('id', id);
+            .select('id', 'name','surname', 'description')
+            .where('id', id)
+            .catch(error => {
+                if(error) {
+                    throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There was an error looking for your profile');
+                }
+            });
         return result[0];
     },
 

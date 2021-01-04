@@ -87,6 +87,7 @@ module.exports = {
         placement.majors = await placementDAO.getPlacementMajors(placementId);
         placement.skills = await skillsService.getPlacementSkills(placementId);
         placement.employer = await employerService.getEmployer(placement.employer_id);
+        placement.location = await  placementDAO.getPlacementLocation(placementId);
         return placement;
     },
 

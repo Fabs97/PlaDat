@@ -23,8 +23,20 @@ router.post("/placement/new-placement", async (req, res, next) => {
 // id, position, workingHours, startPeriod, endPeriod, salary, descriptionRole, institution, major 
 router.get('/placement/:id', async (req, res, next) => {
 
-    const placement = await placementService.getPlacementById(req.params.id); 
-    res.json(placement);
+    
+    if(!isNaN(req.params.id)){
+        let placement = await placementService.getPlacementById(req.params.id)
+        .catch(error => {
+            res.status(error.code).send(error.message);
+        });
+
+        res.json(placement);
+    } else {
+        res.status(ERR_BAD_REQUEST).send('Your request does not contains a valid placement id. Please try again')
+    }
+
+    
+    
 
 });
 
