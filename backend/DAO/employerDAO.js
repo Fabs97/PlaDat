@@ -5,9 +5,14 @@ const ERR_INTERNAL_SERVER_ERROR = require('../errors').ERR_INTERNAL_SERVER_ERROR
 
 module.exports = {
     getEmployer: async (employer_id) => {
-        let result = await database('employer')
-            .select('id', 'name', 'description', 'user_id as userId')
-            .where('id', employer_id);
+        let result = await database('employer AS e')
+            .select('e.id AS id', 'e.name AS name', 'e.description AS description')
+            .where('id', employer_id)
+            .catch(error => {
+                if(error) {
+                    throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There has been a problem getting your employer details. Please try again')
+                }
+            });
         return result[0];
     },
 

@@ -71,6 +71,9 @@ studServ = module.exports = {
     getStudentProfile: async (id) => {
         let profile = await studentDAO.getStudentById(id);
         profile.skills = await skillService.getStudentSkills(profile.id);
+        profile.location = await studentDAO.getStudentLocationById(profile.id);
+        profile.education = await studentDAO.getStudentEducationById(profile.id);
+        profile.work = await studentDAO.getStudentWorkById(profile.id);
         return profile;
     },
 
