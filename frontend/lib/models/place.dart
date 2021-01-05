@@ -10,7 +10,10 @@ class Place {
 
   factory Place.fromJson(Map<String, dynamic> json) {
     return Place(
+      id: json['id'] as int,
       description: json['description'] as String,
+      country: json['country'] as String,
+      city: json['city'] as String,
     );
   }
 
@@ -21,6 +24,7 @@ class Place {
   Map<String, dynamic> toJsonMap() {
     return {
       "id": this.id,
+      "description": this.description,
       "country": this.country,
       "city": this.city,
     };
