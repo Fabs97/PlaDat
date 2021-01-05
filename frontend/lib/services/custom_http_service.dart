@@ -12,7 +12,7 @@ dynamic get(String route,
       if (headers == null) {
         headers = Map();
       }
-      headers["authorization"] = AuthService().jwtToken;
+      headers["authorization"] = "Bearer ${AuthService().jwtToken}";
     }
     return await http.get(
       route,
@@ -29,11 +29,11 @@ dynamic get(String route,
 }
 
 dynamic post(String route,
-    {Map<String, String> headers,
-    body,
-    bool needsAuth = true}) async {
+    {Map<String, String> headers, body, bool needsAuth = true}) async {
   try {
-    if (needsAuth) headers["authorization"] = AuthService().jwtToken;
+    if (needsAuth)
+      headers["authorization"] = "Bearer ${AuthService().jwtToken}";
+
     return await http.post(
       route,
       headers: headers,
@@ -55,7 +55,8 @@ dynamic put(String route,
     Encoding encoding,
     bool needsAuth = true}) async {
   try {
-    if (needsAuth) headers["authorization"] = AuthService().jwtToken;
+    if (needsAuth)
+      headers["authorization"] = "Bearer ${AuthService().jwtToken}";
     return await http.put(
       route,
       headers: headers,
@@ -74,7 +75,8 @@ dynamic put(String route,
 dynamic delete(String route,
     {Map<String, String> headers, bool needsAuth = true}) async {
   try {
-    if (needsAuth) headers["authorization"] = AuthService().jwtToken;
+    if (needsAuth)
+      headers["authorization"] = "Bearer ${AuthService().jwtToken}";
     return await http.delete(
       route,
       headers: headers,

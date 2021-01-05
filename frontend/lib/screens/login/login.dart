@@ -183,7 +183,13 @@ class _LoginState extends State<Login> {
       child: Container(
         decoration: BoxDecoration(borderRadius: BorderRadius.circular(20.0)),
         child: RaisedButton(
-          child: Text("Login"),
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Text(
+              "Login",
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
           onPressed: _loginToPlaDat,
         ),
       ),
