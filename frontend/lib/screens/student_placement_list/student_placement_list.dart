@@ -37,7 +37,7 @@ class _PlacementCardsListState extends State<PlacementCardsList>
             ENDPOINTS.Recomendations, "/recommendation/id/seePlacements",
             urlArgs: studentId)
         .then((placementsList) => setState(() {
-              _placements = placementsList.cast<Placement>();
+              _placements = placementsList?.cast<Placement>() ?? [];
               _filteredPlacements = _placements;
             }));
     super.initState();
@@ -85,8 +85,7 @@ class _PlacementCardsListState extends State<PlacementCardsList>
                                     : true,
                           )).then((match) async {
                         if (match.status == 'ACCEPTED') {
-                          await Nav.currentState
-                              .push(MaterialPageRoute(
+                          await Nav.currentState.push(MaterialPageRoute(
                             builder: (builder) => MatchAlert(
                               placement: _filteredPlacements[index],
                               object: null,

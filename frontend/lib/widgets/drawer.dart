@@ -50,7 +50,10 @@ class CustomDrawer {
   static _createListTile(_CustomDrawerPage page) {
     return ListTile(
       title: Text(page.title),
-      onTap: () => Nav.currentState.pushNamed(page.route),
+      onTap: () => Nav.currentState.pushNamed(
+        page.route,
+        arguments: page.arguments,
+      ),
     );
   }
 }
