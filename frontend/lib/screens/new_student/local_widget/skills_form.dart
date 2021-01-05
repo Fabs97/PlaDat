@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:frontend/models/user.dart';
 import 'package:frontend/services/auth_service.dart';
 import 'package:frontend/utils/routes_generator.dart';
 import 'package:frontend/models/student.dart';
@@ -77,6 +78,8 @@ class SkillsForm extends StatelessWidget {
     String message;
     if (response is Student) {
       message = "Profile saved successfully";
+      await AuthService()
+          .setLoggedAccountInfo(AccountType.Student, response.id);
       Nav.currentState.popAndPushNamed("/student-home");
     } else if (response is String) {
       message = response;

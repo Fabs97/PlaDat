@@ -27,7 +27,7 @@ enum ENDPOINTS {
   Messages,
   Registration,
   Degree,
-  Login
+  Login,
   Domainofactivities,
 }
 
@@ -79,13 +79,12 @@ class APIService {
           return MessagesAPIService.route(subRoute,
               urlArgs: urlArgs, body: body);
         case ENDPOINTS.Degree:
-          return DegreeAPIService.route(subRoute,
-              urlArgs: urlArgs, body: body);
+          return DegreeAPIService.route(subRoute, urlArgs: urlArgs, body: body);
         case ENDPOINTS.Login:
-          return LoginAPIService.route(subRoute,
-              urlArgs: urlArgs, body: body);
+          return LoginAPIService.route(subRoute, urlArgs: urlArgs, body: body);
         case ENDPOINTS.Domainofactivities:
-          return DomainofactivitiesAPIService.route(subRoute, urlArgs: urlArgs, body: body);
+          return DomainofactivitiesAPIService.route(subRoute,
+              urlArgs: urlArgs, body: body);
         default:
           throw APIException();
       }

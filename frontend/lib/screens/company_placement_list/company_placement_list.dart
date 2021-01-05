@@ -144,7 +144,7 @@ class _MyPlacementsState extends State<MyPlacements> {
                                         .then((value) => APIService.route(
                                                 ENDPOINTS.Employers,
                                                 "/employer/:employerId/placements",
-                                                urlArgs: _employerId)
+                                                urlArgs: _employer.id)
                                             .then((placementsList) =>
                                                 setState(() {
                                                   _placements = placementsList;
@@ -163,7 +163,7 @@ class _MyPlacementsState extends State<MyPlacements> {
                                       .then((value) => APIService.route(
                                               ENDPOINTS.Employers,
                                               "/employer/:employerId/placements",
-                                              urlArgs: _employerId)
+                                              urlArgs: _employer.id)
                                           .then(
                                               (placementsList) => setState(() {
                                                     _placements =
