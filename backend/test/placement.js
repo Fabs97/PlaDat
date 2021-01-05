@@ -200,25 +200,9 @@ describe('placement API', () => {
                 done();
             })
         }).timeout(10000)
-    })
+        })
 
-    //WE SHOULD REMOVE THIS, IT'S DANGEROUS
-    // describe('GET /placement', () => {
-    //     it('should return an array with all the ids of all the placements', (done) => {
-    //         chai.request(server)
-    //             .get('/placement')
-    //             .end((err, response) => {
-    //                 response.should.have.status(200);
-    //                 response.body.should.be.a('array');
-    //                 let ids = response.body;
-    //                 for(let i=0; i<ids.length; i++){
-    //                     ids[i].should.be.a('object');
-    //                     ids[i].should.have.property('id')
-    //                 }
-    //                 done();
-    //             })
-    //     })
-    // })
+    })
 
     describe('GET /employer/:employerId/placements', () => {
         let employerId;

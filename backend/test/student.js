@@ -252,64 +252,60 @@ describe('student API', () =>{
         })
 
         it('should get the student details', (done) => {
-            
+        
             chai.request(server)
                 .get('/student/' + studentId)
                 .set('Authorization', `Bearer ${sessionToken}`)
                 .end((err, response) => {
-                    let studentId = response.body.id;
-                    chai.request(server)
-                        .get('/student/' + studentId)
-                        .end((err, response) => {
-                            response.should.have.status(200);
-                            response.body.should.be.a('object');
-                            response.body.should.have.property('id');
-                            response.body.id.should.equal(studentId);
-                            response.body.should.have.property('name');
-                            response.body.should.have.property('surname');
-                            response.body.should.have.property('description');
-                            response.body.should.have.property('skills');
-                            let skills = response.body.skills;
-                            skills.should.be.a('array');
-                            for(let i = 0; i < skills.length; i++){
-                                skills[i].should.be.a('object');
-                                skills[i].should.have.property('id');
-                                skills[i].should.have.property('name');
-                                skills[i].should.have.property('type');
-                            }
-                            response.body.should.have.property('location');
-                            response.body.location.should.be.a('object');
-                            response.body.location.should.have.property('id');
-                            response.body.location.should.have.property('country');
-                            response.body.location.should.have.property('city');
-                            response.body.should.have.property('education');
-                            let education = response.body.education;
-                            education.should.be.a('array');
-                            for(let i = 0; i < education.length; i++){
-                                education[i].should.be.a('object');
-                                education[i].should.have.property('degree');
-                                education[i].should.have.property('major');
-                                education[i].should.have.property('institution');
-                                education[i].should.have.property('id');
-                                education[i].should.have.property('description');
-                                education[i].should.have.property('start_period');
-                                education[i].should.have.property('end_period');
-                            }
-                            response.body.should.have.property('work');
-                            let work = response.body.work;
-                            work.should.be.a('array');
-                            for(let i = 0; i < work.length; i++){
-                                work[i].should.be.a('object');
-                                work[i].should.have.property('id');
-                                work[i].should.have.property('company_name');
-                                work[i].should.have.property('position');
-                                work[i].should.have.property('start_period');
-                                work[i].should.have.property('end_period');
-                                work[i].should.have.property('description');
-                            }
-                        done();
-                    })
-                })
+                    response.should.have.status(200);
+                    response.body.should.be.a('object');
+                    response.body.should.have.property('id');
+                    response.body.id.should.equal(studentId);
+                    response.body.should.have.property('name');
+                    response.body.should.have.property('surname');
+                    response.body.should.have.property('description');
+                    response.body.should.have.property('skills');
+                    let skills = response.body.skills;
+                    skills.should.be.a('array');
+                    for(let i = 0; i < skills.length; i++){
+                        skills[i].should.be.a('object');
+                        skills[i].should.have.property('id');
+                        skills[i].should.have.property('name');
+                        skills[i].should.have.property('type');
+                    }
+                    response.body.should.have.property('location');
+                    response.body.location.should.be.a('object');
+                    response.body.location.should.have.property('id');
+                    response.body.location.should.have.property('country');
+                    response.body.location.should.have.property('city');
+                    response.body.should.have.property('education');
+                    let education = response.body.education;
+                    education.should.be.a('array');
+                    for(let i = 0; i < education.length; i++){
+                        education[i].should.be.a('object');
+                        education[i].should.have.property('degree');
+                        education[i].should.have.property('major');
+                        education[i].should.have.property('institution');
+                        education[i].should.have.property('id');
+                        education[i].should.have.property('description');
+                        education[i].should.have.property('start_period');
+                        education[i].should.have.property('end_period');
+                    }
+                    response.body.should.have.property('work');
+                    let work = response.body.work;
+                    work.should.be.a('array');
+                    for(let i = 0; i < work.length; i++){
+                        work[i].should.be.a('object');
+                        work[i].should.have.property('id');
+                        work[i].should.have.property('company_name');
+                        work[i].should.have.property('position');
+                        work[i].should.have.property('start_period');
+                        work[i].should.have.property('end_period');
+                        work[i].should.have.property('description');
+                    }
+                done();
+            })
+                
             
         })
     })

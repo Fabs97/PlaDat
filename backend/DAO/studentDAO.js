@@ -17,7 +17,7 @@ module.exports = {
         
         // This one is very similar to SQL
         let result = await database('student')
-            .select('id', 'name','surname', 'description')
+            .select('id', 'name','surname', 'description', 'user_id as userId')
             .where('id', id)
             .catch(error => {
                 if(error) {
@@ -249,7 +249,7 @@ module.exports = {
             .where('user_id', userId)
         
         return result.length ? result[0] : null;
-    }
+    },
 
     getStudentLocationById: async (id) => {
         let result = await database('student AS s')
