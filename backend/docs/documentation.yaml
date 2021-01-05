@@ -785,8 +785,101 @@ paths:
                         {id: 8, name: "Cooking", type: "OTHER"},
                         {id: 9, name: "Trekking", type: "OTHER"},
                       ]
+                    },
+                    employer: {
+                      id: 1,
+                      name: "Google",
+                      description: "Friendly work place"
+                    },
+                    location: {
+                      id: 1,
+                      country: "Italy",
+                      city: "Milan"
                     }
                   }
+        '400': 
+          description: Bad Request
+          content:
+            text/html:
+              schema:
+                type: string
+                example:
+                  'Your request does not contains a valid placement id. Please try again'
+        '500':
+          description: Internal Server Error
+          content: 
+            text/html:
+              schema:
+                type: string
+                example:
+                  "There has been a problem getting your placement location. Please try again"
+  
+  /student/{id}:
+    get:
+      description: Returns a student profile with the provided id
+      tags:
+        - "Student"
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/Student'
+                type: object
+                example:
+                  name: John
+                  surname: Dow
+                  description: I am a happy student
+                  location:
+                    id: 1
+                    country: "Italy"
+                    city: "Milan"
+                  education:
+                  - majorId: 3
+                    degreeId: 1
+                    institutionId: 3
+                    description: Difficult job
+                    startPeriod: 2020-12-13T23:00:00.000Z
+                    endPeriod: 2020-12-13T23:00:00.000Z
+                  skills:
+                  - id: 1
+                    name: "JavaScript"
+                    type: "TECH"
+                  - id: 17
+                    name: "Time management"
+                    type: "SOFT"
+                  work:
+                  - companyName: Google
+                    position: Difficult Job
+                    description: Difficult job
+                    startPeriod: 2020-12-13T23:00:00.000Z
+                    endPeriod: 2020-12-13T23:00:00.000Z
+                  
+        '400': 
+          description: Bad Request
+          content:
+            text/html:
+              schema:
+                type: string
+                example:
+                  'Your request does not contains a valid placement id. Please try again'
+        '500':
+          description: Internal Server Error
+          content: 
+            text/html:
+              schema:
+                type: string
+                example:
+                  "There has been a problem getting your placement location. Please try again"
 
   /placement/new-placement:
     post:

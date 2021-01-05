@@ -143,74 +143,66 @@ describe('placement API', () => {
             .get('/placement/' + placementId)
             .set('Authorization', `Bearer ${sessionToken}`)
             .end((err, response) => {
-                
-                response.should.have.status(200);
-                response.body.should.be.a('object');
-                response.body.should.have.property('id');
-                response.body.id.should.equal(placementId);
-                response.body.should.have.property('position');
-                response.body.should.have.property('employment_type');
-                response.body.should.have.property('start_period');
-                response.body.should.have.property('end_period');
-                response.body.should.have.property('salary');
-                response.body.should.have.property('description_role');
-                response.body.should.have.property('employer');
-                response.body.should.have.property('status');
-                let employer = response.body.employer;
-                if(employer != null){
-                    employer.should.be.a('object');
-                    employer.should.have.property('id');
-                    employer.should.have.property('name');
-                    employer.should.have.property('description');
-                }
-                response.body.should.have.property('institutions');
-                let institutions = response.body.institutions;
-                institutions.should.be.a('array');
-                for(let i=0; i<institutions.length; i++){
-                    institutions[i].should.be.a('object');
-                    institutions[i].should.have.property('id');
-                    institutions[i].should.have.property('name');
-                }
-                response.body.should.have.property('majors');
-                let majors = response.body.majors;
-                majors.should.be.a('array')
-                for(let i=0; i<majors.length; i++){
-                    majors[i].should.be.a('object');
-                    majors[i].should.have.property('id');
-                    majors[i].should.have.property('name');
-                }
-                response.body.should.have.property('skills');
-                let skills = response.body.skills;
-                skills.should.be.a('array');
-                for(let i=0; i<skills.length; i++){
-                    skills[i].should.be.a('object');
-                    skills[i].should.have.property('id');
-                    skills[i].should.have.property('name');
-                    skills[i].should.have.property('type');
-                }
+                let placementId = response.body[0].id
+                chai.request(server)
+                .get('/placement/' + placementId)
+                .end((err, response) => {
+                    response.should.have.status(200);
+                    response.body.should.be.a('object');
+                    response.body.should.have.property('id');
+                    response.body.id.should.equal(placementId);
+                    response.body.should.have.property('position');
+                    response.body.should.have.property('employment_type');
+                    response.body.should.have.property('start_period');
+                    response.body.should.have.property('end_period');
+                    response.body.should.have.property('salary');
+                    response.body.should.have.property('description_role');
+                    response.body.should.have.property('employer');
+                    response.body.should.have.property('status');
+                    response.body.should.have.property('location');
+                    response.body.location.should.be.a('object');
+                    response.body.location.should.have.property('id');
+                    response.body.location.should.have.property('country');
+                    response.body.location.should.have.property('city');
+                    let employer = response.body.employer;
+                    if(employer != null){
+                        employer.should.be.a('object');
+                        employer.should.have.property('id');
+                        employer.should.have.property('name');
+                        employer.should.have.property('description');
+                    }
+                    response.body.should.have.property('institutions');
+                    let institutions = response.body.institutions;
+                    institutions.should.be.a('array');
+                    for(let i=0; i<institutions.length; i++){
+                        institutions[i].should.be.a('object');
+                        institutions[i].should.have.property('id');
+                        institutions[i].should.have.property('name');
+                    }
+                    response.body.should.have.property('majors');
+                    let majors = response.body.majors;
+                    majors.should.be.a('array')
+                    for(let i=0; i<majors.length; i++){
+                        majors[i].should.be.a('object');
+                        majors[i].should.have.property('id');
+                        majors[i].should.have.property('name');
+                    }
+                    response.body.should.have.property('skills');
+                    let skills = response.body.skills;
+                    skills.should.be.a('array');
+                    for(let i=0; i<skills.length; i++){
+                        skills[i].should.be.a('object');
+                        skills[i].should.have.property('id');
+                        skills[i].should.have.property('name');
+                        skills[i].should.have.property('type');
+                    }
 
                 done();
             })
         }).timeout(10000)
-    })
+        })
 
-    //WE SHOULD REMOVE THIS, IT'S DANGEROUS
-    // describe('GET /placement', () => {
-    //     it('should return an array with all the ids of all the placements', (done) => {
-    //         chai.request(server)
-    //             .get('/placement')
-    //             .end((err, response) => {
-    //                 response.should.have.status(200);
-    //                 response.body.should.be.a('array');
-    //                 let ids = response.body;
-    //                 for(let i=0; i<ids.length; i++){
-    //                     ids[i].should.be.a('object');
-    //                     ids[i].should.have.property('id')
-    //                 }
-    //                 done();
-    //             })
-    //     })
-    // })
+    })
 
     describe('GET /employer/:employerId/placements', () => {
         let employerId;

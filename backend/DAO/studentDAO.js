@@ -17,8 +17,13 @@ module.exports = {
         
         // This one is very similar to SQL
         let result = await database('student')
-            .select('id', 'name','surname','email', 'description', 'phone', 'user_id as userId')
-            .where('id', id);
+            .select('id', 'name','surname', 'description', 'user_id as userId')
+            .where('id', id)
+            .catch(error => {
+                if(error) {
+                    throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There was an error looking for your profile');
+                }
+            });
         return result[0];
     },
 
@@ -244,7 +249,48 @@ module.exports = {
             .where('user_id', userId)
         
         return result.length ? result[0] : null;
-    }
+    },
+
+    getStudentLocationById: async (id) => {
+        let result = await database('student AS s')
+            .select('l.id', 'l.country', 'l.city')
+            .leftJoin('location AS l', 's.location_id', 'l.id')
+            .where('s.id', id)
+            .catch(error => {
+                if(error) {
+                    throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There has been a problem getting your student profile location. Please try again')
+                }
+            });
+        return result[0]; 
+    }, 
+
+    getStudentEducationById: async (id) => {
+        return await database('student_has_education AS she')
+            .select('d.name AS degree', 'm.name AS major', 'i.name AS institution', 'e.id AS id', 'she.description AS description', 'she.start_period AS start_period', 'she.end_period AS end_period')
+            .leftJoin('education AS e', 'she.education_id', 'e.id')
+            .leftJoin('degree AS d', 'e.degree_id', 'd.id')
+            .leftJoin('majors AS m', 'e.major_id', 'm.id')
+            .leftJoin('institutions AS i', 'e.institution_id', 'i.id')
+            .where('she.student_id', id)
+            .catch(error => {
+                if(error) {
+                    throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There has been a problem getting your student profile education. Please try again')
+                }
+            });
+
+    }, 
+
+    getStudentWorkById: async (id) => {
+        return await database('student_has_work AS shw')
+            .select('w.id AS id', 'w.company_name AS company_name', 'w.position AS position', 'w.start_period AS start_period', 'w.end_period AS end_period', 'w.description AS description')
+            .leftJoin('work AS w', 'shw.work_id', 'w.id')
+            .where('shw.student_id', id)
+            .catch(error => {
+                if(error) {
+                    throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There has been a problem getting your student profile work experience. Please try again')
+                }
+            });
+    },
 
 
 };
