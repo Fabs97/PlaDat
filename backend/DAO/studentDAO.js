@@ -243,6 +243,7 @@ module.exports = {
             });
         return result;
     },
+    
     getStudentByUserId: async (userId) => {
         let result = await database('student')
             .select('id', 'name')
