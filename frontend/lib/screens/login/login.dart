@@ -203,7 +203,7 @@ class _LoginState extends State<Login> {
         if (response is bool) {
           // new user, redirect him to the creation of the profile/placement
           Nav.currentState
-              .popAndPushNamed(response ? "/new-student" : "/new-placement");
+              .popAndPushNamed(response ? "/new-student" : "/new-employer");
         } else if (response is Student) {
           Nav.currentState.popAndPushNamed("/student-home");
         } else if (response is Employer) {
