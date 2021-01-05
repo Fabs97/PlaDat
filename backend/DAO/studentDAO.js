@@ -95,30 +95,28 @@ module.exports = {
         });
     },
 
-    getStudentsBySkills: async (skillsId) => {
-        let skillsNumber = skillsId.length;
-        let studentIDs = await database('student_has_skills')
-            .select('student_id')
-            .whereIn('skill_id', skillsId)
-            
-            .groupBy('student_id')
-                 
-            .havingRaw('count(*) >= ?', parseInt(skillsNumber/2))
-            .as('student_ids')
+    getStudentsForRecommendation: async (placementId) => {
+
+        let studentInteractedWithPlacement = await database('student as s')
+            .select('s.id')
+            .leftJoin('student_has_placement as shp', 's.id', 'shp.student_id')
+            .whereIn('shp.student_accept', [true, false] )
+            .andWhere('shp.placement_id', placementId)
             .catch(error => {
                 if(error){
-                    throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There has been a problem finding the recommended students. Please try again.')
+                    throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There has been a problem looking up informations about the recommended students. Please try again.')
                 }
             })
-        
-        studentIDs = studentIDs.map(student => student.student_id);
+            
+        let studentInteractedWithPlacementIDs =  studentInteractedWithPlacement.map(student => student.id);
 
+        // STUDENT + SKILLS + LOCATION
         let resultTemp = await database('student AS s')
             .select('s.id', 's.name', 's.surname', 's.email', 's.description', 'sk.id AS skill_id', 'sk.name AS skill_name', 'sk.type AS skill_type', 'l.id AS location_id', 'l.country AS location_country', 'l.city AS location_city')
             .leftJoin('student_has_skills AS shs', 's.id', 'shs.student_id')
             .leftJoin('skill AS sk', 'shs.skill_id', 'sk.id')
             .leftJoin('location AS l', 's.location_id', 'l.id')
-            .whereIn('s.id', studentIDs)
+            .whereNotIn('s.id', studentInteractedWithPlacementIDs)
             .orderBy('s.id')
             .catch(error => {
                 if(error){
@@ -128,12 +126,11 @@ module.exports = {
         let result = []
 
         let educations = await database('education AS e')
-            .select('m.name AS major', 'i.name AS institution', 'd.name AS degree', 'she.student_id AS student_id', 'she.description AS description', 'she.start_period AS start_period', 'she.end_period AS end_period')
+            .select('m.name AS major', 'm.id as major_id', 'i.name AS institution', 'i.id as institution_id','d.name AS degree', 'd.id as degree_id', 'she.student_id AS student_id', 'she.description AS description', 'she.start_period AS start_period', 'she.end_period AS end_period')
             .leftJoin('student_has_education AS she', 'e.id', 'she.education_id')
             .leftJoin('majors AS m', 'e.major_id', 'm.id')
             .leftJoin('institutions As i', 'e.institution_id', 'i.id')
             .leftJoin('degree AS d', 'e.degree_id', 'd.id')
-            .whereIn('she.student_id', studentIDs)
             .orderBy('she.student_id')
             .catch(error => {
                 if(error){
@@ -144,7 +141,6 @@ module.exports = {
         let works = await database('work AS w')
             .select('w.company_name AS company', 'w.position AS position', 'w.start_period AS start_period', 'w.end_period AS end_period', 'w.description AS description', 'shw.student_id AS student_id')
             .leftJoin('student_has_work AS shw', 'w.id', 'shw.work_id')
-            .whereIn('shw.student_id', studentIDs)
             .orderBy('shw.student_id')
             .catch(error => {
                 if(error){
@@ -183,8 +179,11 @@ module.exports = {
                 while(j < educations.length && educations[j].student_id == result[curr].id){
                     result[curr].education.push({
                         major: educations[j].major,
+                        major_id: educations[j].major_id,
                         institution: educations[j].institution,
+                        institution_id: educations[j].institution_id,
                         degree: educations[j].degree,
+                        degree_id: educations[j].degree_id,
                         description: educations[j].description,
                         start_period: educations[j].start_period,
                         end_period: educations[j].end_period

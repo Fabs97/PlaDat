@@ -152,13 +152,27 @@ module.exports = {
     },
 
    
-    getPlacementsForRecommendations: async () => {
+    getPlacementsForRecommendations: async (studentId) => {
+
+        let placementsInteractedWithStudent = await database('placements as p')
+            .select('p.id')
+            .leftJoin('student_has_placement as shp', 'p.id', 'shp.placement_id')
+            .whereIn('shp.placement_accept', [true, false] )
+            .andWhere('shp.student_id', studentId)
+            .catch(error => {
+                if(error){
+                    throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There has been a problem looking up informations about the recommended students. Please try again.')
+                }
+            })
+        
+        let placementsInteractedWithStudentIDs =  placementsInteractedWithStudent.map(placement => placement.id);
 
         let resultTemp  = await database('placements AS p')
             .select('p.id AS id', 'p.position AS position', 'p.employment_type AS employment_type', 'p.employer_id AS employer_id', 'p.start_period AS start_period', 'p.end_period AS end_period', 'p.salary AS salary', 'p.status AS status', 'p.description_role AS description_role', 's.id AS skill_id', 's.name AS skill_name', 's.type AS skill_type')
             .leftJoin('placement_has_skills AS phs', 'p.id', 'phs.placement_id')
             .leftJoin('skill AS s', 'phs.skill_id', 's.id')
-            .where('p.status','OPEN')
+            .whereNotIn('p.id', placementsInteractedWithStudentIDs)
+            .andWhere('p.status','OPEN')
             .orderBy('p.id')
             .catch(error => {
                 if(error){

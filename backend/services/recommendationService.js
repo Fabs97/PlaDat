@@ -12,14 +12,55 @@ const educationWeight = 0.17;
 const workWeight = 0.03;
 const threshold = 0.5;
 
-module.exports = {
+recommender = module.exports = {
 
     //for employers
     getStudentRecommendationsForPlacement: async (placementID) => {
+
         try {
-            let placementSkills = await skillsService.getPlacementSkills(placementID);
-            let students = await studentService.getStudentsBySkills(placementSkills);
-            return students;
+            let placement = await placementsService.getPlacementById(placementID);
+            let students = await studentService.getStudentsForRecommendation(placementID);
+
+            let placementSkills = placement.skills; 
+            let placementMajors = placement.majors;
+            let placementInstitutions = placement.institutions;
+
+            let recommendedStudents = [];
+
+            for(let i = 0; i < students.length; i++){
+                let student = students[i];
+
+                let workScore = 0;
+                let skillsScore = 0;
+                let locationScore = 0;
+                let educationScore = 0;
+
+                let studentSkills = student.skills;
+                let studentEducation = student.education;
+
+                if(student.work.length > 0) {
+                    workScore = 1;
+                }
+
+                if(studentSkills.length>0 && placementSkills.length>0){
+                    skillsScore = recommender.calculateSkillsScore(studentSkills, placementSkills);
+                }
+
+                if(studentEducation.length >0 && (placementInstitutions.length>0 || placementMajors.length>0)){
+                    educationScore = recommender.calculateEducationScore(studentEducation, placementInstitutions, placementMajors)
+                }
+
+                if(student.location && placement.location){
+                    locationScore = recommender.calculateLocationScore(student.location, placement.location)
+                }
+                let finalScore = recommender.computeFinalScore(skillsScore, locationScore, educationScore, workScore);
+                if(finalScore >= threshold){
+                    recommendedStudents.push(student);
+                }
+
+            }
+
+            return recommendedStudents;
         } catch(error) {
             if(error.code = ERR_INTERNAL_SERVER_ERROR){
                 throw error;
@@ -41,7 +82,7 @@ module.exports = {
         
         try {
             let student = await studentService.getStudentProfile(studentID);
-            let placements = await placementsService.getPlacementsForRecommendations();
+            let placements = await placementsService.getPlacementsForRecommendations(studentID);
 
             let studentSkills = student.skills; 
             let studentEducation = student.education;
@@ -64,61 +105,18 @@ module.exports = {
                 let placementMajors = placements[i].majors;
 
                 if(placementSkills.length>0 && studentSkills.length>0){
-
-                    let placementTechSkills = 0;
-                    let placementSoftSkills = 0;
-                    let matchingTechSkills = 0;
-                    let matchingSoftSkills = 0;
-    
-                    for(let j = 0; j < placementSkills.length; j++){
-                        if(placementSkills[j].type == 'TECH'){
-                            placementTechSkills++;
-                            if(studentSkills.some(skill => skill.id == placementSkills[j].id)){
-                                matchingTechSkills++;
-                            }
-                        } else {
-                            placementSoftSkills++;
-                            if(studentSkills.some(skill => skill.id == placementSkills[j].id)){
-                                matchingSoftSkills++;
-                            }
-                        }
-                    }
-    
-                    let softSkillsWeight = 1/(placementSoftSkills + placementTechSkills*techSoftRate);
-                    let techSkillsWeight = softSkillsWeight*techSoftRate;
-    
-                    skillsScore = matchingTechSkills*techSkillsWeight + matchingSoftSkills*softSkillsWeight;
-
+                    skillsScore = recommender.calculateSkillsScore(studentSkills, placementSkills);
                 }
 
                 if(studentEducation.length >0 && (placementInstitutions.length>0 || placementMajors.length>0)){
-
-                    let hasMajor = 0;
-                    let hasInstitution = 0;
-                    for(let j = 0; j<placementMajors.length; j++){
-                        if(studentEducation.some(education => education.major == placementMajors[j].name)){
-                            hasMajor = 0.5;
-                        }
-                    }
-                    for(let j = 0; j<placementInstitutions.length; j++){
-                        if(studentEducation.some(education => education.institution == placementInstitutions[j].name)){
-                            hasInstitution = 0.5;
-                        }
-                    }
-
-                    educationScore = hasInstitution + hasMajor;
+                    educationScore = recommender.calculateEducationScore(studentEducation, placementInstitutions, placementMajors)
                 }
 
                 if(student.location && placements[i].location){
-                    if(student.location.id == placements[i].location.id){
-                        locationScore = 1;
-                    } else if(student.location.country == placements[i].location.country){
-                        locationScore = 0.5;
-                    }
+                    locationScore = recommender.calculateLocationScore(student.location, placements[i].location)
                 }
-
                 
-                let finalScore = skillsScore*skillsWeight + locationScore*locationWeight + educationScore*educationWeight + workScore*workWeight;
+                let finalScore = recommender.computeFinalScore(skillsScore, locationScore, educationScore, workScore);
                 if(finalScore >= threshold){
                     recommendedPlacements.push(placements[i]);
                 }
@@ -133,5 +131,62 @@ module.exports = {
                 throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There has been a problem with your recommendations. Please try again.')
             }
         }
+    },
+
+    calculateSkillsScore: (studentSkills, placementSkills) => {
+        let placementTechSkills = 0;
+        let placementSoftSkills = 0;
+        let matchingTechSkills = 0;
+        let matchingSoftSkills = 0;
+
+        for(let j = 0; j < placementSkills.length; j++){
+            if(placementSkills[j].type == 'TECH'){
+                placementTechSkills++;
+                if(studentSkills.some(skill => skill.id == placementSkills[j].id)){
+                    matchingTechSkills++;
+                }
+            } else {
+                placementSoftSkills++;
+                if(studentSkills.some(skill => skill.id == placementSkills[j].id)){
+                    matchingSoftSkills++;
+                }
+            }
+        }
+
+        let softSkillsWeight = 1/(placementSoftSkills + placementTechSkills*techSoftRate);
+        let techSkillsWeight = softSkillsWeight*techSoftRate;
+
+        let skillsScore = matchingTechSkills*techSkillsWeight + matchingSoftSkills*softSkillsWeight;
+        return skillsScore;
+    },
+
+    calculateEducationScore: (studentEducation, placementInstitutions, placementMajors) => {
+        let hasMajor = 0;
+        let hasInstitution = 0;
+        for(let j = 0; j<placementMajors.length; j++){
+            if(studentEducation.some(education => education.major == placementMajors[j].name)){
+                hasMajor = 0.5;
+            }
+        }
+        for(let j = 0; j<placementInstitutions.length; j++){
+            if(studentEducation.some(education => education.institution == placementInstitutions[j].name)){
+                hasInstitution = 0.5;
+            }
+        }
+
+        let educationScore = hasInstitution + hasMajor;
+        return educationScore;
+    },
+    calculateLocationScore: (studentLocation, placementLocation) =>  {
+        let locationScore = 0;
+        if(studentLocation.id == placementLocation.id){
+            locationScore = 1;
+        } else if(studentLocation.country == placementLocation.country){
+            locationScore = 0.5;
+        }
+        return locationScore;
+    },
+    computeFinalScore: (skillsScore, locationScore, educationScore, workScore) => {
+        return skillsScore*skillsWeight + locationScore*locationWeight + educationScore*educationWeight + workScore*workWeight;
     }
 };

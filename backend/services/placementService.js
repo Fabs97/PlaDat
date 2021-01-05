@@ -76,8 +76,8 @@ module.exports = {
 
   
 
-    getPlacementsForRecommendations: async () => {
-        return await placementDAO.getPlacementsForRecommendations();
+    getPlacementsForRecommendations: async (studentId) => {
+        return await placementDAO.getPlacementsForRecommendations(studentId);
     },
 
     getPlacementById: async (placementId) => {
