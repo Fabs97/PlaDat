@@ -9,7 +9,6 @@ router.get("/skills", async (req, res, next) => {
 
 });
 
-
 // this gets a skill known the name and type, useful for the research of the skills in the app (is a first version)
 router.get('/skills/:type', async (req, res, next) => {
 
@@ -17,14 +16,5 @@ router.get('/skills/:type', async (req, res, next) => {
     res.json(skill);
 
 });
-
-// this gets a skill known the name and type, useful for the research of the skills in the app (is a first version)
-router.get('/skills/:type/:name', async (req, res, next) => {
-
-    const skill = await skillsService.getSkillByNameAndType(req.params.name, req.params.type);
-    res.json(skill);
-
-});
-
 
 module.exports = router;

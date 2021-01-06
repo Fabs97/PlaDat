@@ -16,14 +16,6 @@ module.exports = {
         return result[0];
     },
 
-    getLastEmployer: async () => {
-        let result = await database("employer")
-            .select("id")
-            .orderBy("id", "desc")
-            .limit(1);
-        return result[0];
-    },
-
     getEmployerByUserId:  async (userId) => {
         let result = await database('employer')
             .select('id', 'name')

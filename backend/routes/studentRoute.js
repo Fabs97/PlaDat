@@ -31,27 +31,15 @@ router.post("/student", async (req, res, next) => {
             res.status(error.code).send(error.message);
         });
     res.json(studentAccount);
-})
-
-// router.post("/student/:id/profile", async (req, res, next) => {
-//     const studentToSkills = await studentService.saveStudentProfile(req.params.id, req.body, req.user);
-//     res.json(studentToSkills);
-
-// });
-
-// router.get("/students/last", async (req, res, next) => {
-//     //AUTH: MAYBE WE HAVE TO RETHINK THIS
-//     const lastStudent = await studentService.getLastStudent();
-//     res.json(lastStudent);
-// });
+});
 
 router.get("/student/account/:userID", async (req, res, next) => {
+    // TODO: THE userID variable should be the same as userID of the logged in user
     const account = await studentService.getStudentByUserId(req.params.userID);
     res.json(account);
 });
 
 router.delete("/student/:id", async (req, res, next) => {
-    //AUTH: THIS IS DANGEROUS.. WE HAVE TO THINK ABOUT IT.
     let result = await studentService.deleteStudentById(parseInt(req.params.id), req.user)
         .catch(error => {
             res.status(error.code).send(error.message);

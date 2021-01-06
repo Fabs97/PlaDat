@@ -11,6 +11,7 @@ module.exports = {
             throw new SuperError(ERR_FORBIDDEN, 'You are not authorized to save this match');
             return;
         }
+        //TODO: CHECK THAT IF THE ACCOUNT IS STUDENT, THE STUDENT_ACCEPT IS SET (equivalent for employer)
 
         let previousInteraction = await matchDAO.getPreviousInteraction(choice.studentID, choice.placementID);
         let result = {};

@@ -35,15 +35,6 @@ router.get('/placement/:id', async (req, res, next) => {
 
 });
 
-
-// this api return all the ids of all the placements
-router.get('/placement', async (req, res, next) => {
-    //AUTH: DANGEROUS, WE SHOULD REMOVE
-    const placements = await placementService.getAllPlacementsIds();
-    res.json(placements);
-
-});
-
 router.get('/employer/:employerId/placements', async (req, res, next) => {
     const placements = await placementService.getPlacementsByEmployerId(parseInt(req.params.employerId), req.user)
         .catch(error => {
@@ -57,11 +48,6 @@ router.delete('/placement/:id', async (req, res, next) => {
         .catch(error => {
             res.status(error.code).send(error.message);
         });
-    res.json(result);
-})
-
-router.get('/placements/last', async (req, res, next) => {
-    let result = await placementService.getLastPlacement(req.user);
     res.json(result);
 })
 

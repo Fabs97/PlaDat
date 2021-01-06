@@ -3,15 +3,11 @@ const router = require('express').Router();
 const employerService = require('../services/employerService');
 
 router.get("/employer/:id", async (req, res, next) => {
+    //TODO: secure it only for the same employer id as the one logged in
     const employer = await employerService.getEmployer(req.params.id);
     res.json(employer);
 
 });
-
-router.get('/employers/last', async (req, res, next) => {
-    const employerId = await employerService.getLastEmployer();
-    res.json(employerId)
-})
 
 router.post('/employer', async (req, res, next) => {
     const newEmployer = await employerService.createNewEmployer(req.body, req.user)

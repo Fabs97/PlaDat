@@ -41,9 +41,4 @@ router.delete('/message', async (req, res, next) => {
     res.json(result);
 });
 
-router.get('/messages/last', async (req, res, next) => {
-    let lastMessage = await messageService.getLastMessage(req.user);
-    res.json(lastMessage);
-});
-
 module.exports = router;

@@ -7,6 +7,10 @@ exports.seed = function(knex) {
       .select('id')
       .where('type', 'STUDENT');
       // Inserts seed entries
+
+      // LOCATION MISSING
+      // WORK EXPERIENCE MISSING
+      // delete email, delete password
       return knex('student').insert([
         {name: "Alice #TEST", surname: "Casali", email: "abcd@gmail.com", password: "1234", description: "Engineer student", user_id: users[0].id},
         {name: "Fabrizio #TEST", surname: "Siciliano", email: "abcd@gmail.com", password: "1234", description: "Engineer student" , user_id: users[1].id},

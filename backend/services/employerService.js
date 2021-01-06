@@ -14,10 +14,6 @@ module.exports = employerService = {
         return employerDAO.getEmployer(id);
     },
 
-    getLastEmployer: async () => {
-        return await employerDAO.getLastEmployer();
-    },
-
     getEmployerByUserId: (userId) => {
         return employerDAO.getEmployerByUserId(userId);
     },

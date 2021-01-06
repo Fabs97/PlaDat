@@ -56,11 +56,6 @@ module.exports = {
 
     },
 
-    getAllPlacementsIds: () => {
-        return database('placements')
-            .select('id');
-    },
-
     setPlacementSkills: (id, skills) => {
 
         id = parseInt(id);
@@ -357,15 +352,6 @@ module.exports = {
                 }
             });
         return result;
-    },
-
-    getLastPlacement: async (employerId) => {
-        let result = await database("placements")
-            .select("id")
-            .where('employer_id', employerId)
-            .orderBy("id", "desc")
-            .limit(1);
-        return result[0];
     },
 
     closePlacementById: async (id) => {

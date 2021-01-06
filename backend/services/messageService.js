@@ -50,10 +50,6 @@ self = module.exports = {
         return await messageDAO.deleteMessage(msgDetails);
     },
 
-    getLastMessage: async (auth) => {
-        return await messageDAO.getLastMessage(auth);
-    },
-
     checkPermissions: async (studentId, employerId, auth) => {
         if ( auth.studentId !== studentId && auth.employerId !== employerId) {
             throw new SuperError(ERR_FORBIDDEN, 'You are not authorized to see this conversation');

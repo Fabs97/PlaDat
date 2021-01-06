@@ -12,9 +12,6 @@ const ERR_NOT_FOUND = require('../errors').ERR_NOT_FOUND;
 
 
 module.exports = {
-    getAllPlacementsIds: async () => {
-        return await placementDAO.getAllPlacementsIds();
-    },
 
     savePlacement: async (placementDetails, auth) => {
 
@@ -102,10 +99,6 @@ module.exports = {
             throw new SuperError(ERR_FORBIDDEN, 'You are not allowed to delete this placement')
         }
         return placementDAO.deletePlacementById(id);
-    },
-
-    getLastPlacement: (auth) => {
-        return placementDAO.getLastPlacement(auth.employerId);
     },
 
     closePlacementById: async (id, auth) => {

@@ -19,6 +19,7 @@ router.post("/login", async ( req, res, next ) => {
 });
 
 router.delete("/user/:id", async (req, res, next) => {
+    // TODO: allow only logged in users to delete themselves
     let result = await registrationService.deleteUser(req.params.id)
         .catch(error => {
             res.status(error.code ? error.code : ERR_INTERNAL_SERVER_ERROR ).send(error.message);
