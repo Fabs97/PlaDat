@@ -25,6 +25,8 @@ class RecomendationsAPIService extends APIInfo {
       return jsonDecode(response.body)
           .map((placementJson) => Placement.fromJson(placementJson))
           .toList();
+    } else {
+      print(response.body);
     }
   }
 
@@ -36,6 +38,8 @@ class RecomendationsAPIService extends APIInfo {
       return jsonDecode(response.body)
           .map((studentJson) => Student.fromJson(studentJson))
           .toList();
+    } else {
+      print(response.body);
     }
   }
 }

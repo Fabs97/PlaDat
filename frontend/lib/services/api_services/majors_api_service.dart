@@ -19,6 +19,8 @@ class MajorsAPIService extends APIInfo {
     if (response.statusCode == 200) {
       final parsed = jsonDecode(response.body).cast<Map<String, dynamic>>();
       return parsed.map((majorJson) => Major.fromJson(majorJson)).toList();
+    } else {
+      print(response.body);
     }
   }
 }

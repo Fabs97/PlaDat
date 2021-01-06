@@ -19,6 +19,8 @@ class SkillsAPIService extends APIInfo {
     if (response.statusCode == 200) {
       final parsed = jsonDecode(response.body).cast<Map<String, dynamic>>();
       return parsed.map((skillsJson) => Skill.fromJson(skillsJson)).toList();
+    } else {
+      print(response.body);
     }
   }
 }

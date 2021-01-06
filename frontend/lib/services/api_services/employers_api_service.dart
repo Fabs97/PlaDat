@@ -26,6 +26,8 @@ class EmployersAPIService extends APIInfo {
         await http.get(APIInfo.apiEndpoint + "/employer/$id/placements");
     if (response.statusCode == 200) {
       return Placement.listFromJson(response.body);
+    } else {
+      print(response.body);
     }
   }
 
@@ -33,6 +35,8 @@ class EmployersAPIService extends APIInfo {
     var response = await http.get(APIInfo.apiEndpoint + "/employer/$id");
     if (response.statusCode == 200) {
       return Employer.fromJson(jsonDecode(response.body));
+    } else {
+      print(response.body);
     }
   }
 static  Future<dynamic> _postEmployer(String subRoute, Employer employer) async {
