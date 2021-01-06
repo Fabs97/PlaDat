@@ -100,7 +100,7 @@ module.exports = {
         let studentInteractedWithPlacement = await database('student as s')
             .select('s.id')
             .leftJoin('student_has_placement as shp', 's.id', 'shp.student_id')
-            .whereIn('shp.student_accept', [true, false] )
+            .whereIn('shp.placement_accept', [true, false] )
             .andWhere('shp.placement_id', placementId)
             .catch(error => {
                 if(error){
