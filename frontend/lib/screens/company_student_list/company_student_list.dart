@@ -32,7 +32,7 @@ class _StudentCardsListState extends State<StudentCardsList> {
     APIService.route(ENDPOINTS.Employers, "/employer/:employerId/placements",
             urlArgs: _employerID)
         .then((placementsList) {
-      if (placementsList.isNotEmpty) {
+      if (placementsList != null && placementsList.isNotEmpty) {
         setState(() {
           _placements = placementsList;
           _placement = _placements[0] ?? null;
@@ -160,7 +160,8 @@ class _StudentCardsListState extends State<StudentCardsList> {
                               fullscreenDialog: true,
                             ));
                           }
-                          if (recommendationMap[_placement.id].isNotEmpty) {
+                          if (recommendationMap[_placement.id]?.isNotEmpty ??
+                              false) {
                             setState(() {
                               recommendationMap[_placement.id].removeAt(index);
                             });
