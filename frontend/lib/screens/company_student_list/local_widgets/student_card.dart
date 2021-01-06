@@ -90,7 +90,7 @@ class StudentCard extends StatelessWidget {
                     ),
                   ),
                 ),
-                onPressed: () => Nav.navigatorKey.currentState.pushNamed(
+                onPressed: () => Nav.currentState.pushNamed(
                   "/profile",
                   arguments: student,
                 ),

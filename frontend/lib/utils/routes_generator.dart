@@ -10,7 +10,6 @@ import 'package:frontend/screens/profile/profile.dart';
 import 'package:frontend/screens/registration/registration.dart';
 import 'package:frontend/screens/student_matches_list/student_matches_list.dart';
 import 'package:frontend/screens/student_placement_list/student_placement_list.dart';
-import 'package:frontend/services/auth_service.dart';
 
 class RoutesGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {

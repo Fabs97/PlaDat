@@ -102,7 +102,7 @@ class PlacementCard extends StatelessWidget {
                     fontWeight: FontWeight.w700,
                   ),
                 ),
-                onPressed: () => Nav.navigatorKey.currentState.pushNamed(
+                onPressed: () => Nav.currentState.pushNamed(
                   "/profile",
                   arguments: placement,
                 ),

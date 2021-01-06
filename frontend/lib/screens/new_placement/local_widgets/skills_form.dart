@@ -68,7 +68,7 @@ class SkillsForm extends StatelessWidget {
       "otherSkills": skillsBoxes[2].otherSkills,
     };
 
-    placement.userId = AuthService().loggedUser.id;
+    placement.userId = AuthService().loggedUser?.id;
 
     Placement newPlacement = await APIService.route(
         ENDPOINTS.Placement, "/placement/new-placement",

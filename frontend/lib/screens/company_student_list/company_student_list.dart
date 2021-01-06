@@ -25,21 +25,27 @@ class _StudentCardsListState extends State<StudentCardsList> {
   CardController _cardController;
   Placement _placement;
   Map<int, List<Student>> recommendationMap = {};
-  final _employer = AuthService().loggedAccountInfo;
+  final _employerID = AuthService().loggedAccountInfo.id;
 
   @override
   void initState() {
     APIService.route(ENDPOINTS.Employers, "/employer/:employerId/placements",
-            urlArgs: _employer.id)
-        .then((placementsList) => setState(() {
-              _placements = placementsList;
-              _placement = _placements[0] ?? null;
-              for (int i = 0; i < _placements.length; i++) {
-                if (_placements[i].status == 'CLOSED')
-                  _placements.remove(_placements[i]);
-              }
-              _requestRecomendations();
-            }));
+            urlArgs: _employerID)
+        .then((placementsList) {
+      if (placementsList.isNotEmpty) {
+        setState(() {
+          _placements = placementsList;
+          _placement = _placements[0] ?? null;
+          for (int i = 0; i < _placements.length; i++) {
+            if (_placements[i].status == 'CLOSED')
+              _placements.remove(_placements[i]);
+          }
+          _requestRecomendations();
+        });
+      } else {
+        Nav.currentState.popAndPushNamed("/new-placement");
+      }
+    });
     super.initState();
   }
 
@@ -83,33 +89,37 @@ class _StudentCardsListState extends State<StudentCardsList> {
                 ? Center(
                     child: CircularProgressIndicator(),
                   )
-                : DropdownButtonHideUnderline(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                      child: DropdownButton<Placement>(
-                        disabledHint: Text("No placements found!"),
-                        icon: Icon(
-                          Icons.arrow_drop_down,
-                          color: CustomTheme().primaryColor,
+                : (_placements.isEmpty
+                    ? Center(
+                        child: Text("No placements found, please create one"),
+                      )
+                    : DropdownButtonHideUnderline(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                          child: DropdownButton<Placement>(
+                            disabledHint: Text("No placements found!"),
+                            icon: Icon(
+                              Icons.arrow_drop_down,
+                              color: CustomTheme().primaryColor,
+                            ),
+                            iconEnabledColor: CustomTheme().primaryColor,
+                            iconDisabledColor: CustomTheme().secondaryColor,
+                            value: _placement,
+                            items: _placements?.map((placement) {
+                                  return DropdownMenuItem<Placement>(
+                                    value: placement,
+                                    child: Text(
+                                      'Placement #${placement.id}',
+                                      style: TextStyle(
+                                          color: CustomTheme().primaryColor),
+                                    ),
+                                  );
+                                })?.toList() ??
+                                [],
+                            onChanged: onChangeDropdownItem,
+                          ),
                         ),
-                        iconEnabledColor: CustomTheme().primaryColor,
-                        iconDisabledColor: CustomTheme().secondaryColor,
-                        value: _placement,
-                        items: _placements?.map((placement) {
-                              return DropdownMenuItem<Placement>(
-                                value: placement,
-                                child: Text(
-                                  'Placement #${placement.id}',
-                                  style: TextStyle(
-                                      color: CustomTheme().primaryColor),
-                                ),
-                              );
-                            })?.toList() ??
-                            [],
-                        onChanged: onChangeDropdownItem,
-                      ),
-                    ),
-                  ),
+                      )),
           ),
           Container(
             height: size.height * .8,
@@ -142,8 +152,7 @@ class _StudentCardsListState extends State<StudentCardsList> {
                                       : true,
                             )).then((match) async {
                           if (match.status == 'ACCEPTED') {
-                            await Nav.currentState
-                                .push(MaterialPageRoute(
+                            await Nav.currentState.push(MaterialPageRoute(
                               builder: (builder) => MatchAlert(
                                 placement: _placement,
                                 object: recommendationMap[_placement.id][index],

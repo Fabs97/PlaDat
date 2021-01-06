@@ -289,7 +289,6 @@ class _PlacementFormState extends State<PlacementForm> {
       decoration: const InputDecoration(
         hintText: 'Address',
       ),
-      initialValue: placement.location?.description ?? ' ',
       onTap: () async {
         final Place result = await showSearch(
           context: context,

@@ -53,7 +53,7 @@ class _MyPlacementsState extends State<MyPlacements> {
                 color: CustomTheme().primaryColor,
               ),
               onPressed: () {
-                Nav.navigatorKey.currentState.pushNamed("/new-placement");
+                Nav.currentState.pushNamed("/new-placement");
               }),
         ],
       ),
@@ -136,7 +136,7 @@ class _MyPlacementsState extends State<MyPlacements> {
                                           ENDPOINTS.Placement, "/placement/:id",
                                           urlArgs: _placement.id)
                                       .then((placement) {
-                                    Nav.navigatorKey.currentState
+                                    Nav.currentState
                                         .pushNamed(
                                           "/profile",
                                           arguments: placement,
@@ -154,7 +154,7 @@ class _MyPlacementsState extends State<MyPlacements> {
                                         msg: error.message ?? error.toString());
                                   });
                                 } else {
-                                  Nav.navigatorKey.currentState
+                                  Nav.currentState
                                       .push(MaterialPageRoute(
                                         builder: (builder) =>
                                             PlacementMatchedStudents(

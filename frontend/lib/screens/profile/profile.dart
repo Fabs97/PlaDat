@@ -125,10 +125,4 @@ class _ProfileState extends State<Profile> {
       ),
     );
   }
-
-  @override
-  State<StatefulWidget> createState() {
-    // TODO: implement createState
-    throw UnimplementedError();
-  }
 }

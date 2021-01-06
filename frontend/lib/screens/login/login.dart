@@ -6,6 +6,7 @@ import 'package:frontend/models/student.dart';
 import 'package:frontend/models/user.dart';
 import 'package:frontend/services/api_services/login_api_service.dart';
 import 'package:frontend/services/auth_service.dart';
+import 'package:frontend/utils/custom_theme.dart';
 import 'package:frontend/utils/routes_generator.dart';
 
 class Login extends StatefulWidget {
@@ -148,8 +149,10 @@ class _LoginState extends State<Login> {
 
   _createErrorText() {
     return Text(
-      // TODO: style with error text color when rebranded app.
       "The password or the email are not correct",
+      style: TextStyle(
+        color: CustomTheme().accentTextColor,
+      ),
     );
   }
 
@@ -168,7 +171,9 @@ class _LoginState extends State<Login> {
           child: GestureDetector(
             child: Text(
               "Create one here",
-              // TODO: style with text color when rebranded app
+              style: TextStyle(
+                color: CustomTheme().secondaryColor,
+              ),
             ),
             onTap: () => Nav.currentState.pushNamed("/registration"),
           ),

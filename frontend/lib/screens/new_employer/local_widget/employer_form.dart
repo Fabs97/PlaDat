@@ -5,7 +5,9 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:frontend/models/domainofactivity.dart';
 import 'package:frontend/models/employer.dart';
+import 'package:frontend/models/user.dart';
 import 'package:frontend/services/api_service.dart';
+import 'package:frontend/services/auth_service.dart';
 import 'package:frontend/utils/custom_theme.dart';
 import 'package:frontend/utils/routes_generator.dart';
 import 'package:frontend/widgets/address_search.dart';
@@ -92,13 +94,9 @@ class _EmployerFormState extends State<EmployerForm> {
                   padding: const EdgeInsets.symmetric(vertical: 16.0),
                   child: RaisedButton(
                     onPressed: () {
-                      // Validate will return true if the form is valid, or false if
-                      // the form is invalid.
                       if (_formKey.currentState.validate()) {
                         setState(() {
-                          // employer.domainOfActivityId =
-                          //     domainofactivitiesWidget.itemsChosen;
-                          _saveStudentToDB(context, employer);
+                          _saveEmployerToDB(context, employer);
                         });
                       }
                     },
@@ -235,7 +233,8 @@ class _EmployerFormState extends State<EmployerForm> {
     });
   }
 
-  void _saveStudentToDB(BuildContext context, Employer employer) async {
+  void _saveEmployerToDB(BuildContext context, Employer employer) async {
+    employer.domainOfActivityId = _domain.id;
     dynamic response = await APIService.route(
       ENDPOINTS.Employers,
       "/employer",
@@ -245,14 +244,14 @@ class _EmployerFormState extends State<EmployerForm> {
     String message;
     if (response is Employer) {
       message = "Profile saved successfully";
-      Nav.navigatorKey.currentState.popAndPushNamed("/home");
+      await AuthService()
+          .setLoggedAccountInfo(AccountType.Employer, response.id);
+      Nav.currentState.popAndPushNamed("/employer-home");
     } else if (response is String) {
       message = response;
     } else {
       message = "Something really wrong happened";
     }
     Fluttertoast.showToast(msg: message);
-
-    Nav.navigatorKey.currentState.popAndPushNamed("/home");
   }
 }

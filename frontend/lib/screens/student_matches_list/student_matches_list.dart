@@ -118,7 +118,7 @@ class _StudentMatchesState extends State<StudentMatches> {
                                           color: CustomTheme().secondaryColor,
                                         ),
                                       ),
-                                      onTap: () => Nav.navigatorKey.currentState
+                                      onTap: () => Nav.currentState
                                           .pushNamed("/chat-screen",
                                               arguments: ChatScreenArguments(
                                                   _studentId,

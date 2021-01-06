@@ -7,11 +7,8 @@ class Employer extends ChangeNotifier {
   int id;
   String name;
   Place location;
-  String domainOfActivityId;
+  int domainOfActivityId;
   String description;
-  
-  
-  
 
   Employer({this.id, this.name, this.location, this.domainOfActivityId,this.description});
 
