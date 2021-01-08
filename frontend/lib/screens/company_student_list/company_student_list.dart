@@ -121,7 +121,11 @@ class _StudentCardsListState extends State<StudentCardsList> {
                         ),
                       )),
           ),
-          Container(
+          ...(_placement != null &&
+                  recommendationMap[_placement.id] != null &&
+                  recommendationMap[_placement.id].isNotEmpty
+              ? [
+                  Container(
             height: size.height * .8,
             child: _placement != null &&
                     recommendationMap[_placement.id] != null
@@ -192,6 +196,20 @@ class _StudentCardsListState extends State<StudentCardsList> {
               ],
             ),
           )
+                ]
+              : [
+                  Container(
+                    height: size.height * .85,
+                    child: Center(
+                      child: Text(
+                        "No recommendations for this placement (yet!)",
+                        style: TextStyle(
+                          color: CustomTheme().primaryColor,
+                        ),
+                      ),
+                    ),
+                  )
+                ])
         ],
       ),
     );
