@@ -22,6 +22,8 @@ class InstitutionsAPIService extends APIInfo {
       return parsed
           .map((institutionJson) => Institution.fromJson(institutionJson))
           .toList();
+    } else {
+      print(response.body);
     }
   }
 }

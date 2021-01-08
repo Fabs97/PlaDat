@@ -24,6 +24,8 @@ class MatchesAPIService extends APIInfo {
     );
     if (response.statusCode == 200) {
       return Match.fromJson(jsonDecode(response.body)[0]);
+    } else {
+      print(response.body);
     }
   }
 

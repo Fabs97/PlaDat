@@ -25,6 +25,8 @@ class LocationsAPIService extends APIInfo {
       List<Place> tagObjs =
           preObjsJson.map((tagJson) => Place.fromJson(tagJson)).toList();
       return tagObjs;
+    } else {
+      print(response.body);
     }
   }
 }

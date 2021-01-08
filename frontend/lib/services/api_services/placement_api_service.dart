@@ -34,6 +34,8 @@ class PlacementAPIService extends APIInfo {
     if (response.statusCode == 200) {
       final placement = Placement.fromJson(jsonDecode(response.body));
       return placement;
+    } else {
+      print(response.body);
     }
   }
 
@@ -43,6 +45,8 @@ class PlacementAPIService extends APIInfo {
 
     if (response.statusCode == 200) {
       return Placement.fromJson(jsonDecode(response.body));
+    } else {
+      print(response.body);
     }
   }
 
@@ -51,6 +55,8 @@ class PlacementAPIService extends APIInfo {
 
     if (response.statusCode == 200) {
       return Placement.listFromJson(response.body);
+    } else {
+      print(response.body);
     }
   }
 

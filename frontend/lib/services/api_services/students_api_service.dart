@@ -48,6 +48,8 @@ class StudentsAPIService extends APIInfo {
 
     if (response.statusCode == 200) {
       return response;
+    } else {
+      print(response.body);
     }
   }
 
@@ -55,6 +57,8 @@ class StudentsAPIService extends APIInfo {
     var response = await http.get(APIInfo.apiEndpoint + "/student/$id");
     if (response.statusCode == 200) {
       return Student.fromJson(jsonDecode(response.body));
+    } else {
+      print(response.body);
     }
   }
 

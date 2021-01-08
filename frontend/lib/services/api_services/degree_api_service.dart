@@ -20,6 +20,8 @@ class DegreeAPIService extends APIInfo {
     if (response.statusCode == 200) {
       final parsed = jsonDecode(response.body).cast<Map<String, dynamic>>();
       return parsed.map((degreesJson) => Degree.fromJson(degreesJson)).toList();
+    } else {
+      print(response.body);
     }
   }
 }
