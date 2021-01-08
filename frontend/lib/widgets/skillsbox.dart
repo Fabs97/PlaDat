@@ -85,71 +85,74 @@ class SkillBoxState extends State<SkillBox> {
           ),
           SizedBox(
             width: size.width * .9,
-            height: size.height * .3,
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10.0),
-                color: Colors.white,
-                boxShadow: [CustomTheme().boxShadow],
-              ),
-              padding: EdgeInsets.symmetric(
-                horizontal: 20.0,
-                vertical: 5.0,
-              ),
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: TextField(
-                      controller: _textController,
-                      decoration: InputDecoration(
-                        suffixIcon: Icon(Icons.search),
-                        hintText: 'Search Here...',
-                        filled: true,
-                        fillColor: CustomTheme().backgroundColor,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                          borderSide:
-                              BorderSide(width: 0, style: BorderStyle.none),
+            height: size.height * .25,
+            child: SingleChildScrollView(
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10.0),
+                  color: Colors.white,
+                  boxShadow: [CustomTheme().boxShadow],
+                ),
+                padding: EdgeInsets.symmetric(
+                  horizontal: 20.0,
+                  vertical: 5.0,
+                ),
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextField(
+                        controller: _textController,
+                        decoration: InputDecoration(
+                          suffixIcon: Icon(Icons.search),
+                          hintText: 'Search Here...',
+                          filled: true,
+                          fillColor: CustomTheme().backgroundColor,
+                          border: OutlineInputBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(10.0)),
+                            borderSide:
+                                BorderSide(width: 0, style: BorderStyle.none),
+                          ),
                         ),
+                        onChanged: _onItemChanged,
                       ),
-                      onChanged: _onItemChanged,
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Wrap(
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Wrap(
+                        direction: Axis.horizontal,
+                        spacing: 10.0,
+                        runSpacing: 5.0,
+                        children: widget._chosenSkills.map((skill) {
+                          return Chip(
+                            label: Text(
+                              skill.name,
+                            ),
+                            deleteIcon: Icon(Icons.close),
+                            onDeleted: () => _onItemDeleted(skill),
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                    Divider(thickness: 1, color: Colors.grey),
+                    Wrap(
                       direction: Axis.horizontal,
                       spacing: 10.0,
                       runSpacing: 5.0,
-                      children: widget._chosenSkills.map((skill) {
-                        return Chip(
-                          label: Text(
-                            skill.name,
+                      children: suggestedSkills.map((skill) {
+                        return ActionChip(
+                          backgroundColor: themeData.accentColor,
+                          labelStyle: TextStyle(
+                            color: Color(0xffe23300),
                           ),
-                          deleteIcon: Icon(Icons.close),
-                          onDeleted: () => _onItemDeleted(skill),
+                          label: Text(skill.name),
+                          onPressed: () => _onItemPressed(skill),
                         );
                       }).toList(),
                     ),
-                  ),
-                  Divider(thickness: 1, color: Colors.grey),
-                  Wrap(
-                    direction: Axis.horizontal,
-                    spacing: 10.0,
-                    runSpacing: 5.0,
-                    children: suggestedSkills.map((skill) {
-                      return ActionChip(
-                        backgroundColor: themeData.accentColor,
-                        labelStyle: TextStyle(
-                          color: Color(0xffe23300),
-                        ),
-                        label: Text(skill.name),
-                        onPressed: () => _onItemPressed(skill),
-                      );
-                    }).toList(),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           )
