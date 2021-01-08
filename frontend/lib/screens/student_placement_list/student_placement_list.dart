@@ -59,7 +59,7 @@ class _PlacementCardsListState extends State<PlacementCardsList>
             ? [
                 _createFilterButton(size, themeData),
                 Container(
-                  height: size.height * .8,
+                  height: size.height * .78,
                   child: _filteredPlacements == null
                       ? Center(
                           child: CircularProgressIndicator(),
@@ -103,11 +103,11 @@ class _PlacementCardsListState extends State<PlacementCardsList>
                 ),
                 Container(
                   width: size.width * .9,
-                  height: size.height * .05,
+                  height: size.height * .07,
                   child: Row(
                     mainAxisSize: MainAxisSize.max,
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       TinderButton(
                           label: "Discard",

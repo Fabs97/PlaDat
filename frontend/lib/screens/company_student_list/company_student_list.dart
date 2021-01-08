@@ -125,7 +125,7 @@ class _StudentCardsListState extends State<StudentCardsList> {
                   recommendationMap[_placement.id].isNotEmpty
               ? [
                   Container(
-                    height: size.height * .8,
+                    height: size.height * .78,
                     child: _placement != null &&
                             recommendationMap[_placement.id] != null
                         ? TinderSwapCard(
@@ -185,11 +185,11 @@ class _StudentCardsListState extends State<StudentCardsList> {
                   ),
                   Container(
                     width: size.width * .855,
-                    height: size.height * .05,
+                    height: size.height * .07,
                     child: Row(
                       mainAxisSize: MainAxisSize.max,
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         TinderButton(
                             label: "Discard",

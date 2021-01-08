@@ -26,7 +26,7 @@ class TinderButton extends StatelessWidget {
       textColor: _discardButton ? CustomTheme().accentTextColor : Colors.white,
       elevation: 5.0,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 28.0, vertical: 8.0),
+        padding: const EdgeInsets.symmetric(horizontal: 28.0, vertical: 10.0),
         child: Text(_label),
       ),
       onPressed: () {
