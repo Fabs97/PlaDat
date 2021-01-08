@@ -211,11 +211,13 @@ class _EmployerFormState extends State<EmployerForm> {
                 items: _domains?.map((domain) {
                       return DropdownMenuItem<Domainofactivity>(
                         value: domain,
+                        // TODO: ellipsis
                         child: Text(
                           '${domain.name}',
                           style: TextStyle(
                             color: customTheme.primaryColor,
                           ),
+                          overflow: TextOverflow.ellipsis,
                         ),
                       );
                     })?.toList() ??

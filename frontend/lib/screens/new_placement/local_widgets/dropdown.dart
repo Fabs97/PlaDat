@@ -42,6 +42,7 @@ class _DropdownState extends State<Dropdown> {
           chipBackGroundColor: Colors.white,
           checkBoxActiveColor: Colors.white,
           checkBoxCheckColor: CustomTheme().primaryColor,
+          chipLabelStyle: TextStyle(color: CustomTheme().textColor),
           dialogShapeBorder: RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(12.0))),
           title: Text(

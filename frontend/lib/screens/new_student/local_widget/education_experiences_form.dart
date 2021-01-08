@@ -366,6 +366,13 @@ class EducationExperiencesFormState extends State<EducationExperiencesForm> {
       ),
       firstDate: DateTime.now().subtract(Duration(days: 365 * 100)),
       lastDate: (DateTime.now()).add(Duration(days: 365 * 100)),
+      builder: (context, child) {
+        return Theme(
+            data: Theme.of(context).copyWith(
+              primaryColor: CustomTheme().primaryColor.withOpacity(.7),
+            ),
+            child: child);
+      },
     );
     if (range != null) {
       setState(() {

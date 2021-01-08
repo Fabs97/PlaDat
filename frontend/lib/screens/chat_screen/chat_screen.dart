@@ -67,9 +67,7 @@ class _ChatScreenState extends State<ChatScreen> {
       appBar: CustomAppBar.createAppBar(
           context,
           user == null
-              ? (loggedUserIsEmployer
-              ? "Student Name"
-              : "Company Name")
+              ? (loggedUserIsEmployer ? "Student Name" : "Company Name")
               : (loggedUserIsEmployer
                   ? "${user.name} ${user.surname}"
                   : "${user.name}")),
@@ -187,27 +185,27 @@ class _ChatScreenState extends State<ChatScreen> {
     return SizedBox(
       height: screenSize.height * .5,
       width: screenSize.width * .855,
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          boxShadow: [CustomTheme().boxShadow],
-          borderRadius: BorderRadius.circular(14.0),
-        ),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              TextFormField(
+      child: Form(
+        key: _formKey,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                boxShadow: [CustomTheme().boxShadow],
+                borderRadius: BorderRadius.circular(14.0),
+              ),
+              child: TextFormField(
                 decoration: InputDecoration(
                   border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(15.0)),
-                      borderSide: BorderSide(
-                        color: Colors.grey,
-                        width: 1.5,
-                      ),
+                    borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                    borderSide: BorderSide(
+                      color: Colors.grey,
+                      width: 1.5,
+                    ),
                   ),
                   focusedBorder: InputBorder.none,
                   enabledBorder: InputBorder.none,
@@ -227,15 +225,6 @@ class _ChatScreenState extends State<ChatScreen> {
                 },
                 maxLines: 5,
               ),
-              initialValue: _newMessage,
-              onFieldSubmitted: _setMessage,
-              onSaved: _setMessage,
-              onChanged: _setMessage,
-              validator: (value) {
-                if (value.isEmpty) return "Message can not be empty";
-                return null;
-              },
-              maxLines: 5,
             ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 16.0),
@@ -249,8 +238,8 @@ class _ChatScreenState extends State<ChatScreen> {
                   ),
                 ),
               ),
-            ],
-          ),
+            )
+          ],
         ),
       ),
     );
