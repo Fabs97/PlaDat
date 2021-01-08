@@ -126,76 +126,83 @@ class _StudentCardsListState extends State<StudentCardsList> {
                   recommendationMap[_placement.id].isNotEmpty
               ? [
                   Container(
-            height: size.height * .8,
-            child: _placement != null &&
-                    recommendationMap[_placement.id] != null
-                ? TinderSwapCard(
-                    // swipeUp: true,
-                    // swipeDown: true,
-                    animDuration: 400,
-                    orientation: AmassOrientation.BOTTOM,
-                    totalNum: recommendationMap[_placement.id].length,
-                    stackNum: 3,
-                    maxWidth: size.width * .9,
-                    maxHeight: size.height * .9,
-                    minWidth: size.width * .8,
-                    minHeight: size.height * .8,
-                    cardBuilder: (context, index) => StudentCard(
-                        student: recommendationMap[_placement.id][index]),
-                    cardController: _cardController = CardController(),
-                    swipeCompleteCallback: (orientation, index) {
-                      if (orientation != CardSwipeOrientation.RECOVER)
-                        APIService.route(ENDPOINTS.Matches, "/matching",
-                            body: Match(
-                              studentID:
-                                  recommendationMap[_placement.id][index].id,
-                              placementID: _placement.id,
-                              placementAccept:
-                                  orientation == CardSwipeOrientation.LEFT
-                                      ? false
-                                      : true,
-                            )).then((match) async {
-                          if (match.status == 'ACCEPTED') {
-                            await Nav.currentState.push(MaterialPageRoute(
-                              builder: (builder) => MatchAlert(
-                                placement: _placement,
-                                object: recommendationMap[_placement.id][index],
-                              ),
-                              fullscreenDialog: true,
-                            ));
-                          }
-                          if (recommendationMap[_placement.id]?.isNotEmpty ??
-                              false) {
-                            setState(() {
-                              recommendationMap[_placement.id].removeAt(index);
-                            });
-                          }
-                        });
-                    },
-                  )
-                : Center(
-                    child: CircularProgressIndicator(),
+                    height: size.height * .8,
+                    child: _placement != null &&
+                            recommendationMap[_placement.id] != null
+                        ? TinderSwapCard(
+                            // swipeUp: true,
+                            // swipeDown: true,
+                            animDuration: 400,
+                            orientation: AmassOrientation.BOTTOM,
+                            totalNum: recommendationMap[_placement.id].length,
+                            stackNum: 3,
+                            maxWidth: size.width * .9,
+                            maxHeight: size.height * .9,
+                            minWidth: size.width * .8,
+                            minHeight: size.height * .8,
+                            cardBuilder: (context, index) => StudentCard(
+                                student: recommendationMap[_placement.id]
+                                    [index]),
+                            cardController: _cardController = CardController(),
+                            swipeCompleteCallback: (orientation, index) {
+                              if (orientation != CardSwipeOrientation.RECOVER)
+                                APIService.route(ENDPOINTS.Matches, "/matching",
+                                    body: Match(
+                                      studentID:
+                                          recommendationMap[_placement.id]
+                                                  [index]
+                                              .id,
+                                      placementID: _placement.id,
+                                      placementAccept: orientation ==
+                                              CardSwipeOrientation.LEFT
+                                          ? false
+                                          : true,
+                                    )).then((match) async {
+                                  if (match.status == 'ACCEPTED') {
+                                    await Nav.currentState
+                                        .push(MaterialPageRoute(
+                                      builder: (builder) => MatchAlert(
+                                        placement: _placement,
+                                        object: recommendationMap[_placement.id]
+                                            [index],
+                                      ),
+                                      fullscreenDialog: true,
+                                    ));
+                                  }
+                                  if (recommendationMap[_placement.id]
+                                          ?.isNotEmpty ??
+                                      false) {
+                                    setState(() {
+                                      recommendationMap[_placement.id]
+                                          .removeAt(index);
+                                    });
+                                  }
+                                });
+                            },
+                          )
+                        : Center(
+                            child: CircularProgressIndicator(),
+                          ),
                   ),
-          ),
-          Container(
-            width: size.width * .855,
-            height: size.height * .05,
-            child: Row(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                TinderButton(
-                    label: "Discard",
-                    cardController: _cardController,
-                    discardButton: true),
-                TinderButton(
-                    label: "I'm interested",
-                    cardController: _cardController,
-                    discardButton: false),
-              ],
-            ),
-          )
+                  Container(
+                    width: size.width * .855,
+                    height: size.height * .05,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        TinderButton(
+                            label: "Discard",
+                            cardController: _cardController,
+                            discardButton: true),
+                        TinderButton(
+                            label: "I'm interested",
+                            cardController: _cardController,
+                            discardButton: false),
+                      ],
+                    ),
+                  )
                 ]
               : [
                   Container(
