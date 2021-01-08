@@ -36,11 +36,13 @@ class SkillsForm extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            SizedBox(
-              height: size.height * .7,
-              child: ListView.builder(
-                itemCount: skillsBoxes.length,
-                itemBuilder: (_, index) => skillsBoxes[index],
+            SingleChildScrollView(
+              child: SizedBox(
+                height: size.height * .7,
+                child: ListView.builder(
+                  itemCount: skillsBoxes.length,
+                  itemBuilder: (_, index) => skillsBoxes[index],
+                ),
               ),
             ),
             Padding(
