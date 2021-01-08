@@ -66,9 +66,9 @@ module.exports = {
         
         return newPlacement;
     },
-    getPlacementsForSkills: async (skills) => {
-        let skillIDs = skills.map(skill => skill.id);
-        return await placementDAO.getPlacementsForSkills(skillIDs);
+
+    getPlacementsForRecommendations: async (studentId) => {
+        return await placementDAO.getPlacementsForRecommendations(studentId);
     },
 
     getPlacementById: async (placementId) => {

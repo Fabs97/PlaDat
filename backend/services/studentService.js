@@ -99,5 +99,8 @@ studServ = module.exports = {
     },
     getStudentByUserId: (userId) => {
         return studentDAO.getStudentByUserId(userId);
+    },
+    getStudentsForRecommendation: (placementId) => {
+        return studentDAO.getStudentsForRecommendation(placementId);
     }
 };

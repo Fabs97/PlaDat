@@ -147,33 +147,36 @@ module.exports = {
     },
 
    
-    getPlacementsForSkills: async (skills) => {
+    getPlacementsForRecommendations: async (studentId) => {
 
-        let placementData = await database('placements AS p')
-            .select(['p.id', 'p.position', 'p.employment_type', 'start_period', 'end_period', 'salary', 'description_role', 'employer_id', 'status'])
-            .leftJoin('placement_has_skills AS phs', 'phs.placement_id', 'p.id')
-            .leftJoin(database.raw('(select p.id, count(phs.skill_id) as count_total from placements p join placement_has_skills phs on p.id = phs.placement_id group by p.id) as p2'), 'p.id','p2.id') //here we count the total number of skills for each placement
-            .whereIn('phs.skill_id', skills)
-            .andWhere('p.status', 'OPEN')
-            .groupBy('p.id')
-            .having(database.raw('count(phs.skill_id) > max(p2.count_total)/2'))
+        let placementsInteractedWithStudent = await database('placements as p')
+            .select('p.id')
+            .leftJoin('student_has_placement as shp', 'p.id', 'shp.placement_id')
+            .whereIn('shp.student_accept', [true, false] )
+            .andWhere('shp.student_id', studentId)
             .catch(error => {
                 if(error){
-                    throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There has been a problem finding the recommended placements. Please try again.')
+                    throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There has been a problem looking up informations about the recommended students. Please try again.')
+                }
+            })
+        
+        let placementsInteractedWithStudentIDs =  placementsInteractedWithStudent.map(placement => placement.id);
+
+        let resultTemp  = await database('placements AS p')
+            .select('p.id AS id', 'p.position AS position', 'p.employment_type AS employment_type', 'p.employer_id AS employer_id', 'p.start_period AS start_period', 'p.end_period AS end_period', 'p.salary AS salary', 'p.status AS status', 'p.description_role AS description_role', 's.id AS skill_id', 's.name AS skill_name', 's.type AS skill_type')
+            .leftJoin('placement_has_skills AS phs', 'p.id', 'phs.placement_id')
+            .leftJoin('skill AS s', 'phs.skill_id', 's.id')
+            .whereNotIn('p.id', placementsInteractedWithStudentIDs)
+            .andWhere('p.status','OPEN')
+            .orderBy('p.id')
+            .catch(error => {
+                if(error){
+                    throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There has been a problem looking up the recommended placements. Please try again.')
                 }
             })
 
-        let placementIDs =  placementData.map(placement => placement.id);
+        let placementIDs =  resultTemp.map(placement => placement.id);
 
-        let resultTemp = await database('placement_has_skills AS phs')
-            .leftJoin('skill AS s', 's.id', 'phs.skill_id')
-            .whereIn('phs.placement_id', placementIDs)
-            .orderBy('phs.placement_id')
-            .catch(error => {
-                if(error){
-                    throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There has been a problem looking up informations about the recommended placements. Please try again.')
-                }
-            })
         let result = [];
         let prev = 0;
 
@@ -226,79 +229,76 @@ module.exports = {
         let k = 0;
         let h = 0;
         let l = 0;
-        for (let p=0; p<placementData.length; p++) {
+        
 
-            for(let i=0; i<resultTemp.length; i++){
+        for(let i=0; i<resultTemp.length; i++){
 
-                if(placementData[p].id === resultTemp[i].placement_id) {
 
-                    prev = result.length - 1;
+            prev = result.length - 1;
 
-                    if(result[prev] && result[prev].id === placementData[p].id && resultTemp[i].placement_id === result[prev].id) {
-                        result[prev].skills .push({
-                            id: resultTemp[i].skill_id,
-                            name: resultTemp[i].name,
-                            type: resultTemp[i].type
-                        })
-                    } else if (!result[prev] || result[prev].id !== placementData[p].id) {
-                        result.push({
-                            id: placementData[p].id,
-                            position: placementData[p].position,
-                            employment_type: placementData[p].employment_type,
-                            employer_id: placementData[p].employer_id,
-                            start_period: placementData[p].start_period,
-                            end_period: placementData[p].end_period,
-                            end_period: placementData[p].end_period,
-                            salary: placementData[p].salary,
-                            description_role: placementData[p].description_role,
-                            majors: [],
-                            institutions: [],
-                            employer_id: placementData[p].employer_id,
-                            status: placementData[p].status,
-                            skills: [{
-                                id: resultTemp[i].skill_id,
-                                name: resultTemp[i].name,
-                                type: resultTemp[i].type
-                            }]
-                        })
+            if(result[prev] && result[prev].id === resultTemp[i].id) {
+                result[prev].skills .push({
+                    id: resultTemp[i].skill_id,
+                    name: resultTemp[i].skill_name,
+                    type: resultTemp[i].skill_type
+                })
+            } else if (!result[prev] || result[prev].id !== resultTemp[i].id) {
+                result.push({
+                    id: resultTemp[i].id,
+                    position: resultTemp[i].position,
+                    employment_type: resultTemp[i].employment_type,
+                    employer_id: resultTemp[i].employer_id,
+                    start_period: resultTemp[i].start_period,
+                    end_period: resultTemp[i].end_period,
+                    salary: resultTemp[i].salary,
+                    description_role: resultTemp[i].description_role,
+                    status: resultTemp[i].status,
+                    majors: [],
+                    institutions: [],
+                    skills: [{
+                        id: resultTemp[i].skill_id,
+                        name: resultTemp[i].skill_name,
+                        type: resultTemp[i].skill_type
+                    }]
+                })
 
-                        let curr = prev + 1;
+                let curr = prev + 1;
 
-                        while(j < locations.length && locations[j].placement_id == result[curr].id){
-                            result[curr].location = {
-                                id: locations[j].id,
-                                country: locations[j].country,
-                                city: locations[j].city
-                            };
-                            j++;
-                        }
+                while(j < locations.length && locations[j].placement_id == result[curr].id){
+                    result[curr].location = {
+                        id: locations[j].id,
+                        country: locations[j].country,
+                        city: locations[j].city
+                    };
+                    j++;
+                }
 
-                        while(l < employers.length && employers[l].placement_id == result[curr].id){
-                            result[curr].employer_name = employers[l].employer_name;
-                            l++;
-                        }
+                while(l < employers.length && employers[l].placement_id == result[curr].id){
+                    result[curr].employer_name = employers[l].employer_name;
+                    l++;
+                }
 
-                        while(k < majors.length && majors[k].placement_id == result[curr].id){
-                            result[curr].majors.push({
-                                name: majors[k].name
-                            }),
-                            k++;
-                        }
+                while(k < majors.length && majors[k].placement_id == result[curr].id){
+                    result[curr].majors.push({
+                        name: majors[k].name
+                    }),
+                    k++;
+                }
 
-                        while(h < institutions.length && institutions[h].placement_id == result[curr].id){
-                            result[curr].institutions.push({
-                                name: institutions[h].name
-                            })
-                            h++;
-                        }
+                while(h < institutions.length && institutions[h].placement_id == result[curr].id){
+                    result[curr].institutions.push({
+                        name: institutions[h].name
+                    })
+                    h++;
+                }
                                 
                         
                     
-                        
-                    }
-                }
+                    
             }
+            
         }
+        
 
         return result;
 

@@ -28,15 +28,13 @@ class SkillsForm extends StatelessWidget {
       width: size.width * .9,
       height: size.height * .85,
       child: Container(
-        color: Colors.grey[200],
         padding: EdgeInsets.symmetric(
           horizontal: 20.0,
-          vertical: 5.0,
+          vertical: 20.0,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             SizedBox(
               height: size.height * .7,
@@ -48,9 +46,12 @@ class SkillsForm extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 16.0),
               child: RaisedButton(
-                child: Text(
-                  "SAVE",
-                  style: TextStyle(color: Colors.white),
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Text(
+                    "Publish your profile",
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
                 onPressed: () => _saveStudentToDB(context, student),
               ),
