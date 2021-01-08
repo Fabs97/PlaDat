@@ -97,7 +97,9 @@ class _LoginState extends State<Login> {
   Widget _createEmailField() {
     return TextFormField(
       decoration: const InputDecoration(
+        labelText: "Email",
         hintText: 'pladat@dsd.com',
+        contentPadding: EdgeInsets.all(0.0),
       ),
       initialValue: _user.email ?? '',
       onChanged: (value) {
@@ -123,9 +125,12 @@ class _LoginState extends State<Login> {
       obscureText: _obscurePassword,
       decoration: InputDecoration(
         labelText: "Password",
+        contentPadding: EdgeInsets.all(0.0),
         suffixIcon: IconButton(
-          icon:
-              Icon(_obscurePassword ? Icons.visibility_off : Icons.visibility),
+          icon: Icon(
+            _obscurePassword ? Icons.visibility_off : Icons.visibility,
+            color: CustomTheme().primaryColor,
+          ),
           onPressed: () {
             setState(() {
               _obscurePassword = !_obscurePassword;
