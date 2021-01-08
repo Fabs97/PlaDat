@@ -206,7 +206,6 @@ class _EmployerFormState extends State<EmployerForm> {
               disabledHint: Text("No domains found!"),
               icon: Icon(
                 Icons.arrow_drop_down,
-                color: Colors.black,
               ),
               iconEnabledColor: customTheme.primaryColor,
               iconDisabledColor: customTheme.secondaryColor,

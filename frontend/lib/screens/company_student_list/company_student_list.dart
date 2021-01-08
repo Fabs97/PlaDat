@@ -100,7 +100,6 @@ class _StudentCardsListState extends State<StudentCardsList> {
                             disabledHint: Text("No placements found!"),
                             icon: Icon(
                               Icons.arrow_drop_down,
-                              color: CustomTheme().primaryColor,
                             ),
                             iconEnabledColor: CustomTheme().primaryColor,
                             iconDisabledColor: CustomTheme().secondaryColor,

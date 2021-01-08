@@ -189,7 +189,6 @@ class _PlacementFormState extends State<PlacementForm> {
       ),
       icon: Icon(
         Icons.arrow_drop_down,
-        color: Colors.black87,
         size: 25.0,
       ),
       validator: (value) {
