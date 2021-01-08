@@ -214,7 +214,6 @@ class _EmployerFormState extends State<EmployerForm> {
               items: _domains?.map((domain) {
                     return DropdownMenuItem<Domainofactivity>(
                       value: domain,
-                      // TODO: ellipsis
                       child: Text(
                         '${domain.name}',
                         overflow: TextOverflow.ellipsis,

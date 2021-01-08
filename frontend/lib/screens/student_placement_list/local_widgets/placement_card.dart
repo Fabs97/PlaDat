@@ -87,7 +87,6 @@ class PlacementCard extends StatelessWidget {
                   ),
                 ),
               ),
-              // TODO: needs to be chagend with the real name
               Text(
                 "${placement.employerName}",
                 style: textTheme.subtitle2.copyWith(
