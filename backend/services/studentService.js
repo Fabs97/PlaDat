@@ -1,4 +1,3 @@
-
 const studentDAO = require('../DAO/studentDAO');
 const skillService = require('../services/skillsService')
 const locationService = require('../services/locationService');
@@ -7,8 +6,9 @@ const ERR_INTERNAL_SERVER_ERROR = require('../errors').ERR_INTERNAL_SERVER_ERROR
 const ERR_FORBIDDEN = require('../errors').ERR_FORBIDDEN;
 const educationService = require('../services/educationService')
 const workService = require('../services/workService')
+const jwt = require('jsonwebtoken');
 
-studServ = module.exports = {
+module.exports = studServ = {
     // Here you can add all kinds of methods that manage or handle data, or do specific tasks. 
     // This is the place where the business logic is.
     getStudent: (id) => {
@@ -27,6 +27,11 @@ studServ = module.exports = {
         try {
             studentProfile = await studentDAO.createStudentAccount(studentInfo);
 
+            if(studentProfile.id) {
+                studentProfile.token = jwt.sign({ id: auth.id, studentId: studentProfile.id, userType: 'STUDENT'}, process.env.ACCESS_TOKEN_SECRET, {
+                    expiresIn: process.env.ACCESS_TOKEN_LIFE // 30 DAYS
+                });
+            }
             if(studentInfo.location){
                 studentProfile.location = await studServ.saveStudentLocation(studentProfile.id, studentInfo.location);
             }

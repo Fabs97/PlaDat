@@ -6,7 +6,7 @@ const ERR_FORBIDDEN = require('../errors').ERR_FORBIDDEN;
 
 const locationService = require('../services/locationService');
 const domainOfActivityService = require('../services/domainOfActivityService');
-
+const jwt = require('jsonwebtoken');
 
 
 module.exports = employerService = {
@@ -28,6 +28,11 @@ module.exports = employerService = {
             let check = await domainOfActivityService.existsDomainOfActivity(details.domainOfActivityId);
             if(check){
                 let newEmployer = await employerDAO.addNewEmployer(details, auth.id);
+                if(newEmployer.id) {
+                    newEmployer.token = jwt.sign({ id: auth.id, employerId: newEmployer.id, userType: 'EMPLOYER'}, process.env.ACCESS_TOKEN_SECRET, {
+                        expiresIn: process.env.ACCESS_TOKEN_LIFE // 30 DAYS
+                    });
+                }
                 if(details.location){
                     newEmployer.location = await employerService.saveEmployerLocation(newEmployer.id, details.location);
                 }

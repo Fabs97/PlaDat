@@ -1,9 +1,9 @@
 const registrationDAO = require('../DAO/registrationDAO');
 const bcrypt = require('bcrypt');
-const studentService = require('../services/studentService');
 const { SuperError, ERR_UNAUTHORIZED } = require('../errors');
 const placementService = require('./placementService');
 const employerService = require('./employerService');
+const studentService = require('./studentService');
 const jwt = require('jsonwebtoken');
 
 module.exports = {
@@ -14,7 +14,7 @@ module.exports = {
             return await registrationDAO.createUserRegistration(userInfo);
         });        
     },
-    getUserProfile: async (user) => {
+    getUserSession: async (user) => {
         let userResult = {};
         let userAccount = await registrationDAO.getAccountByEmail(user.email);
 
@@ -54,6 +54,12 @@ module.exports = {
         });
         
         return userResult;
+    },
+    updateJWT: (newInfo) => {
+        let JWT = jwt.sign(newInfo, process.env.ACCESS_TOKEN_SECRET, {
+            expiresIn: process.env.ACCESS_TOKEN_LIFE // 30 DAYS
+        });
+        return JWT;
     },
     deleteUser: function(userId) {
         return registrationDAO.deleteUserById(userId);

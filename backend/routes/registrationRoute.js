@@ -11,7 +11,7 @@ router.post("/registration", async ( req, res, next ) => {
 });
 
 router.post("/login", async ( req, res, next ) => {
-    let userProfile = await registrationService.getUserProfile(req.body)
+    let userProfile = await registrationService.getUserSession(req.body)
         .catch(error => {
             res.status(error.code).send(error.message);
         });
