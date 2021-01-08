@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/models/message.dart';
+import 'package:frontend/utils/custom_theme.dart';
 
 class MessageCard extends StatelessWidget {
   final Message message;
@@ -26,7 +27,9 @@ class MessageCard extends StatelessWidget {
                       topRight: Radius.circular(15.0),
                     ),
           ),
-          color: isByMe ? Colors.white : Colors.grey[400],
+          color: isByMe
+              ? Color.fromRGBO(76, 76, 76, .03)
+              : CustomTheme().primaryColor,
           child: Container(
             width: screenSize.width * .7,
             child: Padding(

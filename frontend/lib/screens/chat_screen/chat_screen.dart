@@ -5,6 +5,7 @@ import 'package:frontend/models/user.dart';
 import 'package:frontend/screens/chat_screen/local_widgets/message_card.dart';
 import 'package:frontend/services/api_service.dart';
 import 'package:frontend/services/auth_service.dart';
+import 'package:frontend/utils/custom_theme.dart';
 import 'package:frontend/widgets/appbar.dart';
 import 'package:frontend/widgets/drawer.dart';
 
@@ -181,50 +182,59 @@ class _ChatScreenState extends State<ChatScreen> {
   _createSendMessageButton(Size screenSize) {
     return SizedBox(
       height: screenSize.height * .5,
-      child: Form(
-        key: _formKey,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            TextFormField(
-              decoration: InputDecoration(
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(15.0)),
-                    borderSide: BorderSide(
-                      color: Colors.grey,
-                      width: 1.5,
-                    )),
-                focusedBorder: InputBorder.none,
-                enabledBorder: InputBorder.none,
-                errorBorder: InputBorder.none,
-                disabledBorder: InputBorder.none,
-                fillColor: Colors.white54,
-                filled: true,
-                hintText: "Write your message here",
+      width: screenSize.width * .855,
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          boxShadow: [CustomTheme().boxShadow],
+          borderRadius: BorderRadius.circular(14.0),
+        ),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              TextFormField(
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                      borderSide: BorderSide(
+                        color: Colors.grey,
+                        width: 1.5,
+                      ),
+                  ),
+                  focusedBorder: InputBorder.none,
+                  enabledBorder: InputBorder.none,
+                  errorBorder: InputBorder.none,
+                  disabledBorder: InputBorder.none,
+                  fillColor: Colors.white54,
+                  filled: true,
+                  hintText: "Write your message here",
+                ),
+                initialValue: _newMessage,
+                onFieldSubmitted: _setMessage,
+                onSaved: _setMessage,
+                onChanged: _setMessage,
+                validator: (value) {
+                  if (value.isEmpty) return "Message can not be empty";
+                  return null;
+                },
+                maxLines: 5,
               ),
-              initialValue: _newMessage,
-              onFieldSubmitted: _setMessage,
-              onSaved: _setMessage,
-              onChanged: _setMessage,
-              validator: (value) {
-                if (value.isEmpty) return "Message can not be empty";
-                return null;
-              },
-              maxLines: 5,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 16.0),
-              child: RaisedButton(
-                onPressed: _sendMessageButtonPressed,
-                child: Text(
-                  'Send message',
-                  style: TextStyle(color: Colors.white),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 16.0),
+                child: RaisedButton(
+                  onPressed: _sendMessageButtonPressed,
+                  child: Text(
+                    'Send message',
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
