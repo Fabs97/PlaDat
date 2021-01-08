@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/models/message.dart';
+import 'package:frontend/utils/custom_theme.dart';
 
 class MessageCard extends StatelessWidget {
   final Message message;
@@ -20,13 +21,13 @@ class MessageCard extends StatelessWidget {
           shadowColor: Colors.grey[800],
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
-                      bottomRight: Radius.circular(isByMe ? 0.0 : 15.0),
-                      bottomLeft: Radius.circular(isByMe ? 15.0 : 0.0),
-                      topLeft: Radius.circular(15.0),
-                      topRight: Radius.circular(15.0),
-                    ),
+              bottomRight: Radius.circular(isByMe ? 0.0 : 15.0),
+              bottomLeft: Radius.circular(isByMe ? 15.0 : 0.0),
+              topLeft: Radius.circular(15.0),
+              topRight: Radius.circular(15.0),
+            ),
           ),
-          color: isByMe ? Colors.white : Colors.grey[400],
+          color: isByMe ? Colors.white : CustomTheme().primaryColor,
           child: Container(
             width: screenSize.width * .7,
             child: Padding(

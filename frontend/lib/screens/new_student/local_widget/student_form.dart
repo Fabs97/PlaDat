@@ -41,64 +41,120 @@ class _StudentFormState extends State<StudentForm> {
     final student = Provider.of<Student>(context);
     final formStepper = Provider.of<FormStepper>(context);
     final size = MediaQuery.of(context).size;
+    final themeData = Theme.of(context);
     return SizedBox(
       width: size.width * .9,
       height: size.height * .85,
-      child: Container(
-        child: Form(
-          key: _formKey,
-          child: SafeArea(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              mainAxisSize: MainAxisSize.max,
-              children: <Widget>[
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10.0),
-                    color: Colors.white,
-                    boxShadow: [CustomTheme().boxShadow],
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 20.0,
-                      vertical: 5.0,
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          SizedBox(
+            width: size.width * .855,
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 20),
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                    child: Row(
                       children: [
-                        _createnameField(student),
-                        _createsurnameField(student),
-                        _createemailField(student),
-                        _createphoneField(student),
-                        _createDescriptionField(student),
-                        _cretaeautocompleteField(student),
+                        Text(
+                          "Basic information",
+                          style: themeData.textTheme.subtitle1.copyWith(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18.0,
+                              color: CustomTheme().primaryColor),
+                        ),
                       ],
                     ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 16.0),
-                  child: RaisedButton(
-                    onPressed: () {
-                      // Validate will return true if the form is valid, or false if
-                      // the form is invalid.
-                      if (_formKey.currentState.validate()) {
-                        setState(() {
-                          formStepper.goToNextFormStep();
-                        });
-                      }
-                    },
-                    child: Text(
-                      'Continue',
-                      style: TextStyle(color: Colors.white),
+                  SizedBox(
+                    height: size.height * .03,
+                  ),
+                  Form(
+                    key: _formKey,
+                    child: SafeArea(
+                      child: Column(
+                        children: <Widget>[
+                          Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10.0),
+                              color: Colors.white,
+                              boxShadow: [CustomTheme().boxShadow],
+                            ),
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 20.0,
+                                vertical: 10.0,
+                              ),
+                              child: Column(
+                                children: [
+                                  _createnameField(student),
+                                  _createsurnameField(student),
+                                  _createemailField(student),
+                                  _createphoneField(student),
+                                  Padding(
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: Row(
+                                      children: [
+                                        Text(
+                                          'Tell us about yourself',
+                                          style: themeData.textTheme.subtitle1
+                                              .copyWith(
+                                            fontSize: 16,
+                                            color: CustomTheme().textColor,
+                                          ),
+                                          textAlign: TextAlign.left,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  _createDescriptionField(student),
+                                  _cretaeautocompleteField(student),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
-        ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: SizedBox(
+              width: size.width * .9,
+              child: Container(
+                child: RaisedButton(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10.0),
+                    child: Text(
+                      'Continue',
+                      style: themeData.textTheme.subtitle1.copyWith(
+                        color: Colors.white,
+                        fontSize: 18.0,
+                        fontStyle: FontStyle.normal,
+                        fontWeight: FontWeight.normal,
+                      ),
+                    ),
+                  ),
+                  onPressed: () {
+                    // Validate will return true if the form is valid, or false if
+                    // the form is invalid.
+                    if (_formKey.currentState.validate()) {
+                      setState(() {
+                        formStepper.goToNextFormStep();
+                      });
+                    }
+                  },
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -107,6 +163,7 @@ class _StudentFormState extends State<StudentForm> {
     return TextFormField(
       decoration: const InputDecoration(
         hintText: 'Name',
+        hintStyle: TextStyle(fontSize: 16, color: Color(0xff4c4c4c)),
       ),
       initialValue: student.name ?? '',
       onChanged: (value) {
@@ -127,6 +184,7 @@ class _StudentFormState extends State<StudentForm> {
     return TextFormField(
       decoration: const InputDecoration(
         hintText: 'Surname',
+        hintStyle: TextStyle(fontSize: 16, color: Color(0xff4c4c4c)),
       ),
       initialValue: student.surname ?? '',
       onChanged: (value) {
@@ -146,7 +204,13 @@ class _StudentFormState extends State<StudentForm> {
   Widget _createemailField(Student student) {
     return TextFormField(
       decoration: const InputDecoration(
-        hintText: 'student@school.com',
+        hintText: 'Email',
+        hintStyle: TextStyle(fontSize: 16, color: Color(0xff4c4c4c)),
+        suffixText: 'student@school.com',
+        suffixStyle: TextStyle(
+            fontStyle: FontStyle.italic,
+            fontSize: 16,
+            color: Color(0xff4c4c4c)),
       ),
       initialValue: student.email ?? '',
       onChanged: (value) {
@@ -168,9 +232,7 @@ class _StudentFormState extends State<StudentForm> {
   Widget _createDescriptionField(Student student) {
     return TextFormField(
       decoration: const InputDecoration(
-        hintText: "Try to be as descriptive as possible",
-        labelText: "Tell about yourself",
-        filled: true,
+        border: OutlineInputBorder(),
       ),
       initialValue: student.description ?? '',
       onChanged: (value) {
@@ -192,6 +254,7 @@ class _StudentFormState extends State<StudentForm> {
     return TextFormField(
       decoration: const InputDecoration(
         hintText: 'Phone number',
+        hintStyle: TextStyle(fontSize: 16, color: Color(0xff4c4c4c)),
       ),
       keyboardType: TextInputType.number,
       inputFormatters: [
@@ -218,6 +281,7 @@ class _StudentFormState extends State<StudentForm> {
       readOnly: true,
       decoration: const InputDecoration(
         hintText: 'Address',
+        hintStyle: TextStyle(fontSize: 16, color: Color(0xff4c4c4c)),
       ),
       onTap: () async {
         final Place result = await showSearch(
