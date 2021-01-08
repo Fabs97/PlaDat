@@ -29,6 +29,10 @@ class _ChatScreenState extends State<ChatScreen> {
   bool _sendingMessage = false;
   final _formKey = GlobalKey<FormState>();
   String _newMessage = "";
+  final loggedUserIsEmployer =
+      AuthService().loggedUser.type == AccountType.Employer;
+
+  dynamic user;
 
   @override
   void initState() {
@@ -44,19 +48,31 @@ class _ChatScreenState extends State<ChatScreen> {
         widget._messages = List.from((messagesList.cast<Message>()).reversed);
       });
     });
+    if (loggedUserIsEmployer) {
+      APIService.route(ENDPOINTS.Student, "/student/:id",
+              urlArgs: widget.args.studentId)
+          .then((value) => setState(() => user = value));
+    } else {
+      APIService.route(ENDPOINTS.Employers, "/employer/:id",
+              urlArgs: widget.args.employerId)
+          .then((value) => setState(() => user = value));
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
-    final loggedUserType = AuthService().loggedUser.type;
     return Scaffold(
       // TODO: needs to be chagend with the real name
       appBar: CustomAppBar.createAppBar(
           context,
-          loggedUserType == AccountType.Employer
+          user == null
+              ? (loggedUserIsEmployer
               ? "Student Name"
-              : "Company Name"),
+              : "Company Name")
+              : (loggedUserIsEmployer
+                  ? "${user.name} ${user.surname}"
+                  : "${user.name}")),
       drawer: CustomDrawer.createDrawer(context),
       body: RefreshIndicator(
         onRefresh: () async => _requestMessages(),
@@ -81,9 +97,9 @@ class _ChatScreenState extends State<ChatScreen> {
                             return MessageCard(
                               message: message,
                               isByMe: (messageSender == Sender.STUDENT &&
-                                      loggedUserType == AccountType.Student) ||
+                                      !loggedUserIsEmployer) ||
                                   (messageSender == Sender.EMPLOYER &&
-                                      loggedUserType == AccountType.Employer),
+                                      loggedUserIsEmployer),
                             );
                           }),
                     ),
