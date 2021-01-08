@@ -67,9 +67,7 @@ class _ChatScreenState extends State<ChatScreen> {
       appBar: CustomAppBar.createAppBar(
           context,
           user == null
-              ? (loggedUserIsEmployer
-              ? "Student Name"
-              : "Company Name")
+              ? (loggedUserIsEmployer ? "Student Name" : "Company Name")
               : (loggedUserIsEmployer
                   ? "${user.name} ${user.surname}"
                   : "${user.name}")),
@@ -203,11 +201,11 @@ class _ChatScreenState extends State<ChatScreen> {
               TextFormField(
                 decoration: InputDecoration(
                   border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(15.0)),
-                      borderSide: BorderSide(
-                        color: Colors.grey,
-                        width: 1.5,
-                      ),
+                    borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                    borderSide: BorderSide(
+                      color: Colors.grey,
+                      width: 1.5,
+                    ),
                   ),
                   focusedBorder: InputBorder.none,
                   enabledBorder: InputBorder.none,
@@ -227,28 +225,19 @@ class _ChatScreenState extends State<ChatScreen> {
                 },
                 maxLines: 5,
               ),
-              initialValue: _newMessage,
-              onFieldSubmitted: _setMessage,
-              onSaved: _setMessage,
-              onChanged: _setMessage,
-              validator: (value) {
-                if (value.isEmpty) return "Message can not be empty";
-                return null;
-              },
-              maxLines: 5,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 16.0),
-              child: RaisedButton(
-                onPressed: _sendMessageButtonPressed,
-                child: Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Text(
-                    'Send message',
-                    style: TextStyle(color: Colors.white),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 16.0),
+                child: RaisedButton(
+                  onPressed: _sendMessageButtonPressed,
+                  child: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Text(
+                      'Send message',
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
                 ),
-              ),
+              )
             ],
           ),
         ),

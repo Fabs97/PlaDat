@@ -1,7 +1,9 @@
 import 'dart:ui';
 import 'package:email_validator/email_validator.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:frontend/models/student.dart';
 import 'package:frontend/utils/custom_theme.dart';
 import 'package:frontend/widgets/address_search.dart';
@@ -88,7 +90,7 @@ class _StudentFormState extends State<StudentForm> {
                                 children: [
                                   _createnameField(student),
                                   _createsurnameField(student),
-                                  _createemailField(student),
+                                  //_createemailField(student),
                                   _createphoneField(student),
                                   Padding(
                                     padding: const EdgeInsets.all(10.0),
@@ -198,39 +200,38 @@ class _StudentFormState extends State<StudentForm> {
     );
   }
 
-  Widget _createemailField(Student student) {
-    return TextFormField(
-      decoration: const InputDecoration(
-        hintText: 'Email',
-        hintStyle: TextStyle(fontSize: 16, color: Color(0xff4c4c4c)),
-        suffixText: 'student@school.com',
-            fontSize: 16,
-            color: Color(0xff4c4c4c)),
-      ),
-      initialValue: student.email ?? '',
-      onChanged: (value) {
-        setState(() {
-          student.email = value;
-        });
-      },
-      validator: (value) {
-        if (value.isEmpty) {
-          return 'Please enter a student email';
-        } else if (!EmailValidator.validate(value)) {
-          return 'Please enter a valid email';
-        }
-        return null;
-      },
-    );
-  }
+  // Widget _createemailField(Student student) {
+  //   return TextFormField(
+  //     decoration: const InputDecoration(
+  //       hintText: 'Email',
+  //       hintStyle: TextStyle(fontSize: 16, color: Color(0xff4c4c4c)),
+  //       suffixText: 'student@school.com',
+  //     ),
+  //     initialValue: student.email ?? '',
+  //     onChanged: (value) {
+  //       setState(() {
+  //         student.email = value;
+  //       });
+  //     },
+  //     validator: (value) {
+  //       if (value.isEmpty) {
+  //         return 'Please enter a student email';
+  //       } else if (!EmailValidator.validate(value)) {
+  //         return 'Please enter a valid email';
+  //       }
+  //       return null;
+  //     },
+  //   );
+  // }
 
->>>>>>> dev
   Widget _createDescriptionField(Student student) {
+    return TextFormField(
       decoration: const InputDecoration(
         border: OutlineInputBorder(),
       ),
       initialValue: student.description ?? '',
       onChanged: (value) {
+        setState(() {
           student.description = value;
         });
       },
