@@ -220,6 +220,13 @@ class _PlacementFormState extends State<PlacementForm> {
       ),
       firstDate: DateTime.now(),
       lastDate: (DateTime.now()).add(Duration(days: 365 * 100)),
+      builder: (context, child) {
+        return Theme(
+            data: Theme.of(context).copyWith(
+              primaryColor: CustomTheme().primaryColor.withOpacity(.7),
+            ),
+            child: child);
+      },
     );
     if (range != null) {
       setState(() {
@@ -321,7 +328,6 @@ class _PlacementFormState extends State<PlacementForm> {
           });
         }
       },
-
       validator: (value) {
         if (value.isEmpty) {
           return 'Please enter your address';
