@@ -90,8 +90,9 @@ class _EmployerFormState extends State<EmployerForm> {
                     ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 16.0),
+                Container(
+                  decoration:
+                      BoxDecoration(borderRadius: BorderRadius.circular(20.0)),
                   child: RaisedButton(
                     onPressed: () {
                       if (_formKey.currentState.validate()) {
@@ -100,9 +101,12 @@ class _EmployerFormState extends State<EmployerForm> {
                         });
                       }
                     },
-                    child: Text(
-                      'Save company information',
-                      style: TextStyle(color: Colors.white),
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Text(
+                        'Save company information',
+                        style: TextStyle(color: Colors.white),
+                      ),
                     ),
                   ),
                 ),
@@ -197,33 +201,28 @@ class _EmployerFormState extends State<EmployerForm> {
             child: CircularProgressIndicator(),
           )
         : DropdownButtonHideUnderline(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10.0),
-              child: DropdownButton<Domainofactivity>(
-                disabledHint: Text("No domains found!"),
-                icon: Icon(
-                  Icons.arrow_drop_down,
-                  color: customTheme.primaryColor,
-                ),
-                iconEnabledColor: customTheme.primaryColor,
-                iconDisabledColor: customTheme.secondaryColor,
-                value: _domain,
-                items: _domains?.map((domain) {
-                      return DropdownMenuItem<Domainofactivity>(
-                        value: domain,
-                        // TODO: ellipsis
-                        child: Text(
-                          '${domain.name}',
-                          style: TextStyle(
-                            color: customTheme.primaryColor,
-                          ),
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      );
-                    })?.toList() ??
-                    [],
-                onChanged: onChangeDropdownItem,
+            child: DropdownButtonFormField<Domainofactivity>(
+              isExpanded: true,
+              disabledHint: Text("No domains found!"),
+              icon: Icon(
+                Icons.arrow_drop_down,
+                color: Colors.black,
               ),
+              iconEnabledColor: customTheme.primaryColor,
+              iconDisabledColor: customTheme.secondaryColor,
+              value: _domain,
+              items: _domains?.map((domain) {
+                    return DropdownMenuItem<Domainofactivity>(
+                      value: domain,
+                      // TODO: ellipsis
+                      child: Text(
+                        '${domain.name}',
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    );
+                  })?.toList() ??
+                  [],
+              onChanged: onChangeDropdownItem,
             ),
           );
   }
