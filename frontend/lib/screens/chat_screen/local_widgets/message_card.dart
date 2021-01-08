@@ -32,7 +32,12 @@ class MessageCard extends StatelessWidget {
             width: screenSize.width * .7,
             child: Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Text(message.message),
+              child: Text(
+                message.message,
+                style: TextStyle(
+                  color: isByMe ? Colors.black : Colors.white,
+                ),
+              ),
             ),
           ),
         ),
