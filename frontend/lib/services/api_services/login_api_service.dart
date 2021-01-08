@@ -24,7 +24,6 @@ class LoginAPIService {
     switch (response.statusCode) {
       case 200:
         return jsonDecode(response.body) as Map<String, dynamic>;
-      // TODO: maybe this shouldn't be defaul, maybe yes
       default:
         throw LoginAPIException(message: response.body);
     }

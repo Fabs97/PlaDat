@@ -63,7 +63,6 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
     return Scaffold(
-      // TODO: needs to be chagend with the real name
       appBar: CustomAppBar.createAppBar(
           context,
           user == null
