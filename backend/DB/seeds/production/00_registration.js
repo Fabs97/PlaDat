@@ -5,6 +5,7 @@ exports.seed = function(knex) {
     .then(function () {
       // Inserts seed entries
       return knex('registration').insert([
+        //12345678
         {email: "google@google.com", password: '$2b$10$RMoFltIgzqy8QO8.nhcD0.Ovv.mhVuBAsoXZtLE3PA9x3v3XAda4a', type: 'EMPLOYER'},
         {email: "amazon@amazon.com", password: '$2b$10$RMoFltIgzqy8QO8.nhcD0.Ovv.mhVuBAsoXZtLE3PA9x3v3XAda4a', type: 'EMPLOYER'},
         {email: "Instagram@Instagram.com", password:  '$2b$10$RMoFltIgzqy8QO8.nhcD0.Ovv.mhVuBAsoXZtLE3PA9x3v3XAda4a', type: 'EMPLOYER'},
