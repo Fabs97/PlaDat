@@ -27,6 +27,11 @@ class AuthService {
 
   dynamic get loggedAccountInfo => this._loggedAccountInfo;
 
+  void updateToken(String token) {
+    window.localStorage["jwtToken"] = token;
+    this._jwtToken = token;
+  }
+
   void setLoggedAccountInfo(AccountType accountType, int id) async {
     this._loggedAccountInfo = await (accountType == AccountType.Student
         ? APIService.route(

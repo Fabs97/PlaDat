@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:frontend/models/placement.dart';
 import 'package:frontend/models/skill.dart';
+import 'package:frontend/services/auth_service.dart';
 import 'package:frontend/services/custom_http_service.dart' as http;
 import 'package:frontend/models/student.dart';
 import 'package:frontend/services/api_service.dart';
@@ -31,6 +32,10 @@ class StudentsAPIService extends APIInfo {
     switch (response.statusCode) {
       case 200:
         {
+          final body = jsonDecode(response.body);
+          if (body["token"] != null) {
+            AuthService().updateToken(body["token"]);
+          }
           return Student.fromJson(jsonDecode(response.body));
         }
       default:

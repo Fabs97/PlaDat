@@ -170,11 +170,12 @@ class StudentProfile extends StatelessWidget {
           direction: Axis.horizontal,
           spacing: 10.0,
           runSpacing: 10.0,
-          children: skills.map((skill) {
+          children: skills?.map((skill) {
             return Chip(
               label: Text(skill.name),
             );
-          }).toList(),
+          })?.toList() ??
+              [],
         ),
       ],
     );
