@@ -38,10 +38,12 @@ class SkillBoxState extends State<SkillBox> {
 
   _onItemChanged(String value) {
     setState(() {
-      suggestedSkills = skills.where((skill) {
+      suggestedSkills = value != null && value != ""
+          ? skills.where((skill) {
         return skill.name.toLowerCase().contains(value.toLowerCase()) &&
             !widget._chosenSkills.contains(skill);
-      }).toList();
+      }).toList()
+          : [];
     });
   }
 
