@@ -151,7 +151,7 @@ recommender = module.exports = {
                 if(studentSkills.some(skill => skill.id == placementSkills[j].id)){
                     matchingTechSkills++;
                 }
-            } else {
+            } else if (placementSkills[j].type == 'SOFT') {
                 placementSoftSkills++;
                 if(studentSkills.some(skill => skill.id == placementSkills[j].id)){
                     matchingSoftSkills++;
