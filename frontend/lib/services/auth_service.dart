@@ -64,6 +64,7 @@ class AuthService {
 
         this._loggedUser = user;
         window.localStorage["jwtToken"] = response["token"];
+        this._jwtToken = response["token"];
         if (studentId != null) {
           this._loggedAccountInfo = await APIService.route(
             ENDPOINTS.Student,

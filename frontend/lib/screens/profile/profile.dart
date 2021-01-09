@@ -22,6 +22,8 @@ class _ProfileState extends State<Profile> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        elevation: 0,
+        centerTitle: true,
         title: Text(
           widget.profile is Student
               ? (widget.profile.id != AuthService().loggedAccountInfo.id &&

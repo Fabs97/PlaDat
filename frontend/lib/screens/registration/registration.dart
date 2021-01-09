@@ -29,6 +29,7 @@ class _RegistrationState extends State<Registration> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Register to PlaDat"),
+        elevation: 0,
         centerTitle: true,
         leading: Container(),
       ),

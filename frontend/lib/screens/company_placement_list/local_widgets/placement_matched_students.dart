@@ -45,6 +45,8 @@ class _PlacementMatchedStudentsState extends State<PlacementMatchedStudents> {
     final themeData = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
+        elevation: 0,
+        centerTitle: true,
         title: Text(
           "Matched Student",
           textAlign: TextAlign.center,

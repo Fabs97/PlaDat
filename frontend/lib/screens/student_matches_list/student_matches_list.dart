@@ -36,6 +36,8 @@ class _StudentMatchesState extends State<StudentMatches> {
     final themeData = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
+        elevation: 0,
+        centerTitle: true,
         title: Text(
           "Matched Placements",
           textAlign: TextAlign.center,

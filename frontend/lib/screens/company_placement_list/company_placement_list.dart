@@ -44,6 +44,8 @@ class _MyPlacementsState extends State<MyPlacements> {
     return Scaffold(
       appBar: AppBar(
         title: Text("My Placement"),
+        elevation: 0,
+        centerTitle: true,
         actions: [
           IconButton(
               padding: EdgeInsets.all(10.0),

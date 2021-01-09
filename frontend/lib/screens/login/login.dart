@@ -37,6 +37,7 @@ class _LoginState extends State<Login> {
     final screenSize = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
+        elevation: 0,
         centerTitle: true,
         title: Text("Login to PlaDat"),
         leading: Container(),
