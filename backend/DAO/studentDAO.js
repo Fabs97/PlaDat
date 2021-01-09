@@ -112,7 +112,7 @@ module.exports = {
 
         // STUDENT + SKILLS + LOCATION
         let resultTemp = await database('student AS s')
-            .select('s.id', 's.name', 's.surname', 's.email', 's.description', 'sk.id AS skill_id', 'sk.name AS skill_name', 'sk.type AS skill_type', 'l.id AS location_id', 'l.country AS location_country', 'l.city AS location_city')
+            .select('s.id', 's.name', 's.surname', 's.description', 'sk.id AS skill_id', 'sk.name AS skill_name', 'sk.type AS skill_type', 'l.id AS location_id', 'l.country AS location_country', 'l.city AS location_city')
             .leftJoin('student_has_skills AS shs', 's.id', 'shs.student_id')
             .leftJoin('skill AS sk', 'shs.skill_id', 'sk.id')
             .leftJoin('location AS l', 's.location_id', 'l.id')
