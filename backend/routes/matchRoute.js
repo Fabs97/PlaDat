@@ -22,7 +22,7 @@ router.get('/student/:studentId/placements', async (req, res, next) => {
 
 router.delete('/match/:studentId/:placementId', async (req, res, next) => {
     if( !isNaN(req.params.studentId) && !isNaN(req.params.placementId)){
-        let match = await matchService.deleteMatch(req.params.studentId, req.params.placementId, req.user)
+        let match = await matchService.deleteMatch(parseInt(req.params.studentId), parseInt(req.params.placementId), req.user)
         .catch(error => {
             res.status(error.code).send(error.message);
         });
