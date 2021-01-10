@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/models/user.dart';
 import 'package:frontend/services/auth_service.dart';
+import 'package:frontend/utils/custom_theme.dart';
 import 'package:frontend/utils/routes_generator.dart';
 
 class _CustomDrawerPage {
@@ -29,9 +30,14 @@ class CustomDrawer {
       child: ListView(
         children: [
           DrawerHeader(
-            child: Text("Welcome to PlaDat"),
+            child: Text(
+              "Welcome to PlaDat",
+              style: TextStyle(
+                color: CustomTheme().backgroundColor,
+              ),
+            ),
             decoration: BoxDecoration(
-              color: Color(0xff4c60d2),
+              color: CustomTheme().primaryColor,
             ),
           ),
           ..._createDrawer(isStudent),
