@@ -10,8 +10,11 @@ const jwt = require('jsonwebtoken');
 
 
 module.exports = employerService = {
-    getEmployer: (id) => {
-        return employerDAO.getEmployer(id);
+    getEmployer: async (id, auth) => {
+        if(auth.employerId !== id) {
+            throw new SuperError(ERR_FORBIDDEN, 'You cannot see this employer profile');
+        }
+        return await employerDAO.getEmployer(id);
     },
 
     getEmployerByUserId: (userId) => {

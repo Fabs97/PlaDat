@@ -1,4 +1,5 @@
 const matchDAO = require('../DAO/matchDAO');
+const { checkIfOtherSkillExists } = require('../DAO/skillsDAO');
 const { SuperError, ERR_FORBIDDEN, ERR_NOT_FOUND } = require('../errors');
 const employerService = require('./employerService');
 const placementService = require('./placementService');
@@ -8,10 +9,15 @@ module.exports = {
     saveChoice: async (choice, auth) => { 
         let employer = await employerService.getEmployerByPlacementId(choice.placementID);
         if (auth.studentId !== choice.studentID && auth.employerId !== employer.id) {
-            throw new SuperError(ERR_FORBIDDEN, 'You are not authorized to save this match');
+            throw new SuperError(ERR_FORBIDDEN, 'You are not authorized to save this interaction');
             return;
         }
-        //TODO: CHECK THAT IF THE ACCOUNT IS STUDENT, THE STUDENT_ACCEPT IS SET (equivalent for employer)
+        if(auth.studentId && choice.placementAccept !== undefined) {
+            throw new SuperError(ERR_FORBIDDEN, 'You are not allowed to save this interaction'); return;
+        }
+        if(auth.employerId && choice.studentAccept !== undefined) {
+            throw new SuperError(ERR_FORBIDDEN, 'You are not allowed to save this interaction'); return;
+        }
 
         let previousInteraction = await matchDAO.getPreviousInteraction(choice.studentID, choice.placementID);
         let result = {};

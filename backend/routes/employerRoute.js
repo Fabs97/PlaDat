@@ -3,8 +3,10 @@ const router = require('express').Router();
 const employerService = require('../services/employerService');
 
 router.get("/employer/:id", async (req, res, next) => {
-    //TODO: secure it only for the same employer id as the one logged in
-    const employer = await employerService.getEmployer(req.params.id);
+    const employer = await employerService.getEmployer(parseInt(req.params.id), req.user)
+        .catch(error => {
+            res.status(error.code).send(error.message);
+        })
     res.json(employer);
 
 });

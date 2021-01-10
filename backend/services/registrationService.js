@@ -1,6 +1,6 @@
 const registrationDAO = require('../DAO/registrationDAO');
 const bcrypt = require('bcrypt');
-const { SuperError, ERR_UNAUTHORIZED } = require('../errors');
+const { SuperError, ERR_UNAUTHORIZED, ERR_FORBIDDEN } = require('../errors');
 const placementService = require('./placementService');
 const employerService = require('./employerService');
 const studentService = require('./studentService');
@@ -34,7 +34,7 @@ module.exports = {
         }
 
         if(userAccount.type === 'STUDENT') {
-            let studentAccount = await studentService.getStudentByUserId(userAccount.id);
+            let studentAccount = await studentService.getStudentByUserId(userAccount.id, {id: userAccount.id});
             if(studentAccount && studentAccount.id){
                 userResult.studentID = studentAccount.id;
             }
@@ -61,7 +61,11 @@ module.exports = {
         });
         return JWT;
     },
-    deleteUser: function(userId) {
-        return registrationDAO.deleteUserById(userId);
+    deleteUser: async function(userId, auth) {
+        if(userId !== auth.id) {
+            throw new SuperError(ERR_FORBIDDEN, 'You are not authorized to delete this user');
+            return;
+        }
+        return await registrationDAO.deleteUserById(userId);
     }
 }

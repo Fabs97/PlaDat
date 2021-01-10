@@ -7,9 +7,11 @@ const ERR_FORBIDDEN = require('../errors').ERR_FORBIDDEN;
 
 
 router.post("/matching", async (req, res, next) => {
-    const choice = await matchService.saveChoice(req.body, req.user);
+    const choice = await matchService.saveChoice(req.body, req.user)
+        .catch(error => {
+            res.status(error.code).send(error.message);
+        });
     res.json(choice);
-
 });
 
 router.get('/student/:studentId/placements', async (req, res, next) => {

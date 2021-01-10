@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken')
 module.exports = {
     
     authMiddleware: function (req, res, next) {
-        if(req.url === '/login' || req.url === '/registration' || /\/user\/[0-9]*$/.test(req.url)) {
+        if(req.url === '/login' || req.url === '/registration') {
             next();
         } else {
             // Gather the jwt access token from the request header

@@ -21,7 +21,12 @@ module.exports = {
                 student_accept: choice.studentAccept,
                 placement_accept: choice.placementAccept, 
                 status: (choice.studentAccept === false || choice.placementAccept === false ? 'REJECTED' : 'PENDING')
-            }, ['student_id', 'placement_id', 'student_accept', 'placement_accept', 'status']);
+            }, ['student_id', 'placement_id', 'student_accept', 'placement_accept', 'status'])
+            .catch(error => {
+                if(error){
+                    throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There has been a problem saving your match. Please try again')
+                }
+            });
         
         return result[0];
     },

@@ -102,8 +102,11 @@ module.exports = studServ = {
         }
         return location;
     },
-    getStudentByUserId: (userId) => {
-        return studentDAO.getStudentByUserId(userId);
+    getStudentByUserId: async (userId, auth) => {
+        if(auth.id !== userId) {
+            throw new SuperError(ERR_FORBIDDEN, 'You cannot see this profile');
+        }
+        return await studentDAO.getStudentByUserId(userId);
     },
     getStudentsForRecommendation: (placementId) => {
         return studentDAO.getStudentsForRecommendation(placementId);

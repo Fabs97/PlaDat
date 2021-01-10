@@ -34,8 +34,10 @@ router.post("/student", async (req, res, next) => {
 });
 
 router.get("/student/account/:userID", async (req, res, next) => {
-    // TODO: THE userID variable should be the same as userID of the logged in user
-    const account = await studentService.getStudentByUserId(req.params.userID);
+    const account = await studentService.getStudentByUserId(parseInt(req.params.userID), req.user)
+        .catch(error => {
+            res.status(error.code).send(error.message);
+        });
     res.json(account);
 });
 
