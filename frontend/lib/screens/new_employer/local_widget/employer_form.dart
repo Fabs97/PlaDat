@@ -56,6 +56,7 @@ class _EmployerFormState extends State<EmployerForm> {
   Widget build(BuildContext context) {
     final employer = Provider.of<Employer>(context);
     final size = MediaQuery.of(context).size;
+    final themeData = Theme.of(context);
     return SizedBox(
       width: size.width * .9,
       height: size.height * .85,
@@ -85,6 +86,21 @@ class _EmployerFormState extends State<EmployerForm> {
                         _createnameField(employer),
                         _cretaeautocompleteField(employer),
                         _createDropdown(),
+                        Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Row(
+                            children: [
+                              Text(
+                                'Tell us about yourself',
+                                style: themeData.textTheme.subtitle1.copyWith(
+                                  fontSize: 16,
+                                  color: CustomTheme().textColor,
+                                ),
+                                textAlign: TextAlign.left,
+                              ),
+                            ],
+                          ),
+                        ),
                         _createDescriptionField(employer),
                       ],
                     ),
@@ -141,9 +157,7 @@ class _EmployerFormState extends State<EmployerForm> {
   Widget _createDescriptionField(Employer employer) {
     return TextFormField(
       decoration: const InputDecoration(
-        hintText: "Describe the company",
-        labelText: "Tell about company",
-        filled: true,
+        border: OutlineInputBorder(),
       ),
       initialValue: employer.description ?? '',
       onChanged: (value) {
