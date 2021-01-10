@@ -25,8 +25,9 @@ class RegistrationAPIService extends APIInfo {
     int statusCode = response.statusCode;
     switch (statusCode) {
       case 200:
-        return User.fromJson(
-            jsonDecode(response.body));
+        return User.fromJson(jsonDecode(response.body));
+      case 401:
+        return (response.body);
       case 409:
         return "The user with the given email is already present in the database";
       case 500:
