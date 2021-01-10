@@ -21,7 +21,7 @@ var options = {
       authAction :{ JWT: {name: "JWT", schema: {type: "apiKey", in: "header", name: "Authorization", description: ""}, value: "Bearer <JWT>"} }
     }
   };
-app.use('/', swaggerUI.serve, swaggerUI.setup(APIDocumentation, options));
+app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(APIDocumentation, options));
 
 app.use(express.json());
 
@@ -48,6 +48,8 @@ app.use('/', authMiddleware, educationRoute);
 app.use('/', authMiddleware, messageRoute);
 app.use('/', authMiddleware, domainOfActivityRoute);
 
-app.listen(port, () => console.log(`PlaDat backend listening on port ${port}!`));
+
+app.get('/', (req, res) => res.send('Hello World!'));
+app.listen(port, () => console.log(`Example app listening on port ${port}!`));
 
 module.exports = app;
