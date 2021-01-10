@@ -7,6 +7,7 @@ import 'package:frontend/screens/student_placement_list/local_widgets/placement_
 import 'package:frontend/screens/student_placement_list/local_widgets/placement_filter.dart';
 import 'package:frontend/services/api_service.dart';
 import 'package:frontend/services/auth_service.dart';
+import 'package:frontend/services/custom_http_service.dart';
 import 'package:frontend/utils/custom_theme.dart';
 import 'package:frontend/utils/routes_generator.dart';
 import 'package:frontend/widgets/appbar.dart';
@@ -94,9 +95,10 @@ class _PlacementCardsListState extends State<PlacementCardsList>
                                   ),
                                   fullscreenDialog: true,
                                 ));
-                              } else {
-                                setState(() {});
                               }
+                              setState(() {
+                                _placements.remove(_filteredPlacements[index]);
+                              });
                             });
                           },
                         ),
