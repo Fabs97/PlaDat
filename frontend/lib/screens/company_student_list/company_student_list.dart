@@ -49,11 +49,11 @@ class _StudentCardsListState extends State<StudentCardsList> {
     super.initState();
   }
 
-  onChangeDropdownItem(Placement selectedPlacement) {
-    if (selectedPlacement == null) return;
+  onChangeDropdownItem(int selectedPlacementId) {
+    if (selectedPlacementId == null) return;
     setState(() {
-      _placement = selectedPlacement;
-      if (!recommendationMap.containsKey(selectedPlacement.id)) {
+      _placement = _placements[selectedPlacementId];
+      if (!recommendationMap.containsKey(selectedPlacementId)) {
         _requestRecomendations();
       }
     });
@@ -96,17 +96,17 @@ class _StudentCardsListState extends State<StudentCardsList> {
                     : DropdownButtonHideUnderline(
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                          child: DropdownButton<Placement>(
+                          child: DropdownButton<int>(
                             disabledHint: Text("No placements found!"),
                             icon: Icon(
                               Icons.arrow_drop_down,
                             ),
                             iconEnabledColor: CustomTheme().primaryColor,
                             iconDisabledColor: CustomTheme().secondaryColor,
-                            value: _placement,
+                            value: _placement.id,
                             items: _placements?.map((placement) {
-                                  return DropdownMenuItem<Placement>(
-                                    value: placement,
+                                  return DropdownMenuItem<int>(
+                                    value: placement.id,
                                     child: Text(
                                       'Placement #${placement.id}',
                                       style: TextStyle(
