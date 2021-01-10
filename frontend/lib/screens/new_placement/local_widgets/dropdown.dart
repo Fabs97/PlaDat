@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/utils/custom_theme.dart';
-import 'package:multiselect_formfield/multiselect_formfield.dart';
+import 'package:multi_select_flutter/dialog/multi_select_dialog_field.dart';
+import 'package:multi_select_flutter/multi_select_flutter.dart';
+import 'package:multi_select_flutter/util/multi_select_item.dart';
 
 class Dropdown extends StatefulWidget {
   final String title;
@@ -38,24 +40,15 @@ class _DropdownState extends State<Dropdown> {
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.only(top: 8.0),
-        child: MultiSelectFormField(
-          chipBackGroundColor: Colors.white,
-          checkBoxActiveColor: Colors.white,
-          checkBoxCheckColor: CustomTheme().primaryColor,
-          dialogShapeBorder: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(12.0))),
-          title: Text(
-            widget.title,
-          ),
-          fillColor: Colors.white,
-          dataSource: widget._items
-              .map((item) => {'display': item.name, 'value': item.name})
+        child: MultiSelectDialogField(
+          items: widget._items
+              .map((item) => MultiSelectItem<dynamic>(item.name, item.name))
               .toList(),
-          textField: 'display',
-          valueField: 'value',
-          okButtonLabel: 'OK',
-          cancelButtonLabel: 'CANCEL',
-          onSaved: (value) {
+          title: Text(widget.title),
+          selectedColor: CustomTheme().secondaryColor,
+          buttonIcon: Icon(Icons.arrow_drop_down),
+          buttonText: Text(widget.title),
+          onConfirm: (value) {
             if (value == null) return;
             setState(() {
               widget._itemsChosen = widget._items
@@ -63,6 +56,10 @@ class _DropdownState extends State<Dropdown> {
                   .toList();
             });
           },
+          chipDisplay: MultiSelectChipDisplay(
+            height: 33.0,
+            scroll: true,
+          ),
         ),
       ),
     );

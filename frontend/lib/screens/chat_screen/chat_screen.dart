@@ -5,6 +5,7 @@ import 'package:frontend/models/user.dart';
 import 'package:frontend/screens/chat_screen/local_widgets/message_card.dart';
 import 'package:frontend/services/api_service.dart';
 import 'package:frontend/services/auth_service.dart';
+import 'package:frontend/utils/custom_theme.dart';
 import 'package:frontend/widgets/appbar.dart';
 import 'package:frontend/widgets/drawer.dart';
 
@@ -29,6 +30,10 @@ class _ChatScreenState extends State<ChatScreen> {
   bool _sendingMessage = false;
   final _formKey = GlobalKey<FormState>();
   String _newMessage = "";
+  final loggedUserIsEmployer =
+      AuthService().loggedUser.type == AccountType.Employer;
+
+  dynamic user;
 
   @override
   void initState() {
@@ -44,19 +49,28 @@ class _ChatScreenState extends State<ChatScreen> {
         widget._messages = List.from((messagesList.cast<Message>()).reversed);
       });
     });
+    if (loggedUserIsEmployer) {
+      APIService.route(ENDPOINTS.Student, "/student/:id",
+              urlArgs: widget.args.studentId)
+          .then((value) => setState(() => user = value));
+    } else {
+      APIService.route(ENDPOINTS.Employers, "/employer/:id",
+              urlArgs: widget.args.employerId)
+          .then((value) => setState(() => user = value));
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
-    final loggedUserType = AuthService().loggedUser.type;
     return Scaffold(
-      // TODO: needs to be chagend with the real name
       appBar: CustomAppBar.createAppBar(
           context,
-          loggedUserType == AccountType.Employer
-              ? "Student Name"
-              : "Company Name"),
+          user == null
+              ? (loggedUserIsEmployer ? "Student Name" : "Company Name")
+              : (loggedUserIsEmployer
+                  ? "${user.name} ${user.surname}"
+                  : "${user.name}")),
       drawer: CustomDrawer.createDrawer(context),
       body: RefreshIndicator(
         onRefresh: () async => _requestMessages(),
@@ -81,9 +95,9 @@ class _ChatScreenState extends State<ChatScreen> {
                             return MessageCard(
                               message: message,
                               isByMe: (messageSender == Sender.STUDENT &&
-                                      loggedUserType == AccountType.Student) ||
+                                      !loggedUserIsEmployer) ||
                                   (messageSender == Sender.EMPLOYER &&
-                                      loggedUserType == AccountType.Employer),
+                                      loggedUserIsEmployer),
                             );
                           }),
                     ),
@@ -170,6 +184,7 @@ class _ChatScreenState extends State<ChatScreen> {
   _createSendMessageButton(Size screenSize) {
     return SizedBox(
       height: screenSize.height * .5,
+      width: screenSize.width * .855,
       child: Form(
         key: _formKey,
         child: Column(
@@ -177,31 +192,39 @@ class _ChatScreenState extends State<ChatScreen> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           mainAxisSize: MainAxisSize.max,
           children: [
-            TextFormField(
-              decoration: InputDecoration(
-                border: OutlineInputBorder(
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                boxShadow: [CustomTheme().boxShadow],
+                borderRadius: BorderRadius.circular(14.0),
+              ),
+              child: TextFormField(
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(15.0)),
                     borderSide: BorderSide(
                       color: Colors.grey,
                       width: 1.5,
-                    )),
-                focusedBorder: InputBorder.none,
-                enabledBorder: InputBorder.none,
-                errorBorder: InputBorder.none,
-                disabledBorder: InputBorder.none,
-                fillColor: Colors.white54,
-                filled: true,
-                hintText: "Write your message here",
+                    ),
+                  ),
+                  focusedBorder: InputBorder.none,
+                  enabledBorder: InputBorder.none,
+                  errorBorder: InputBorder.none,
+                  disabledBorder: InputBorder.none,
+                  fillColor: Colors.white54,
+                  filled: true,
+                  hintText: "Write your message here",
+                ),
+                initialValue: _newMessage,
+                onFieldSubmitted: _setMessage,
+                onSaved: _setMessage,
+                onChanged: _setMessage,
+                validator: (value) {
+                  if (value.isEmpty) return "Message can not be empty";
+                  return null;
+                },
+                maxLines: 5,
               ),
-              initialValue: _newMessage,
-              onFieldSubmitted: _setMessage,
-              onSaved: _setMessage,
-              onChanged: _setMessage,
-              validator: (value) {
-                if (value.isEmpty) return "Message can not be empty";
-                return null;
-              },
-              maxLines: 5,
             ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 16.0),
@@ -215,7 +238,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   ),
                 ),
               ),
-            ),
+            )
           ],
         ),
       ),

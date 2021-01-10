@@ -4,6 +4,7 @@ import 'package:frontend/models/student.dart';
 import 'package:frontend/utils/routes_generator.dart';
 import 'package:frontend/utils/custom_theme.dart';
 import 'package:frontend/widgets/card_skills_info.dart';
+import 'package:intl/intl.dart';
 
 class StudentCard extends StatelessWidget {
   final Student student;
@@ -90,7 +91,7 @@ class StudentCard extends StatelessWidget {
                     ),
                   ),
                 ),
-                onPressed: () => Nav.navigatorKey.currentState.pushNamed(
+                onPressed: () => Nav.currentState.pushNamed(
                   "/profile",
                   arguments: student,
                 ),
@@ -114,18 +115,35 @@ class StudentCard extends StatelessWidget {
   }
 
   Widget _createStudentInfo(ThemeData themeData) {
+    final format = DateFormat('MMM yyyy');
+    final List<Widget> children = [];
+    final hasEducation =
+        student.educations != null && student.educations.isNotEmpty;
+    final hasWork = student.works != null && student.works.isNotEmpty;
+    if (hasEducation) {
+      final education = student.educations[0];
+      children.add(_createStudentInfoBox(
+          "${education.institution.name}",
+          "${format.format(education.startPeriod)} - ${format.format(education.endPeriod)}",
+          themeData));
+    }
+    if (hasWork) {
+      final work = student.works[0];
+      children.add(_createStudentInfoBox(
+          "${work.companyName}",
+          "${format.format(work.startPeriod)} - ${format.format(work.endPeriod)}",
+          themeData));
+    }
+    if ((hasWork && !hasEducation) || (!hasWork && hasEducation)) {
+      children.add(Container());
+    }
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 9.0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.max,
-        children: [
-          _createStudentInfoBox(
-              "School of Life", "Jan 2020 - July 2022", themeData),
-          _createStudentInfoBox(
-              "School of Life", "Jan 2020 - July 2022", themeData),
-        ],
+        children: children,
       ),
     );
   }

@@ -3,12 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:frontend/models/user.dart';
 import 'package:frontend/services/api_service.dart';
-import 'package:frontend/services/api_services/registration_api_service.dart';
 import 'package:frontend/utils/custom_theme.dart';
 import 'package:frontend/utils/routes_generator.dart';
-import 'package:frontend/widgets/appbar.dart';
-import 'package:frontend/widgets/drawer.dart';
-import 'package:http/http.dart';
 
 class Registration extends StatefulWidget {
   Registration({Key key}) : super(key: key);
@@ -31,8 +27,12 @@ class _RegistrationState extends State<Registration> {
     final screenSize = MediaQuery.of(context).size;
     final themeData = Theme.of(context);
     return Scaffold(
-      appBar: CustomAppBar.createAppBar(context, "Register to PlaDat"),
-      drawer: CustomDrawer.createDrawer(context),
+      appBar: AppBar(
+        title: Text("Register to PlaDat"),
+        elevation: 0,
+        centerTitle: true,
+        leading: Container(),
+      ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -269,7 +269,7 @@ class _RegistrationState extends State<Registration> {
         if (response is User) {
           message = "User correctly registered";
           toastColor = Colors.blue[700];
-          Nav.navigatorKey.currentState.pop();
+          Nav.currentState.pop();
         } else {
           message = response;
           toastColor = Colors.redAccent;

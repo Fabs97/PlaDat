@@ -17,7 +17,7 @@ module.exports = {
         
         // This one is very similar to SQL
         let result = await database('student')
-            .select('id', 'name','surname', 'description')
+            .select('id', 'name','surname', 'description', 'user_id as userId')
             .where('id', id)
             .catch(error => {
                 if(error) {
@@ -33,10 +33,10 @@ module.exports = {
             .insert({
                 name: studentInfo.name,
                 surname: studentInfo.surname,
-                email: studentInfo.email,
                 description: studentInfo.description,
-                phone: studentInfo.phone
-            },['id','name','surname','email','description', 'phone'])
+                phone: studentInfo.phone, 
+                user_id: studentInfo.userId
+            },['id','name','surname','description', 'phone', 'user_id'])
             .catch(error => {
                 if(error) {
                     throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There was an error saving your profile');
@@ -112,7 +112,7 @@ module.exports = {
 
         // STUDENT + SKILLS + LOCATION
         let resultTemp = await database('student AS s')
-            .select('s.id', 's.name', 's.surname', 's.email', 's.description', 'sk.id AS skill_id', 'sk.name AS skill_name', 'sk.type AS skill_type', 'l.id AS location_id', 'l.country AS location_country', 'l.city AS location_city')
+            .select('s.id', 's.name', 's.surname', 's.description', 'sk.id AS skill_id', 'sk.name AS skill_name', 'sk.type AS skill_type', 'l.id AS location_id', 'l.country AS location_country', 'l.city AS location_city')
             .leftJoin('student_has_skills AS shs', 's.id', 'shs.student_id')
             .leftJoin('skill AS sk', 'shs.skill_id', 'sk.id')
             .leftJoin('location AS l', 's.location_id', 'l.id')
@@ -228,7 +228,6 @@ module.exports = {
         return database('student')
             .where('id', id)
             .del();
-            
     },
 
     setStudentLocation: async (studentId, locationId) => {
@@ -242,6 +241,18 @@ module.exports = {
                 }
             });
         return result;
+    },
+    
+    getStudentByUserId: async (userId) => {
+        let result = await database('student')
+            .select('id', 'name')
+            .where('user_id', userId)
+            .catch(error => {
+                if(error){
+                    throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There has been a problem retrieving this student. Please try again')
+                }
+            });
+        return result.length ? result[0] : null;
     },
 
     getStudentLocationById: async (id) => {

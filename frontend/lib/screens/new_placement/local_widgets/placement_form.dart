@@ -68,86 +68,91 @@ class _PlacementFormState extends State<PlacementForm> {
     return SizedBox(
       width: size.width * .9,
       height: size.height * .85,
-      child: Container(
-        child: Form(
-          key: _formKey,
-          child: SafeArea(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              mainAxisSize: MainAxisSize.max,
-              children: <Widget>[
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10.0),
-                    color: Colors.white,
-                    boxShadow: [CustomTheme().boxShadow],
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 20.0,
-                      vertical: 5.0,
+      child: SingleChildScrollView(
+        child: Container(
+          child: Form(
+            key: _formKey,
+            child: SafeArea(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisSize: MainAxisSize.max,
+                children: <Widget>[
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10.0),
+                      color: Colors.white,
+                      boxShadow: [CustomTheme().boxShadow],
                     ),
                     child: Padding(
-                      padding: const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 30.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          _createPlacementField(placement),
-                          _createTypeOfEmploymentField(placement),
-                          _createWorkingPeriodField(placement, context),
-                          _createSalaryField(placement),
-                          Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Row(
-                              children: [
-                                Text(
-                                  "Describe the role's activity",
-                                  style: themeData.textTheme.subtitle1.copyWith(
-                                    fontSize: 16,
-                                    color: CustomTheme().textColor,
-                                  ),
-                                  textAlign: TextAlign.left,
-                                ),
-                              ],
-                            ),
-                          ),
-                          _createDescriptionField(placement),
-                          majorsWidget ?? Container(),
-                          institutionsWidget ?? Container(),
-                          _cretaeautocompleteField(placement),
-                        ],
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 20.0,
+                        vertical: 5.0,
                       ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 16.0),
-                  child: RaisedButton(
-                    onPressed: () {
-                      // Validate will return true if the form is valid, or false if
-                      // the form is invalid.
-                      if (_formKey.currentState.validate()) {
-                        placement.majors = majorsWidget.itemsChosen;
-                        placement.institutions = institutionsWidget.itemsChosen;
-                        widget.changeStep(false);
-                      }
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Text(
-                        'Continue',
-                        style: themeData.textTheme.subtitle1.copyWith(
-                          color: Colors.white,
-                          fontSize: 18.0,
-                          fontStyle: FontStyle.normal,
-                          fontWeight: FontWeight.normal,
+                      child: Padding(
+                        padding:
+                            const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 30.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            _createPlacementField(placement),
+                            _createTypeOfEmploymentField(placement),
+                            _createWorkingPeriodField(placement, context),
+                            _createSalaryField(placement),
+                            Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    "Describe the role's activity",
+                                    style:
+                                        themeData.textTheme.subtitle1.copyWith(
+                                      fontSize: 16,
+                                      color: CustomTheme().textColor,
+                                    ),
+                                    textAlign: TextAlign.left,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            _createDescriptionField(placement),
+                            majorsWidget,
+                            institutionsWidget,
+                            _cretaeautocompleteField(placement),
+                          ],
                         ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 16.0),
+                    child: RaisedButton(
+                      onPressed: () {
+                        // Validate will return true if the form is valid, or false if
+                        // the form is invalid.
+                        if (_formKey.currentState.validate()) {
+                          placement.majors = majorsWidget.itemsChosen;
+                          placement.institutions =
+                              institutionsWidget.itemsChosen;
+                          widget.changeStep(false);
+                        }
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Text(
+                          'Continue',
+                          style: themeData.textTheme.subtitle1.copyWith(
+                            color: Colors.white,
+                            fontSize: 18.0,
+                            fontStyle: FontStyle.normal,
+                            fontWeight: FontWeight.normal,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -184,7 +189,6 @@ class _PlacementFormState extends State<PlacementForm> {
       ),
       icon: Icon(
         Icons.arrow_drop_down,
-        color: Colors.black87,
         size: 25.0,
       ),
       validator: (value) {
@@ -220,6 +224,13 @@ class _PlacementFormState extends State<PlacementForm> {
       ),
       firstDate: DateTime.now(),
       lastDate: (DateTime.now()).add(Duration(days: 365 * 100)),
+      builder: (context, child) {
+        return Theme(
+            data: Theme.of(context).copyWith(
+              primaryColor: CustomTheme().primaryColor.withOpacity(.7),
+            ),
+            child: child);
+      },
     );
     if (range != null) {
       setState(() {
@@ -261,7 +272,7 @@ class _PlacementFormState extends State<PlacementForm> {
       inputFormatters: [
         FilteringTextInputFormatter.digitsOnly,
       ],
-      initialValue: placement.salary?.toString(),
+      initialValue: placement.salary?.toString() ?? '',
       onChanged: (value) {
         setState(() {
           placement.salary = value != null ? int.parse(value) : "";
@@ -304,7 +315,6 @@ class _PlacementFormState extends State<PlacementForm> {
       decoration: const InputDecoration(
         hintText: 'Address',
       ),
-      //initialValue: _controller.text ?? ' ',
       onTap: () async {
         final Place result = await showSearch(
           context: context,
@@ -322,7 +332,6 @@ class _PlacementFormState extends State<PlacementForm> {
           });
         }
       },
-
       validator: (value) {
         if (value.isEmpty) {
           return 'Please enter your address';

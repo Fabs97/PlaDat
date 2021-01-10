@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_tindercard/flutter_tindercard.dart';
 import 'package:frontend/models/placement.dart';
 import 'package:frontend/models/match.dart';
+import 'package:frontend/screens/company_placement_list/local_widgets/placement_matched_students.dart';
 import 'package:frontend/screens/student_placement_list/local_widgets/placement_card.dart';
 import 'package:frontend/screens/student_placement_list/local_widgets/placement_filter.dart';
 import 'package:frontend/services/api_service.dart';
 import 'package:frontend/services/auth_service.dart';
+import 'package:frontend/services/custom_http_service.dart';
 import 'package:frontend/utils/custom_theme.dart';
 import 'package:frontend/utils/routes_generator.dart';
 import 'package:frontend/widgets/appbar.dart';
@@ -37,7 +39,7 @@ class _PlacementCardsListState extends State<PlacementCardsList>
             ENDPOINTS.Recomendations, "/recommendation/id/seePlacements",
             urlArgs: studentId)
         .then((placementsList) => setState(() {
-              _placements = placementsList.cast<Placement>();
+              _placements = placementsList?.cast<Placement>() ?? [];
               _filteredPlacements = _placements;
             }));
     super.initState();
@@ -54,70 +56,83 @@ class _PlacementCardsListState extends State<PlacementCardsList>
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          _createFilterButton(size, themeData),
-          Container(
-            height: size.height * .8,
-            child: _filteredPlacements == null
-                ? Center(
-                    child: CircularProgressIndicator(),
-                  )
-                : TinderSwapCard(
-                    animDuration: 400,
-                    orientation: AmassOrientation.BOTTOM,
-                    totalNum: _filteredPlacements.length,
-                    stackNum: 3,
-                    maxWidth: size.width * .9,
-                    maxHeight: size.height * .9,
-                    minWidth: size.width * .8,
-                    minHeight: size.height * .8,
-                    cardBuilder: (context, index) =>
-                        PlacementCard(placement: _filteredPlacements[index]),
-                    cardController: _cardController = CardController(),
-                    swipeCompleteCallback: (orientation, index) {
-                      APIService.route(ENDPOINTS.Matches, "/matching",
-                          body: Match(
-                            studentID: studentId,
-                            placementID: _filteredPlacements[index].id,
-                            studentAccept:
-                                orientation == CardSwipeOrientation.LEFT
-                                    ? false
-                                    : true,
-                          )).then((match) async {
-                        if (match.status == 'ACCEPTED') {
-                          await Nav.navigatorKey.currentState
-                              .push(MaterialPageRoute(
-                            builder: (builder) => MatchAlert(
-                              placement: _filteredPlacements[index],
-                              object: null,
-                            ),
-                            fullscreenDialog: true,
-                          ));
-                        }
-                      });
-                    },
+        children: _placements != null && _placements.isNotEmpty
+            ? [
+                _createFilterButton(size, themeData),
+                Container(
+                  height: size.height * .78,
+                  child: _filteredPlacements == null
+                      ? Center(
+                          child: CircularProgressIndicator(),
+                        )
+                      : TinderSwapCard(
+                          animDuration: 400,
+                          orientation: AmassOrientation.BOTTOM,
+                          totalNum: _filteredPlacements.length,
+                          stackNum: 3,
+                          maxWidth: size.width * .9,
+                          maxHeight: size.height * .9,
+                          minWidth: size.width * .8,
+                          minHeight: size.height * .8,
+                          cardBuilder: (context, index) => PlacementCard(
+                              placement: _filteredPlacements[index]),
+                          cardController: _cardController = CardController(),
+                          swipeCompleteCallback: (orientation, index) {
+                            APIService.route(ENDPOINTS.Matches, "/matching",
+                                body: Match(
+                                  studentID: studentId,
+                                  placementID: _filteredPlacements[index].id,
+                                  studentAccept:
+                                      orientation == CardSwipeOrientation.LEFT
+                                          ? false
+                                          : true,
+                                )).then((match) async {
+                              if (match.status == 'ACCEPTED') {
+                                await Nav.currentState.push(MaterialPageRoute(
+                                  builder: (builder) => MatchAlert(
+                                    placement: _filteredPlacements[index],
+                                    object: null,
+                                  ),
+                                  fullscreenDialog: true,
+                                ));
+                              }
+                              setState(() {
+                                _placements.remove(_filteredPlacements[index]);
+                              });
+                            });
+                          },
+                        ),
+                ),
+                Container(
+                  width: size.width * .9,
+                  height: size.height * .07,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      TinderButton(
+                          label: "Discard",
+                          cardController: _cardController,
+                          discardButton: true),
+                      TinderButton(
+                          label: "I'm interested",
+                          cardController: _cardController,
+                          discardButton: false),
+                    ],
                   ),
-          ),
-          Container(
-            width: size.width * .9,
-            height: size.height * .05,
-            child: Row(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                TinderButton(
-                    label: "Discard",
-                    cardController: _cardController,
-                    discardButton: true),
-                TinderButton(
-                    label: "I'm interested",
-                    cardController: _cardController,
-                    discardButton: false),
+                )
+              ]
+            : [
+                Center(
+                  child: Text(
+                    "No recommendations for you (yet!)",
+                    style: TextStyle(
+                      color: CustomTheme().primaryColor,
+                    ),
+                  ),
+                )
               ],
-            ),
-          )
-        ],
       ),
     );
   }

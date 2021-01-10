@@ -1,9 +1,10 @@
 const skillsService = require('./skillsService');
 const placementsService = require('./placementService');
 const studentService = require('./studentService');
-
+const employerService = require('./employerService');
 const SuperError = require('../errors').SuperError;
 const ERR_INTERNAL_SERVER_ERROR = require('../errors').ERR_INTERNAL_SERVER_ERROR;
+const ERR_FORBIDDEN = require('../errors').ERR_FORBIDDEN;
 
 const techSoftRate = 7/3;
 const skillsWeight = 0.7;
@@ -15,7 +16,11 @@ const threshold = 0.5;
 recommender = module.exports = {
 
     //for employers
-    getStudentRecommendationsForPlacement: async (placementID) => {
+    getStudentRecommendationsForPlacement: async (placementID, auth) => {
+        let employer = await employerService.getEmployerByPlacementId(placementID);
+        if(auth.employerId !== employer.id) {
+            throw new SuperError(ERR_FORBIDDEN, 'You cannot see the recommendations for this placement.')
+        }
 
         try {
             let placement = await placementsService.getPlacementById(placementID);
@@ -70,15 +75,16 @@ recommender = module.exports = {
         }
         
     },
-
-    //for students
-
-
+    
     /* 
      * This is the updated version of the algorithm.
      * The parameters we agreed on, for example the 70% - 30% rate between tech and soft skills, are defined above as constatnts to be accessed easily.
      */ 
-    getPlacementRecommendationsForStudent: async (studentID) => {
+    getPlacementRecommendationsForStudent: async (studentID, auth) => {
+
+        if(auth.studentId !== studentID) {
+            throw new SuperError(ERR_FORBIDDEN, 'You cannot see the recommendations for other students.')
+        }
         
         try {
             let student = await studentService.getStudentProfile(studentID);
@@ -145,7 +151,7 @@ recommender = module.exports = {
                 if(studentSkills.some(skill => skill.id == placementSkills[j].id)){
                     matchingTechSkills++;
                 }
-            } else {
+            } else if (placementSkills[j].type == 'SOFT') {
                 placementSoftSkills++;
                 if(studentSkills.some(skill => skill.id == placementSkills[j].id)){
                     matchingSoftSkills++;

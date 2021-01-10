@@ -8,7 +8,12 @@ module.exports = {
         let result = await database('student_has_placement')
             .select('student_id', 'placement_id', 'student_accept', 'placement_accept', 'status')
             .where('student_id', studentID)
-            .andWhere('placement_id', placementID);
+            .andWhere('placement_id', placementID)
+            .catch(error => {
+                if(error){
+                    throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There has been a problem saving your interaction. Please try again')
+                }
+            });
         return result[0];
     },
 
@@ -21,7 +26,12 @@ module.exports = {
                 student_accept: choice.studentAccept,
                 placement_accept: choice.placementAccept, 
                 status: (choice.studentAccept === false || choice.placementAccept === false ? 'REJECTED' : 'PENDING')
-            }, ['student_id', 'placement_id', 'student_accept', 'placement_accept', 'status']);
+            }, ['student_id', 'placement_id', 'student_accept', 'placement_accept', 'status'])
+            .catch(error => {
+                if(error){
+                    throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There has been a problem saving your interaction. Please try again')
+                }
+            });
         
         return result[0];
     },
@@ -39,6 +49,11 @@ module.exports = {
                 student_accept : choice.studentAccept,
                 status: choice.studentAccept === true ? 'ACCEPTED' : 'REJECTED'
             }, ['student_id', 'placement_id', 'student_accept', 'placement_accept', 'status'])
+            .catch(error => {
+                if(error){
+                    throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There has been a problem saving your interaction. Please try again')
+                }
+            });
     },
 
     getMatchesByStudentId: (studentId) => {
@@ -80,5 +95,19 @@ module.exports = {
                     throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There has been a problem retrieving your matches. Please try again')
                 }
             })
+    },
+    getStudentMatchesWithEmployer: async function (employerId, studentID) {
+        let result = await database('student_has_placement as shp')
+            .select('shp.student_id', 'shp.placement_id', 'shp.student_accept', 'shp.placement_accept', 'shp.status')
+            .leftJoin('placements as p', 'shp.placement_id', 'p.id')
+            .where('p.employer_id', employerId)
+            .andWhere('shp.student_id', studentID)
+            .andWhere('shp.status', 'ACCEPTED')
+            .catch(error => {
+                if(error){
+                    throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There has been a problem retrieving your matches. Please try again')
+                }
+            });
+        return result;
     }
 };

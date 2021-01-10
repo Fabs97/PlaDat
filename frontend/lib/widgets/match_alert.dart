@@ -73,8 +73,12 @@ class MatchAlert extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    // TODO: this needs to be dynamic
-                    isStudent ? 'School of Life' : "Zurich",
+                    isStudent
+                        ? (object.educations != null &&
+                                object.educations.isNotEmpty
+                            ? "${object.educations[0].location.city}, ${object.educations[0].location.country}"
+                            : "")
+                        : "${placement.location.city}, ${placement.location.country}",
                     style: themeData.textTheme.headline6.copyWith(
                       color: customTheme.secondaryColor,
                       fontWeight: FontWeight.w700,
@@ -109,14 +113,13 @@ class MatchAlert extends StatelessWidget {
                     style: TextStyle(color: Colors.white),
                   ),
                   onPressed: () {
-                    Nav.navigatorKey.currentState
-                        .popAndPushNamed("/chat-screen",
-                            arguments: ChatScreenArguments(
-                              isStudent
-                                  ? object.id
-                                  : AuthService().loggedAccountInfo.id,
-                              placement.employerId,
-                            ));
+                    Nav.currentState.pushNamed("/chat-screen",
+                        arguments: ChatScreenArguments(
+                          isStudent
+                              ? object.id
+                              : AuthService().loggedAccountInfo.id,
+                          placement.employerId,
+                        ));
                   },
                 ),
               ),

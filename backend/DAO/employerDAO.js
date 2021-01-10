@@ -6,7 +6,7 @@ const ERR_INTERNAL_SERVER_ERROR = require('../errors').ERR_INTERNAL_SERVER_ERROR
 module.exports = {
     getEmployer: async (employer_id) => {
         let result = await database('employer AS e')
-            .select('e.id AS id', 'e.name AS name', 'e.description AS description')
+            .select('e.id AS id', 'e.name AS name', 'e.description AS description', 'user_id as userId')
             .where('id', employer_id)
             .catch(error => {
                 if(error) {
@@ -16,21 +16,40 @@ module.exports = {
         return result[0];
     },
 
-    getLastEmployer: async () => {
-        let result = await database("employer")
-            .select("id")
-            .orderBy("id", "desc")
-            .limit(1);
-        return result[0];
+    getEmployerByUserId:  async (userId) => {
+        let result = await database('employer')
+            .select('id', 'name')
+            .where('user_id', userId)
+            .catch(error => {
+                if(error) {
+                    throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There was an error retrieving this profile. Please try again');
+                }
+            });
+        
+        return result.length ? result[0] : null;
     },
 
-    addNewEmployer: async (details) => {
+    getEmployerByPlacementId: async (id) => {
+        let result = await database('employer as e')
+            .select('e.id', 'e.user_id as userId')
+            .leftJoin('placements as p', 'e.id', 'p.employer_id')
+            .where('p.id', id)
+            .catch(error => {
+                if(error) {
+                    throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There was an error retrieving this profile. Please try again');
+                }
+            });
+        return result.length ? result[0] : null;
+    },
+
+    addNewEmployer: async (details, userId) => {
         let result = await database('employer')
             .returning()
             .insert({
                 name: details.name,
                 description: details.description,
-                domain_of_activity_id: details.domainOfActivityId
+                domain_of_activity_id: details.domainOfActivityId,
+                user_id: userId
             }, ['id','name', 'description', 'domain_of_activity_id'])
             .catch(error => {
                 if(error) {

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/main.dart';
 import 'package:frontend/screens/company_placement_list/company_placement_list.dart';
 import 'package:frontend/screens/chat_screen/chat_screen.dart';
 import 'package:frontend/screens/company_student_list/company_student_list.dart';
+import 'package:frontend/screens/login/login.dart';
 import 'package:frontend/screens/new_employer/new_employer.dart';
 import 'package:frontend/screens/new_placement/new_placement.dart';
 import 'package:frontend/screens/new_student/new_student.dart';
@@ -10,23 +10,10 @@ import 'package:frontend/screens/profile/profile.dart';
 import 'package:frontend/screens/registration/registration.dart';
 import 'package:frontend/screens/student_matches_list/student_matches_list.dart';
 import 'package:frontend/screens/student_placement_list/student_placement_list.dart';
-import 'package:frontend/services/auth_service.dart';
 
 class RoutesGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
-      case '/home':
-        {
-          return _createRoute(FirstPage(), settings);
-        }
-      case '/student-list':
-        {
-          return _createRoute(StudentCardsList(), settings);
-        }
-      case '/placement-list':
-        {
-          return _createRoute(PlacementCardsList(), settings);
-        }
       case '/new-placement':
         {
           return _createRoute(NewPlacement(), settings);
@@ -49,8 +36,7 @@ class RoutesGenerator {
         }
       case '/profile':
         {
-          return _createRoute(
-              Profile(profile: settings.arguments), settings);
+          return _createRoute(Profile(profile: settings.arguments), settings);
         }
       case '/chat-screen':
         {
@@ -60,7 +46,23 @@ class RoutesGenerator {
               ),
               settings);
         }
-        case '/new-employer':
+      case "/login":
+        {
+          return _createRoute(
+              Login(
+                isAfterAuthError: settings.arguments ?? false,
+              ),
+              settings);
+        }
+      case "/employer-home":
+        {
+          return _createRoute(StudentCardsList(), settings);
+        }
+      case "/student-home":
+        {
+          return _createRoute(PlacementCardsList(), settings);
+        }
+      case '/new-employer':
         {
           return _createRoute(NewEmployer(), settings);
         }
@@ -93,4 +95,5 @@ class RoutesGenerator {
 
 class Nav {
   static final navigatorKey = GlobalKey<NavigatorState>();
+  static final currentState = navigatorKey.currentState;
 }

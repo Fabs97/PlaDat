@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:frontend/models/domainofactivity.dart';
-import 'package:http/http.dart' as http;
+import 'package:frontend/services/custom_http_service.dart' as http;
 
 import 'package:frontend/services/api_service.dart';
 
@@ -19,7 +19,11 @@ class DomainofactivitiesAPIService extends APIInfo {
     var response = await http.get(APIInfo.apiEndpoint + subRoute);
     if (response.statusCode == 200) {
       final parsed = jsonDecode(response.body).cast<Map<String, dynamic>>();
-      return parsed.map((majorJson) => Domainofactivity.fromJson(majorJson)).toList();
+      return parsed
+          .map((majorJson) => Domainofactivity.fromJson(majorJson))
+          .toList();
+    } else {
+      print(response.body);
     }
   }
 }

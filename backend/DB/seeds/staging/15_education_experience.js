@@ -10,14 +10,14 @@ exports.seed = function(knex) {
       
       let education = await knex('education')
         .select('id')
-        .limit(3)
+        .limit(10)
 
       let experiences = [];
       let today = new Date();
       for (let i=0; i<students.length; i++) {
         experiences.push({
           student_id: students[i].id,
-          education_id: education[i%3].id,
+          education_id: education[i].id,
           description: "Difficult study",
           start_period: today,
           end_period: today,

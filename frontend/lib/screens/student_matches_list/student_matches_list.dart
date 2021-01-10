@@ -36,6 +36,8 @@ class _StudentMatchesState extends State<StudentMatches> {
     final themeData = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
+        elevation: 0,
+        centerTitle: true,
         title: Text(
           "Matched Placements",
           textAlign: TextAlign.center,
@@ -68,127 +70,123 @@ class _StudentMatchesState extends State<StudentMatches> {
                       return Column(
                         children: [
                           ListTile(
-                              leading: Column(
-                                children: [
-                                  Container(
-                                    width: 46,
-                                    height: 46,
-                                    child:
-                                        Icon(Icons.work, color: Colors.white),
-                                    decoration: BoxDecoration(
-                                      color: CustomTheme().primaryColor,
-                                      borderRadius: BorderRadius.circular(4.0),
-                                    ),
+                            leading: Column(
+                              children: [
+                                Container(
+                                  width: 46,
+                                  height: 46,
+                                  child: Icon(Icons.work, color: Colors.white),
+                                  decoration: BoxDecoration(
+                                    color: CustomTheme().primaryColor,
+                                    borderRadius: BorderRadius.circular(4.0),
                                   ),
-                                ],
-                              ),
-                              title: Text(
-                                  _placement.position + " No.$index",
-                                  style: themeData.textTheme.bodyText1.copyWith(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500,
-                                  )),
-                              subtitle: Text(
-                                _placement.employerName +
-                                    '\n${_placement.description}',
-                                maxLines: 3,
-                                overflow: TextOverflow.ellipsis,
-                                style: themeData.textTheme.bodyText2.copyWith(
-                                    fontSize: 12, fontWeight: FontWeight.w400),
-                              ),
-                              trailing: PopupMenuButton<String>(
-                                icon: Icon(
-                                  Icons.more_vert,
-                                  color: CustomTheme().primaryColor,
-                                  size: 36,
                                 ),
-                                padding: EdgeInsets.zero,
-                                itemBuilder: (context) =>
-                                    <PopupMenuEntry<String>>[
-                                  PopupMenuItem<String>(
-                                    child: ListTile(
-                                      leading: Icon(
-                                        Icons.email,
+                              ],
+                            ),
+                            title: Text(_placement.position + " No.$index",
+                                style: themeData.textTheme.bodyText1.copyWith(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                )),
+                            subtitle: Text(
+                              _placement.employerName +
+                                  '\n${_placement.description}',
+                              maxLines: 3,
+                              overflow: TextOverflow.ellipsis,
+                              style: themeData.textTheme.bodyText2.copyWith(
+                                  fontSize: 12, fontWeight: FontWeight.w400),
+                            ),
+                            trailing: PopupMenuButton<String>(
+                              icon: Icon(
+                                Icons.more_vert,
+                                color: CustomTheme().primaryColor,
+                                size: 36,
+                              ),
+                              padding: EdgeInsets.zero,
+                              itemBuilder: (context) =>
+                                  <PopupMenuEntry<String>>[
+                                PopupMenuItem<String>(
+                                  child: ListTile(
+                                    leading: Icon(
+                                      Icons.email,
+                                      color: CustomTheme().secondaryColor,
+                                    ),
+                                    title: Text(
+                                      "Send message",
+                                      style: themeData.textTheme.subtitle1
+                                          .copyWith(
                                         color: CustomTheme().secondaryColor,
                                       ),
-                                      title: Text(
-                                        "Send message",
-                                        style: themeData.textTheme.subtitle1
-                                            .copyWith(
-                                          color: CustomTheme().secondaryColor,
-                                        ),
-                                      ),
-                                      onTap: () => Nav.navigatorKey.currentState
-                                          .pushNamed("/chat-screen",
-                                              arguments: ChatScreenArguments(
-                                                  _studentId,
-                                                  _placement.employerId)),
                                     ),
+                                    onTap: () => Nav.currentState.pushNamed(
+                                        "/chat-screen",
+                                        arguments: ChatScreenArguments(
+                                            _studentId, _placement.employerId)),
                                   ),
-                                  PopupMenuItem<String>(
-                                    child: ListTile(
-                                      leading: Icon(Icons.delete,
-                                          color: CustomTheme().primaryColor),
-                                      title: Text(
-                                        "Remove the match",
-                                      ),
-                                      onTap: () {
-                                        showDialog(
-                                            context: context,
-                                            builder: (BuildContext context) {
-                                              return AlertDialog(
-                                                title: Text(
-                                                    'Are you sure you want to remove the match?'),
-                                                actions: [
-                                                  FlatButton(
-                                                    child: Text('No'),
-                                                    onPressed: () {
-                                                      Navigator.pop(context);
-                                                    },
-                                                  ),
-                                                  FlatButton(
-                                                    child: Text('Yes'),
-                                                    onPressed: () {
-                                                      APIService.route(
-                                                              ENDPOINTS.Matches,
-                                                              "/match/:studentId/:placementId",
-                                                              urlArgs: Match(
-                                                                  studentID:
-                                                                      _studentId,
-                                                                  placementID:
-                                                                      _placements[
-                                                                              index]
-                                                                          .id))
-                                                          .then(
-                                                              (value) =>
-                                                                  setState(() {
-                                                                    print(
-                                                                        value);
-                                                                    if (value
-                                                                            is bool &&
-                                                                        value) {
-                                                                      _placements
-                                                                          .remove(
-                                                                              _placement);
-                                                                      Navigator.pop(
-                                                                          context);
-                                                                    } else {
-                                                                      Fluttertoast
-                                                                          .showToast(
-                                                                              msg: value);
-                                                                    }
-                                                                  }));
-                                                      Navigator.pop(context);
-                                                    },
-                                                  )
-                                                ],
-                                              );
-                                            });
-                                      },
+                                ),
+                                PopupMenuItem<String>(
+                                  child: ListTile(
+                                    leading: Icon(Icons.delete,
+                                        color: CustomTheme().primaryColor),
+                                    title: Text(
+                                      "Remove the match",
                                     ),
-                                  )
-                                ],
-                              )),
+                                    onTap: () {
+                                      showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return AlertDialog(
+                                              title: Text(
+                                                  'Are you sure you want to remove the match?'),
+                                              actions: [
+                                                FlatButton(
+                                                  child: Text('No'),
+                                                  onPressed: () {
+                                                    Navigator.pop(context);
+                                                  },
+                                                ),
+                                                FlatButton(
+                                                  child: Text('Yes'),
+                                                  onPressed: () {
+                                                    APIService.route(
+                                                            ENDPOINTS.Matches,
+                                                            "/match/:studentId/:placementId",
+                                                            urlArgs: Match(
+                                                                studentID:
+                                                                    _studentId,
+                                                                placementID:
+                                                                    _placements[
+                                                                            index]
+                                                                        .id))
+                                                        .then((value) =>
+                                                            setState(() {
+                                                              print(value);
+                                                              if (value
+                                                                      is bool &&
+                                                                  value) {
+                                                                _placements.remove(
+                                                                    _placement);
+                                                                Navigator.pop(
+                                                                    context);
+                                                              } else {
+                                                                Fluttertoast
+                                                                    .showToast(
+                                                                        msg:
+                                                                            value);
+                                                              }
+                                                            }));
+                                                    Navigator.pop(context);
+                                                  },
+                                                )
+                                              ],
+                                            );
+                                          });
+                                    },
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
                           Padding(
                             padding:
                                 const EdgeInsets.symmetric(horizontal: 8.0),

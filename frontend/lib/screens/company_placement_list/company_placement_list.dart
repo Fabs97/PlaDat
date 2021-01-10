@@ -8,6 +8,8 @@ import 'package:frontend/screens/company_placement_list/local_widgets/placement_
 import 'package:frontend/services/api_service.dart';
 import 'package:frontend/utils/custom_theme.dart';
 import 'package:frontend/utils/routes_generator.dart';
+import 'package:frontend/services/auth_service.dart';
+import 'package:frontend/widgets/appbar.dart';
 import 'package:frontend/widgets/drawer.dart';
 
 class MyPlacements extends StatefulWidget {
@@ -19,12 +21,12 @@ class MyPlacements extends StatefulWidget {
 
 class _MyPlacementsState extends State<MyPlacements> {
   List<Placement> _placements;
-  int _employerId = 1;
-
+  Placement _placement;
+  final _employer = AuthService().loggedAccountInfo;
   @override
   void initState() {
     APIService.route(ENDPOINTS.Employers, "/employer/:employerId/placements",
-            urlArgs: _employerId)
+            urlArgs: _employer.id)
         .then((placementsList) => setState(() {
               _placements = placementsList;
             }));
@@ -42,6 +44,8 @@ class _MyPlacementsState extends State<MyPlacements> {
     return Scaffold(
       appBar: AppBar(
         title: Text("My Placement"),
+        elevation: 0,
+        centerTitle: true,
         actions: [
           IconButton(
               padding: EdgeInsets.all(10.0),
@@ -51,7 +55,7 @@ class _MyPlacementsState extends State<MyPlacements> {
                 color: CustomTheme().primaryColor,
               ),
               onPressed: () {
-                Nav.navigatorKey.currentState.pushNamed("/new-placement");
+                Nav.currentState.pushNamed("/new-placement");
               }),
         ],
       ),
@@ -134,7 +138,7 @@ class _MyPlacementsState extends State<MyPlacements> {
                                           ENDPOINTS.Placement, "/placement/:id",
                                           urlArgs: _placement.id)
                                       .then((placement) {
-                                    Nav.navigatorKey.currentState
+                                    Nav.currentState
                                         .pushNamed(
                                           "/profile",
                                           arguments: placement,
@@ -142,7 +146,7 @@ class _MyPlacementsState extends State<MyPlacements> {
                                         .then((value) => APIService.route(
                                                 ENDPOINTS.Employers,
                                                 "/employer/:employerId/placements",
-                                                urlArgs: _employerId)
+                                                urlArgs: _employer.id)
                                             .then((placementsList) =>
                                                 setState(() {
                                                   _placements = placementsList;
@@ -152,7 +156,7 @@ class _MyPlacementsState extends State<MyPlacements> {
                                         msg: error.message ?? error.toString());
                                   });
                                 } else {
-                                  Nav.navigatorKey.currentState
+                                  Nav.currentState
                                       .push(MaterialPageRoute(
                                         builder: (builder) =>
                                             PlacementMatchedStudents(
@@ -161,7 +165,7 @@ class _MyPlacementsState extends State<MyPlacements> {
                                       .then((value) => APIService.route(
                                               ENDPOINTS.Employers,
                                               "/employer/:employerId/placements",
-                                              urlArgs: _employerId)
+                                              urlArgs: _employer.id)
                                           .then(
                                               (placementsList) => setState(() {
                                                     _placements =

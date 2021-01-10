@@ -3,16 +3,19 @@ const router = require('express').Router();
 const matchService = require('../services/matchService');
 const SuperError = require('../errors').SuperError;
 const ERR_BAD_REQUEST = require('../errors').ERR_BAD_REQUEST;
+const ERR_FORBIDDEN = require('../errors').ERR_FORBIDDEN;
 
 
 router.post("/matching", async (req, res, next) => {
-    const choice = await matchService.saveChoice(req.body);
+    const choice = await matchService.saveChoice(req.body, req.user)
+        .catch(error => {
+            res.status(error.code).send(error.message);
+        });
     res.json(choice);
-
 });
 
 router.get('/student/:studentId/placements', async (req, res, next) => {
-    const placements = await matchService.getMatchesByStudentId(req.params.studentId)
+    const placements = await matchService.getMatchesByStudentId(req.params.studentId, req.user)
         .catch(error => {
             res.status(error.code).send(error.message);
         });
@@ -21,7 +24,7 @@ router.get('/student/:studentId/placements', async (req, res, next) => {
 
 router.delete('/match/:studentId/:placementId', async (req, res, next) => {
     if( !isNaN(req.params.studentId) && !isNaN(req.params.placementId)){
-        let match = await matchService.deleteMatch(req.params.studentId, req.params.placementId)
+        let match = await matchService.deleteMatch(parseInt(req.params.studentId), parseInt(req.params.placementId), req.user)
         .catch(error => {
             res.status(error.code).send(error.message);
         });
@@ -34,7 +37,7 @@ router.delete('/match/:studentId/:placementId', async (req, res, next) => {
 
 router.get('/placement/:placementId/students', async (req, res, next) => {
     if(!isNaN(req.params.placementId)){
-        let students = await matchService.getMatchesByPlacementId(req.params.placementId)
+        let students = await matchService.getMatchesByPlacementId(req.params.placementId, req.user)
         .catch(error => {
             res.status(error.code).send(error.message);
         });

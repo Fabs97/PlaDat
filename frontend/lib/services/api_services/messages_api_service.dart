@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:frontend/models/message.dart';
 import 'package:frontend/screens/chat_screen/chat_screen.dart';
-import 'package:http/http.dart' as http;
+import 'package:frontend/services/custom_http_service.dart' as http;
 import 'package:frontend/services/api_service.dart';
 
 class MessagesAPIService extends APIInfo {

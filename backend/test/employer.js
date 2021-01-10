@@ -21,11 +21,34 @@ describe('employer API', () => {
         let domId;
         let employerId;
         let locationId; 
+        let userId;
+        let sessionToken;
 
         beforeEach(async () => {
+
+            let newUser = {
+                email: 'test_employer@mail.com',
+                password: '12345678',
+                type: 'EMPLOYER'
+            }
+            let account = (await chai.request(server)
+                .post('/registration')
+                .set('content-type', 'application/json')
+                .send(newUser)).body;
+            let session = (await chai.request(server)
+                .post('/login')
+                .set('content-type', 'application/json')
+                .send({email: newUser.email, password: newUser.password})).body;
+       
+
+            // console.log(session);
+            userId = session.userID;
+            sessionToken = session.token;
+
             let doms = (await chai.request(server)
-                .get('/domainOfActivity')).body;
+                .get('/domainOfActivity').set('Authorization', `Bearer ${sessionToken}`)).body;
             domId = doms[0].id;
+
         })
 
         it('should post the profile in the database and returns all the details', (done) => {
@@ -33,6 +56,7 @@ describe('employer API', () => {
             chai.request(server)
                 .post('/employer')
                 .set('content-type', 'application/json')
+                .set('Authorization', `Bearer ${sessionToken}`)
                 .send({
                     name: "test company",
                     description: "test description",
@@ -40,7 +64,7 @@ describe('employer API', () => {
                     location: {
                         country: "test employer country",
                         city: "test employer city"
-                    }
+                    },
                 })
                 .end((err, response) => {
                     response.should.have.status(200);
@@ -68,9 +92,14 @@ describe('employer API', () => {
 
         afterEach(async () => {
             await chai.request(server)
-                .delete('/employer/' + employerId);
+                .delete('/employer/' + employerId)
+                .set('Authorization', `Bearer ${sessionToken}`);
             await chai.request(server)
-                .delete('/location/' + locationId);
+                .delete('/user/' + userId)
+                .set('Authorization', `Bearer ${sessionToken}`);
+            await chai.request(server)
+                .delete('/location/' + locationId)
+                .set('Authorization', `Bearer ${sessionToken}`);
         })
 
     })

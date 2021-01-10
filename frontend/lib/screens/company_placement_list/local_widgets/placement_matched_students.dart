@@ -45,6 +45,8 @@ class _PlacementMatchedStudentsState extends State<PlacementMatchedStudents> {
     final themeData = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
+        elevation: 0,
+        centerTitle: true,
         title: Text(
           "Matched Student",
           textAlign: TextAlign.center,
@@ -86,7 +88,7 @@ class _PlacementMatchedStudentsState extends State<PlacementMatchedStudents> {
                           urlArgs: widget.placement.id,
                         ).then((response) {
                           if (response is Placement) {
-                            Nav.navigatorKey.currentState
+                            Nav.currentState
                                 .pushNamed("/profile", arguments: response);
                           } else {
                             Fluttertoast.showToast(msg: response);
@@ -206,7 +208,7 @@ class _PlacementMatchedStudentsState extends State<PlacementMatchedStudents> {
                     color: CustomTheme().secondaryColor,
                   ),
             ),
-            onTap: () => Nav.navigatorKey.currentState.pushNamed("/chat-screen",
+            onTap: () => Nav.currentState.pushNamed("/chat-screen",
                 arguments:
                     ChatScreenArguments(student.id, placement.employerId)),
           ),

@@ -10,10 +10,9 @@ class Student extends ChangeNotifier {
   int id;
   String name;
   String surname;
-  String email;
-  String password;
   String description;
   String phone;
+  int userId;
   Map<String, dynamic> skills;
   Place location;
   List<EducationExperience> educations;
@@ -23,10 +22,9 @@ class Student extends ChangeNotifier {
     this.id,
     this.name,
     this.surname,
-    this.email,
-    this.password,
     this.description,
     this.phone,
+    this.userId,
     this.skills,
     this.educations,
     this.works,
@@ -42,10 +40,9 @@ class Student extends ChangeNotifier {
       "id": this.id,
       "name": this.name,
       "surname": this.surname,
-      "email": this.email,
-      "password": this.password,
       "description": this.description,
       "phone": this.phone,
+      "userId": this.userId,
       "skills": this.skills.map((key, value) =>
           MapEntry(key, value.map((e) => e.toJsonMap()).toList())),
       "location": this.location?.toJsonMap() ?? null,
@@ -63,21 +60,14 @@ class Student extends ChangeNotifier {
       id: json["id"],
       name: json["name"],
       surname: json["surname"],
-      email: json["email"],
-      password: json["password"],
       description: json["description"],
       phone: json["phone"],
       location:
           json["location"] != null ? Place.fromJson(json['location']) : null,
+      userId: json["userId"] ?? json["user_id"] ?? json["userID"],
       skills: Skill.listFromJson(json["skills"]),
       educations: EducationExperience.listFromJson(json["education"]),
-          // ?.map((education) => EducationExperience.fromJson(jsonDecode(education)))
-          // ?.toList()
-          // ?.cast<EducationExperience>(),
       works: WorkExperience.listFromJson(json["work"]),
-          // ?.map((work) => WorkExperience.fromJson(jsonDecode(work)))
-          // ?.toList()
-          // ?.cast<WorkExperience>(),
     );
   }
 

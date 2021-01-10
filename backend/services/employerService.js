@@ -2,10 +2,11 @@ const employerDAO = require('../DAO/employerDAO');
 
 const SuperError = require('../errors').SuperError;
 const ERR_BAD_REQUEST = require('../errors').ERR_BAD_REQUEST;
+const ERR_FORBIDDEN = require('../errors').ERR_FORBIDDEN;
 
 const locationService = require('../services/locationService');
 const domainOfActivityService = require('../services/domainOfActivityService');
-
+const jwt = require('jsonwebtoken');
 
 
 module.exports = employerService = {
@@ -13,15 +14,25 @@ module.exports = employerService = {
         return employerDAO.getEmployer(id);
     },
 
-    getLastEmployer: async () => {
-        return await employerDAO.getLastEmployer();
+    getEmployerByUserId: (userId) => {
+        return employerDAO.getEmployerByUserId(userId);
     },
-
-    createNewEmployer: async (details) => {
+    getEmployerByPlacementId: (placementId) => {
+        return employerDAO.getEmployerByPlacementId(placementId);
+    },
+    createNewEmployer: async (details, auth) => {
         if(details && typeof(details.location.country) == 'string' && typeof(details.location.city) == 'string' && typeof(details.name) == 'string' && typeof(details.description) == 'string' && !isNaN(details.domainOfActivityId)){
+            if(auth.userType !== 'EMPLOYER') {
+                throw new SuperError(ERR_FORBIDDEN, 'You cannot create an employer profile from a non-employer account.')
+            }
             let check = await domainOfActivityService.existsDomainOfActivity(details.domainOfActivityId);
             if(check){
-                let newEmployer = await employerDAO.addNewEmployer(details);
+                let newEmployer = await employerDAO.addNewEmployer(details, auth.id);
+                if(newEmployer.id) {
+                    newEmployer.token = jwt.sign({ id: auth.id, employerId: newEmployer.id, userType: 'EMPLOYER'}, process.env.ACCESS_TOKEN_SECRET, {
+                        expiresIn: process.env.ACCESS_TOKEN_LIFE // 30 DAYS
+                    });
+                }
                 if(details.location){
                     newEmployer.location = await employerService.saveEmployerLocation(newEmployer.id, details.location);
                 }
@@ -43,7 +54,10 @@ module.exports = employerService = {
         return location;
     },
 
-    deleteEmployerById: (id) => {
-        return employerDAO.deleteEmployerById(id);
+    deleteEmployerById: async (id, auth) => {
+        if(auth.employerId !== id) {
+            throw new SuperError(ERR_FORBIDDEN, 'You cannot delete this employer profile');
+        }
+        return await employerDAO.deleteEmployerById(id);
     }
 };

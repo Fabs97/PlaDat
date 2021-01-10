@@ -12,15 +12,15 @@ exports.seed = function(knex) {
 
       return knex('placement_has_institution').insert([
         {placement_id: placements[1].id, institution_id: institutions[0].id},
-        {placement_id: placements[2].id, institution_id: institutions[0].id},
-        {placement_id: placements[3].id, institution_id: institutions[1].id},
+        {placement_id: placements[2].id, institution_id: institutions[1].id},
+        {placement_id: placements[3].id, institution_id: institutions[2].id},
         {placement_id: placements[4].id, institution_id: institutions[1].id},
-        {placement_id: placements[5].id, institution_id: institutions[2].id},
-        {placement_id: placements[6].id, institution_id: institutions[3].id},
-        {placement_id: placements[7].id, institution_id: institutions[4].id},
-        {placement_id: placements[8].id, institution_id: institutions[5].id},
-        {placement_id: placements[9].id, institution_id: institutions[6].id},
-        {placement_id: placements[0].id, institution_id: institutions[6].id}
+        {placement_id: placements[5].id, institution_id: institutions[0].id},
+        {placement_id: placements[6].id, institution_id: institutions[4].id},
+        {placement_id: placements[7].id, institution_id: institutions[3].id},
+        {placement_id: placements[8].id, institution_id: institutions[2].id},
+        {placement_id: placements[9].id, institution_id: institutions[3].id},
+        {placement_id: placements[0].id, institution_id: institutions[4].id}
       ]);
     });
 };

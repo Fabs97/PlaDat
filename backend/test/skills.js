@@ -21,9 +21,27 @@ describe('skills api', () => {
     */
 
     describe('GET /skills', () => {
+
+        let sessionToken;
+
+        beforeEach(async () =>{
+            let student = {
+                email: 'Alice@test.com',
+                password: '12345678',
+            }
+            let session = (await chai.request(server)
+                .post('/login')
+                .set('content-type', 'application/json')
+                .send(student)).body;
+            // console.log(session);
+            sessionToken = session.token;
+            // console.log(`token works!!! ${session.token}`)
+        })
+
         it('should get all the tech and soft skills', (done) => {
             chai.request(server)
                 .get('/skills')
+                .set('Authorization', `Bearer ${sessionToken}`)
                 .end((err, response) => {
                     response.should.have.status(200);
                     response.body.should.be.a('object');
@@ -55,9 +73,26 @@ describe('skills api', () => {
     })
 
     describe('GET /skills/:type', () => {
+        let sessionToken;
+
+        beforeEach(async () =>{
+            let student = {
+                email: 'Alice@test.com',
+                password: '12345678',
+            }
+            let session = (await chai.request(server)
+                .post('/login')
+                .set('content-type', 'application/json')
+                .send(student)).body;
+            // console.log(session);
+            sessionToken = session.token;
+            // console.log(`token works!!! ${session.token}`)
+        })
+
         it('should get all the techinical skills if TECH is selected', (done) => {
             chai.request(server)
                 .get('/skills/TECH')
+                .set('Authorization', `Bearer ${sessionToken}`)
                 .end((err, response) => {
                     response.should.have.status(200);
                     response.body.should.be.a('array');
@@ -73,8 +108,10 @@ describe('skills api', () => {
                 })
         })
         it('should get all the soft skills if SOFT is selected', (done) => {
+
             chai.request(server)
                 .get('/skills/SOFT')
+                .set('Authorization', `Bearer ${sessionToken}`)
                 .end((err, response) => {
                     response.should.have.status(200);
                     response.body.should.be.a('array');
@@ -90,8 +127,10 @@ describe('skills api', () => {
                 })
         })
         it('should get all the other skills if OTHER is selected', (done) => {
+
             chai.request(server)
                 .get('/skills/OTHER')
+                .set('Authorization', `Bearer ${sessionToken}`)
                 .end((err, response) => {
                     response.should.have.status(200);
                     response.body.should.be.a('array');

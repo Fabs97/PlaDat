@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:frontend/models/placement.dart';
 import 'package:frontend/models/student.dart';
-import 'package:http/http.dart' as http;
+import 'package:frontend/services/custom_http_service.dart' as http;
 import 'package:frontend/services/api_service.dart';
 
 class RecomendationsAPIService extends APIInfo {
@@ -25,6 +25,8 @@ class RecomendationsAPIService extends APIInfo {
       return jsonDecode(response.body)
           .map((placementJson) => Placement.fromJson(placementJson))
           .toList();
+    } else {
+      print(response.body);
     }
   }
 
@@ -36,6 +38,8 @@ class RecomendationsAPIService extends APIInfo {
       return jsonDecode(response.body)
           .map((studentJson) => Student.fromJson(studentJson))
           .toList();
+    } else {
+      print(response.body);
     }
   }
 }

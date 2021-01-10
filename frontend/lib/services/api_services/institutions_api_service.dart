@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:http/http.dart' as http;
+import 'package:frontend/services/custom_http_service.dart' as http;
 import 'package:frontend/models/institution.dart';
 import 'package:frontend/services/api_service.dart';
 
@@ -22,6 +22,8 @@ class InstitutionsAPIService extends APIInfo {
       return parsed
           .map((institutionJson) => Institution.fromJson(institutionJson))
           .toList();
+    } else {
+      print(response.body);
     }
   }
 }

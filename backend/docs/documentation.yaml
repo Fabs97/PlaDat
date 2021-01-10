@@ -12,29 +12,30 @@ servers:
   
 tags:
   - name: Skills
-    description: All the APIs related to the "skill" table
-  - name: Majors
-    description: All the APIs related to the "majors" table
-  - name: Institutions
-    description: All the APIs related to the "institutions" table
-  - name: Degree
-    description: All the APIs related to the "degree" table
+    description: Endpoints related to skills of students, or skills required by placements
+  - name: Education
+    description: Endpoints related to the education experience of a student
   - name: Placement
-    description: All the APIs related to the "placements" table
+    description: Endpoints related to placement management and information
   - name: Student
-    description: All the APIs related to the "student" table
+    description: Endpoints related to the student profile
   - name: Matching
-    description: All the APIs related to the matching algorithm
+    description: Endpoints related to the recommendations system (matching algorithm) and matching management
   - name: Employer
-    description: All the APIs related to the "employer" algorithm
-  - name: Google Maps
-    description: All the APIs related to the access to the google maps service
+    description: Endpoints related to the employer profile
+  - name: Location
+    description: Endpoints related to location management
   - name: Registration
-    description: All the APIs related to the "registration" table
+    description: Endpoints related to authentication and authorization
   - name: Message
-    description: All the APIs related to the "message" table
+    description: Endpoints related to conversations between matching parties
 
 components:
+  securitySchemes:
+      bearerAuth:            # arbitrary name for the security scheme
+        type: http
+        scheme: bearer
+        bearerFormat: JWT
   schemas:
     Degree:
       type: object
@@ -244,8 +245,75 @@ components:
         
         
 paths:
+  /registration:
+    post:
+      description: Allows users to register to the application
+      tags:
+        - "Registration"
+      requestBody:
+        description: A json containing all the information about the user. The type can be "STUDENT" or "EMPLOYER"
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                {
+                  email: "paolo@gmail.com",
+                  password: "S4f3PvvD1!2089",
+                  type: "STUDENT"
+                }
+      responses:
+        '200':
+          description: Returns a json with the newly inserted user, without the hashed password
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  {
+                    id: 2,
+                    email: "paolo@gmail.com",
+                    type: "STUDENT"
+                  }
+        '500':
+          description: 'There has been a problem saving your registration. Please try again'
+  /login:
+    post:
+      description: Allows users to login to the application
+      tags:
+        - "Registration"
+      requestBody:
+        description: A json containing the email and the password of the user
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                {
+                  email: "paolo@gmail.com",
+                  password: "S4f3PvvD1!2089"
+                }
+      responses:
+        '200':
+          description: Returns a JSON object with the information about the logged in accont and the JWT token used for authorization. The token must be sent with every call to the backend, in the headers, in the key "authorization" and it should have the form "Bearer eyJhbGciOiJIUzI1NiIsInR5c[...]"
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  {
+                    "userID": 60,
+                    "student": true,
+                    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NjAsInVzZXJUeXBlIjoiU1RVREVOVCIsImlhdCI6MTYwOTAwOTg5MSwiZXhwIjoxNjA5MDEyNDgzfQ.UcUheC-M-7GbzpoZ6dV_p3luQ_pcipzRDrgPUedIh4M"
+                  }
+        '401':
+          description: 'Unauthorized. The credentials are wrong, the login has failed.'
   /employer/{id}:
     get:
+      security:
+        - bearerAuth: []
       description: Provides the employer for the provided id 
       tags:
         - "Employer"
@@ -271,8 +339,10 @@ paths:
                     location: "Milan, Italy",
                     urllogo: "www.pladat.eu"
                   }
-  /employer/:employerId/placements:
+  /employer/{employerId}/placements:
     get:
+      security:
+        - bearerAuth: []
       description: Provides all the placements of the selected employer id,
       tags:
         - "Employer"
@@ -307,6 +377,14 @@ paths:
                       count_matches: 3
                     }
                   ]
+        '403':
+          description: Forbidden
+          content:
+            text/html:
+              schema:
+                type: string
+                example:
+                  "You are not allowed to see these placements."
 
   /employer:
     post:
@@ -370,6 +448,8 @@ paths:
 
   /recommendation/{id}/seeStudents:
     get:
+      security:
+        - bearerAuth: []
       description: Provides all the students recommendation for the provided placement id, based on the algorithm
       tags:
         - "Matching"
@@ -457,11 +537,21 @@ paths:
                 type: string
                 example:
                   "There has been a problem looking up the recommended students. Please try again"
+        '403':
+          description: Forbidden
+          content:
+            text/html:
+              schema:
+                type: string
+                example:
+                  "You cannot see the recommendations for other employer's placements."
 
 
 
   /recommendation/{id}/seePlacements:
     get:
+      security:
+        - bearerAuth: []
       description: Provides all placements recommendation for the provided student id, based on the algorithm
       tags:
         - "Matching"
@@ -529,9 +619,19 @@ paths:
                 type: string
                 example:
                   "There has been a problem looking up the recommended placements. Please try again"
+        '403':
+          description: Forbidden
+          content:
+            text/html:
+              schema:
+                type: string
+                example:
+                  "You cannot see the recommendations for other students."
   /matching:
     post:
-      description: Allows users to upsert the provided match to the matches table
+      security:
+        - bearerAuth: []
+      description: Saves an interaction (accept or reject) that can lead to a match
       tags:
         - "Matching"
       requestBody:
@@ -562,8 +662,10 @@ paths:
                     status: "ACCEPTED"
                   }
 
-  /match/:studentId/:placementId:
+  /match/{studentId}/{placementId}:
     delete:
+      security:
+        - bearerAuth: []
       description: Delete the match based on the given ids
       tags:
         - "Matching"
@@ -596,11 +698,21 @@ paths:
                 type: string
                 example:
                   "Your request did not provided valid values for ids. Please try again."
+        '403':
+          description: Forbidden
+          content:
+            text/html:
+              schema:
+                type: string
+                example:
+                  "You are not authorized to delete this match."
 
 
 
   /placement:
     get:
+      security:
+        - bearerAuth: []
       description: Returns all placement ids in the database 
       tags:
         - "Placement"
@@ -620,6 +732,8 @@ paths:
                   ]
   /placement/{id}:
     get:
+      security:
+        - bearerAuth: []
       description: Returns a placement with the provided id
       tags:
         - "Placement"
@@ -667,9 +781,9 @@ paths:
                         {id: 6, name: "Communications", type: "SOFT"},
                       ],
                       otherSkills: [
-                        {id: 7, name: "Skiing", type: "OTHER"},
-                        {id: 8, name: "Cooking", type: "OTHER"},
-                        {id: 9, name: "Trekking", type: "OTHER"},
+                        {id: 7, name: "Event Organizing", type: "OTHER"},
+                        {id: 8, name: "MS Office proficency", type: "OTHER"},
+                        {id: 9, name: "English Language", type: "OTHER"},
                       ]
                     },
                     employer: {
@@ -769,6 +883,8 @@ paths:
 
   /placement/new-placement:
     post:
+      security:
+        - bearerAuth: []
       description: Allows companies to insert a new placement into the database
       tags:
         - "Placement"
@@ -778,6 +894,7 @@ paths:
         content:
           application/json:
             schema:
+              $ref: '#/components/schemas/Placement'
               type: object
               example:
                 {
@@ -812,9 +929,9 @@ paths:
                       {id: 6},
                     ],
                     otherSkills: [
-                      "Cooking",
+                      "Artificial Intelligence",
                       "Organizing events",
-                      "Trekking"
+                      "SCRUM knowledge"
                     ]
                   }
                 }
@@ -861,9 +978,9 @@ paths:
                         {id: 6},
                       ],
                       otherSkills: [
-                        "Cooking",
-                        "Organizing events",
-                        "Trekking"
+                        "Event Organizing",
+                        "MS Office proficency", 
+                        "English Language"
                       ]
                     }
                   }
@@ -907,9 +1024,11 @@ paths:
 
   /majors:
     get:
+      security:
+        - bearerAuth: []
       description: Returns all the majors in the database
       tags: 
-        - "Majors"
+        - "Education"
       responses:
         '200':
           description: OK
@@ -932,9 +1051,11 @@ paths:
                   ]
   /degrees:
     get:
+      security:
+        - bearerAuth: []
       description: Returns all the degrees in the database
       tags: 
-        - "Degree"
+        - "Education"
       responses:
         '200':
           description: OK
@@ -993,9 +1114,11 @@ paths:
 
   /institutions:
     get:
+      security:
+        - bearerAuth: []
       description: Returns all the institutions in the database
       tags:
-        - "Institutions"
+        - "Education"
       responses:
         '200':
           description: OK
@@ -1023,6 +1146,8 @@ paths:
   
   /student:
     post:
+      security:
+        - bearerAuth: []
       description: Allows students to fill in the details of their profile
       tags: 
         - "Student"
@@ -1104,8 +1229,18 @@ paths:
                     skill: 18
         '500':
           description: INTERNAL SERVER ERROR - Offers an explanation about what caused the error
+        '403':
+          description: Forbidden
+          content:
+            text/html:
+              schema:
+                type: string
+                example:
+                  "You cannot create a student profile from a non-student account."
   /skills:
     get: 
+      security:
+        - bearerAuth: []
       description: Provides all the skills in the database 
       tags:
         - "Skills"
@@ -1169,6 +1304,8 @@ paths:
                 
   /skills/{type}/{name}:
     get:
+      security:
+        - bearerAuth: []
       description: Returns the skill in the database with the given name and type
       deprecated: true
       tags:
@@ -1206,6 +1343,8 @@ paths:
   
   /skills/{type}:
     get:
+      security:
+        - bearerAuth: []
       description: Returns all the skills in the database with the given type
       tags:
         - "Skills"
@@ -1240,9 +1379,11 @@ paths:
                   ]
   /googleMaps/{input}:
     get:
+      security:
+        - bearerAuth: []
       description: Provides the required informations retrieved from the Google Maps API
       tags:
-        - "Google Maps"
+        - "Location"
       parameters:
         - in: query
           name: input
@@ -1365,42 +1506,11 @@ paths:
                     ],
                     status : "OK"
                   }
-  /registration:
-    post:
-      description: Allows users to register to the application
-      tags:
-        - "Registration"
-      requestBody:
-        description: a json containing all the information about the user
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              example:
-                {
-                  email: "paolo@gmail.com",
-                  password: "Iloveyou_3000",
-                  type: "STUDENT"
-                }
-      responses:
-        '200':
-          description: Returns a json with the newly inserted user, without the hashed password
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  {
-                    id: 2,
-                    email: "paolo@gmail.com",
-                    type: "STUDENT"
-                  }
-        '500':
-          description: 'There has been a problem saving your registration. Please try again'
 
   /student/{studentId}/placements:
     get:
+      security:
+        - bearerAuth: []
       description: Returns all the placements that a student has been matched with
       tags: 
         - "Matching"
@@ -1449,9 +1559,18 @@ paths:
                 ]
         '500': 
           description: 'There has been a problem retrieving your matches. Please try again'
-                
-  /placement/:placementId/students:
+        '403':
+          description: Forbidden
+          content:
+            text/html:
+              schema:
+                type: string
+                example:
+                  'You are not authorized to retrieve this information'
+  /placement/{placementId}/students:
     get:
+      security:
+        - bearerAuth: []
       description: Returns all the students that a placement has been matched with
       tags: 
         - "Matching"
@@ -1545,9 +1664,19 @@ paths:
                 ]
         '500': 
           description: 'There has been a problem retrieving your matches. Please try again'
+        '403':
+          description: Forbidden
+          content:
+            text/html:
+              schema:
+                type: string
+                example:
+                  'You are not authorized to retrieve this information'
 
   /message/{studentId}/{employerId}:
     get:
+      security:
+        - bearerAuth: []
       description: Returns all the messages in the database between a student and an employer in chronological order
       tags:
         - "Message"
@@ -1606,12 +1735,56 @@ paths:
                 type: string
                 example:
                   "There has been a problem looking for this conversation. Please try again"
-
+        '403':
+          description: Forbidden
+          content:
+            text/html:
+              schema:
+                type: string
+                example:
+                  'You are not authorized to see this conversation'
+    delete:
+      security:
+        - bearerAuth: []
+      description: Delete the message
+      tags:
+        - "Message"
+      parameters:
+        - in: path
+          required: true
+          name: studentId
+          schema:
+            type: integer
+            example: 1
+        - in: path
+          required: true
+          name: placementId
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: OK
+          content: 
+            application/json:
+              schema:
+                type: integer
+                example: 1
+        '403':
+          description: Forbidden
+          content:
+            text/html:
+              schema:
+                type: string
+                example:
+                  "You are not authorized to delete this match."
 
 
   /message:
     post: 
-      description: Allows the user to save a message for another use on the database
+      security:
+        - bearerAuth: []
+      description: Allows the user to send a message to another user with whom he has a match
       tags: 
         - "Message"
       requestBody: 
@@ -1620,7 +1793,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object
+              $ref: "#/definitions/Message"
               example:
                 {
                   studentId: 1,
@@ -1663,3 +1836,11 @@ paths:
                 type: string
                 example:
                   "There has been a problem saving your message. Please try again"
+        '403':
+          description: Forbidden
+          content:
+            text/html:
+              schema:
+                type: string
+                example:
+                  'You are not authorized to send this message'

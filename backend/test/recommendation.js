@@ -12,21 +12,33 @@ chai.use(chaiJsonSchema);
 
 describe('recommendation API', () => {
 
-
-
     describe('GET /recommendation/:id/seePlacements', () => {
 
-        let StudentId;
+        let studentId;
+        let userId;
+        let sessionToken;
 
-        beforeEach(async () => {
-            studentId = (await chai.request(server)
-                .get('/students/last')).body.id;
+        beforeEach(async () =>{
+            let student = {
+                email: 'Alice@test.com',
+                password: '12345678',
+            }
+            let session = (await chai.request(server)
+                .post('/login')
+                .set('content-type', 'application/json')
+                .send(student)).body;
+            // console.log(session);
+            userId = session.userID;
+            sessionToken = session.token;
+            studentId = session.studentID;
+            // console.log(`token works!!! ${session.token}`)
         })
 
         it('should get a list of placements based on the id of a student', (done) => {
         
             chai.request(server)
                 .get('/recommendation/' + studentId + '/seePlacements')
+                .set('Authorization', `Bearer ${sessionToken}`)
                 .end((err, response) => {
                     response.should.have.status(200);
                     response.body.should.be.a('array');
@@ -41,17 +53,16 @@ describe('recommendation API', () => {
                         placements[i].should.have.property('end_period');                                
                         placements[i].should.have.property('salary');
                         placements[i].should.have.property('description_role');
-                        placements[i].should.have.property('employer_name');
                         placements[i].should.have.property('skills');
                         placements[i].should.have.property('status');
                         placements[i].status.should.equal('OPEN');
                         let skills = placements[i].skills;
                         skills.should.be.a('array');
                         for(let j = 0; j < skills.length; j++){
-                            skills[i].should.be.a('object');
-                            skills[i].should.have.property('id');
-                            skills[i].should.have.property('name');
-                            skills[i].should.have.property('type');
+                            skills[j].should.be.a('object');
+                            skills[j].should.have.property('id');
+                            skills[j].should.have.property('name');
+                            skills[j].should.have.property('type');
                         }
                         if(placements[i].location){
                             placements[i].location.should.be.a('object');
@@ -62,16 +73,20 @@ describe('recommendation API', () => {
                         placements[i].should.have.property('majors');
                         let majors = placements[i].majors;
                         majors.should.be.a('array');
-                        for(let j = 0; j < majors.length; j++){
-                            majors[i].should.be.a('object');
-                            majors[i].should.have.property('name');
+                        if(majors.length) {
+                            for(let j = 0; j < majors.length; j++){
+                                majors[j].should.be.a('object');
+                                majors[j].should.have.property('name');
+                            }
                         }
                         placements[i].should.have.property('institutions');
                         let institutions = placements[i].institutions;
                         institutions.should.be.a('array');
-                        for(let j = 0; j < institutions.length; j++){
-                            institutions[i].should.be.a('object');
-                            institutions[i].should.have.property('name');
+                        if(institutions.length) {
+                            for(let j = 0; j < institutions.length; j++){
+                                institutions[j].should.be.a('object');
+                                institutions[j].should.have.property('name');
+                            }
                         }
                     }
                     done();
@@ -83,6 +98,7 @@ describe('recommendation API', () => {
         it('should get a 400 Bad Request error if the request does not contains a valid student id', (done) => {
             chai.request(server)
                 .get('/recommendation/foo/seePlacements')
+                .set('Authorization', `Bearer ${sessionToken}`)
                 .end((err, response) => {
                     response.should.have.status(400);
                     done();
@@ -93,17 +109,35 @@ describe('recommendation API', () => {
 
     describe('GET /recommendation/:id/seeStudents', () => {
 
+        let employerId;
+        let userId;
+        let sessionToken;
         let placementId;
 
-        beforeEach(async () => {
-            placementId = (await chai.request(server)
-                .get('/placements/last')).body.id;
-        })
+        beforeEach(async () =>{
+            let employer = {
+                email: 'google@google.com',
+                password: '12345678',
+            }
+            session = (await chai.request(server)
+                .post('/login')
+                .set('content-type', 'application/json')
+                .send(employer)).body;
+            // console.log(session);
+            userId = session.userID;
+            sessionToken = session.token;
+            employerId = session.employerID;
 
-        it('should get a list of students based on the id of a placement', (done) => {
+            placementId = (await chai.request(server)
+                .get('/employer/' + employerId + '/placements')
+                .set('Authorization', `Bearer ${sessionToken}`)).body[0].id
+        });
+
+        it('should get a list of students recommended based on the id of a placement', (done) => {
             
             chai.request(server)
                 .get('/recommendation/' + placementId + '/seeStudents')
+                .set('Authorization', `Bearer ${sessionToken}`)
                 .end((err, response) => {
                     response.should.have.status(200);
                     response.body.should.be.a('array');
@@ -160,6 +194,7 @@ describe('recommendation API', () => {
         it('should get a 400 Bad Request error if the request does not contains a valid placement id', (done) => {
             chai.request(server)
                 .get('/recommendation/foo/seeStudents')
+                .set('Authorization', `Bearer ${sessionToken}`)
                 .end((err, response) => {
                     response.should.have.status(400);
                     done();

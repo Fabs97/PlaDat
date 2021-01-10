@@ -87,9 +87,8 @@ class PlacementCard extends StatelessWidget {
                   ),
                 ),
               ),
-              // TODO: needs to be chagend with the real name
               Text(
-                "Company name",
+                "${placement.employerName}",
                 style: textTheme.subtitle2.copyWith(
                   fontWeight: FontWeight.w300,
                 ),
@@ -103,7 +102,7 @@ class PlacementCard extends StatelessWidget {
                     fontWeight: FontWeight.w700,
                   ),
                 ),
-                onPressed: () => Nav.navigatorKey.currentState.pushNamed(
+                onPressed: () => Nav.currentState.pushNamed(
                   "/profile",
                   arguments: placement,
                 ),

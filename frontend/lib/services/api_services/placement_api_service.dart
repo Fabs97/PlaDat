@@ -1,6 +1,6 @@
 import 'dart:convert';
+import 'package:frontend/services/custom_http_service.dart' as http;
 import 'package:frontend/models/student.dart';
-import 'package:http/http.dart' as http;
 import 'package:frontend/models/placement.dart';
 import 'package:frontend/services/api_service.dart';
 
@@ -34,6 +34,8 @@ class PlacementAPIService extends APIInfo {
     if (response.statusCode == 200) {
       final placement = Placement.fromJson(jsonDecode(response.body));
       return placement;
+    } else {
+      print(response.body);
     }
   }
 
@@ -43,6 +45,8 @@ class PlacementAPIService extends APIInfo {
 
     if (response.statusCode == 200) {
       return Placement.fromJson(jsonDecode(response.body));
+    } else {
+      print(response.body);
     }
   }
 
@@ -51,6 +55,8 @@ class PlacementAPIService extends APIInfo {
 
     if (response.statusCode == 200) {
       return Placement.listFromJson(response.body);
+    } else {
+      print(response.body);
     }
   }
 

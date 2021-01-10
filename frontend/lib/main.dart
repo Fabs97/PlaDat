@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: CustomTheme().appThemeData,
       navigatorKey: Nav.navigatorKey,
-      initialRoute: "/home",
+      initialRoute: "/login",
       onGenerateRoute: RoutesGenerator.generateRoute,
     );
   }

@@ -15,12 +15,30 @@ chai.use(chaiJsonSchema);
 
 describe('domainOfActivity API', () => {
 
+    let userId;
+    let sessionToken;
+
+    beforeEach(async () =>{
+        let employer = {
+            email: 'google@google.com',
+            password: '12345678',
+        }
+        session = (await chai.request(server)
+            .post('/login')
+            .set('content-type', 'application/json')
+            .send(employer)).body;
+        // console.log(session);
+        userId = session.userID;
+        sessionToken = session.token;
+    })
+
     describe('GET /domainOfActivity', () => {
 
         it('should get an array of domain of activity with id and name', (done) => {
 
             chai.request(server)
                 .get('/domainOfActivity')
+                .set('Authorization', `Bearer ${sessionToken}`)
                 .end((err, response) => {
                     response.should.have.status(200);
                     response.body.should.be.a('array');

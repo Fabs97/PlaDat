@@ -55,7 +55,7 @@ class _NewStudentState extends State<NewStudent> {
             ),
             elevation: 0,
             leading: stepper.step == 0
-                ? null
+                ? Container()
                 : IconButton(
                     onPressed: () => stepper.goToPreviousFormStep(),
                     icon: Icon(Icons.arrow_back),
