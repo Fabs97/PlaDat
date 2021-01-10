@@ -23,6 +23,7 @@ class OtherSkillsState extends State<OtherSkills> {
           name: skillName,
           type: "OTHER",
         ));
+        _textController.text = "";
       });
     }
   }

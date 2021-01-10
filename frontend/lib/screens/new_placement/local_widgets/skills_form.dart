@@ -75,7 +75,6 @@ class SkillsForm extends StatelessWidget {
     Placement newPlacement = await APIService.route(
         ENDPOINTS.Placement, "/placement/new-placement",
         body: placement);
-    print(newPlacement);
 
     Nav.currentState.popAndPushNamed("/employer-home");
   }
