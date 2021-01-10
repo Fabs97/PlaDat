@@ -23,10 +23,10 @@ router.post("/placement/new-placement", async (req, res, next) => {
 router.get('/placement/:id', async (req, res, next) => {
 
     if(!isNaN(req.params.id)){
-        let placement = await placementService.getPlacementById(req.params.id)
-        .catch(error => {
-            res.status(error.code).send(error.message);
-        });
+        let placement = await placementService.getPlacementById(parseInt(req.params.id))
+            .catch(error => {
+                res.status(error.code).send(error.message);
+            });
 
         res.json(placement);
     } else {

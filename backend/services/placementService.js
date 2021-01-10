@@ -72,13 +72,24 @@ module.exports = {
     },
 
     getPlacementById: async (placementId) => {
-
-        let placement = await placementDAO.getPlacementById(placementId);
-        placement.institutions = await placementDAO.getPlacementInstitutions(placementId);
-        placement.majors = await placementDAO.getPlacementMajors(placementId);
-        placement.skills = await skillsService.getPlacementSkills(placementId);
-        placement.employer = await employerService.getEmployer(placement.employer_id);
-        placement.location = await  placementDAO.getPlacementLocation(placementId);
+        let placement = {};
+        try {
+            placement = await placementDAO.getPlacementById(placementId);
+            if(!placement) {
+                throw new SuperError(ERR_NOT_FOUND, 'The placement you are trying to see does not exist.')
+            }
+            placement.institutions = await placementDAO.getPlacementInstitutions(placementId);
+            placement.majors = await placementDAO.getPlacementMajors(placementId);
+            placement.skills = await skillsService.getPlacementSkills(placementId);
+            placement.employer = await employerService.getEmployer(placement.employer_id);
+            placement.location = await  placementDAO.getPlacementLocation(placementId);
+        } catch(error) {
+            if(error.code) {
+                throw error;
+            } else {
+                throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There was a problem retrieving this placement. Please try again.')
+            }
+        }
         return placement;
     },
 
