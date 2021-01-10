@@ -29,12 +29,22 @@ module.exports = {
         let result = await database('registration')
             .select()
             .where('email', email)
+            .catch(error => {
+                if(error){
+                    throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There has been a problem logging you in. Please try again')
+                }
+            });
         return result.length ? result[0] : null
     },
 
     deleteUserById: function(userId) {
         return database('registration')
             .where('id', userId)
-            .del();
+            .del()
+            .catch(error => {
+                if(error){
+                    throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There has been a problem deleting the user. Please try again')
+                }
+            });
     }
 }

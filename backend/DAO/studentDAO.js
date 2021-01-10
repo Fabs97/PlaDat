@@ -247,7 +247,11 @@ module.exports = {
         let result = await database('student')
             .select('id', 'name')
             .where('user_id', userId)
-        
+            .catch(error => {
+                if(error){
+                    throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There has been a problem retrieving this student. Please try again')
+                }
+            });
         return result.length ? result[0] : null;
     },
 

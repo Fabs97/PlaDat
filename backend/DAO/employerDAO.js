@@ -20,6 +20,11 @@ module.exports = {
         let result = await database('employer')
             .select('id', 'name')
             .where('user_id', userId)
+            .catch(error => {
+                if(error) {
+                    throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There was an error retrieving this profile. Please try again');
+                }
+            });
         
         return result.length ? result[0] : null;
     },
@@ -28,7 +33,12 @@ module.exports = {
         let result = await database('employer as e')
             .select('e.id', 'e.user_id as userId')
             .leftJoin('placements as p', 'e.id', 'p.employer_id')
-            .where('p.id', id);
+            .where('p.id', id)
+            .catch(error => {
+                if(error) {
+                    throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There was an error retrieving this profile. Please try again');
+                }
+            });
         return result.length ? result[0] : null;
     },
 

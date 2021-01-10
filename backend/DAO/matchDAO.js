@@ -8,7 +8,12 @@ module.exports = {
         let result = await database('student_has_placement')
             .select('student_id', 'placement_id', 'student_accept', 'placement_accept', 'status')
             .where('student_id', studentID)
-            .andWhere('placement_id', placementID);
+            .andWhere('placement_id', placementID)
+            .catch(error => {
+                if(error){
+                    throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There has been a problem saving your interaction. Please try again')
+                }
+            });
         return result[0];
     },
 
@@ -24,7 +29,7 @@ module.exports = {
             }, ['student_id', 'placement_id', 'student_accept', 'placement_accept', 'status'])
             .catch(error => {
                 if(error){
-                    throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There has been a problem saving your match. Please try again')
+                    throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There has been a problem saving your interaction. Please try again')
                 }
             });
         
@@ -44,6 +49,11 @@ module.exports = {
                 student_accept : choice.studentAccept,
                 status: choice.studentAccept === true ? 'ACCEPTED' : 'REJECTED'
             }, ['student_id', 'placement_id', 'student_accept', 'placement_accept', 'status'])
+            .catch(error => {
+                if(error){
+                    throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There has been a problem saving your interaction. Please try again')
+                }
+            });
     },
 
     getMatchesByStudentId: (studentId) => {
@@ -93,6 +103,11 @@ module.exports = {
             .where('p.employer_id', employerId)
             .andWhere('shp.student_id', studentID)
             .andWhere('shp.status', 'ACCEPTED')
+            .catch(error => {
+                if(error){
+                    throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There has been a problem retrieving your matches. Please try again')
+                }
+            });
         return result;
     }
 };

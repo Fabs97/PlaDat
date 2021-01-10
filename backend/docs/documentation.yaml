@@ -781,9 +781,9 @@ paths:
                         {id: 6, name: "Communications", type: "SOFT"},
                       ],
                       otherSkills: [
-                        {id: 7, name: "Skiing", type: "OTHER"},
-                        {id: 8, name: "Cooking", type: "OTHER"},
-                        {id: 9, name: "Trekking", type: "OTHER"},
+                        {id: 7, name: "Event Organizing", type: "OTHER"},
+                        {id: 8, name: "MS Office proficency", type: "OTHER"},
+                        {id: 9, name: "English Language", type: "OTHER"},
                       ]
                     },
                     employer: {
@@ -978,9 +978,9 @@ paths:
                         {id: 6},
                       ],
                       otherSkills: [
-                        "Cooking",
-                        "Organizing events",
-                        "Trekking"
+                        "Event Organizing",
+                        "MS Office proficency", 
+                        "English Language"
                       ]
                     }
                   }
