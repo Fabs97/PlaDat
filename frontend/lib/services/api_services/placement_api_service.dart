@@ -1,5 +1,6 @@
 import 'dart:convert';
-import 'package:http/http.dart' as http;
+import 'package:frontend/services/custom_http_service.dart' as http;
+import 'package:frontend/models/student.dart';
 import 'package:frontend/models/placement.dart';
 import 'package:frontend/services/api_service.dart';
 
@@ -11,6 +12,12 @@ class PlacementAPIService extends APIInfo {
         return _postPlacement(subRoute, body);
       case "placements":
         return _getPlacements(subRoute);
+      case "/placement/:id":
+        return _getPlacement(subRoute, urlArgs);
+      case "/placement/:placementId/students":
+        return _getMatchedStudentsByPlacementId(subRoute, urlArgs);
+      case "/placement/:id/close":
+        return _putClosed(subRoute, urlArgs);
       default:
         throw PlacementAPIException();
     }
@@ -27,6 +34,19 @@ class PlacementAPIService extends APIInfo {
     if (response.statusCode == 200) {
       final placement = Placement.fromJson(jsonDecode(response.body));
       return placement;
+    } else {
+      print(response.body);
+    }
+  }
+
+  static Future<dynamic> _getPlacement(String subRoute, int placementId) async {
+    var response =
+        await http.get(APIInfo.apiEndpoint + "/placement/${placementId}");
+
+    if (response.statusCode == 200) {
+      return Placement.fromJson(jsonDecode(response.body));
+    } else {
+      print(response.body);
     }
   }
 
@@ -35,6 +55,34 @@ class PlacementAPIService extends APIInfo {
 
     if (response.statusCode == 200) {
       return Placement.listFromJson(response.body);
+    } else {
+      print(response.body);
+    }
+  }
+
+  static Future<dynamic> _getMatchedStudentsByPlacementId(
+      String subRoute, int id) async {
+    var response =
+        await http.get(APIInfo.apiEndpoint + "/placement/$id/students");
+    switch (response.statusCode) {
+      case 200:
+        {
+          return Student.listFromJson(response.body);
+        }
+      default:
+        return response.body;
+    }
+  }
+
+  static Future<dynamic> _putClosed(String subRoute, int id) async {
+    var response = await http.put(APIInfo.apiEndpoint + "/placement/$id/close");
+    switch (response.statusCode) {
+      case 200:
+        {
+          return response.body;
+        }
+      default:
+        return response.body;
     }
   }
 }

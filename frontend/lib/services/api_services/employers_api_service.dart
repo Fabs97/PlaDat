@@ -1,7 +1,8 @@
 import 'dart:convert';
 
 import 'package:frontend/models/employer.dart';
-import 'package:http/http.dart' as http;
+import 'package:frontend/services/auth_service.dart';
+import 'package:frontend/services/custom_http_service.dart' as http;
 import 'package:frontend/models/placement.dart';
 import 'package:frontend/services/api_service.dart';
 
@@ -9,12 +10,14 @@ class EmployersAPIService extends APIInfo {
   static Future<dynamic> route(String subRoute,
       {dynamic body, dynamic urlArgs}) {
     switch (subRoute) {
+      case "/employer":
+        return _postEmployer(subRoute, body);
       case "/employer/:employerId/placements":
         return _getPlacementByEmployerId(subRoute, urlArgs);
       case "/employer/:id":
-        return _getEmployerById(urlArgs);
+        return _getEmployerById(urlArgs.toString());
       default:
-        throw StudentAPIException();
+        throw EmployerAPIException();
     }
   }
 
@@ -24,6 +27,8 @@ class EmployersAPIService extends APIInfo {
         await http.get(APIInfo.apiEndpoint + "/employer/$id/placements");
     if (response.statusCode == 200) {
       return Placement.listFromJson(response.body);
+    } else {
+      print(response.body);
     }
   }
 
@@ -31,8 +36,31 @@ class EmployersAPIService extends APIInfo {
     var response = await http.get(APIInfo.apiEndpoint + "/employer/$id");
     if (response.statusCode == 200) {
       return Employer.fromJson(jsonDecode(response.body));
+    } else {
+      print(response.body);
+    }
+  }
+
+  static Future<dynamic> _postEmployer(
+      String subRoute, Employer employer) async {
+    var response = await http.post(
+      APIInfo.apiEndpoint + subRoute,
+      headers: {"Content-Type": "application/json"},
+      body: employer.toJson(),
+    );
+    switch (response.statusCode) {
+      case 200:
+        {
+          final body = jsonDecode(response.body);
+          if (body["token"] != null) {
+            AuthService().updateToken(body["token"]);
+          }
+          return Employer.fromJson(jsonDecode(response.body));
+        }
+      default:
+        return response.body;
     }
   }
 }
 
-class StudentAPIException extends APIException {}
+class EmployerAPIException extends APIException {}

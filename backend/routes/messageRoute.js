@@ -8,7 +8,7 @@ const ERR_BAD_REQUEST = require('../errors').ERR_BAD_REQUEST;
 
 router.post('/message', async (req, res, next) => {
     
-    let message = await messageService.saveNewMessage(req.body)
+    let message = await messageService.saveNewMessage(req.body, req.user)
     .catch(error => {
         res.status(error.code).send(error.message);
     });
@@ -19,8 +19,11 @@ router.post('/message', async (req, res, next) => {
 
 router.get('/message/:studentId/:employerId', async (req, res, next) => {
     if( !isNaN(req.params.studentId) && !isNaN(req.params.employerId)){
-        let conversation = await messageService.getConversation(req.params.studentId, req.params.employerId)
-        .catch(error => {
+        let conversation = await messageService.getConversation(
+            parseInt(req.params.studentId), 
+            parseInt(req.params.employerId),
+            req.user
+        ).catch(error => {
             res.status(error.code).send(error.message);
         });
         res.json(conversation);
@@ -31,13 +34,11 @@ router.get('/message/:studentId/:employerId', async (req, res, next) => {
 });
 
 router.delete('/message', async (req, res, next) => {
-    let result = await messageService.deleteMessage(req.body);
+    let result = await messageService.deleteMessage(req.body, req.user)
+        .catch(error => {
+            res.status(error.code).send(error.message);
+        });
     res.json(result);
-});
-
-router.get('/messages/last', async (req, res, next) => {
-    let lastMessage = await messageService.getLastMessage();
-    res.json(lastMessage);
 });
 
 module.exports = router;

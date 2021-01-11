@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:http/http.dart' as http;
+import 'package:frontend/services/custom_http_service.dart' as http;
 import 'package:frontend/models/skill.dart';
 import 'package:frontend/services/api_service.dart';
 
@@ -19,6 +19,8 @@ class SkillsAPIService extends APIInfo {
     if (response.statusCode == 200) {
       final parsed = jsonDecode(response.body).cast<Map<String, dynamic>>();
       return parsed.map((skillsJson) => Skill.fromJson(skillsJson)).toList();
+    } else {
+      print(response.body);
     }
   }
 }

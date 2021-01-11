@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:frontend/models/user.dart';
+import 'package:frontend/services/auth_service.dart';
 import 'package:frontend/utils/routes_generator.dart';
 import 'package:frontend/models/student.dart';
 import 'package:frontend/widgets/skillsbox.dart';
@@ -26,30 +28,32 @@ class SkillsForm extends StatelessWidget {
       width: size.width * .9,
       height: size.height * .85,
       child: Container(
-        color: Colors.grey[200],
         padding: EdgeInsets.symmetric(
           horizontal: 20.0,
-          vertical: 5.0,
+          vertical: 20.0,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            SizedBox(
-              height: size.height * .7,
-              child: ListView.builder(
-                itemCount: skillsBoxes.length,
-                itemBuilder: (_, index) => skillsBoxes[index],
+            SingleChildScrollView(
+              child: SizedBox(
+                height: size.height * .7,
+                child: ListView.builder(
+                  itemCount: skillsBoxes.length,
+                  itemBuilder: (_, index) => skillsBoxes[index],
+                ),
               ),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 16.0),
               child: RaisedButton(
-                color: Colors.grey[600],
-                child: Text(
-                  "SAVE",
-                  style: TextStyle(color: Colors.white),
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Text(
+                    "Publish your profile",
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
                 onPressed: () => _saveStudentToDB(context, student),
               ),
@@ -66,6 +70,8 @@ class SkillsForm extends StatelessWidget {
       "softSkills": skillsBoxes[1].chosenSkills
     };
 
+    student.userId = AuthService().loggedUser.id;
+
     dynamic response = await APIService.route(
       ENDPOINTS.Student,
       "/student",
@@ -75,7 +81,9 @@ class SkillsForm extends StatelessWidget {
     String message;
     if (response is Student) {
       message = "Profile saved successfully";
-      Nav.navigatorKey.currentState.popAndPushNamed("/home");
+      await AuthService()
+          .setLoggedAccountInfo(AccountType.Student, response.id);
+      Nav.currentState.popAndPushNamed("/student-home");
     } else if (response is String) {
       message = response;
     } else {

@@ -7,8 +7,8 @@ import 'package:frontend/models/student.dart';
 import 'package:frontend/screens/new_student/local_widget/experience_card.dart';
 import 'package:frontend/screens/new_student/new_student.dart';
 import 'package:frontend/services/api_service.dart';
+import 'package:frontend/utils/custom_theme.dart';
 import 'package:intl/intl.dart';
-import 'package:date_range_picker/date_range_picker.dart' as DateRagePicker;
 import 'package:provider/provider.dart';
 
 class EducationExperiencesForm extends StatefulWidget {
@@ -59,6 +59,7 @@ class EducationExperiencesFormState extends State<EducationExperiencesForm> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final themeData = Theme.of(context);
     final student = Provider.of<Student>(context);
     final formStepper = Provider.of<FormStepper>(context);
     final List<EducationExperience> educations = [
@@ -80,7 +81,7 @@ class EducationExperiencesFormState extends State<EducationExperiencesForm> {
           _creatingExperience
               ? Flexible(
                   child: _createExperienceForm(student),
-                  flex: 3,
+                  flex: 4,
                 )
               : Container(),
           Flexible(
@@ -98,20 +99,32 @@ class EducationExperiencesFormState extends State<EducationExperiencesForm> {
           ),
           Flexible(
             flex: 1,
-            child: RaisedButton(
-              color: Colors.grey[600],
-              onPressed: () {
-                if (!_creatingExperience ||
-                    (_creatingExperience && _formKey.currentState.validate())) {
-                  student.educations = educations.cast<EducationExperience>();
-                  setState(() {
-                    formStepper.goToNextFormStep();
-                  });
-                }
-              },
-              child: Text(
-                "Continue",
-                style: TextStyle(color: Colors.white),
+            child: SizedBox(
+              width: size.width * .9,
+              child: RaisedButton(
+                onPressed: () {
+                  //need to check the validation also here
+                  if (!_creatingExperience ||
+                      (_creatingExperience &&
+                          _formKey.currentState.validate())) {
+                    student.educations = educations.cast<EducationExperience>();
+                    setState(() {
+                      formStepper.goToNextFormStep();
+                    });
+                  }
+                },
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10.0),
+                  child: Text(
+                    "Continue",
+                    style: themeData.textTheme.subtitle1.copyWith(
+                      color: Colors.white,
+                      fontSize: 18.0,
+                      fontStyle: FontStyle.normal,
+                      fontWeight: FontWeight.normal,
+                    ),
+                  ),
+                ),
               ),
             ),
           ),
@@ -136,7 +149,10 @@ class EducationExperiencesFormState extends State<EducationExperiencesForm> {
         children: [
           Text(
             "Education",
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22.0),
+            style: Theme.of(context).textTheme.subtitle1.copyWith(
+                fontWeight: FontWeight.bold,
+                fontSize: 18.0,
+                color: CustomTheme().primaryColor),
           ),
           Spacer(),
           IconButton(
@@ -149,28 +165,23 @@ class EducationExperiencesFormState extends State<EducationExperiencesForm> {
   }
 
   _createExperienceForm(Student student) {
-    return Form(
-      key: _formKey,
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10.0),
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black,
-              blurRadius: 2.0,
-              spreadRadius: 0.0,
-              offset: Offset(2.0, 2.0),
+    return SingleChildScrollView(
+      child: Form(
+        key: _formKey,
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10.0),
+            color: Colors.white,
+            boxShadow: [CustomTheme().boxShadow],
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize: MainAxisSize.max,
+              children: _createEducationForm(student),
             ),
-          ],
-        ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisSize: MainAxisSize.max,
-            children: _createEducationForm(student),
           ),
         ),
       ),
@@ -181,13 +192,24 @@ class EducationExperiencesFormState extends State<EducationExperiencesForm> {
     final formatter = DateFormat('dd/MMM/yyyy');
     return [
       DropdownButtonFormField<Institution>(
+        icon: Icon(
+          Icons.keyboard_arrow_down,
+          color: Color(0xffc4c4c4),
+          size: 35,
+        ),
         items: (_institutions ?? [])
             .map((institution) => DropdownMenuItem<Institution>(
                   value: institution,
                   child: Text(institution.name),
                 ))
             .toList(),
-        hint: Text("Institution"),
+        hint: Text(
+          "Institution",
+          style: Theme.of(context).textTheme.subtitle1.copyWith(
+                fontSize: 16.0,
+                color: CustomTheme().textColor,
+              ),
+        ),
         onChanged: (value) {
           setState(() {
             _newExperience.institution = value;
@@ -200,13 +222,24 @@ class EducationExperiencesFormState extends State<EducationExperiencesForm> {
         value: _newExperience.institution,
       ),
       DropdownButtonFormField<Degree>(
+        icon: Icon(
+          Icons.keyboard_arrow_down,
+          color: Color(0xffc4c4c4),
+          size: 35,
+        ),
         items: (_degrees ?? [])
             .map((degree) => DropdownMenuItem<Degree>(
                   value: degree,
                   child: Text(degree.name),
                 ))
             .toList(),
-        hint: Text("Degree"),
+        hint: Text(
+          "Degree",
+          style: Theme.of(context).textTheme.subtitle1.copyWith(
+                fontSize: 16.0,
+                color: CustomTheme().textColor,
+              ),
+        ),
         onChanged: (value) {
           setState(() {
             _newExperience.degree = value;
@@ -219,13 +252,24 @@ class EducationExperiencesFormState extends State<EducationExperiencesForm> {
         value: _newExperience.degree,
       ),
       DropdownButtonFormField<Major>(
+        icon: Icon(
+          Icons.keyboard_arrow_down,
+          color: Color(0xffc4c4c4),
+          size: 35,
+        ),
         items: (_majors ?? [])
             .map((major) => DropdownMenuItem<Major>(
                   value: major,
                   child: Text(major.name),
                 ))
             .toList(),
-        hint: Text("Major"),
+        hint: Text(
+          "Major",
+          style: Theme.of(context).textTheme.subtitle1.copyWith(
+                fontSize: 16.0,
+                color: CustomTheme().textColor,
+              ),
+        ),
         onChanged: (value) {
           setState(() {
             _newExperience.major = value;
@@ -243,7 +287,7 @@ class EducationExperiencesFormState extends State<EducationExperiencesForm> {
           hintText: _newExperience.startPeriod != null &&
                   _newExperience.endPeriod != null
               ? "${formatter.format(_newExperience.startPeriod)} - ${formatter.format(_newExperience.endPeriod)}"
-              : "Period of study",
+              : "Period of study (mm/yyyy - mm-yyyy)",
         ),
         readOnly: true,
         validator: (_) {
@@ -252,11 +296,24 @@ class EducationExperiencesFormState extends State<EducationExperiencesForm> {
           return null;
         },
       ),
+      Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: Row(
+          children: [
+            Text(
+              'Describe your academic activity',
+              style: Theme.of(context).textTheme.subtitle1.copyWith(
+                    fontSize: 16,
+                    color: CustomTheme().textColor,
+                  ),
+              textAlign: TextAlign.left,
+            ),
+          ],
+        ),
+      ),
       TextFormField(
         decoration: const InputDecoration(
-          hintText: "Try to be as descriptive as possible",
-          labelText: "Describe your work experience",
-          filled: true,
+          border: OutlineInputBorder(),
         ),
         initialValue: _newExperience.description ?? "",
         onChanged: (value) {
@@ -278,7 +335,10 @@ class EducationExperiencesFormState extends State<EducationExperiencesForm> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           FlatButton(
-            child: Text("Save"),
+            child: Text("Save",
+                style: Theme.of(context).textTheme.subtitle1.copyWith(
+                      color: CustomTheme().accentTextColor,
+                    )),
             onPressed: () {
               setState(() {
                 _experiences.add(_newExperience);
@@ -297,19 +357,28 @@ class EducationExperiencesFormState extends State<EducationExperiencesForm> {
   }
 
   void _openDatePicker() async {
-    final List<DateTime> picked = await DateRagePicker.showDatePicker(
+    final DateTimeRange range = await showDateRangePicker(
       context: context,
-      initialFirstDate: _newExperience.startPeriod ?? DateTime.now(),
-      initialLastDate: _newExperience.endPeriod ??
-          (new DateTime.now()).add(new Duration(days: 7)),
+      initialDateRange: DateTimeRange(
+        start: _newExperience.startPeriod ?? DateTime.now(),
+        end: _newExperience.endPeriod ??
+            (new DateTime.now()).add(new Duration(days: 7)),
+      ),
       firstDate: DateTime.now().subtract(Duration(days: 365 * 100)),
       lastDate: (DateTime.now()).add(Duration(days: 365 * 100)),
+      builder: (context, child) {
+        return Theme(
+            data: Theme.of(context).copyWith(
+              primaryColor: CustomTheme().primaryColor.withOpacity(.7),
+            ),
+            child: child);
+      },
     );
-    if (picked != null && picked.length == 2) {
+    if (range != null) {
       setState(() {
         // picked is always ordered with the smaller one coming at index 0
-        _newExperience.startPeriod = picked[0];
-        _newExperience.endPeriod = picked[1];
+        _newExperience.startPeriod = range.start;
+        _newExperience.endPeriod = range.end;
       });
     }
   }

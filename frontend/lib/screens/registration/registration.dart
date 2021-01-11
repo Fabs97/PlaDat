@@ -3,11 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:frontend/models/user.dart';
 import 'package:frontend/services/api_service.dart';
-import 'package:frontend/services/api_services/registration_api_service.dart';
+import 'package:frontend/utils/custom_theme.dart';
 import 'package:frontend/utils/routes_generator.dart';
-import 'package:frontend/widgets/appbar.dart';
-import 'package:frontend/widgets/drawer.dart';
-import 'package:http/http.dart';
 
 class Registration extends StatefulWidget {
   Registration({Key key}) : super(key: key);
@@ -28,9 +25,14 @@ class _RegistrationState extends State<Registration> {
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
+    final themeData = Theme.of(context);
     return Scaffold(
-      appBar: CustomAppBar.createAppBar(context, "Register to PlaDat"),
-      drawer: CustomDrawer.createDrawer(context),
+      appBar: AppBar(
+        title: Text("Register to PlaDat"),
+        elevation: 0,
+        centerTitle: true,
+        leading: Container(),
+      ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -46,25 +48,17 @@ class _RegistrationState extends State<Registration> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     SizedBox(
-                      width: screenSize.width * .8,
-                      height: screenSize.height * .45,
+                      width: screenSize.width * .855,
+                      height: screenSize.height * .368,
                       child: Container(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10.0),
                           color: Colors.white,
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black,
-                              blurRadius: 2.0,
-                              spreadRadius: 0.0,
-                              offset: Offset(2.0, 2.0),
-                            ),
-                          ],
+                          boxShadow: [CustomTheme().boxShadow],
                         ),
                         child: Padding(
                           padding: const EdgeInsets.symmetric(
-                            horizontal: 20.0,
-                            vertical: 5.0,
+                            horizontal: 22.0,
                           ),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -72,34 +66,47 @@ class _RegistrationState extends State<Registration> {
                               _createEmailInputField(),
                               _createPasswordInputField(),
                               _createSecondPasswordInputField(),
-                              _createInfoBox(screenSize),
+                              _createInfoBox(),
                             ],
                           ),
                         ),
                       ),
                     ),
                     SizedBox(
-                      width: screenSize.width * .8,
+                      width: screenSize.width * .855,
                       child: Padding(
-                        padding: const EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 5.0),
+                        padding:
+                            const EdgeInsets.fromLTRB(21.0, 15.0, 0.0, 15.0),
                         child: Text(
                           "Account type",
-                          style: Theme.of(context).textTheme.headline6,
+                          style: Theme.of(context).textTheme.headline6.copyWith(
+                                fontSize: 18.0,
+                                color: CustomTheme().primaryColor,
+                              ),
                         ),
                       ),
                     ),
-                    _createAccountTypeRadios(screenSize),
+                    _createAccountTypeRadios(screenSize, themeData),
                   ],
                 ),
               ),
             ),
             SizedBox(
-              width: screenSize.width * .8,
+              width: screenSize.width * .855,
               child: Container(
-                decoration:
-                    BoxDecoration(borderRadius: BorderRadius.circular(20.0)),
                 child: RaisedButton(
-                  child: Text("Register"),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10.0),
+                    child: Text(
+                      "Register",
+                      style: themeData.textTheme.subtitle1.copyWith(
+                        color: Colors.white,
+                        fontSize: 18.0,
+                        fontStyle: FontStyle.normal,
+                        fontWeight: FontWeight.normal,
+                      ),
+                    ),
+                  ),
                   onPressed: _registerToPlaDat,
                 ),
               ),
@@ -115,12 +122,14 @@ class _RegistrationState extends State<Registration> {
       decoration: InputDecoration(
         labelText: "Email",
         hintText: "julian@bass.test",
+        contentPadding: EdgeInsets.all(0.0),
       ),
       initialValue: _email,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       validator: (email) {
-        if (!EmailValidator.validate(email))
+        if (!EmailValidator.validate(email)) {
           return "Please inser a valid email";
+        }
         return null;
       },
       onChanged: (email) {
@@ -137,9 +146,12 @@ class _RegistrationState extends State<Registration> {
       obscureText: _obscurePassword,
       decoration: InputDecoration(
         labelText: "Password",
+        contentPadding: EdgeInsets.all(0.0),
         suffixIcon: IconButton(
-          icon:
-              Icon(_obscurePassword ? Icons.visibility_off : Icons.visibility),
+          icon: Icon(
+            _obscurePassword ? Icons.visibility_off : Icons.visibility,
+            color: CustomTheme().primaryColor,
+          ),
           onPressed: () {
             setState(() {
               _obscurePassword = !_obscurePassword;
@@ -164,9 +176,11 @@ class _RegistrationState extends State<Registration> {
       obscureText: _obscureSecondPassword,
       decoration: InputDecoration(
         labelText: "Password",
+        contentPadding: EdgeInsets.all(0.0),
         suffixIcon: IconButton(
           icon: Icon(
               _obscureSecondPassword ? Icons.visibility_off : Icons.visibility),
+          color: CustomTheme().primaryColor,
           onPressed: () {
             setState(() {
               _obscureSecondPassword = !_obscureSecondPassword;
@@ -185,7 +199,7 @@ class _RegistrationState extends State<Registration> {
     );
   }
 
-  _createInfoBox(Size screenSize) {
+  _createInfoBox() {
     return Text(
       "Your password should be at least 8 characters and shall include at least a digital and a capital letter",
       style: TextStyle(
@@ -194,49 +208,46 @@ class _RegistrationState extends State<Registration> {
     );
   }
 
-  _createAccountTypeRadios(Size screenSize) {
+  _createAccountTypeRadios(Size screenSize, ThemeData themeData) {
     return SizedBox(
-      width: screenSize.width * .8,
-      height: screenSize.height * .18,
+      width: screenSize.width * .855,
+      height: screenSize.height * .13,
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10.0),
           color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black,
-              blurRadius: 2.0,
-              spreadRadius: 0.0,
-              offset: Offset(2.0, 2.0),
+          boxShadow: [CustomTheme().boxShadow],
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            RadioListTile<AccountType>(
+              activeColor: CustomTheme().secondaryColor,
+              title: Text(
+                "Employer",
+                style: themeData.textTheme.subtitle1,
+              ),
+              dense: true,
+              value: AccountType.Employer,
+              groupValue: _accountType,
+              onChanged: (accountType) =>
+                  setState(() => _accountType = accountType),
+            ),
+            RadioListTile<AccountType>(
+              activeColor: CustomTheme().secondaryColor,
+              title: Text(
+                "Student",
+                style: themeData.textTheme.subtitle1,
+              ),
+              dense: true,
+              value: AccountType.Student,
+              groupValue: _accountType,
+              onChanged: (accountType) =>
+                  setState(() => _accountType = accountType),
             ),
           ],
-        ),
-        child: Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: 20.0,
-            vertical: 5.0,
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              RadioListTile<AccountType>(
-                title: const Text("Employer"),
-                value: AccountType.Employer,
-                groupValue: _accountType,
-                onChanged: (accountType) =>
-                    setState(() => _accountType = accountType),
-              ),
-              RadioListTile<AccountType>(
-                title: const Text("Student"),
-                value: AccountType.Student,
-                groupValue: _accountType,
-                onChanged: (accountType) =>
-                    setState(() => _accountType = accountType),
-              ),
-            ],
-          ),
         ),
       ),
     );
@@ -258,7 +269,7 @@ class _RegistrationState extends State<Registration> {
         if (response is User) {
           message = "User correctly registered";
           toastColor = Colors.blue[700];
-          Nav.navigatorKey.currentState.pop();
+          Nav.currentState.pop();
         } else {
           message = response;
           toastColor = Colors.redAccent;

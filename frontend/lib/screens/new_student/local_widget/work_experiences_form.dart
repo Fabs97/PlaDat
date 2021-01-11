@@ -3,8 +3,8 @@ import 'package:frontend/models/student.dart';
 import 'package:frontend/models/work_experience.dart';
 import 'package:frontend/screens/new_student/local_widget/experience_card.dart';
 import 'package:frontend/screens/new_student/new_student.dart';
+import 'package:frontend/utils/custom_theme.dart';
 import 'package:intl/intl.dart';
-import 'package:date_range_picker/date_range_picker.dart' as DateRagePicker;
 import 'package:provider/provider.dart';
 
 class WorkExperiencesForm extends StatefulWidget {
@@ -27,9 +27,13 @@ class WorkExperiencesFormState extends State<WorkExperiencesForm> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final themeData = Theme.of(context);
     final student = Provider.of<Student>(context);
     final formStepper = Provider.of<FormStepper>(context);
-    final List<WorkExperience> works = [...student.works ?? [], ..._experiences].toSet().toList().cast<WorkExperience>();
+    final List<WorkExperience> works = [...student.works ?? [], ..._experiences]
+        .toSet()
+        .toList()
+        .cast<WorkExperience>();
     return SizedBox(
       width: size.width * .9,
       height: size.height * .85,
@@ -64,7 +68,6 @@ class WorkExperiencesFormState extends State<WorkExperiencesForm> {
           Flexible(
             flex: 1,
             child: RaisedButton(
-              color: Colors.grey[600],
               onPressed: () {
                 if (!_creatingExperience ||
                     (_creatingExperience && _formKey.currentState.validate())) {
@@ -74,9 +77,17 @@ class WorkExperiencesFormState extends State<WorkExperiencesForm> {
                   });
                 }
               },
-              child: Text(
-                "Continue",
-                style: TextStyle(color: Colors.white),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10.0),
+                child: Text(
+                  "Continue",
+                  style: themeData.textTheme.subtitle1.copyWith(
+                    color: Colors.white,
+                    fontSize: 18.0,
+                    fontStyle: FontStyle.normal,
+                    fontWeight: FontWeight.normal,
+                  ),
+                ),
               ),
             ),
           ),
@@ -101,7 +112,10 @@ class WorkExperiencesFormState extends State<WorkExperiencesForm> {
         children: [
           Text(
             "Work Experience",
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22.0),
+            style: Theme.of(context).textTheme.subtitle1.copyWith(
+                fontWeight: FontWeight.bold,
+                fontSize: 18.0,
+                color: CustomTheme().primaryColor),
           ),
           Spacer(),
           IconButton(
@@ -120,14 +134,7 @@ class WorkExperiencesFormState extends State<WorkExperiencesForm> {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10.0),
           color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black,
-              blurRadius: 2.0,
-              spreadRadius: 0.0,
-              offset: Offset(2.0, 2.0),
-            ),
-          ],
+          boxShadow: [CustomTheme().boxShadow],
         ),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15.0),
@@ -147,8 +154,8 @@ class WorkExperiencesFormState extends State<WorkExperiencesForm> {
     return [
       TextFormField(
         decoration: const InputDecoration(
-          hintText: 'Position',
-        ),
+            hintText: 'Position',
+            hintStyle: TextStyle(fontSize: 16, color: Color(0xff4c4c4c))),
         initialValue: _newExperience.position ?? "",
         onChanged: (value) {
           setState(() {
@@ -164,8 +171,8 @@ class WorkExperiencesFormState extends State<WorkExperiencesForm> {
       ),
       TextFormField(
         decoration: const InputDecoration(
-          hintText: 'Company Name',
-        ),
+            hintText: 'Company Name',
+            hintStyle: TextStyle(fontSize: 16, color: Color(0xff4c4c4c))),
         initialValue: _newExperience.companyName ?? "",
         onChanged: (value) {
           setState(() {
@@ -182,11 +189,11 @@ class WorkExperiencesFormState extends State<WorkExperiencesForm> {
       TextFormField(
         onTap: () => _openDatePicker(),
         decoration: InputDecoration(
-          hintText: _newExperience.startPeriod != null &&
-                  _newExperience.endPeriod != null
-              ? "${formatter.format(_newExperience.startPeriod)} - ${formatter.format(_newExperience.endPeriod)} "
-              : "Period of work",
-        ),
+            hintText: _newExperience.startPeriod != null &&
+                    _newExperience.endPeriod != null
+                ? "${formatter.format(_newExperience.startPeriod)} - ${formatter.format(_newExperience.endPeriod)} "
+                : "Period of work (mm/yyyy - mm-yyyy)",
+            hintStyle: TextStyle(fontSize: 16, color: CustomTheme().textColor)),
         readOnly: true,
         validator: (_) {
           if (_newExperience.startPeriod.isAfter(DateTime.now()))
@@ -194,11 +201,24 @@ class WorkExperiencesFormState extends State<WorkExperiencesForm> {
           return null;
         },
       ),
+      Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: Row(
+          children: [
+            Text(
+              'Describe your work experience',
+              style: TextStyle(
+                fontSize: 16,
+                color: CustomTheme().textColor,
+              ),
+              textAlign: TextAlign.left,
+            ),
+          ],
+        ),
+      ),
       TextFormField(
         decoration: const InputDecoration(
-          hintText: "Try to be as descriptive as possible",
-          labelText: "Describe your work experience",
-          filled: true,
+          border: OutlineInputBorder(),
         ),
         initialValue: _newExperience.description ?? "",
         onChanged: (value) {
@@ -220,17 +240,22 @@ class WorkExperiencesFormState extends State<WorkExperiencesForm> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           FlatButton(
-            child: Text("Save"),
+            child: Text("Save",
+                style: Theme.of(context).textTheme.subtitle1.copyWith(
+                      color: CustomTheme().accentTextColor,
+                    )),
             onPressed: () {
-              setState(() {
-                _experiences.add(_newExperience);
-                student.works = [
-                  ...student.works ?? [],
-                  ..._experiences,
-                ];
-                _newExperience = new WorkExperience();
-                _creatingExperience = false;
-              });
+              if (_formKey.currentState.validate()) {
+                setState(() {
+                  _experiences.add(_newExperience);
+                  student.works = [
+                    ...student.works ?? [],
+                    ..._experiences,
+                  ];
+                  _newExperience = new WorkExperience();
+                  _creatingExperience = false;
+                });
+              }
             },
           ),
         ],
@@ -239,19 +264,28 @@ class WorkExperiencesFormState extends State<WorkExperiencesForm> {
   }
 
   void _openDatePicker() async {
-    final List<DateTime> picked = await DateRagePicker.showDatePicker(
+    final DateTimeRange range = await showDateRangePicker(
       context: context,
-      initialFirstDate: _newExperience.startPeriod ?? DateTime.now(),
-      initialLastDate: _newExperience.endPeriod ??
-          (new DateTime.now()).add(new Duration(days: 7)),
+      initialDateRange: DateTimeRange(
+        start: _newExperience.startPeriod ?? DateTime.now(),
+        end: _newExperience.endPeriod ??
+            (new DateTime.now()).add(new Duration(days: 7)),
+      ),
       firstDate: DateTime.now().subtract(Duration(days: 365 * 100)),
       lastDate: (DateTime.now()).add(Duration(days: 365 * 100)),
+      builder: (context, child) {
+        return Theme(
+            data: Theme.of(context).copyWith(
+              primaryColor: CustomTheme().primaryColor.withOpacity(.7),
+            ),
+            child: child);
+      },
     );
-    if (picked != null && picked.length == 2) {
+    if (range != null) {
       setState(() {
         // picked is always ordered with the smaller one coming at index 0
-        _newExperience.startPeriod = picked[0];
-        _newExperience.endPeriod = picked[1];
+        _newExperience.startPeriod = range.start;
+        _newExperience.endPeriod = range.end;
       });
     }
   }

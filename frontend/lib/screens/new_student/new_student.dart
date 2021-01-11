@@ -48,12 +48,14 @@ class _NewStudentState extends State<NewStudent> {
         final stepper = context.watch<FormStepper>();
         return Scaffold(
           appBar: AppBar(
+            centerTitle: true,
             title: Text(
               "Student Profile",
               textAlign: TextAlign.center,
             ),
+            elevation: 0,
             leading: stepper.step == 0
-                ? null
+                ? Container()
                 : IconButton(
                     onPressed: () => stepper.goToPreviousFormStep(),
                     icon: Icon(Icons.arrow_back),

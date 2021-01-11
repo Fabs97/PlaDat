@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend/models/placement.dart';
 import 'package:frontend/screens/new_placement/local_widgets/placement_form.dart';
 import 'package:frontend/screens/new_placement/local_widgets/skills_form.dart';
+import 'package:frontend/widgets/drawer.dart';
 import 'package:provider/provider.dart';
 
 class NewPlacement extends StatefulWidget {
@@ -31,17 +32,20 @@ class _NewPlacementState extends State<NewPlacement> {
       ],
       child: Scaffold(
         appBar: AppBar(
+          centerTitle: true,
           title: Text(
             "Create Placement",
             textAlign: TextAlign.center,
           ),
+          elevation: 0,
           leading: _firstStep
-              ? null
+              ? Container()
               : IconButton(
                   onPressed: () => changeStep(true),
                   icon: Icon(Icons.arrow_back),
                 ),
         ),
+        drawer: CustomDrawer.createDrawer(context),
         body: Container(
           width: MediaQuery.of(context).size.width,
           child: Column(

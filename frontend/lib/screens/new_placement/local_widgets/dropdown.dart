@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:multiselect_formfield/multiselect_formfield.dart';
+import 'package:frontend/utils/custom_theme.dart';
+import 'package:multi_select_flutter/dialog/multi_select_dialog_field.dart';
+import 'package:multi_select_flutter/multi_select_flutter.dart';
+import 'package:multi_select_flutter/util/multi_select_item.dart';
 
 class Dropdown extends StatefulWidget {
   final String title;
@@ -9,7 +12,7 @@ class Dropdown extends StatefulWidget {
 
   List<dynamic> get itemsChosen => _itemsChosen;
   set items(List<dynamic> items) => state.setItems(items);
-  
+
   Dropdown({this.title, Key key}) : super(key: key);
 
   @override
@@ -35,30 +38,29 @@ class _DropdownState extends State<Dropdown> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: MultiSelectFormField(
-        chipBackGroundColor: Colors.grey,
-        checkBoxActiveColor: Colors.grey[50],
-        checkBoxCheckColor: Colors.lightBlue,
-        dialogShapeBorder: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(12.0))),
-        title: Text(
-          widget.title,
+      child: Padding(
+        padding: const EdgeInsets.only(top: 8.0),
+        child: MultiSelectDialogField(
+          items: widget._items
+              .map((item) => MultiSelectItem<dynamic>(item.name, item.name))
+              .toList(),
+          title: Text(widget.title),
+          selectedColor: CustomTheme().secondaryColor,
+          buttonIcon: Icon(Icons.arrow_drop_down),
+          buttonText: Text(widget.title),
+          onConfirm: (value) {
+            if (value == null) return;
+            setState(() {
+              widget._itemsChosen = widget._items
+                  .where((element) => value.contains(element.name))
+                  .toList();
+            });
+          },
+          chipDisplay: MultiSelectChipDisplay(
+            height: 33.0,
+            scroll: true,
+          ),
         ),
-        dataSource: widget._items
-            .map((item) => {'display': item.name, 'value': item.name})
-            .toList(),
-        textField: 'display',
-        valueField: 'value',
-        okButtonLabel: 'OK',
-        cancelButtonLabel: 'CANCEL',
-        onSaved: (value) {
-          if (value == null) return;
-          setState(() {
-            widget._itemsChosen = widget._items
-                .where((element) => value.contains(element.name))
-                .toList();
-          });
-        },
       ),
     );
   }

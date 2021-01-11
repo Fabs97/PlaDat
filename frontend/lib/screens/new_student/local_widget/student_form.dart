@@ -1,18 +1,16 @@
 import 'dart:ui';
-import 'package:email_validator/email_validator.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:frontend/models/student.dart';
-import 'package:frontend/services/api_service.dart';
-import 'package:frontend/utils/routes_generator.dart';
+import 'package:frontend/utils/custom_theme.dart';
 import 'package:frontend/widgets/address_search.dart';
 import 'package:frontend/models/place.dart';
-import 'package:intl/intl.dart';
 import 'package:frontend/screens/new_student/new_student.dart';
 import 'package:provider/provider.dart';
 
 class StudentForm extends StatefulWidget {
-
   const StudentForm({Key key}) : super(key: key);
   @override
   _StudentFormState createState() => _StudentFormState();
@@ -25,7 +23,7 @@ class _StudentFormState extends State<StudentForm> {
   @override
   void initState() {
     _controller.addListener(() {
-      final text = _controller.text.toLowerCase();
+      final text = _controller.text;
       _controller.value = _controller.value.copyWith(
         text: text,
         selection:
@@ -41,72 +39,119 @@ class _StudentFormState extends State<StudentForm> {
     final student = Provider.of<Student>(context);
     final formStepper = Provider.of<FormStepper>(context);
     final size = MediaQuery.of(context).size;
+    final themeData = Theme.of(context);
     return SizedBox(
       width: size.width * .9,
       height: size.height * .85,
-      child: Container(
-        child: Form(
-          key: _formKey,
-          child: SafeArea(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              mainAxisSize: MainAxisSize.max,
-              children: <Widget>[
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10.0),
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black,
-                        blurRadius: 2.0,
-                        spreadRadius: 0.0,
-                        offset: Offset(2.0, 2.0),
-                      ),
-                    ],
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 20.0,
-                      vertical: 5.0,
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          SizedBox(
+            width: size.width * .855,
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 20),
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                    child: Row(
                       children: [
-                        _createnameField(student),
-                        _createsurnameField(student),
-                        _createemailField(student),
-                        _createphoneField(student),
-                        _createDescriptionField(student),
-                        _cretaeautocompleteField(student),
+                        Text(
+                          "Basic information",
+                          style: themeData.textTheme.subtitle1.copyWith(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18.0,
+                              color: CustomTheme().primaryColor),
+                        ),
                       ],
                     ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 16.0),
-                  child: RaisedButton(
-                    color: Colors.grey[600],
-                    onPressed: () {
-                      // Validate will return true if the form is valid, or false if
-                      // the form is invalid.
-                      if (_formKey.currentState.validate()) {
-                        setState(() {
-                          formStepper.goToNextFormStep();
-                        });
-                      }
-                    },
-                    child: Text(
-                      'Continue',
-                      style: TextStyle(color: Colors.white),
+                  SizedBox(
+                    height: size.height * .03,
+                  ),
+                  Form(
+                    key: _formKey,
+                    child: SafeArea(
+                      child: Column(
+                        children: <Widget>[
+                          Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10.0),
+                              color: Colors.white,
+                              boxShadow: [CustomTheme().boxShadow],
+                            ),
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 20.0,
+                                vertical: 10.0,
+                              ),
+                              child: Column(
+                                children: [
+                                  _createnameField(student),
+                                  _createsurnameField(student),
+                                  _createphoneField(student),
+                                  _cretaeautocompleteField(student),
+                                  Padding(
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: Row(
+                                      children: [
+                                        Text(
+                                          'Tell us about yourself',
+                                          style: themeData.textTheme.subtitle1
+                                              .copyWith(
+                                            fontSize: 16,
+                                            color: CustomTheme().textColor,
+                                          ),
+                                          textAlign: TextAlign.left,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  _createDescriptionField(student),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
-        ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: SizedBox(
+              width: size.width * .9,
+              child: Container(
+                child: RaisedButton(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10.0),
+                    child: Text(
+                      'Continue',
+                      style: themeData.textTheme.subtitle1.copyWith(
+                        color: Colors.white,
+                        fontSize: 18.0,
+                        fontStyle: FontStyle.normal,
+                        fontWeight: FontWeight.normal,
+                      ),
+                    ),
+                  ),
+                  onPressed: () {
+                    // Validate will return true if the form is valid, or false if
+                    // the form is invalid.
+                    if (_formKey.currentState.validate()) {
+                      setState(() {
+                        formStepper.goToNextFormStep();
+                      });
+                    }
+                  },
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -115,6 +160,7 @@ class _StudentFormState extends State<StudentForm> {
     return TextFormField(
       decoration: const InputDecoration(
         hintText: 'Name',
+        hintStyle: TextStyle(fontSize: 16, color: Color(0xff4c4c4c)),
       ),
       initialValue: student.name ?? '',
       onChanged: (value) {
@@ -135,6 +181,7 @@ class _StudentFormState extends State<StudentForm> {
     return TextFormField(
       decoration: const InputDecoration(
         hintText: 'Surname',
+        hintStyle: TextStyle(fontSize: 16, color: Color(0xff4c4c4c)),
       ),
       initialValue: student.surname ?? '',
       onChanged: (value) {
@@ -151,34 +198,10 @@ class _StudentFormState extends State<StudentForm> {
     );
   }
 
-  Widget _createemailField(Student student) {
-    return TextFormField(
-      decoration: const InputDecoration(
-        hintText: 'student@school.com',
-      ),
-      initialValue: student.email ?? '',
-      onChanged: (value) {
-        setState(() {
-          student.email = value;
-        });
-      },
-      validator: (value) {
-        if (value.isEmpty) {
-          return 'Please enter a student email';
-        } else if (!EmailValidator.validate(value)) {
-          return 'Please enter a valid email';
-        }
-        return null;
-      },
-    );
-  }
-
   Widget _createDescriptionField(Student student) {
     return TextFormField(
       decoration: const InputDecoration(
-        hintText: "Try to be as descriptive as possible",
-        labelText: "Tell about yourself",
-        filled: true,
+        border: OutlineInputBorder(),
       ),
       initialValue: student.description ?? '',
       onChanged: (value) {
@@ -200,6 +223,7 @@ class _StudentFormState extends State<StudentForm> {
     return TextFormField(
       decoration: const InputDecoration(
         hintText: 'Phone number',
+        hintStyle: TextStyle(fontSize: 16, color: Color(0xff4c4c4c)),
       ),
       keyboardType: TextInputType.number,
       inputFormatters: [
@@ -226,7 +250,9 @@ class _StudentFormState extends State<StudentForm> {
       readOnly: true,
       decoration: const InputDecoration(
         hintText: 'Address',
+        hintStyle: TextStyle(fontSize: 16, color: Color(0xff4c4c4c)),
       ),
+      // initialValue: student.location?.description ?? '',
       onTap: () async {
         final Place result = await showSearch(
           context: context,
@@ -241,12 +267,9 @@ class _StudentFormState extends State<StudentForm> {
             result.country = splits[splits.length - 1];
             result.city = splits[splits.length - 2];
             student.location = result;
-          
           });
-          
         }
       },
-
       validator: (value) {
         if (value.isEmpty) {
           return 'Please enter your address';

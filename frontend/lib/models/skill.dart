@@ -39,6 +39,16 @@ class Skill {
     return toReturn;
   }
 
+  static Map<String, dynamic> listFromJsonMap(Map<String, dynamic> json) {
+    if (json == null) return null;
+    Map<String, List<Skill>> toReturn = {};
+    json.forEach((key, value) {
+      toReturn[key] =
+          value?.map((e) => Skill.fromJson(e))?.toList()?.cast<Skill>() ?? [];
+    });
+    return toReturn;
+  }
+
   static String mapToJson(Map<String, dynamic> skillsList) {
     return jsonEncode(skillsList.map((key, value) =>
         MapEntry(key, value.map((e) => e.toJsonMap()).toList())));

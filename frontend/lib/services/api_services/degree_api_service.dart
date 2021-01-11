@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:frontend/models/degree.dart';
-import 'package:http/http.dart' as http;
+import 'package:frontend/services/custom_http_service.dart' as http;
 import 'package:frontend/services/api_service.dart';
 
 class DegreeAPIService extends APIInfo {
@@ -20,6 +20,8 @@ class DegreeAPIService extends APIInfo {
     if (response.statusCode == 200) {
       final parsed = jsonDecode(response.body).cast<Map<String, dynamic>>();
       return parsed.map((degreesJson) => Degree.fromJson(degreesJson)).toList();
+    } else {
+      print(response.body);
     }
   }
 }

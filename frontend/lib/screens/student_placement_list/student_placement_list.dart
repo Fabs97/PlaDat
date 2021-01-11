@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_tindercard/flutter_tindercard.dart';
 import 'package:frontend/models/placement.dart';
 import 'package:frontend/models/match.dart';
+import 'package:frontend/screens/company_placement_list/local_widgets/placement_matched_students.dart';
 import 'package:frontend/screens/student_placement_list/local_widgets/placement_card.dart';
 import 'package:frontend/screens/student_placement_list/local_widgets/placement_filter.dart';
 import 'package:frontend/services/api_service.dart';
 import 'package:frontend/services/auth_service.dart';
+import 'package:frontend/services/custom_http_service.dart';
+import 'package:frontend/utils/custom_theme.dart';
 import 'package:frontend/utils/routes_generator.dart';
 import 'package:frontend/widgets/appbar.dart';
 import 'package:frontend/widgets/drawer.dart';
@@ -36,7 +39,7 @@ class _PlacementCardsListState extends State<PlacementCardsList>
             ENDPOINTS.Recomendations, "/recommendation/id/seePlacements",
             urlArgs: studentId)
         .then((placementsList) => setState(() {
-              _placements = placementsList.cast<Placement>();
+              _placements = placementsList?.cast<Placement>() ?? [];
               _filteredPlacements = _placements;
             }));
     super.initState();
@@ -45,6 +48,7 @@ class _PlacementCardsListState extends State<PlacementCardsList>
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final themeData = Theme.of(context);
     return Scaffold(
       appBar: CustomAppBar.createAppBar(context, "PlaDat"),
       drawer: CustomDrawer.createDrawer(context),
@@ -52,91 +56,96 @@ class _PlacementCardsListState extends State<PlacementCardsList>
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          _createFilterButton(size),
-          Container(
-            height: size.height * .8,
-            child: _filteredPlacements == null
-                ? Center(
-                    child: CircularProgressIndicator(),
-                  )
-                : TinderSwapCard(
-                    // swipeUp: true,
-                    // swipeDown: true,
-                    animDuration: 400,
-                    orientation: AmassOrientation.BOTTOM,
-                    totalNum: _filteredPlacements.length,
-                    stackNum: 3,
-                    maxWidth: size.width * .9,
-                    maxHeight: size.height * .9,
-                    minWidth: size.width * .8,
-                    minHeight: size.height * .8,
-                    cardBuilder: (context, index) =>
-                        PlacementCard(placement: _filteredPlacements[index]),
-                    cardController: _cardController = CardController(),
-                    swipeCompleteCallback: (orientation, index) {
-                      APIService.route(ENDPOINTS.Matches, "/matching",
-                          body: Match(
-                            studentID: studentId,
-                            placementID: _filteredPlacements[index].id,
-                            studentAccept:
-                                orientation == CardSwipeOrientation.LEFT
-                                    ? false
-                                    : true,
-                          )).then((match) async {
-                        if (match.status == 'ACCEPTED') {
-                          await Nav.navigatorKey.currentState
-                              .push(MaterialPageRoute(
-                            builder: (builder) => MatchAlert(
-                              placement: _filteredPlacements[index],
-                              object: null,
-                            ),
-                            fullscreenDialog: true,
-                          ));
-                        }
-                      });
-                    },
+        children: _placements != null && _placements.isNotEmpty
+            ? [
+                _createFilterButton(size, themeData),
+                Container(
+                  height: size.height * .78,
+                  child: _filteredPlacements == null
+                      ? Center(
+                          child: CircularProgressIndicator(),
+                        )
+                      : TinderSwapCard(
+                          animDuration: 400,
+                          orientation: AmassOrientation.BOTTOM,
+                          totalNum: _filteredPlacements.length,
+                          stackNum: 3,
+                          maxWidth: size.width * .9,
+                          maxHeight: size.height * .9,
+                          minWidth: size.width * .8,
+                          minHeight: size.height * .8,
+                          cardBuilder: (context, index) => PlacementCard(
+                              placement: _filteredPlacements[index]),
+                          cardController: _cardController = CardController(),
+                          swipeCompleteCallback: (orientation, index) {
+                            APIService.route(ENDPOINTS.Matches, "/matching",
+                                body: Match(
+                                  studentID: studentId,
+                                  placementID: _filteredPlacements[index].id,
+                                  studentAccept:
+                                      orientation == CardSwipeOrientation.LEFT
+                                          ? false
+                                          : true,
+                                )).then((match) async {
+                              if (match.status == 'ACCEPTED') {
+                                await Nav.currentState.push(MaterialPageRoute(
+                                  builder: (builder) => MatchAlert(
+                                    placement: _filteredPlacements[index],
+                                    object: null,
+                                  ),
+                                  fullscreenDialog: true,
+                                ));
+                              }
+                              setState(() {
+                                _placements.remove(_filteredPlacements[index]);
+                              });
+                            });
+                          },
+                        ),
+                ),
+                Container(
+                  width: size.width * .9,
+                  height: size.height * .07,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      TinderButton(
+                          label: "Discard",
+                          cardController: _cardController,
+                          discardButton: true),
+                      TinderButton(
+                          label: "I'm interested",
+                          cardController: _cardController,
+                          discardButton: false),
+                    ],
                   ),
-          ),
-          Container(
-            width: size.width * .9,
-            height: size.height * .05,
-            child: Row(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                TinderButton(
-                    label: "Discard",
-                    cardController: _cardController,
-                    discardButton: true),
-                TinderButton(
-                    label: "I'm interested",
-                    cardController: _cardController,
-                    discardButton: false),
+                )
+              ]
+            : [
+                Center(
+                  child: Text(
+                    "No recommendations for you (yet!)",
+                    style: TextStyle(
+                      color: CustomTheme().primaryColor,
+                    ),
+                  ),
+                )
               ],
-            ),
-          )
-        ],
       ),
     );
   }
 
-  _createFilterButton(Size screenSize) {
+  _createFilterButton(Size screenSize, ThemeData themeData) {
+    final customTheme = CustomTheme();
     return SizedBox(
       width: screenSize.width * .85,
       child: Container(
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(5.0),
+          borderRadius: BorderRadius.circular(14.0),
           color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black,
-              blurRadius: 2.0,
-              spreadRadius: 0.0,
-              offset: Offset(2.0, 2.0),
-            )
-          ],
+          boxShadow: [customTheme.boxShadow],
         ),
         child: SmartSelect<PlacementFilter>.multiple(
           value: _filtersChosen,
@@ -164,6 +173,12 @@ class _PlacementCardsListState extends State<PlacementCardsList>
           title: "Filter",
           placeholder: "",
           modalType: S2ModalType.popupDialog,
+          modalStyle: S2ModalStyle(
+            backgroundColor: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(14.0),
+            ),
+          ),
           modalFilter: false,
           modalHeader: true,
           modalHeaderBuilder: (context, _) {
@@ -178,24 +193,76 @@ class _PlacementCardsListState extends State<PlacementCardsList>
                   mainAxisSize: MainAxisSize.max,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Icon(Icons.filter_alt_outlined),
-                    Text(
-                      "Filter",
-                      style: TextStyle(
-                        fontSize: 20.0,
+                    Icon(
+                      Icons.filter_alt_outlined,
+                      size: 18,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 4.0),
+                      child: Text(
+                        "Filter",
+                        style: TextStyle(
+                          color: CustomTheme().primaryColor,
+                          fontSize: 20.0,
+                        ),
                       ),
                     ),
                     Spacer(),
-                    Icon(Icons.keyboard_arrow_up)
+                    Icon(Icons.keyboard_arrow_up,
+                        color: CustomTheme().primaryColor)
                   ],
                 ),
               ),
             );
           },
-          modalHeaderStyle: S2ModalHeaderStyle(
-            centerTitle: true,
+          modalConfig: S2ModalConfig(
+            barrierColor: Colors.transparent,
+            headerStyle: S2ModalHeaderStyle(
+              centerTitle: true,
+              elevation: 0.0,
+              textStyle: themeData.textTheme.bodyText1.copyWith(
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+          ),
+          choiceConfig: S2ChoiceConfig(
+            overscrollColor: customTheme.backgroundColor,
           ),
           choiceGrouped: true,
+          choiceHeaderStyle: S2ChoiceHeaderStyle(
+            backgroundColor: Colors.white,
+            textStyle: themeData.textTheme.bodyText1.copyWith(
+              fontWeight: FontWeight.w700,
+              color: customTheme.primaryColor,
+            ),
+            padding: const EdgeInsets.symmetric(horizontal: 28.0),
+            height: 20,
+          ),
+          choiceHeaderBuilder: (_, group, __) {
+            final style = group.style;
+            return Padding(
+              padding: style.padding,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text(
+                    group.name,
+                    style: style.textStyle,
+                  ),
+                ],
+              ),
+            );
+          },
+          choiceStyle: S2ChoiceStyle(
+            showCheckmark: false,
+            activeColor: customTheme.secondaryColor,
+            padding: const EdgeInsets.symmetric(horizontal: 21.0),
+            control: S2ChoiceControl.leading,
+            spacing: 21.0,
+            titleStyle: themeData.textTheme.bodyText1.copyWith(
+              fontWeight: FontWeight.w400,
+            ),
+          ),
           choiceItems: S2Choice.listFrom(
             source: _filters,
             value: (_, filter) => filter,

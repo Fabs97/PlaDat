@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/models/skill.dart';
+import 'package:frontend/utils/custom_theme.dart';
 
 class OtherSkills extends StatefulWidget {
   List<Skill> _otherSkills = [];
@@ -16,12 +17,13 @@ class OtherSkillsState extends State<OtherSkills> {
   TextEditingController _textController = TextEditingController();
 
   onItemPressed(String skillName) {
-    if(!widget._otherSkills.map((e) => e.name).contains(skillName)){
+    if (!widget._otherSkills.map((e) => e.name).contains(skillName)) {
       setState(() {
         widget._otherSkills.add(Skill(
           name: skillName,
           type: "OTHER",
         ));
+        _textController.text = "";
       });
     }
   }
@@ -31,33 +33,56 @@ class OtherSkillsState extends State<OtherSkills> {
     return Container(
       child: Column(
         children: [
-          Row(
-            children: [
-              Text("Other Skills",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                  textAlign: TextAlign.left),
-              Padding(
-                padding: EdgeInsets.all(16.0),
-              ),
-            ],
+          Padding(
+            padding:
+                const EdgeInsets.symmetric(vertical: 8.0, horizontal: 20.0),
+            child: Row(
+              children: [
+                Text("Other Skills",
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18.0,
+                        color: CustomTheme().primaryColor),
+                    textAlign: TextAlign.left),
+                Padding(
+                  padding: EdgeInsets.all(16.0),
+                ),
+              ],
+            ),
           ),
           Container(
-            color: Colors.white,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10.0),
+              color: Colors.white,
+              boxShadow: [CustomTheme().boxShadow],
+            ),
             padding: EdgeInsets.symmetric(
               horizontal: 20.0,
               vertical: 5.0,
             ),
             child: Column(
               children: [
-                TextField(
-                  controller: _textController,
-                  decoration: InputDecoration(
-                    suffixIcon: IconButton(
-                      onPressed: () => onItemPressed(_textController.text),
-                      icon: Icon(Icons.add),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextField(
+                    controller: _textController,
+                    decoration: InputDecoration(
+                      suffixIcon: IconButton(
+                        onPressed: () => onItemPressed(_textController.text),
+                        icon: Icon(
+                          Icons.add,
+                          color: CustomTheme().primaryColor,
+                        ),
+                      ),
+                      hintText: 'Insert Here...',
+                      filled: true,
+                      fillColor: CustomTheme().backgroundColor,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                        borderSide:
+                            BorderSide(width: 0, style: BorderStyle.none),
+                      ),
                     ),
-                    hintText: 'Search Here...',
-                    filled: true,
                   ),
                 ),
                 Padding(
@@ -68,10 +93,8 @@ class OtherSkillsState extends State<OtherSkills> {
                     runSpacing: 5.0,
                     children: widget._otherSkills.map((skill) {
                       return Chip(
-                        backgroundColor: Colors.grey[600],
                         label: Text(
                           skill.name,
-                          style: TextStyle(color: Colors.white),
                         ),
                       );
                     }).toList(),

@@ -1,13 +1,14 @@
-
 const studentDAO = require('../DAO/studentDAO');
 const skillService = require('../services/skillsService')
 const locationService = require('../services/locationService');
 const SuperError = require('../errors').SuperError;
 const ERR_INTERNAL_SERVER_ERROR = require('../errors').ERR_INTERNAL_SERVER_ERROR;
+const ERR_FORBIDDEN = require('../errors').ERR_FORBIDDEN;
 const educationService = require('../services/educationService')
 const workService = require('../services/workService')
+const jwt = require('jsonwebtoken');
 
-self = module.exports = {
+module.exports = studServ = {
     // Here you can add all kinds of methods that manage or handle data, or do specific tasks. 
     // This is the place where the business logic is.
     getStudent: (id) => {
@@ -16,18 +17,27 @@ self = module.exports = {
         return studentDAO.getStudentById(id);
     },
 
-    createStudentAccount: async (studentInfo) => {
-        let studentProfile = {};
+    createStudentAccount: async (studentInfo, auth) => {
+        
+        if(auth.userType !== 'STUDENT') {
+            throw new SuperError(ERR_FORBIDDEN, 'You cannot create a student profile from a non-student account.');
+        }
 
+        let studentProfile = {};
         try {
             studentProfile = await studentDAO.createStudentAccount(studentInfo);
 
+            if(studentProfile.id) {
+                studentProfile.token = jwt.sign({ id: auth.id, studentId: studentProfile.id, userType: 'STUDENT'}, process.env.ACCESS_TOKEN_SECRET, {
+                    expiresIn: process.env.ACCESS_TOKEN_LIFE // 30 DAYS
+                });
+            }
             if(studentInfo.location){
-                studentProfile.location = await self.saveStudentLocation(studentProfile.id, studentInfo.location);
+                studentProfile.location = await studServ.saveStudentLocation(studentProfile.id, studentInfo.location);
             }
 
             if(studentInfo.skills) {
-                studentProfile.skills = await self.saveStudentSkills(studentProfile.id, studentInfo.skills);
+                studentProfile.skills = await studServ.saveStudentSkills(studentProfile.id, studentInfo.skills);
             }
             if(studentInfo.work && studentInfo.work.length > 0) {
                 studentProfile.work = await workService.saveStudentWork(studentProfile.id, studentInfo.work);
@@ -66,6 +76,9 @@ self = module.exports = {
     getStudentProfile: async (id) => {
         let profile = await studentDAO.getStudentById(id);
         profile.skills = await skillService.getStudentSkills(profile.id);
+        profile.location = await studentDAO.getStudentLocationById(profile.id);
+        profile.education = await studentDAO.getStudentEducationById(profile.id);
+        profile.work = await studentDAO.getStudentWorkById(profile.id);
         return profile;
     },
 
@@ -73,8 +86,11 @@ self = module.exports = {
         return await studentDAO.getLastStudent();
     },
 
-    deleteStudentById: (id) => {
-        return studentDAO.deleteStudentById(id);
+    deleteStudentById: async (id, auth) => {
+        if(auth.studentId !== id) {
+            throw new SuperError(ERR_FORBIDDEN, 'You cannot delete this student profile');
+        }
+        return await studentDAO.deleteStudentById(id);
     },
 
     saveStudentLocation: async (id, details) => {
@@ -86,4 +102,13 @@ self = module.exports = {
         }
         return location;
     },
+    getStudentByUserId: async (userId, auth) => {
+        if(auth.id !== userId) {
+            throw new SuperError(ERR_FORBIDDEN, 'You cannot see this profile');
+        }
+        return await studentDAO.getStudentByUserId(userId);
+    },
+    getStudentsForRecommendation: (placementId) => {
+        return studentDAO.getStudentsForRecommendation(placementId);
+    }
 };

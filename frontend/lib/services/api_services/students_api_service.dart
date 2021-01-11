@@ -1,7 +1,8 @@
 import 'dart:convert';
 import 'package:frontend/models/placement.dart';
 import 'package:frontend/models/skill.dart';
-import 'package:http/http.dart' as http;
+import 'package:frontend/services/auth_service.dart';
+import 'package:frontend/services/custom_http_service.dart' as http;
 import 'package:frontend/models/student.dart';
 import 'package:frontend/services/api_service.dart';
 
@@ -31,6 +32,10 @@ class StudentsAPIService extends APIInfo {
     switch (response.statusCode) {
       case 200:
         {
+          final body = jsonDecode(response.body);
+          if (body["token"] != null) {
+            AuthService().updateToken(body["token"]);
+          }
           return Student.fromJson(jsonDecode(response.body));
         }
       default:
@@ -48,13 +53,17 @@ class StudentsAPIService extends APIInfo {
 
     if (response.statusCode == 200) {
       return response;
+    } else {
+      print(response.body);
     }
   }
 
-  static Future<dynamic> _getStudentById(String id) async {
+  static Future<dynamic> _getStudentById(int id) async {
     var response = await http.get(APIInfo.apiEndpoint + "/student/$id");
     if (response.statusCode == 200) {
       return Student.fromJson(jsonDecode(response.body));
+    } else {
+      print(response.body);
     }
   }
 

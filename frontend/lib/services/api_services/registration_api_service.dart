@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:frontend/models/user.dart';
-import 'package:http/http.dart' as http;
+import 'package:frontend/services/custom_http_service.dart' as http;
 import 'package:frontend/services/api_service.dart';
 
 class RegistrationAPIService extends APIInfo {
@@ -19,13 +19,15 @@ class RegistrationAPIService extends APIInfo {
     var response = await http.post(
       APIInfo.apiEndpoint + "/registration",
       headers: {"Content-Type": "application/json"},
-      body: user.toJson()
+      body: user.toJson(),
+      needsAuth: false,
     );
     int statusCode = response.statusCode;
     switch (statusCode) {
       case 200:
-        return User.fromJson(
-            jsonDecode(response.body));
+        return User.fromJson(jsonDecode(response.body));
+      case 401:
+        return (response.body);
       case 409:
         return "The user with the given email is already present in the database";
       case 500:

@@ -1,11 +1,13 @@
 import 'package:frontend/services/api_services/degree_api_service.dart';
 import 'package:frontend/services/api_services/institutions_api_service.dart';
+import 'package:frontend/services/api_services/login_api_service.dart';
 import 'package:frontend/services/api_services/majors_api_service.dart';
 import 'package:frontend/services/api_services/messages_api_service.dart';
 import 'package:frontend/services/api_services/placement_api_service.dart';
 import 'package:frontend/services/api_services/recomendations_api_service.dart';
 import 'package:frontend/services/api_services/registration_api_service.dart';
 import 'package:frontend/services/api_services/students_api_service.dart';
+import 'api_services/activities_api_services.dart';
 import 'api_services/employers_api_service.dart';
 import 'api_services/location_api_service.dart';
 import 'api_services/matches_API_service.dart';
@@ -24,7 +26,9 @@ enum ENDPOINTS {
   Locations,
   Messages,
   Registration,
-  Degree
+  Degree,
+  Login,
+  Domainofactivities,
 }
 
 class APIInfo {
@@ -47,9 +51,10 @@ class APIService {
           return StudentsAPIService.route(subRoute,
               body: body, urlArgs: urlArgs);
         case ENDPOINTS.Majors:
-          return MajorsAPIService.route(subRoute);
+          return MajorsAPIService.route(subRoute, urlArgs: urlArgs, body: body);
         case ENDPOINTS.Institutions:
-          return InstitutionsAPIService.route(subRoute);
+          return InstitutionsAPIService.route(subRoute,
+              urlArgs: urlArgs, body: body);
         case ENDPOINTS.Skills:
           return SkillsAPIService.route(subRoute, urlArgs: urlArgs, body: body);
         case ENDPOINTS.Placement:
@@ -59,13 +64,14 @@ class APIService {
           return RecomendationsAPIService.route(subRoute,
               body: body, urlArgs: urlArgs);
         case ENDPOINTS.Matches:
-          return MatchesAPIService.route(subRoute, body: body);
+          return MatchesAPIService.route(subRoute,
+              body: body, urlArgs: urlArgs);
         case ENDPOINTS.Employers:
           return EmployersAPIService.route(subRoute,
               urlArgs: urlArgs, body: body);
         case ENDPOINTS.Locations:
           return LocationsAPIService.route(subRoute,
-              urlArgs: urlArgs, body: body);      
+              urlArgs: urlArgs, body: body);
         case ENDPOINTS.Registration:
           return RegistrationAPIService.route(subRoute,
               urlArgs: urlArgs, body: body);
@@ -73,13 +79,17 @@ class APIService {
           return MessagesAPIService.route(subRoute,
               urlArgs: urlArgs, body: body);
         case ENDPOINTS.Degree:
-          return DegreeAPIService.route(subRoute,
+          return DegreeAPIService.route(subRoute, urlArgs: urlArgs, body: body);
+        case ENDPOINTS.Login:
+          return LoginAPIService.route(subRoute, urlArgs: urlArgs, body: body);
+        case ENDPOINTS.Domainofactivities:
+          return DomainofactivitiesAPIService.route(subRoute,
               urlArgs: urlArgs, body: body);
         default:
           throw APIException();
       }
     } catch (e) {
-      print("[Error]::APIService - $e");
+      print("[Error]::APIService - ${e.toString()}");
       return null;
     }
   }

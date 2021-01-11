@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:frontend/models/place.dart';
-import 'package:http/http.dart' as http;
+import 'package:frontend/services/custom_http_service.dart' as http;
 import 'package:frontend/services/api_service.dart';
 
 class LocationsAPIService extends APIInfo {
@@ -25,6 +25,8 @@ class LocationsAPIService extends APIInfo {
       List<Place> tagObjs =
           preObjsJson.map((tagJson) => Place.fromJson(tagJson)).toList();
       return tagObjs;
+    } else {
+      print(response.body);
     }
   }
 }

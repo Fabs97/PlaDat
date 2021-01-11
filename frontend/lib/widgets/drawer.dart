@@ -1,53 +1,64 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/models/user.dart';
+import 'package:frontend/services/auth_service.dart';
+import 'package:frontend/utils/custom_theme.dart';
 import 'package:frontend/utils/routes_generator.dart';
 
+class _CustomDrawerPage {
+  final String title;
+  final String route;
+  final Object arguments;
+
+  _CustomDrawerPage(this.title, this.route, {this.arguments});
+}
+
 class CustomDrawer {
+  static List<_CustomDrawerPage> _employerDrawerPages = [
+    _CustomDrawerPage("My recommendations", "/employer-home"),
+    _CustomDrawerPage("My placements", "/company-placements"),
+  ];
+  static List<_CustomDrawerPage> _studentDrawerPages = [
+    _CustomDrawerPage("My recommendations", "/student-home"),
+    _CustomDrawerPage("My matches", "/student-matches"),
+    _CustomDrawerPage("My profile", "/profile",
+        arguments: AuthService().loggedAccountInfo),
+  ];
+
   static Drawer createDrawer(BuildContext context) {
+    final bool isStudent = AuthService().loggedUser.type == AccountType.Student;
     return Drawer(
       child: ListView(
         children: [
           DrawerHeader(
-            child: Text("Welcome to PlaDat"),
+            child: Text(
+              "Welcome to PlaDat",
+              style: TextStyle(
+                color: CustomTheme().backgroundColor,
+              ),
+            ),
             decoration: BoxDecoration(
-              color: Colors.blue,
+              color: CustomTheme().primaryColor,
             ),
           ),
-          ListTile(
-            title: Text("Students list"),
-            onTap: () =>
-                Nav.navigatorKey.currentState.pushNamed("/student-list"),
-          ),
-          ListTile(
-            title: Text("Placements list"),
-            onTap: () =>
-                Nav.navigatorKey.currentState.pushNamed("/placement-list"),
-          ),
-          ListTile(
-            title: Text("Create placement"),
-            onTap: () =>
-                Nav.navigatorKey.currentState.pushNamed("/new-placement"),
-          ),
-          ListTile(
-            title: Text("Create student"),
-            onTap: () =>
-                Nav.navigatorKey.currentState.pushNamed("/new-student"),
-          ),
-          ListTile(
-            title: Text("My placements"),
-            onTap: () =>
-                Nav.navigatorKey.currentState.pushNamed("/company-placements"),
-          ),
-          ListTile(
-            title: Text("Register to PlaDat"),
-            onTap: () =>
-                Nav.navigatorKey.currentState.pushNamed("/registration"),
-          ),
-          ListTile(
-            title: Text("My matches"),
-            onTap: () =>
-                Nav.navigatorKey.currentState.pushNamed("/student-matches"),
-          ),
+          ..._createDrawer(isStudent),
         ],
+      ),
+    );
+  }
+
+  static _createDrawer(bool isStudent) {
+    return (isStudent ? _studentDrawerPages : _employerDrawerPages)
+        .map(_createListTile)
+        .cast<ListTile>()
+        .toList();
+  }
+
+  static _createListTile(_CustomDrawerPage page) {
+    return ListTile(
+      title: Text(page.title),
+      onTap: () => Nav.currentState.pushNamed(
+        page.route,
+        arguments: page.arguments,
       ),
     );
   }
