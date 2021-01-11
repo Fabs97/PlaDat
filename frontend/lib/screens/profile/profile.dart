@@ -113,14 +113,22 @@ class _ProfileState extends State<Profile> {
                   ),
                 ],
               ),
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: widget.profile is Student
-                      ? StudentProfile(student: widget.profile)
-                      : PlacementProfile(placement: widget.profile),
-                ),
-              ),
+              child: widget.profile != null
+                  ? SingleChildScrollView(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: widget.profile is Student
+                            ? StudentProfile(student: widget.profile)
+                            : PlacementProfile(placement: widget.profile),
+                      ),
+                    )
+                  : Center(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                        child: Text(
+                            "I could not retrieve correctly the information, please go back and try again."),
+                      ),
+                    ),
             ),
           );
         },

@@ -1,7 +1,13 @@
+import 'dart:convert';
+
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:frontend/models/employer.dart';
+import 'package:frontend/models/student.dart';
 import 'package:frontend/models/user.dart';
 import 'dart:html' show window;
 import 'package:frontend/services/api_service.dart';
 import 'package:frontend/services/api_services/login_api_service.dart';
+import 'package:frontend/utils/routes_generator.dart';
 
 class AuthException implements Exception {}
 
@@ -23,9 +29,33 @@ class AuthService {
     return this._jwtToken;
   }
 
-  User get loggedUser => _loggedUser;
+  User get loggedUser {
+    if (this._loggedUser == null) {
+      final localStorageUser = window.localStorage["user"];
+      if (localStorageUser == null) {
+        Fluttertoast.showToast(msg: "Fatal error occurred, please login again");
+        Nav.currentState.popAndPushNamed("/login");
+      } else {
+        this._loggedUser = User.fromJson(jsonDecode(localStorageUser));
+      }
+    }
+    return this._loggedUser;
+  }
 
-  dynamic get loggedAccountInfo => this._loggedAccountInfo;
+  dynamic get loggedAccountInfo {
+    if (this._loggedAccountInfo == null) {
+      final localStorageAccount = window.localStorage["accountInfo"];
+      if (localStorageAccount == null) {
+        Fluttertoast.showToast(msg: "Fatal error occurred, please login again");
+        Nav.currentState.popAndPushNamed("/login");
+      } else {
+        this._loggedAccountInfo = this.loggedUser.type == AccountType.Employer
+            ? Employer.fromJson(jsonDecode(localStorageAccount))
+            : Student.fromJson(jsonDecode(localStorageAccount));
+      }
+    }
+    return this._loggedAccountInfo;
+  }
 
   void updateToken(String token) {
     window.localStorage["jwtToken"] = token;
@@ -68,6 +98,7 @@ class AuthService {
         user.id = response["userID"];
 
         this._loggedUser = user;
+        window.localStorage["user"] = this._loggedUser.toJson();
         window.localStorage["jwtToken"] = response["token"];
         this._jwtToken = response["token"];
         if (studentId != null) {
@@ -85,6 +116,7 @@ class AuthService {
         } else if (employerId == null && studentId == null) {
           return response["student"];
         }
+        window.localStorage["accountInfo"] = this._loggedAccountInfo.toJson();
         return this._loggedAccountInfo;
       }
     } on LoginAPIException catch (e) {

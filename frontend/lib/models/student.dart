@@ -56,6 +56,13 @@ class Student extends ChangeNotifier {
   }
 
   static Student fromJson(Map<String, dynamic> json) {
+    Map<String, dynamic> _skills;
+    if (json["skills"] is List<dynamic>)
+      _skills = Skill.listFromJson(json["skills"]);
+    else {
+      _skills = Skill.listFromJsonMap(json["skills"]);
+    }
+
     return Student(
       id: json["id"],
       name: json["name"],
@@ -65,7 +72,7 @@ class Student extends ChangeNotifier {
       location:
           json["location"] != null ? Place.fromJson(json['location']) : null,
       userId: json["userId"] ?? json["user_id"] ?? json["userID"],
-      skills: Skill.listFromJson(json["skills"]),
+      skills: _skills,
       educations: EducationExperience.listFromJson(json["education"]),
       works: WorkExperience.listFromJson(json["work"]),
     );
