@@ -90,6 +90,7 @@ class _StudentFormState extends State<StudentForm> {
                                   _createnameField(student),
                                   _createsurnameField(student),
                                   _createphoneField(student),
+                                  _cretaeautocompleteField(student),
                                   Padding(
                                     padding: const EdgeInsets.all(10.0),
                                     child: Row(
@@ -107,7 +108,6 @@ class _StudentFormState extends State<StudentForm> {
                                     ),
                                   ),
                                   _createDescriptionField(student),
-                                  _cretaeautocompleteField(student),
                                 ],
                               ),
                             ),

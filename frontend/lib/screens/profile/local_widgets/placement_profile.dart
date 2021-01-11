@@ -124,8 +124,9 @@ class _PlacementProfileState extends State<PlacementProfile> {
           ),
           child: Padding(
             padding: const EdgeInsets.all(15.0),
-            child: Text(_employer.location != null
-                ? "${_employer.location}"
+            child: Text(widget.placement.location?.city != null &&
+                    widget.placement.location?.country != null
+                ? "${widget.placement.location.city}, ${widget.placement.location.country}"
                 : "No location has been specified"),
           ),
         )
