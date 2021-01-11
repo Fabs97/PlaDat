@@ -70,30 +70,37 @@ class StudentCard extends StatelessWidget {
                     size.height * .1,
                   ),
                 ),
-                child: AutoSizeText(
-                  "${student.name} ${student.surname}",
-                  style: textTheme.headline5.copyWith(
-                    color: CustomTheme().textColor,
-                    fontWeight: FontWeight.w700,
-                    fontSize: 20,
-                  ),
-                ),
-              ),
-              FlatButton(
-                color: Colors.transparent,
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 8.0),
-                  child: Text(
-                    "Find out more",
-                    style: textTheme.subtitle1.copyWith(
-                      color: CustomTheme().secondaryColor,
-                      fontWeight: FontWeight.w700,
+                child: Column(
+                  children: [
+                    AutoSizeText(
+                      "${student.name} ${student.surname}",
+                      style: textTheme.headline5.copyWith(
+                        color: CustomTheme().textColor,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 20,
+                      ),
                     ),
-                  ),
-                ),
-                onPressed: () => Nav.currentState.pushNamed(
-                  "/profile",
-                  arguments: student,
+                    FlatButton(
+                      color: Colors.transparent,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            "Find out more",
+                            style: textTheme.subtitle1.copyWith(
+                              color: CustomTheme().secondaryColor,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ),
+                      ),
+                      onPressed: () => Nav.currentState.pushNamed(
+                        "/profile",
+                        arguments: student,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],
