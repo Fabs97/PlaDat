@@ -108,7 +108,7 @@ class _StudentCardsListState extends State<StudentCardsList> {
                                   return DropdownMenuItem<Placement>(
                                     value: placement,
                                     child: Text(
-                                      'Placement #${placement.id}',
+                                      '${placement.position}',
                                       style: TextStyle(
                                           color: CustomTheme().primaryColor),
                                     ),

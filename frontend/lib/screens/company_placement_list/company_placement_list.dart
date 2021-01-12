@@ -88,7 +88,7 @@ class _MyPlacementsState extends State<MyPlacements> {
                           children: [
                             ListTile(
                               title: Text(
-                                _placement.position + " No.$index",
+                                _placement.position,
                                 style: themeData.textTheme.bodyText1.copyWith(
                                   fontWeight: FontWeight.w700,
                                 ),

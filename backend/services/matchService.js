@@ -12,10 +12,10 @@ module.exports = {
             throw new SuperError(ERR_FORBIDDEN, 'You are not authorized to save this interaction');
             return;
         }
-        if(auth.studentId && choice.placementAccept !== undefined) {
+        if(auth.studentId && choice.placementAccept !== null) {
             throw new SuperError(ERR_FORBIDDEN, 'You are not allowed to save this interaction'); return;
         }
-        if(auth.employerId && choice.studentAccept !== undefined) {
+        if(auth.employerId && choice.studentAccept !== null) {
             throw new SuperError(ERR_FORBIDDEN, 'You are not allowed to save this interaction'); return;
         }
 

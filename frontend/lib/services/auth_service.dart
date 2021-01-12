@@ -22,8 +22,8 @@ class AuthService {
 
   String get jwtToken {
     if (this._jwtToken == null) {
-      this._jwtToken = window.localStorage.containsKey("jwtToken")
-          ? window.localStorage["jwtToken"]
+      this._jwtToken = window.sessionStorage.containsKey("jwtToken")
+          ? window.sessionStorage["jwtToken"]
           : throw AuthException();
     }
     return this._jwtToken;
@@ -31,7 +31,7 @@ class AuthService {
 
   User get loggedUser {
     if (this._loggedUser == null) {
-      final localStorageUser = window.localStorage["user"];
+      final localStorageUser = window.sessionStorage["user"];
       if (localStorageUser == null) {
         Fluttertoast.showToast(msg: "Fatal error occurred, please login again");
         Nav.currentState.popAndPushNamed("/login");
@@ -44,7 +44,7 @@ class AuthService {
 
   dynamic get loggedAccountInfo {
     if (this._loggedAccountInfo == null) {
-      final localStorageAccount = window.localStorage["accountInfo"];
+      final localStorageAccount = window.sessionStorage["accountInfo"];
       if (localStorageAccount == null) {
         Fluttertoast.showToast(msg: "Fatal error occurred, please login again");
         Nav.currentState.popAndPushNamed("/login");
@@ -58,7 +58,7 @@ class AuthService {
   }
 
   void updateToken(String token) {
-    window.localStorage["jwtToken"] = token;
+    window.sessionStorage["jwtToken"] = token;
     this._jwtToken = token;
   }
 
@@ -98,8 +98,8 @@ class AuthService {
         user.id = response["userID"];
 
         this._loggedUser = user;
-        window.localStorage["user"] = this._loggedUser.toJson();
-        window.localStorage["jwtToken"] = response["token"];
+        window.sessionStorage["user"] = this._loggedUser.toJson();
+        window.sessionStorage["jwtToken"] = response["token"];
         this._jwtToken = response["token"];
         if (studentId != null) {
           this._loggedAccountInfo = await APIService.route(
@@ -116,7 +116,7 @@ class AuthService {
         } else if (employerId == null && studentId == null) {
           return response["student"];
         }
-        window.localStorage["accountInfo"] = this._loggedAccountInfo.toJson();
+        window.sessionStorage["accountInfo"] = this._loggedAccountInfo.toJson();
         return this._loggedAccountInfo;
       }
     } on LoginAPIException catch (e) {
