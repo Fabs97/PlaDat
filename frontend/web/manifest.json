@@ -1,11 +1,11 @@
 {
-    "name": "frontend",
-    "short_name": "frontend",
+    "name": "Placement Dating for Students",
+    "short_name": "PlaDat",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "An application for the students and companies.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

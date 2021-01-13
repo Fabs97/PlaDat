@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
+      title: 'PlaDat - Placement Dating for Students',
       theme: CustomTheme().appThemeData,
       navigatorKey: Nav.navigatorKey,
       initialRoute: "/login",
