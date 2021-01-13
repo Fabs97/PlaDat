@@ -130,29 +130,37 @@ class Placement extends ChangeNotifier {
 
   static Placement fromJson(Map<String, dynamic> json) {
     if (json == null) return null;
+    Map<String, dynamic> _skills;
+    if (json["skills"] is List<dynamic>)
+      _skills = Skill.listFromJson(json["skills"]);
+    else {
+      _skills = Skill.listFromJsonMap(json["skills"]);
+    }
     return Placement(
       id: json["id"],
       position: json["position"],
-      employmentType: json["employment_type"] != null
-          ? EmploymentTypeExtension.fromString(json["employment_type"])
+      employmentType:
+          json["employment_type"] != null || json["employmentType"] != null
+              ? EmploymentTypeExtension.fromString(
+                  json["employment_type"] ?? json["employmentType"])
           : null,
-      startPeriod: json["start_period"] != null
-          ? DateTime.parse(json["start_period"])
+      startPeriod: json["start_period"] != null || json["startPeriod"] != null
+          ? DateTime.parse(json["start_period"] ?? json["startPeriod"])
           : null,
-      endPeriod: json["end_period"] != null
-          ? DateTime.parse(json["end_period"])
+      endPeriod: json["end_period"] != null || json["endPeriod"] != null
+          ? DateTime.parse(json["end_period"] ?? json["endPeriod"])
           : null,
       userId: json["userId"] ?? json["user_id"] ?? json["userID"],
       salary: json["salary"],
-      description: json["description_role"],
+      description: json["description_role"] ?? json["descriptionRole"],
       institutions: json["institutions"]
           ?.map((institution) => Institution.fromJson(institution))
           ?.toList(),
       majors: json["majors"]?.map((major) => Major.fromJson(major))?.toList(),
-      skills: Skill.listFromJson(json["skills"]),
-      employerId: json["employer_id"],
-      employerName: json["employer_name"],
-      countMatches: json["count_matches"],
+      skills: _skills,
+      employerId: json["employer_id"] ?? json["employerId"],
+      employerName: json["employer_name"] ?? json["employerName"],
+      countMatches: json["count_matches"] ?? json["countMatches"],
       location:
           json["location"] != null ? Place.fromJson(json['location']) : null,
       status: json["status"],
