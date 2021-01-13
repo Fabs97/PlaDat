@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:frontend/models/message.dart';
+import 'dart:html' show window;
 import 'package:frontend/models/user.dart';
 import 'package:frontend/screens/chat_screen/local_widgets/message_card.dart';
 import 'package:frontend/services/api_service.dart';
 import 'package:frontend/services/auth_service.dart';
 import 'package:frontend/utils/custom_theme.dart';
+import 'package:frontend/utils/routes_generator.dart';
 import 'package:frontend/widgets/appbar.dart';
 import 'package:frontend/widgets/drawer.dart';
 
@@ -29,6 +31,7 @@ class _ChatScreenState extends State<ChatScreen> {
   bool _creatingNewMessage = false;
   bool _sendingMessage = false;
   final _formKey = GlobalKey<FormState>();
+  ChatScreenArguments args;
   String _newMessage = "";
   final loggedUserIsEmployer =
       AuthService().loggedUser.type == AccountType.Employer;
@@ -42,8 +45,32 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   _requestMessages() {
+    if (widget.args != null) {
+      window.sessionStorage["chat_studentId"] =
+          widget.args.studentId.toString();
+      window.sessionStorage["chat_employerId"] =
+          widget.args.employerId.toString();
+      args = widget.args;
+    } else if (args == null) {
+      final chatStudentId = window.sessionStorage["chat_studentId"];
+      final chatEmployerId = window.sessionStorage["chat_employerId"];
+      if (chatStudentId != null && chatEmployerId != null) {
+        args = ChatScreenArguments(
+          int.parse(window.sessionStorage["chat_studentId"]),
+          int.parse(window.sessionStorage["chat_employerId"]),
+        );
+      } else {
+        Fluttertoast.showToast(
+            msg:
+                "There was an error while retrieving the chat, please try again");
+        Nav.currentState.popAndPushNamed(
+            AuthService().loggedUser.type == AccountType.Student
+                ? "/student-home"
+                : "/student-home");
+      }
+    }
     APIService.route(ENDPOINTS.Messages, "/message/:studentId/:employerId",
-            urlArgs: widget.args)
+            urlArgs: args)
         .then((messagesList) {
       setState(() {
         widget._messages = List.from((messagesList.cast<Message>()).reversed);
@@ -51,11 +78,11 @@ class _ChatScreenState extends State<ChatScreen> {
     });
     if (loggedUserIsEmployer) {
       APIService.route(ENDPOINTS.Student, "/student/:id",
-              urlArgs: widget.args.studentId)
+              urlArgs: args.studentId)
           .then((value) => setState(() => user = value));
     } else {
       APIService.route(ENDPOINTS.Employers, "/employer/:id",
-              urlArgs: widget.args.employerId)
+              urlArgs: args.employerId)
           .then((value) => setState(() => user = value));
     }
   }
@@ -157,8 +184,8 @@ class _ChatScreenState extends State<ChatScreen> {
         ENDPOINTS.Messages,
         "/message",
         body: Message(
-          studentId: widget.args.studentId,
-          employerId: widget.args.employerId,
+          studentId: args.studentId,
+          employerId: args.employerId,
           message: _newMessage,
           sender: AuthService().loggedUser.type == AccountType.Student
               ? Sender.STUDENT
