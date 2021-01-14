@@ -19,6 +19,10 @@ describe('placement API', () => {
         let employerId;
         let userId;
         let sessionToken;
+        let institutions;
+        let majors;
+        let techSkills;
+        let softSkills;
 
         beforeEach(async () =>{
             let employer = {
@@ -33,8 +37,25 @@ describe('placement API', () => {
             userId = session.userID;
             sessionToken = session.token;
             employerId = session.employerID;
+            majors = (await chai.request(server)
+                .get('/majors')
+                .set('Authorization', `Bearer ${sessionToken}`)).body;
+            institutions = (await chai.request(server)
+                .get('/institutions')
+                .set('Authorization', `Bearer ${sessionToken}`)).body;
+            techSkills = (await chai.request(server)
+                .get('/skills/TECH')
+                .set('Authorization', `Bearer ${sessionToken}`)).body;
+            softSkills = (await chai.request(server)
+                .get('/skills/SOFT')
+                .set('Authorization', `Bearer ${sessionToken}`)).body;
             // console.log(`placement id ${placementId}`)
         })
+        let skills = {};
+        skills.technicalSkills = techSkills;
+        skills.softSkills = softSkills;
+        
+        
 
         it('should add a new placement to the db and return the details with the id', (done) => {
             chai.request(server)
@@ -53,9 +74,9 @@ describe('placement API', () => {
                             country: "Canada",
                             city: "Toronto"
                         },
-                        institutions: [],
-                        majors: [],
-                        skills: []})
+                        institutions: institutions,
+                        majors: majors,
+                        skills: skills})
                 .end((err, response) => {
                     response.should.have.status(200);
                     response.body.should.be.a('object');
@@ -80,16 +101,16 @@ describe('placement API', () => {
                     institutions.should.be.a('array');
                     for(let i=0; i<institutions.length; i++){
                         institutions[i].should.be.a('object');
-                        institutions[i].should.have.property('id');
-                        institutions[i].should.have.property('name');
+                        institutions[i].should.have.property('placement');
+                        institutions[i].should.have.property('institution');
                     }
                     response.body.should.have.property('majors');
                     let majors = response.body.majors;
                     majors.should.be.a('array')
                     for(let i=0; i<majors.length; i++){
                         majors[i].should.be.a('object');
-                        majors[i].should.have.property('id');
-                        majors[i].should.have.property('name');
+                        majors[i].should.have.property('placement');
+                        majors[i].should.have.property('major');
                     }
                     response.body.should.have.property('skills');
                     let skills = response.body.skills;
@@ -107,7 +128,8 @@ describe('placement API', () => {
 
         afterEach(async () =>{
             await chai.request(server)
-                .delete('/placement/' + placementId);
+                .delete('/placement/' + placementId)
+                .set('Authorization', `Bearer ${sessionToken}`);
         })
     })
 
