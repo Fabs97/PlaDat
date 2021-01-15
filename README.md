@@ -170,6 +170,7 @@ npm i
 
 Once the requirements have been completed, please go ahead and run `npm test`. All tests will be automatically run and you will be able to see the results on your prompt.
 
+The backend comes together with a coverage checking function that can be easily run with `npm run coverage`. The results of it can be found inside the `./backend/.nyc_output` folder.
 ### 4.5 Important DEV notes:
 - When testing the application from the dev branch, remember to run the frontend with the following command: 
 ```
