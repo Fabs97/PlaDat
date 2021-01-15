@@ -192,6 +192,8 @@ components:
           enum:
             - STUDENT
             - EMPLOYER
+        id: 
+          type: integer
     Registration:
       type: object
       properties:
@@ -1890,14 +1892,16 @@ paths:
                       employer_id: 1,
                       message: "Hi, I would like to work for your company",
                       send_date: "2020-11-10T12:30:00.000Z",
-                      sender: "STUDENT"
+                      sender: "STUDENT",
+                      id: 1
                     },
                     {
                       student_id: 1,
                       employer_id: 1,
                       message: "hi, would you like to have an interview tomorrow?",
                       send_date: "2020-11-10T12:40:00.000Z",
-                      sender: "EMPLOYER"
+                      sender: "EMPLOYER",
+                      id: 2
                     }
                   ]
         '400': 
@@ -1924,42 +1928,7 @@ paths:
                 type: string
                 example:
                   'You are not authorized to see this conversation'
-    delete:
-      security:
-        - bearerAuth: []
-      description: Delete the message
-      tags:
-        - "Message"
-      parameters:
-        - in: path
-          required: true
-          name: studentId
-          schema:
-            type: integer
-            example: 1
-        - in: path
-          required: true
-          name: placementId
-          schema:
-            type: integer
-            example: 1
-      responses:
-        '200':
-          description: OK
-          content: 
-            application/json:
-              schema:
-                type: integer
-                example: 1
-        '403':
-          description: Forbidden
-          content:
-            text/html:
-              schema:
-                type: string
-                example:
-                  "You are not authorized to delete this match."
-
+   
 
   /message:
     post: 
@@ -2000,7 +1969,8 @@ paths:
                     employer_id: 1, 
                     message: "Thank you for offering me to do an interview.",
                     send_date: "2020-11-10T12:50:00.000Z",
-                    sender: "STUDENT"
+                    sender: "STUDENT",
+                    id: 3
                   }
         '400':
           description: Bad Request
@@ -2026,3 +1996,33 @@ paths:
                 type: string
                 example:
                   'You are not authorized to send this message'
+    delete:
+      security:
+        - bearerAuth: []
+      description: Delete the message
+      tags:
+        - "Message"
+      requestBody: 
+        description: a json containing all the information about the message
+        required: true
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - $ref: "#/components/schemas/Message"
+              example:
+                {
+                  studentId: 1,
+                  employerId: 1, 
+                  sendDate: "2020-11-10T12:50:00.000Z",
+                  sender: "STUDENT",
+                  id: 3
+                }
+      responses:
+        '200':
+          description: OK
+          content: 
+            application/json:
+              schema:
+                type: integer
+                example: 1
