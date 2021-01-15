@@ -76,7 +76,7 @@ class MatchAlert extends StatelessWidget {
                     isStudent
                         ? (object.educations != null &&
                                 object.educations.isNotEmpty
-                            ? "${object.educations[0].location.city}, ${object.educations[0].location.country}"
+                            ? "${object.educations[0]?.institution?.name ?? ""}"
                             : "")
                         : "${placement.location.city}, ${placement.location.country}",
                     style: themeData.textTheme.headline6.copyWith(

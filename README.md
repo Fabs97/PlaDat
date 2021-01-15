@@ -14,7 +14,8 @@
   - [4.1 Frontend](#41-frontend)
   - [4.2 Backend](#42-backend)
   - [4.3 Database](#43-database)
-  - [4.4 Important DEV notes:](#44-important-dev-notes)
+  - [4.4 Testing](#44-testing)
+  - [4.5 Important DEV notes:](#45-important-dev-notes)
 
 ---
 
@@ -119,6 +120,7 @@ Once the requirements have been completed, please go ahead and follow the next s
 - Open a command line prompt on your local machine and type the following commands:
 ```
 cd <path_to_project>/backend
+npm i
 npm start
 ```
 - You should be able to check your backend by opening your browser of choice and navigating to the URL that is prompted after the `npm start`
@@ -151,6 +153,9 @@ DEV_DB_USR="your_username"
 DEV_DB_PORT="port_of_your_database"
 DEV_DB_PWD="your_password"
 PLADAT_ENV="development" #do not change this
+GPLACES_APIKEY="your_gplaces_api_key" #ask to our devs or create on of your own at https://developers.google.com/places/web-service/overview
+ACCESS_TOKEN_SECRET="your_secret"
+ACCESS_TOKEN_LIFE="your_token_life_in_seconds" #e.g. 2592000 = 30 days
 
 ```
    3. Check that everything is correct by doing the first migration:
@@ -158,17 +163,20 @@ PLADAT_ENV="development" #do not change this
 cd <project_folder>/backend
 knex migrate:latest 
 ```   
+### 4.4 Testing
+Make sure to have previously run the following commands:
+```
+cd <project_folder>/backend
+npm i
+```
 
-### 4.4 Important DEV notes:
+Once the requirements have been completed, please go ahead and run `npm test`. All tests will be automatically run and you will be able to see the results on your prompt.
+
+The backend comes together with a coverage checking function that can be easily run with `npm run coverage`. The results of it can be found inside the `./backend/.nyc_output` folder.
+### 4.5 Important DEV notes:
 - When testing the application from the dev branch, remember to run the frontend with the following command: 
 ```
 flutter run -d chrome --dart-define=API_ENDPOINT=https://pladat-staging.herokuapp.com/
-```
-
-- When testing your frontend application and its linking with the backend, make sure to run it with one of the following commands:
-```
-flutter run -d chrome --web-hostname=127.0.0.1 --web-port=8200
-flutter run -d chrome --web-hostname=localhost --web-port=8200
 ```
 
 - If you're using VSCode and you wish to debug with just the push of a button, you can use the following in your launch.json file:

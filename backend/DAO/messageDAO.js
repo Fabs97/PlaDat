@@ -13,7 +13,7 @@ module.exports = {
                 message: messageBody.message,
                 send_date: messageBody.sendDate,
                 sender: messageBody.sender
-            },['student_id', 'employer_id', 'message', 'send_date', 'sender'])
+            },['student_id', 'employer_id', 'message', 'send_date', 'sender', 'id'])
             .catch(error => {
                 if(error){
                     throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There has been a problem saving your message. Please try again');
@@ -24,7 +24,7 @@ module.exports = {
 
     getConversation: (studentId, employerId) => {
         return database('message')
-            .select('student_id', 'employer_id', 'message', 'send_date', 'sender')
+            .select('student_id', 'employer_id', 'message', 'send_date', 'sender', 'id')
             .where('student_id', studentId)
             .andWhere('employer_id', employerId)
             .orderBy('send_date', 'asc')
@@ -35,10 +35,11 @@ module.exports = {
     
     deleteMessage: (details) => {
         return database('message')
-            .where('student_id', details.studentId)
-            .andWhere('employer_id', details.employerId)
-            .andWhere('send_date', details.sendDate)
-            .del();
+            .where('id', details.id)
+            .del()
+            .catch(error => {
+                throw new SuperError(ERR_INTERNAL_SERVER_ERROR, 'There has been a problem deleting this message. Please try again');  
+            });
     },
 
 }

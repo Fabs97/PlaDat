@@ -131,6 +131,7 @@ module.exports = {
             .leftJoin('majors AS m', 'e.major_id', 'm.id')
             .leftJoin('institutions As i', 'e.institution_id', 'i.id')
             .leftJoin('degree AS d', 'e.degree_id', 'd.id')
+            .whereNotIn('she.student_id', studentInteractedWithPlacementIDs)
             .orderBy('she.student_id')
             .catch(error => {
                 if(error){
@@ -141,6 +142,7 @@ module.exports = {
         let works = await database('work AS w')
             .select('w.company_name AS company', 'w.position AS position', 'w.start_period AS start_period', 'w.end_period AS end_period', 'w.description AS description', 'shw.student_id AS student_id')
             .leftJoin('student_has_work AS shw', 'w.id', 'shw.work_id')
+            .whereNotIn('shw.student_id', studentInteractedWithPlacementIDs)
             .orderBy('shw.student_id')
             .catch(error => {
                 if(error){

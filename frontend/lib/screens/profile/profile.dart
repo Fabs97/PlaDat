@@ -1,3 +1,5 @@
+import 'dart:convert';
+import 'dart:html' show window;
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:frontend/models/employer.dart';
@@ -18,25 +20,61 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
+  dynamic profile;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.profile != null) {
+      window.sessionStorage["profile"] = widget.profile.toJson();
+      window.sessionStorage["profileType"] =
+          widget.profile is Student ? "Student" : "Placement";
+      profile = widget.profile;
+    } else {
+      final sessionStorageProfile = window.sessionStorage["profile"];
+      if (sessionStorageProfile == null)
+        profile = null;
+      else {
+        switch (window.sessionStorage["profileType"]) {
+          case "Student":
+            {
+              profile = Student.fromJson(jsonDecode(sessionStorageProfile));
+              break;
+            }
+          case "Placement":
+            {
+              profile = Placement.fromJson(jsonDecode(sessionStorageProfile));
+              break;
+            }
+          default:
+            {
+              profile = null;
+              break;
+            }
+        }
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final loggedAccountInfo = AuthService().loggedAccountInfo;
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
         centerTitle: true,
         title: Text(
-          widget.profile is Student
-              ? (widget.profile.id != AuthService().loggedAccountInfo.id &&
-                      AuthService().loggedAccountInfo is Employer
+          profile is Student
+              ? (profile.id != loggedAccountInfo.id &&
+                      loggedAccountInfo is Employer
                   ? "Student Profile"
                   : "My profile")
               : "Placement Profile",
         ),
         actions: [
-          widget.profile is Placement &&
-                  widget.profile.employerId ==
-                      AuthService().loggedAccountInfo.id &&
-                  AuthService().loggedAccountInfo is Employer
+          profile is Placement &&
+                  profile.employerId == loggedAccountInfo.id &&
+                  loggedAccountInfo is Employer
               ? PopupMenuButton<String>(
                   icon: Icon(
                     Icons.settings,
@@ -74,10 +112,10 @@ class _ProfileState extends State<Profile> {
                                       onPressed: () {
                                         APIService.route(ENDPOINTS.Placement,
                                                 "/placement/:id/close",
-                                                urlArgs: widget.profile.id)
+                                                urlArgs: profile.id)
                                             .then((value) => setState(() {
                                                   value is String
-                                                      ? widget.profile.status =
+                                                      ? profile.status =
                                                           "CLOSED"
                                                       : Fluttertoast.showToast(
                                                           msg: value);
@@ -113,13 +151,13 @@ class _ProfileState extends State<Profile> {
                   ),
                 ],
               ),
-              child: widget.profile != null
+              child: profile != null
                   ? SingleChildScrollView(
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: widget.profile is Student
-                            ? StudentProfile(student: widget.profile)
-                            : PlacementProfile(placement: widget.profile),
+                        child: profile is Student
+                            ? StudentProfile(student: profile)
+                            : PlacementProfile(placement: profile),
                       ),
                     )
                   : Center(

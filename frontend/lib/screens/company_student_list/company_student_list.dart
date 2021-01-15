@@ -157,7 +157,8 @@ class _StudentCardsListState extends State<StudentCardsList> {
                                           ? false
                                           : true,
                                     )).then((match) async {
-                                  if (match.status == 'ACCEPTED') {
+                                  if (match != null &&
+                                      match.status == 'ACCEPTED') {
                                     await Nav.currentState
                                         .push(MaterialPageRoute(
                                       builder: (builder) => MatchAlert(

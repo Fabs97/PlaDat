@@ -69,6 +69,8 @@ describe('message API', () => {
                     response.body.should.have.property('message');
                     response.body.should.have.property('send_date');
                     response.body.should.have.property('sender');
+                    response.body.should.have.property('id');
+                    msg.id = response.body.id;
                     response.body.student_id.should.equal(studentId);
                     response.body.employer_id.should.equal(employerId);
                     response.body.message.should.equal(msg.message);
@@ -121,7 +123,8 @@ describe('message API', () => {
                 .send({
                     studentId: studentId,
                     employerId: employerId,
-                    sendDate: msg.sendDate
+                    sendDate: msg.sendDate,
+                    id: msg.id
                 })
         })
         
@@ -176,6 +179,7 @@ describe('message API', () => {
                         currTime.should.be.at.least(prevTime);
                         prevTime = currTime;
                         messages[i].should.have.property('sender');
+                        messages[i].should.have.property('id');
                     }
                     done();
 

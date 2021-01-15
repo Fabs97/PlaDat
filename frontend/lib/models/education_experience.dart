@@ -31,8 +31,11 @@ class EducationExperience {
     return {
       "id": this.id,
       "majorId": this.major.id,
+      "major": this.major.name,
       "degreeId": this.degree.id,
+      "degree": this.degree.name,
       "institutionId": this.institution.id,
+      "institution": this.institution.name,
       "description": this.description,
       "startPeriod": this.startPeriod.toString(),
       "endPeriod": this.endPeriod.toString(),
@@ -55,7 +58,6 @@ class EducationExperience {
 
   static List<EducationExperience> listFromJson(List<dynamic> json) {
     if (json == null) return null;
-    // final parsed = jsonDecode(json).cast<Map<String, dynamic>>();
     return json
         .map((experiencesJson) => EducationExperience.fromJson(experiencesJson))
         .toList()
