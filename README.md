@@ -163,12 +163,6 @@ knex migrate:latest
 flutter run -d chrome --dart-define=API_ENDPOINT=https://pladat-staging.herokuapp.com/
 ```
 
-- When testing your frontend application and its linking with the backend, make sure to run it with one of the following commands:
-```
-flutter run -d chrome --web-hostname=127.0.0.1 --web-port=8200
-flutter run -d chrome --web-hostname=localhost --web-port=8200
-```
-
 - If you're using VSCode and you wish to debug with just the push of a button, you can use the following in your launch.json file:
 ```
 {
