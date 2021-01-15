@@ -149,6 +149,9 @@ DEV_DB_USR="your_username"
 DEV_DB_PORT="port_of_your_database"
 DEV_DB_PWD="your_password"
 PLADAT_ENV="development" #do not change this
+GPLACES_APIKEY="your_gplaces_api_key" #ask to our devs or create on of your own at https://developers.google.com/places/web-service/overview
+ACCESS_TOKEN_SECRET="your_secret"
+ACCESS_TOKEN_LIFE="your_token_life_in_seconds" #e.g. 2592000 = 30 days
 
 ```
    3. Check that everything is correct by doing the first migration:
