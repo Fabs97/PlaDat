@@ -1,3 +1,5 @@
+![Node.js CI](https://github.com/Fabs97/PlaDat/workflows/Node.js%20CI/badge.svg)
+
 - [1. Project Proposal](#1-project-proposal)
   - [1.1 Project Abstract](#11-project-abstract)
   - [1.2 Project Scope](#12-project-scope)
