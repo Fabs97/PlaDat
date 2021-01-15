@@ -217,7 +217,9 @@ components:
           type: string
         description:
           type: string
-        workPeriod: 
+        startPeriod:
+          type: string
+        endPeriod: 
           type: string
     Education: 
       type: object
@@ -232,7 +234,9 @@ components:
           type: integer
         description: 
           type: string
-        period: 
+        startPeriod:
+          type: string
+        endPeriod: 
           type: string
     Domain of Activity: 
       type: object
@@ -336,8 +340,8 @@ paths:
                   {
                     id: 1,
                     name: "Google",
-                    location: "Milan, Italy",
-                    urllogo: "www.pladat.eu"
+                    description: "A nice company",
+                    userId: 1
                   }
   /employer/{employerId}/placements:
     get:
@@ -388,6 +392,8 @@ paths:
 
   /employer:
     post:
+      security:
+        - bearerAuth: []
       description: Allows the user to save their employer profile on the database
       tags:
         - "Employer"
@@ -426,7 +432,8 @@ paths:
                     city: "Seul"
                     },
                   description: "A big tech company",
-                  domain_of_activity_id: 3
+                  domain_of_activity_id: 3,
+                  token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NzEsImVtcGxveWVySWQiOjIxLCJ1c2VyVHlwZSI6IkVNUExPWUVSIiwiaWF0IjoxNjEwNzI0NTU2LCJleHAiOjE2MTA3BNjcxNDh9.cc9XV1SRJhG6yyz8P4erglp8xXyWoQM83G-IHzmU9sU"
                   }
         '400': 
           description: Bad Request
@@ -496,8 +503,11 @@ paths:
                       education: [
                         {
                           major: Computer Science,
+                          major_id: 2,
                           institution: Hardvard,
+                          istitution_id: 5,
                           degree: Master,
+                          degree_id: 2,
                           description: My grade was 100/1000,
                           start_period: 2017-10-11,
                           end_period: 2019-10-11
@@ -600,7 +610,13 @@ paths:
                            name: Leadership,
                            type: SOFT
                          }
-                      ]
+                      ],
+                      location: {
+                        id: 8,
+                        country: "United States of America",
+                        city: "Los Angeles"
+                      },
+                      employer_name: "Gooogle"
                     }
                   ]
         '400': 
@@ -707,29 +723,198 @@ paths:
                 example:
                   "You are not authorized to delete this match."
 
-
-
-  /placement:
-    get:
+  /employer/{ID}:
+    delete:
       security:
         - bearerAuth: []
-      description: Returns all placement ids in the database 
+      description: Delete the employer based on the given id
       tags:
-        - "Placement"
+        - "Employer"
+      parameters:
+        - in: path
+          required: true
+          name: ID
+          schema:
+            type: integer
+            example: 1
       responses:
         '200':
+          description: OK
+          content: 
+            text/html:
+              schema:
+                type: string
+                example: employer deleted correctly.
+        '403':
+          description: Forbidden
+          content:
+            text/html:
+              schema:
+                type: string
+                example:
+                  "You cannot delete this employer profile"
+  
+  /placement/{ID}:
+    delete:
+      security:
+        - bearerAuth: []
+      description: Delete the placement based on the given id
+      tags:
+        - "Placement"
+      parameters:
+        - in: path
+          required: true
+          name: ID
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: OK
+          content: 
+            text/html:
+              schema:
+                type: integer
+                example: 1
+        '403':
+          description: Forbidden
+          content:
+            text/html:
+              schema:
+                type: string
+                example:
+                  "You are not allowed to delete this placement"
+
+  /student/account/{userId}:
+    get:
+      security:
+        -bearerAuth: []
+      description: Get the student Id and name given the user Id
+      tags:
+        - "Student"
+      parameters:
+        - in: path 
+          required: true
+          name: userId
+          schema:
+            type: integer
+            example: 10
+      responses:
+        '200': 
           description: OK
           content:
             application/json:
               schema:
-                type: array
-                example: 
-                  [
-                    {id: 1},
-                    {id: 2},
-                    {id: 3},
-                    {id: 4},
-                  ]
+                type: object
+                example: {
+                  id: 3,
+                  name: "John"
+                }
+        '403':
+          description: Forbidden
+          content:
+            text/html:
+              schema:
+                type: string
+                example:
+                  "You cannot see this profile"
+        '500':
+          description: Internal Server Error
+          content:
+            text/html:
+              schema:
+                type: string
+                example:
+                  "There has been a problem retrieving this student. Please try again"
+        
+
+  /user/{ID}:
+    delete:
+      security:
+        - bearerAuth: []
+      description: Delete the user based on the given id
+      tags:
+        - "Registration"
+      parameters:
+        - in: path
+          required: true
+          name: ID
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: OK
+          content: 
+            text/html:
+              schema:
+                type: integer
+                example: 1
+        '403':
+          description: Forbidden
+          content:
+            text/html:
+              schema:
+                type: string
+                example:
+                  "You cannot delete this student profile"
+
+  /student/{ID}:
+    delete:
+      security:
+        - bearerAuth: []
+      description: Delete the student based on the given id
+      tags:
+        - "Student"
+      parameters:
+        - in: path
+          required: true
+          name: id
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: OK
+          content: 
+            text/html:
+              schema:
+                type: integer
+                example: 1
+        '403':
+          description: Forbidden
+          content:
+            text/html:
+              schema:
+                type: string
+                example:
+                  "You are not authorized to delete this user"
+
+  /location/{ID}:
+    delete:
+      security:
+        - bearerAuth: []
+      description: Delete the student based on the given id
+      tags:
+        - "Location"
+      parameters:
+        - in: path
+          required: true
+          name: ID
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: OK
+          content: 
+            text/html:
+              schema:
+                type: string
+                example: location deleted correctly
+
+
+  
   /placement/{id}:
     get:
       security:
@@ -754,7 +939,7 @@ paths:
                 example: {
                     id: 1,
                     position: "Full stack developer",
-                    working_hours: 20,
+                    employement_type: "FULL_TIME",
                     start_period: "2020-11-11",
                     end_period: "2020-11-11",
                     salary: 600,
@@ -769,27 +954,22 @@ paths:
                       {id: 1, name: "Politecnico di Milano"},
                       {id: 1, name: "Politecnico di Torino"},
                     ],
-                    skills: {
-                      technicalSkills: [
-                        {id: 1, name: "Flutter", type: "TECH"},
-                        {id: 2, name: "JavaScript", type: "TECH"},
-                        {id: 3, name: "Java", type: "TECH"},
-                      ],
-                      softSkills: [
-                        {id: 4, name: "Team Management", type: "SOFT"},
-                        {id: 5, name: "Time Management", type: "SOFT"},
-                        {id: 6, name: "Communications", type: "SOFT"},
-                      ],
-                      otherSkills: [
-                        {id: 7, name: "Event Organizing", type: "OTHER"},
-                        {id: 8, name: "MS Office proficency", type: "OTHER"},
-                        {id: 9, name: "English Language", type: "OTHER"},
-                      ]
-                    },
+                    skills: [
+                      {id: 1, name: "Flutter", type: "TECH"},
+                      {id: 2, name: "JavaScript", type: "TECH"},
+                      {id: 3, name: "Java", type: "TECH"},
+                      {id: 4, name: "Team Management", type: "SOFT"},
+                      {id: 5, name: "Time Management", type: "SOFT"},
+                      {id: 6, name: "Communications", type: "SOFT"},
+                      {id: 7, name: "Event Organizing", type: "OTHER"},
+                      {id: 8, name: "MS Office proficency", type: "OTHER"},
+                      {id: 9, name: "English Language", type: "OTHER"},
+                    ],
                     employer: {
                       id: 1,
                       name: "Google",
-                      description: "Friendly work place"
+                      description: "Friendly work place",
+                      userId: 1
                     },
                     location: {
                       id: 1,
@@ -816,6 +996,8 @@ paths:
   
   /student/{id}:
     get:
+      security:
+        - bearerAuth: []
       description: Returns a student profile with the provided id
       tags:
         - "Student"
@@ -825,7 +1007,7 @@ paths:
           required: true
           schema:
             type: integer
-            example: 1
+            example: 3
       responses:
         '200':
           description: OK
@@ -836,17 +1018,20 @@ paths:
                   - $ref: '#/components/schemas/Student'
                 type: object
                 example:
+                  id: 3
                   name: John
                   surname: Dow
                   description: I am a happy student
+                  userId: 2
                   location:
                     id: 1
                     country: "Italy"
                     city: "Milan"
                   education:
-                  - majorId: 3
-                    degreeId: 1
-                    institutionId: 3
+                  - major: "Computer Science and Engineering"
+                    degree: "Master"
+                    institution: "Politecnico di Milano"
+                    id: 11
                     description: Difficult job
                     startPeriod: 2020-12-13T23:00:00.000Z
                     endPeriod: 2020-12-13T23:00:00.000Z
@@ -858,7 +1043,8 @@ paths:
                     name: "Time management"
                     type: "SOFT"
                   work:
-                  - companyName: Google
+                  - id: 23
+                    companyName: Google
                     position: Difficult Job
                     description: Difficult job
                     startPeriod: 2020-12-13T23:00:00.000Z
@@ -894,7 +1080,8 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Placement'
+              oneOf:
+                - $ref: '#/components/schemas/Placement'
               type: object
               example:
                 {
@@ -904,14 +1091,14 @@ paths:
                   endPeriod: "2020-11-11",
                   salary: 600,
                   descriptionRole: "An internship for you to learn how to be a full stack developer",
-                  employer_id: 1,
+                  employerId: 1,
                   majors: [
-                    {id: 1, name: "Computer Science and Engineering"},
-                    {id: 2, name: "Management Engineering"},
+                    {id: 1},
+                    {id: 2},
                   ],
                   institutions: [
-                    {id: 1, name: "Politecnico di Milano"},
-                    {id: 1, name: "Politecnico di Torino"},
+                    {id: 1},
+                    {id: 1},
                   ],
                   location: {
                     country: "Italy",
@@ -919,19 +1106,13 @@ paths:
                   },
                   skills: {
                     technicalSkills: [
-                      {id: 1},
-                      {id: 2},
-                      {id: 3},
+                      {id: 1}
                     ],
                     softSkills: [
-                      {id: 4},
-                      {id: 5},
-                      {id: 6},
+                      {id: 4}
                     ],
                     otherSkills: [
-                      "Artificial Intelligence",
-                      "Organizing events",
-                      "SCRUM knowledge"
+                      {name: "social media management"}
                     ]
                   }
                 }
@@ -955,38 +1136,29 @@ paths:
                     employer_id: 1,
                     status: 'OPEN',
                     majors: [
-                      {id: 1, name: "Computer Science and Engineering"},
-                      {id: 2, name: "Management Engineering"},
+                      {placement: 3, major: 5},
+                      {placement: 3, major: 6},
                     ],
                     institutions: [
-                      {id: 1, name: "Politecnico di Milano"},
-                      {id: 1, name: "Politecnico di Torino"},
+                      {placement: 3, institution: 5},
+                      {placement: 3, institution: 7},
                     ],
                     location: {
+                      id: 1,
                       country: "Italy",
                       city: "Milan"
                     },
-                    skills: {
-                      technicalSkills: [
-                        {id: 1},
-                        {id: 2},
-                        {id: 3},
-                      ],
-                      softSkills: [
-                        {id: 4},
-                        {id: 5},
-                        {id: 6},
-                      ],
-                      otherSkills: [
-                        "Event Organizing",
-                        "MS Office proficency", 
-                        "English Language"
-                      ]
-                    }
+                    skills: [
+                      {placement: 3, skill: 1},
+                      {placement: 3, skill: 4},
+                      {placement: 3, skill: 256}
+                    ]
                   }
 
   /placement/{id}/close:
     put:
+      security:
+        - bearerAuth: []
       description: changes a placement's status to 'CLOSED'
       tags:
         - "Placement"
@@ -1079,6 +1251,8 @@ paths:
   
   /domainOfActivity:
     get:
+      security:
+        - bearerAuth: []
       description: Returns all the domains of activity in the database
       tags:
         - "Employer"
@@ -1162,9 +1336,9 @@ paths:
               example:
                 name: John
                 surname: Dow
-                email: aa@aaa.com
                 description: I am a happy student
                 phone: '5478929202'
+                userId: 2
                 location:
                   country: "Italy"
                   city: "Milan"
@@ -1173,17 +1347,20 @@ paths:
                   degreeId: 1
                   institutionId: 3
                   description: Difficult job
-                  period: September 2020 - October 2021
+                  startPeriod: "2020-09-20"
+                  endPeriod: "2021-10-12"
                 - majorId: 1
                   degreeId: 2
                   institutionId: 1
                   description: Difficult job
-                  period: September 2020 - October 2021
+                  startPeriod: "2020-09-20"
+                  endPeriod: "2021-10-12"
                 - majorId: 1
                   degreeId: 1
                   institutionId: 4
                   description: Difficult job
-                  period: September 2020 - October 2021
+                  startPeriod: "2020-09-20"
+                  endPeriod: "2021-10-12"
                 skills:
                   technicalSkills:
                   - id: 1
@@ -1195,11 +1372,13 @@ paths:
                 - companyName: Google
                   position: Difficult Job
                   description: Difficult job
-                  workPeriod: September 2020 - October 2021
+                  startPeriod: "2020-09-20"
+                  endPeriod: "2021-10-12"
                 - companyName: Facebook
                   position: Very Difficult Job
                   description: Very Difficult job
-                  workPeriod: September 2019 - December 2020
+                  startPeriod: "2020-09-20"
+                  endPeriod: "2021-10-12"
 
       responses:
         '200':
@@ -1209,24 +1388,65 @@ paths:
               schema:
                 description: Returns a json from the table matching the student id with the skills ids
                 example: 
-                  id: 129
+                  id: 3
                   name: John
-                  surname: " Edu"
-                  email: aa@aaa.com
-                  description: desgn
+                  surname: Dow
+                  description: I am a happy student
                   phone: '5478929202'
+                  userId: 2
+                  token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NzAsInN0dWRlbnRJZCI6NTIsInVzZXJUeXBlIjoiU1RVREVOVCIsImlhdCI6MTYxMDcxNzU1MywiZXhwIjoxNjEwNzIwMTQ1fQ.KN5p0heEaRgeHa8u0_YWv6mEBeQ4wh5F6PlY7exmGwk"
                   location:
+                    id: 1
                     country: "Italy"
                     city: "Milan"
                   skills:
-                  - student: 129
+                  - student: 3
                     skill: 1
-                  - student: 129
+                  - student: 3
                     skill: 2
-                  - student: 129
+                  - student: 3
                     skill: 17
-                  - student: 129
+                  - student: 3
                     skill: 18
+                    work:
+                  - id: 2
+                    companyName: Google
+                    position: Difficult Job
+                    description: Difficult job
+                    startPeriod: "2020-09-20"
+                    endPeriod: "2021-10-12"
+                  - id: 4
+                    companyName: Facebook
+                    position: Very Difficult Job
+                    description: Very Difficult job
+                    startPeriod: "2020-09-20"
+                    endPeriod: "2021-10-12"
+                  education:
+                  - majorId: 3
+                    degreeId: 1
+                    institutionId: 3
+                    description: Difficult job
+                    startPeriod: "2020-09-20"
+                    endPeriod: "2021-10-12"
+                    studentId: 3
+                    educationId: 4
+                  - majorId: 1
+                    degreeId: 2
+                    institutionId: 1
+                    description: Difficult job
+                    startPeriod: "2020-09-20"
+                    endPeriod: "2021-10-12"
+                    studentId: 3
+                    educationId: 5
+                  - majorId: 1
+                    degreeId: 1
+                    institutionId: 4
+                    description: Difficult job
+                    startPeriod: "2020-09-20"
+                    endPeriod: "2021-10-12"
+                    studentId: 3
+                    educationId: 6
+                  
         '500':
           description: INTERNAL SERVER ERROR - Offers an explanation about what caused the error
         '403':
@@ -1241,7 +1461,7 @@ paths:
     get: 
       security:
         - bearerAuth: []
-      description: Provides all the skills in the database 
+      description: Provides all the technical and soft skills in the database 
       tags:
         - "Skills"
       responses:
@@ -1301,45 +1521,6 @@ paths:
                     },
                   ]
                 }
-                
-  /skills/{type}/{name}:
-    get:
-      security:
-        - bearerAuth: []
-      description: Returns the skill in the database with the given name and type
-      deprecated: true
-      tags:
-        - "Skills"
-      parameters:
-        - in: path
-          required: true
-          name: type
-          schema:
-            type: string
-            example: "TECH"
-        - in: path
-          required: true
-          name: name
-          schema: 
-            type: string
-            example: "Flutter"
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                allOf:
-                  - $ref: "#/components/schemas/Skill"
-                type: array
-                example: 
-                  [
-                    {
-                      id: 1,
-                      name: "Flutter",
-                      type: "TECH"
-                    }
-                  ]
   
   /skills/{type}:
     get:
@@ -1793,7 +1974,8 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/definitions/Message"
+              oneOf:
+                - $ref: "#/components/schemas/Message"
               example:
                 {
                   studentId: 1,
