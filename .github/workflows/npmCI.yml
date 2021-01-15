@@ -5,30 +5,58 @@ on:
     branches: [ main ]
   pull_request:
     branches: [ main ]
+env:
+  ACCESS_TOKEN_LIFE: ${{ secrets.ACCESS_TOKEN_LIFE }}
+  ACCESS_TOKEN_SECRET: ${{ secrets.ACCESS_TOKEN_SECRET }}
+  DEV_DB_HOST: localhost
+  DEV_DB_NAME: postgres
+  DEV_DB_USR: postgres
+  DEV_DB_PORT: 5432
+  DEV_DB_PWD: postgres
+  GPLACES_APIKEY: ${{ secrets.GPLACES_APIKEY }}
+  PLADAT_ENV: staging 
+  DATABASE_URL: postgres://postgres:postgres@0.0.0.0:5432/postgres
 defaults:
   run:
     working-directory: ./backend
+
 jobs:
   build:
-
-    runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [10.x, 12.x, 14.x, 15.x]
-
+    runs-on: ubuntu-latest    
+    services:
+      db:
+        image: postgres:13-alpine
+        ports: 
+          - 5432:5432
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_USER: postgres
+          POSTGRES_DB: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    
     steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }}
+    - name: Checkout source
+      uses: actions/checkout@v2
+    - name: Use Node.js 15.x
       uses: actions/setup-node@v1
       with:
-        node-version: ${{ matrix.node-version }}
+        node-version: 15.x
     - name: NPM CI
       run: |
         npm ci
     - name: NPM build
       run: |
         npm run build --if-present
+    - name: Knex migrate
+      run: |
+        npx knex migrate:latest
+    - name: Knex seeding
+      run: |
+        npx knex seed:run
     - name: NPM testing
       run: | 
         npm test
