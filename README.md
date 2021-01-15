@@ -12,7 +12,8 @@
   - [4.1 Frontend](#41-frontend)
   - [4.2 Backend](#42-backend)
   - [4.3 Database](#43-database)
-  - [4.4 Important DEV notes:](#44-important-dev-notes)
+  - [4.4 Testing](#44-testing)
+  - [4.5 Important DEV notes:](#45-important-dev-notes)
 
 ---
 
@@ -117,6 +118,7 @@ Once the requirements have been completed, please go ahead and follow the next s
 - Open a command line prompt on your local machine and type the following commands:
 ```
 cd <path_to_project>/backend
+npm i
 npm start
 ```
 - You should be able to check your backend by opening your browser of choice and navigating to the URL that is prompted after the `npm start`
@@ -159,8 +161,16 @@ ACCESS_TOKEN_LIFE="your_token_life_in_seconds" #e.g. 2592000 = 30 days
 cd <project_folder>/backend
 knex migrate:latest 
 ```   
+### 4.4 Testing
+Make sure to have previously run the following commands:
+```
+cd <project_folder>/backend
+npm i
+```
 
-### 4.4 Important DEV notes:
+Once the requirements have been completed, please go ahead and run `npm test`. All tests will be automatically run and you will be able to see the results on your prompt.
+
+### 4.5 Important DEV notes:
 - When testing the application from the dev branch, remember to run the frontend with the following command: 
 ```
 flutter run -d chrome --dart-define=API_ENDPOINT=https://pladat-staging.herokuapp.com/
